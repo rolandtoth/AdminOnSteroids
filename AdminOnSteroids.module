@@ -1,0 +1,234 @@
+<?php
+
+/**
+ * AdminOnSteroids
+ * Admin helper utilities
+ *
+ * @author Roland Toth (tpr)
+ *
+ * ProcessWire 3.x
+ * Copyright (C) 2011 by Ryan Cramer
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ *
+ * http://www.processwire.com
+ * http://www.ryancramer.com
+ *
+ */
+class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
+
+    static $configData;
+
+    public static function getModuleInfo() {
+        return array(
+            'title'     => 'AdminOnSteroids',
+            'class'     => 'AdminOnSteroids',
+            'version'   => 2,
+            'summary'   => __('Admin helper utilities'),
+            'author'    => 'Roland Toth',
+            'autoload'  => 'template=admin',
+            'icon'      => 'medkit',
+            'singular'  => true,
+            'permanent' => false,
+        );
+    }
+
+    /**
+     * Default configuration for module
+     *
+     */
+    static public function getDefaultData() {
+        return array(
+            'enabledSubmodules'                    => array(
+                'AutosizeTextareas',
+                'DeselectRadios',
+                'FocusInputOnLangTabSwitch',
+                'LangTabHotkeySwitcher',
+                'LongClickDuration'
+            ),
+            'DeselectRadios'                  => array(
+                'adminOnly'
+            ),
+            'FocusInputOnLangTabSwitch'    => array(
+                'focus'
+            ),
+            'FocusInputOnLangTabSwitchCKE' => array(
+                'focus'
+            ),
+            'LongClickDuration'               => 600
+        );
+    }
+
+    public function __toString() {
+        return __CLASS__;
+    }
+
+    public function init() {
+
+        self::$configData = $this->modules->getModuleConfigData($this);
+        $defaultData = self::getDefaultData();
+
+        $root = $this->config->urls->siteModules . __CLASS__;
+        $scripts = $this->config->scripts;
+
+        $enabledSubmodules = isset(self::$configData['enabledSubmodules']) ? self::$configData['enabledSubmodules'] : false;
+
+        if (!$enabledSubmodules) {
+            return false;
+        }
+
+        $configSettings = array(
+            'isSuperUser' => $this->user->isSuperUser(),
+        );
+
+        //AutosizeTextareas
+        $subModule = 'AutosizeTextareas';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $scripts->add($root . '/' . $subModule . '/Autosize.js');
+            $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
+        }
+
+        //DeselectRadios
+        $subModule = 'DeselectRadios';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
+        }
+
+        //FocusInputOnLangTabSwitch
+        $subModule = 'FocusInputOnLangTabSwitch';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
+        }
+
+        //LangTabHotkeySwitcher
+        $subModule = 'LangTabHotkeySwitcher';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
+        }
+
+        //LongClickDuration
+        $subModule = 'LongClickDuration';
+        if (in_array($subModule, $enabledSubmodules)) {
+
+            $LongClickDuration = (int)self::$configData['LongClickDuration'];
+
+            //do not allow lower value than default 600
+            $LongClickDuration = ($LongClickDuration < $defaultData['LongClickDuration']) ? $defaultData['LongClickDuration'] : $LongClickDuration;
+
+            $configSettings['LongClickDuration'] = $LongClickDuration;
+        } else {
+            // need to set default value explicitly
+            $configSettings['LongClickDuration'] = $defaultData['LongClickDuration'];
+        }
+
+        // also add global js
+        $scripts->add($root . '/' . __CLASS__ . '.js');
+
+        // note: $configSettings overwrite $configData (intentional)
+        $this->config->js("AdminOnSteroids", json_encode(array_merge(self::$configData, $configSettings)));
+    }
+
+
+    public static function getModuleConfigInputfields(array $data) {
+
+        $defaultData = self::getDefaultData();
+        $data = array_merge(self::getDefaultData(), $data);
+
+        $wrapper = new InputfieldWrapper();
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'enabledSubmodules');
+        $f->columnWidth = 36;
+        $f->label = __('Therapies', __FILE__);
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
+        $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
+        $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
+        $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
+        $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
+
+        $f->attr('value', isset($data['enabledSubmodules']) ? $data['enabledSubmodules'] : $defaultData['enabledSubmodules']);
+
+        $wrapper->add($f);
+
+
+        $fset = wire('modules')->get("InputfieldFieldset");
+        $fset->columnWidth = 64;
+        $fset->label = 'Tunings';
+
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'DeselectRadios');
+        $f->label = 'DeselectRadios settings';
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+        $f->showIf = 'enabledSubmodules=DeselectRadios';
+
+        $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
+        $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
+
+        $f->attr('value', isset($data['DeselectRadios']) ? $data['DeselectRadios'] : $defaultData['DeselectRadios']);
+
+        $fset->add($f);
+
+
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'FocusInputOnLangTabSwitch');
+        $f->label = __('ActivateFieldsOnLangTabClick settings', __FILE__);
+        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+        $f->columnWidth = 50;
+
+
+        $f->addOption('focus', 'Focus');
+        $f->addOption('moveEnd', 'Move cursor to the end');
+        $f->addOption('selectAll', 'Select all');
+        $f->addOption('nothing', 'Do nothing');
+
+        if ($data['FocusInputOnLangTabSwitch']) {
+            $f->attr('value', $data['FocusInputOnLangTabSwitch']);
+        }
+
+        $fset->add($f);
+
+
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
+        $f->label = __('ActivateFieldsOnLangTabClick settings (CKEditor)', __FILE__);
+        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+        $f->columnWidth = 50;
+
+        $f->addOption('focus', 'Focus');
+        $f->addOption('moveEnd', 'Move cursor to the end');
+        $f->addOption('selectAll', 'Select all');
+        $f->addOption('nothing', 'Do nothing');
+
+        if ($data['FocusInputOnLangTabSwitchCKE']) {
+            $f->attr('value', $data['FocusInputOnLangTabSwitchCKE']);
+        }
+
+        $fset->add($f);
+
+
+        $f = wire('modules')->get("InputfieldText");
+        $f->attr('name', 'LongClickDuration');
+        $f->label = 'LongClickDuration settings';
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+        $f->showIf = 'enabledSubmodules=LongClickDuration';
+
+        $f->attr('value', (isset($data['LongClickDuration']) && (int)$data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+
+        $fset->add($f);
+
+
+        $wrapper->add($fset);
+
+        return $wrapper;
+    }
+}
+
