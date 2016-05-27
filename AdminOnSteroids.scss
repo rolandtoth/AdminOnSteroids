@@ -5,7 +5,7 @@ body.AdminThemeDefault {
 
   // stickyHeader
   &.aos_stickyHeader:not(.modal) {
-    @media only screen and (min-width: 1200px) {
+    @media only screen and (min-width: 960px) {
 
       padding-top: 64px;
 
@@ -53,7 +53,8 @@ body.AdminThemeReno {
 
   // stickyHeader
   &.aos_stickyHeader:not(.modal) {
-    @media only screen and (min-width: 1200px) {
+
+    @media only screen and (min-width: 960px) {
       #masthead,
       #branding,
       .main-nav-toggle {
@@ -82,21 +83,36 @@ body.AdminThemeReno {
         width: 100%;
         left: 0;
         z-index: 2;
-        padding: 1em 0 1em 1.33em;
         border-bottom: 1px solid rgba(#000, 0.1);
-        box-shadow: 0 5px 9px -1px rgba(0, 0, 0, 0.075);
+        padding: 1.33em 0 1.33em 1.33em;
+        transition: padding-top 0.12s, padding-bottom 0.12s !important;
       }
       #main {
-        padding-top: 145px;
+        padding-top: 156px;
+        &:not(.closed) #headline {
+          padding-left: 230px;
+        }
+      }
+      ul.quicklinks {
+        top: 52px !important;
+      }
+
+      &.scrolled {
+        #headline {
+          box-shadow: 0 5px 9px -1px rgba(0, 0, 0, 0.075);
+          padding: 1em 0 1em 1.33em;
+        }
+      }
+    }
+
+    @media only screen and (min-width: 1200px) {
+      #main {
         &:not(.closed) #headline {
           padding-left: 250px;
         }
       }
-
-      ul.quicklinks {
-        top: 52px !important;
-      }
     }
+
     &.pw-ready {
       #headline {
         transition: padding-left $defaultTransition;
@@ -106,7 +122,7 @@ body.AdminThemeReno {
 
   // autoHideSidebar
   &.aos_autoHideSidebar:not(.modal) {
-    @media only screen and (min-width: 1200px) {
+    @media only screen and (min-width: 960px) {
 
       //padding-left: 1em;
 
@@ -174,7 +190,7 @@ body.AdminThemeReno {
 
   // headButtonNextToTitle
   &.aos_headButtonNextToTitle {
-    @media only screen and (min-width: 1200px) {
+    @media only screen and (min-width: 960px) {
       // head_button next to title
       #headline {
         #head_button {
@@ -190,7 +206,7 @@ body.AdminThemeReno {
         }
         #title {
           float: left;
-          //padding-right: 2em;
+          padding-right: 2em;
         }
       }
     }
@@ -198,20 +214,29 @@ body.AdminThemeReno {
 
   // stickySidebar
   &.aos_stickySidebar {
-    @media only screen and (min-width: 1200px) {
+    @media only screen and (min-width: 960px) {
       #sidebar {
         position: fixed;
-        z-index: 25;
+        z-index: 19;
       }
     }
   }
 
   // alwaysVisibleSidebarItems
   &.aos_alwaysVisibleSidebarItems {
-    @media only screen and (min-width: 1200px) {
+    @media only screen and (min-width: 960px) {
       #sidebar {
+        z-index: 19;
         #main-nav {
-          & > li {
+          > li {
+            > a {
+              font-weight: 600;
+              //header icons
+              > i {
+                margin: 5px 8px 0 0;
+                float: right;
+              }
+            }
             a {
               padding: 0.75em 0.5em 0.7em 1.3em;
               background-color: inherit !important;
@@ -235,12 +260,12 @@ body.AdminThemeReno {
                 display: none;
               }
             }
-            & > ul {
+            > ul {
               display: block !important;
               overflow: visible !important;
               height: auto !important;
-              padding: 12px 10px 12px 14px !important;
-              & > li {
+              padding: 12px 14px 6px 14px !important;
+              > li {
                 display: inline-block;
                 font-size: 0.92em;
                 a {
@@ -267,6 +292,30 @@ body.AdminThemeReno {
         }
       }
     }
+  }
+
+  // hideSidebarQuickLinks
+  &.aos_hideSidebarQuickLinks {
+    //@media only screen and (min-width: 960px) {
+    #sidebar #main-nav > li a {
+      span {
+        padding-right: 0 !important;
+      }
+      i.quicklink-open {
+        display: none;
+      }
+    }
+    //}
+  }
+
+  // oneLineSidebarSubmenus (only with autoHideSidebar)
+  &.aos_oneLineSidebarSubmenus.aos_autoHideSidebar {
+    //@media only screen and (min-width: 960px) {
+    #sidebar {
+      z-index: 19;
+      width: auto;
+    }
+    //}
   }
 
   // closeNoticeButtonToLeft

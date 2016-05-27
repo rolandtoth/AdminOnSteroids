@@ -1,5 +1,12 @@
 #Changelog
 
+
+### 0.0.5 (2016-05-27)
+
+- added Reno tweaks hideSidebarQuickLinks and oneLineSidebarSubmenus
+- various bugfixes
+
+
 ### 0.0.4 (2016-05-27)
 
 - added default admin theme tweaks
