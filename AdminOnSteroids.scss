@@ -57,7 +57,7 @@ body.AdminThemeDefault {
 html.AdminThemeReno {
 
   // disable all anims
-  &:not(.pw-ready) {
+  body:not(.pw-ready) {
     #branding:not(.hide), #masthead:not(.full), #sidebar:not(.hide), #main:not(.full), .main-nav-toggle:not(.full) {
       transition: none;
     }
@@ -109,7 +109,7 @@ html.AdminThemeReno {
         top: 52px !important;
       }
 
-      &.scrolled {
+      body.scrolled {
         #headline {
           box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.1);
           padding: 1em 0 1em 1.33em;
@@ -125,7 +125,7 @@ html.AdminThemeReno {
       }
     }
 
-    &.pw-ready {
+    body.pw-ready {
       #headline {
         transition: padding-left $defaultTransition;
       }
@@ -192,7 +192,7 @@ html.AdminThemeReno {
           transform: translateX(0);
         }
       }
-      &.pw-ready {
+      body.pw-ready {
         #sidebar {
           transition: transform 0.12s;
         }
