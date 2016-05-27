@@ -1,5 +1,16 @@
 $defaultTransition: 0.25s ease-in;
 
+// fixScrollbarJump
+html.aos_fixScrollbarJump:not(.modal) {
+  width: 100vw;
+  overflow-x: hidden;
+  #headline,
+  #breadcrumbs,
+  #masthead {
+    width: 100vw !important;
+  }
+}
+
 //Default theme tweaks
 // note: the default theme adds theme name class only to body
 body.AdminThemeDefault {
@@ -119,12 +130,6 @@ html.AdminThemeReno {
         transition: padding-left $defaultTransition;
       }
     }
-  }
-
-  // fixScrollbarJump
-  &.aos_fixScrollbarJump:not(.modal) {
-    width: 100vw;
-    overflow-x: hidden;
   }
 
   // autoHideSidebar

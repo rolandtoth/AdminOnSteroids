@@ -22,6 +22,13 @@ $(document).ready(function () {
         }
     }
 
+    // fixScrollbarJump
+
+    if (AOSsettings.enabledSubmodules.indexOf('fixScrollbarJump') !== -1) {
+        $('html').addClass('aos_fixScrollbarJump');
+    }
+
+
     // Default admin theme tweaks
 
     if (AOSsettings.enabledSubmodules.indexOf('AdminTweaks') !== -1 && $('body').hasClass('AdminThemeDefault')) {
@@ -37,16 +44,14 @@ $(document).ready(function () {
     }
 
 
+
     // RenoTWeaks
+
 
     if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks,
             htmlClasses = '';
-
-        if (renoTweaksSettings.indexOf('fixScrollbarJump') !== -1) {
-            htmlClasses += ' aos_fixScrollbarJump';
-        }
 
         if (renoTweaksSettings.indexOf('stickyHeader') !== -1) {
             htmlClasses += ' aos_stickyHeader';

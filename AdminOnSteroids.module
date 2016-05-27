@@ -46,7 +46,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'LangTabHotkeySwitcher',
                 'AdminTweaks',
                 'RenoTweaks',
-                'LoadCollapsedModuleInfos'
+                'LoadCollapsedModuleInfos',
+                'fixScrollbarJump'
             ),
             'DeselectRadios'               => array(
                 'adminOnly'
@@ -66,7 +67,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 //                'hideSidebarQuickLinks',
 //                'oneLineSidebarSubmenus',
                 'headButtonNextToTitle',
-                'fixScrollbarJump',
                 'closeNoticeButtonToLeft'
             ),
             'AdminTweaks'                  => array(
@@ -168,6 +168,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
         $f->addOption('LoadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
+        $f->addOption('fixScrollbarJump', __('Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('AdminTweaks', __('Default admin theme tweaks', __FILE__) . ' [...]');
         $f->addOption('RenoTweaks', __('Reno admin theme tweaks', __FILE__) . ' [...]');
 
@@ -276,7 +277,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
         $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
-        $f->addOption('fixScrollbarJump', __('Prevent page jump when the scrollbar appears', __FILE__));
 
         if ($data['RenoTweaks']) {
             $f->attr('value', $data['RenoTweaks']);
