@@ -1,6 +1,15 @@
 $(document).ready(function () {
 
+
     var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids);
+
+    // AutoCollapseModuleInfo
+
+    if (AOSsettings.enabledSubmodules.indexOf('LoadCollapsedModuleInfos') !== -1) {
+        if ($('#ModuleInfo').length) {
+            $('#ModuleInfo').addClass('InputfieldStateCollapsed');
+        }
+    }
 
     // LongClickDuration
 
@@ -18,13 +27,13 @@ $(document).ready(function () {
     if (AOSsettings.enabledSubmodules.indexOf('AdminTweaks') !== -1 && $('body').hasClass('AdminThemeDefault')) {
 
         var adminTweaksSettings = AOSsettings.AdminTweaks,
-            bodyClasses = '';
+            htmlClasses = '';
 
         if (adminTweaksSettings.indexOf('stickyHeader') !== -1) {
-            bodyClasses += ' aos_stickyHeader';
+            htmlClasses += ' aos_stickyHeader';
         }
 
-        $('body').addClass(bodyClasses);
+        $('body').addClass(htmlClasses);
     }
 
 
@@ -33,43 +42,46 @@ $(document).ready(function () {
     if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks,
-            bodyClasses = '';
+            htmlClasses = '';
+
+        if (renoTweaksSettings.indexOf('fixScrollbarJump') !== -1) {
+            htmlClasses += ' aos_fixScrollbarJump';
+        }
 
         if (renoTweaksSettings.indexOf('stickyHeader') !== -1) {
-            bodyClasses += ' aos_stickyHeader';
+            htmlClasses += ' aos_stickyHeader';
         }
 
         if (renoTweaksSettings.indexOf('stickySidebar') !== -1) {
-            bodyClasses += ' aos_stickySidebar';
+            htmlClasses += ' aos_stickySidebar';
         }
 
         if (renoTweaksSettings.indexOf('autoHideSidebar') !== -1) {
-            bodyClasses += ' aos_autoHideSidebar';
+            htmlClasses += ' aos_autoHideSidebar';
         }
 
         if (renoTweaksSettings.indexOf('alwaysVisibleSidebarItems') !== -1) {
-            bodyClasses += ' aos_alwaysVisibleSidebarItems';
+            htmlClasses += ' aos_alwaysVisibleSidebarItems';
         }
 
         if (renoTweaksSettings.indexOf('hideSidebarQuickLinks') !== -1) {
-            bodyClasses += ' aos_hideSidebarQuickLinks';
+            htmlClasses += ' aos_hideSidebarQuickLinks';
         }
 
         if (renoTweaksSettings.indexOf('oneLineSidebarSubmenus') !== -1) {
-            bodyClasses += ' aos_oneLineSidebarSubmenus';
+            htmlClasses += ' aos_oneLineSidebarSubmenus';
         }
 
         if (renoTweaksSettings.indexOf('headButtonNextToTitle') !== -1) {
-            bodyClasses += ' aos_headButtonNextToTitle';
+            htmlClasses += ' aos_headButtonNextToTitle';
         }
 
         if (renoTweaksSettings.indexOf('closeNoticeButtonToLeft') !== -1) {
-            bodyClasses += ' aos_closeNoticeButtonToLeft';
+            htmlClasses += ' aos_closeNoticeButtonToLeft';
         }
 
-        $('body').addClass(bodyClasses);
+        $('html').addClass(htmlClasses);
     }
-
 });
 
 

@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 5,
+            'version'   => 6,
             'summary'   => __('Various admin hacks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -44,7 +44,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'DeselectRadios',
                 'FocusInputOnLangTabSwitch',
                 'LangTabHotkeySwitcher',
-                'LongClickDuration'
+                'AdminTweaks',
+                'RenoTweaks',
+                'LoadCollapsedModuleInfos'
             ),
             'DeselectRadios'               => array(
                 'adminOnly'
@@ -59,16 +61,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'RenoTweaks'                   => array(
                 'stickyHeader',
                 'stickySidebar',
-                'autoHideSidebar',
+//                'autoHideSidebar',
                 'alwaysVisibleSidebarItems',
-                'hideSidebarQuickLinks',
-                'oneLineSidebarSubmenus',
+//                'hideSidebarQuickLinks',
+//                'oneLineSidebarSubmenus',
                 'headButtonNextToTitle',
+                'fixScrollbarJump',
                 'closeNoticeButtonToLeft'
             ),
             'AdminTweaks'                  => array(
                 'stickyHeader'
             ),
+            'LoadCollapsedModuleInfos'      => 1
         );
     }
 
@@ -163,6 +167,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
+        $f->addOption('LoadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('AdminTweaks', __('Default admin theme tweaks', __FILE__) . ' [...]');
         $f->addOption('RenoTweaks', __('Reno admin theme tweaks', __FILE__) . ' [...]');
 
@@ -271,6 +276,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
         $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
+        $f->addOption('fixScrollbarJump', __('Prevent page jump when the scrollbar appears', __FILE__));
 
         if ($data['RenoTweaks']) {
             $f->attr('value', $data['RenoTweaks']);

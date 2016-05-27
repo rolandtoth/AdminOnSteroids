@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.0.6 (2016-05-27)
+
+- new tweaks: LoadCollapsedModuleInfos and fixScrollbarJump (Reno)
+- revised default tweaks
+
+
 ### 0.0.5 (2016-05-27)
 
 - added Reno tweaks hideSidebarQuickLinks and oneLineSidebarSubmenus

@@ -66,11 +66,20 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 
 
 
+###LoadCollapsedModuleInfos
+
+*Load module info fields collapsed*
+
+When entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
+
+
+
 ###LongClickDuration
 
 *Custom long-click action duration*
 
 Long-clicking on Edit or View links on the Page tree opens a modal to edit/view the page. The default value is 600 milliseconds which you can modify here. Note that you can add only greater value than the default.
+
 
 
 ###AdminTweaks
@@ -97,3 +106,4 @@ A few usability mods targetting the Reno admin theme.
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items
 - **One-line sidebar submenus (only with autoHideSidebar)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
+- **Prevent page jump when the scrollbar appears**: disable page jump and elements repositioning when the height of the page changes and the scrollbar appears or disappears
