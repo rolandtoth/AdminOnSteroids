@@ -1,7 +1,8 @@
 $defaultTransition: 0.25s ease-in;
 
 //Default theme tweaks
-html.AdminThemeDefault {
+// note: the default theme adds theme name class only to body
+body.AdminThemeDefault {
 
   // stickyHeader
   &.aos_stickyHeader:not(.modal) {
