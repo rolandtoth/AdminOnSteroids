@@ -67,19 +67,31 @@ body.AdminThemeReno {
   &.aos_autoHideSidebar {
     @media only screen and (min-width: 1200px) {
 
+      //padding-left: 1em;
+
+      #headline {
+        padding-left: 1.5em !important;
+      }
+
       //#main,
       //#branding,
       //#masthead {
-      //  padding-left: 2em;
+      //  //padding-left: 2em;
+      //  transform: translateX(2em);
       //}
-      //
-      //#main {
-      //  margin-left: 0;
-      //}
-      //
-      //#notices {
-      //  left: -2em;
-      //}
+
+      #main {
+        margin-left: 0;
+      }
+
+      #notices {
+        left: -1em;
+        .NoticeMessage {
+          position: relative;
+          //left: -1em;
+          padding-left: 2.5em;
+        }
+      }
       //
       //#breadcrumbs {
       //  padding-left: 3.5em;
