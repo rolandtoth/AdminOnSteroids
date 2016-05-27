@@ -1,7 +1,7 @@
 Admin On Steroids
 ========================
 
-Various admin utilities to enhance ProcessWire admin.
+Various admin hacks to enhance ProcessWire admin.
 
 
 ## Install
@@ -49,7 +49,7 @@ Saves an extra click to activate text input, textarea or CKEditor when switching
 
 ####Settings
 
-- **Focus**: activates the target input so the previous cursor position is restored.
+- **Focus**: activates the target input so the previous cursor position is restored
 - **Move cursor to the end**: sets the cursor to the end of the input's content
 - **Select all**: selects all content of the target input
 - **Do nothing**: disables setting focus for the current field type
@@ -71,3 +71,18 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 *Custom long-click action duration*
 
 Long-clicking on Edit or View links on the Page tree opens a modal to edit/view the page. The default value is 600 milliseconds which you can modify here. Note that you can add only greater value than the default.
+
+
+
+###RenoTweaks
+
+*Apply Reno theme tweaks*
+
+A few usability mods targetting the Reno admin theme.
+
+- **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
+- **Make sidebar sticky**: stick the sidebar to the top to make it always visible
+- **Auto hide sidebar on left**: auto hide the sidebar so it's accessible by moving the mouse to the left side of the screen
+- **Always show sidebar items (disable accordion)**: make sidebar submenus more compact and do not hide them
+- **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach
+- **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access

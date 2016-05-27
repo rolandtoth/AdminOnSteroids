@@ -2,7 +2,7 @@
 
 /**
  * AdminOnSteroids
- * Admin helper utilities
+ * Various admin hacks
  *
  * @author Roland Toth (tpr)
  *
@@ -22,10 +22,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 2,
-            'summary'   => __('Admin helper utilities'),
+            'version'   => 3,
+            'summary'   => __('Various admin hacks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
+            'url'       => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
             'icon'      => 'medkit',
             'singular'  => true,
             'permanent' => false,
@@ -38,14 +39,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
      */
     static public function getDefaultData() {
         return array(
-            'enabledSubmodules'                    => array(
+            'enabledSubmodules'            => array(
                 'AutosizeTextareas',
                 'DeselectRadios',
                 'FocusInputOnLangTabSwitch',
                 'LangTabHotkeySwitcher',
                 'LongClickDuration'
             ),
-            'DeselectRadios'                  => array(
+            'DeselectRadios'               => array(
                 'adminOnly'
             ),
             'FocusInputOnLangTabSwitch'    => array(
@@ -54,7 +55,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'FocusInputOnLangTabSwitchCKE' => array(
                 'focus'
             ),
-            'LongClickDuration'               => 600
+            'LongClickDuration'            => 600,
+
+            'RenoTweaks' => array(
+                'stickyHeader',
+                'stickySidebar',
+                'autoHideSidebar',
+                'alwaysVisibleSidebarItems',
+                'headButtonNextToTitle',
+                'closeNoticeButtonToLeft'
+            ),
         );
     }
 
@@ -65,10 +75,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     public function init() {
 
         self::$configData = $this->modules->getModuleConfigData($this);
-        $defaultData = self::getDefaultData();
+        $defaultData      = self::getDefaultData();
 
-        $root = $this->config->urls->siteModules . __CLASS__;
+        $root    = $this->config->urls->siteModules . __CLASS__;
         $scripts = $this->config->scripts;
+        $styles  = $this->config->styles;
 
         $enabledSubmodules = isset(self::$configData['enabledSubmodules']) ? self::$configData['enabledSubmodules'] : false;
 
@@ -109,7 +120,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'LongClickDuration';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $LongClickDuration = (int)self::$configData['LongClickDuration'];
+            $LongClickDuration = (int) self::$configData['LongClickDuration'];
 
             //do not allow lower value than default 600
             $LongClickDuration = ($LongClickDuration < $defaultData['LongClickDuration']) ? $defaultData['LongClickDuration'] : $LongClickDuration;
@@ -120,8 +131,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $configSettings['LongClickDuration'] = $defaultData['LongClickDuration'];
         }
 
-        // also add global js
+        // also add global js & css
         $scripts->add($root . '/' . __CLASS__ . '.js');
+        $styles->add($root . '/' . __CLASS__ . '.css');
 
         // note: $configSettings overwrite $configData (intentional)
         $this->config->js("AdminOnSteroids", json_encode(array_merge(self::$configData, $configSettings)));
@@ -131,39 +143,40 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     public static function getModuleConfigInputfields(array $data) {
 
         $defaultData = self::getDefaultData();
-        $data = array_merge(self::getDefaultData(), $data);
+        $data        = array_merge(self::getDefaultData(), $data);
 
         $wrapper = new InputfieldWrapper();
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
         $f->columnWidth = 36;
-        $f->label = __('Therapies', __FILE__);
+        $f->label       = __('Therapies', __FILE__);
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
         $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
+        $f->addOption('RenoTweaks', __('Apply Reno theme tweaks', __FILE__) . ' [...]');
 
         $f->attr('value', isset($data['enabledSubmodules']) ? $data['enabledSubmodules'] : $defaultData['enabledSubmodules']);
 
         $wrapper->add($f);
 
 
-        $fset = wire('modules')->get("InputfieldFieldset");
+        $fset              = wire('modules')->get("InputfieldFieldset");
         $fset->columnWidth = 64;
-        $fset->label = 'Tunings';
+        $fset->label       = 'Tunings';
 
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'DeselectRadios');
-        $f->label = 'DeselectRadios settings';
+        $f->label       = 'DeselectRadios settings';
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=DeselectRadios';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=DeselectRadios';
 
         $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
         $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
@@ -175,10 +188,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitch');
-        $f->label = __('ActivateFieldsOnLangTabClick settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->label       = __('ActivateFieldsOnLangTabClick settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
         $f->columnWidth = 50;
 
 
@@ -196,10 +209,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label = __('ActivateFieldsOnLangTabClick settings (CKEditor)', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->label       = __('ActivateFieldsOnLangTabClick settings (CKEditor)', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
         $f->columnWidth = 50;
 
         $f->addOption('focus', 'Focus');
@@ -216,12 +229,31 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldText");
         $f->attr('name', 'LongClickDuration');
-        $f->label = 'LongClickDuration settings';
+        $f->label       = 'LongClickDuration settings';
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=LongClickDuration';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=LongClickDuration';
 
-        $f->attr('value', (isset($data['LongClickDuration']) && (int)$data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+        $f->attr('value', (isset($data['LongClickDuration']) && (int) $data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+
+        $fset->add($f);
+
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'RenoTweaks');
+        $f->label  = __('RenoTweaks settings', __FILE__);
+        $f->showIf = 'enabledSubmodules=RenoTweaks';
+
+        $f->addOption('stickyHeader', __('Make header sticky', __FILE__));
+        $f->addOption('stickySidebar', __('Make sidebar sticky', __FILE__));
+        $f->addOption('autoHideSidebar', __('Auto hide sidebar on left', __FILE__));
+        $f->addOption('alwaysVisibleSidebarItems', __('Always show sidebar items (disable accordion)', __FILE__));
+        $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
+        $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
+
+        if ($data['RenoTweaks']) {
+            $f->attr('value', $data['RenoTweaks']);
+        }
 
         $fset->add($f);
 
@@ -231,4 +263,3 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return $wrapper;
     }
 }
-
