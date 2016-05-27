@@ -73,6 +73,15 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 Long-clicking on Edit or View links on the Page tree opens a modal to edit/view the page. The default value is 600 milliseconds which you can modify here. Note that you can add only greater value than the default.
 
 
+###AdminTweaks
+
+*Apply default admin theme tweaks*
+
+A few usability mods targetting the default admin theme.
+
+- **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
+
+
 
 ###RenoTweaks
 

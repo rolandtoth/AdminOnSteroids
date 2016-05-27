@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 3,
+            'version'   => 4,
             'summary'   => __('Various admin hacks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -56,14 +56,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'focus'
             ),
             'LongClickDuration'            => 600,
-
-            'RenoTweaks' => array(
+            'RenoTweaks'                   => array(
                 'stickyHeader',
                 'stickySidebar',
                 'autoHideSidebar',
                 'alwaysVisibleSidebarItems',
                 'headButtonNextToTitle',
                 'closeNoticeButtonToLeft'
+            ),
+            'AdminTweaks'                  => array(
+                'stickyHeader'
             ),
         );
     }
@@ -159,7 +161,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
-        $f->addOption('RenoTweaks', __('Apply Reno theme tweaks', __FILE__) . ' [...]');
+        $f->addOption('AdminTweaks', __('Default admin theme tweaks', __FILE__) . ' [...]');
+        $f->addOption('RenoTweaks', __('Reno admin theme tweaks', __FILE__) . ' [...]');
 
         $f->attr('value', isset($data['enabledSubmodules']) ? $data['enabledSubmodules'] : $defaultData['enabledSubmodules']);
 
@@ -235,6 +238,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->showIf      = 'enabledSubmodules=LongClickDuration';
 
         $f->attr('value', (isset($data['LongClickDuration']) && (int) $data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+
+        $fset->add($f);
+
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'AdminTweaks');
+        $f->label  = __('AdminTweaks settings', __FILE__);
+        $f->showIf = 'enabledSubmodules=AdminTweaks';
+
+        $f->addOption('stickyHeader', __('Make header sticky', __FILE__));
+
+        if ($data['AdminTweaks']) {
+            $f->attr('value', $data['AdminTweaks']);
+        }
 
         $fset->add($f);
 

@@ -13,9 +13,24 @@ $(document).ready(function () {
         }
     }
 
+    // Default admin theme tweaks
+
+    if (AOSsettings.enabledSubmodules.indexOf('AdminTweaks') !== -1 && $('body').hasClass('AdminThemeDefault')) {
+
+        var adminTweaksSettings = AOSsettings.AdminTweaks,
+            bodyClasses = '';
+
+        if (adminTweaksSettings.indexOf('stickyHeader') !== -1) {
+            bodyClasses += ' aos_stickyHeader';
+        }
+
+        $('body').addClass(bodyClasses);
+    }
+
+
     // RenoTWeaks
 
-    if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1) {
+    if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks,
             bodyClasses = '';

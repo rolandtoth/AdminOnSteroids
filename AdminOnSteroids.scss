@@ -1,5 +1,46 @@
 $defaultTransition: 0.25s ease-in;
 
+//Default theme tweaks
+body.AdminThemeDefault {
+
+  // stickyHeader
+  &.aos_stickyHeader:not(.modal) {
+    @media only screen and (min-width: 1200px) {
+
+      padding-top: 64px;
+
+      #masthead {
+        position: fixed;
+        z-index: 40;
+        width: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      #breadcrumbs {
+        position: fixed;
+        z-index: 20;
+        top: 44px;
+        left: 0;
+        width: 100%;
+        border: none;
+      }
+
+      &.hasWireTabs {
+        padding-top: 100px;
+      }
+
+      #head_button {
+        margin-bottom: -1em;
+      }
+
+      #content {
+        padding-top: 52px;
+      }
+    }
+  }
+}
+
 /*Reno theme tweaks*/
 body.AdminThemeReno {
 
@@ -11,7 +52,7 @@ body.AdminThemeReno {
   }
 
   // stickyHeader
-  &.aos_stickyHeader {
+  &.aos_stickyHeader:not(.modal) {
     @media only screen and (min-width: 1200px) {
       #masthead,
       #branding,
@@ -64,7 +105,7 @@ body.AdminThemeReno {
   }
 
   // autoHideSidebar
-  &.aos_autoHideSidebar {
+  &.aos_autoHideSidebar:not(.modal) {
     @media only screen and (min-width: 1200px) {
 
       //padding-left: 1em;
