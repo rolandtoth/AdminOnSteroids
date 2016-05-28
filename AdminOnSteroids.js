@@ -2,7 +2,14 @@ $(document).ready(function () {
 
     var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
 
-    if(AOSsettings == null) {
+
+    // HoverSaveDropdown
+    if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
+        $('#pw-dropdown-toggle-submit_save.dropdown-toggle-click, #pw-dropdown-toggle-submit_save_copy.dropdown-toggle-click').removeClass('dropdown-toggle-click');
+    }
+
+
+    if (AOSsettings == null) {
         return false;
     }
 

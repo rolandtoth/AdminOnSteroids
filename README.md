@@ -27,6 +27,14 @@ Adds auto-grow functionality to fit textarea to its content. The submodule has n
 
 
 
+###HoverSaveDropdown
+
+*Show save dropdown on hover instead on click*
+
+Hovering on the Save button in the page editor shows the dropdown menu instantly instead on click.
+
+
+
 ###DeselectRadios
 
 *Enable clearing checked radio buttons*

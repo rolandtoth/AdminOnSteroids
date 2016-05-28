@@ -49,7 +49,7 @@ form[action$="AdminOnSteroids"] {
 
   input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
   input#Inputfield_RenoTweaks_oneLineSidebarSubmenus {
-    margin-left: 20px;
+    margin-left: 21px;
   }
 
 }
@@ -399,3 +399,55 @@ html.AdminThemeReno {
   }
 
 }
+
+//.PageListItem {
+//  &:hover {
+//      a {
+//        opacity: 1 !important;
+//      }
+//    }
+//}
+//
+//.PageList .PageListItem .PageListActions.actions {
+//  display: block !important;
+//  opacity: 1 !important;
+//  margin: 4px 0 -3px -4px;
+//  > li {
+//    &:before {
+//      display: none;
+//    }
+//  }
+//
+//  a {
+//    color: inherit;
+//    opacity: 0.5;
+//    transition: opacity 0.1s;
+//    font-size: 13px;
+//    background: transparent;
+//    &:hover {
+//      //opacity: 1;
+//      color: inherit !important;
+//      text-decoration: underline;
+//    }
+//  }
+//}
+//
+//.content .PageList .PageListNumChildren {
+//  font-size: 12px;
+//  display: inline-block;
+//  //background: #bbb;
+//  //min-width: 15px;
+//  text-align: center;
+//  //border: 1px solid #ddd;
+//  //border-radius: 12px;
+//  //color: #333;
+//  //padding: 0 4px;
+//  margin: 0;
+//  position: relative;
+//  top: -5px;
+//  left: -3px;
+//}
+//
+//span.PageListNumChildren.detail:empty {
+//  display: none;
+//}

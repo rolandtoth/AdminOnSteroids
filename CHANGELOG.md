@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.0.8 (2016-05-28)
+
+- new tweak: HoverSaveDropdown
+
+
+
 ### 0.0.7 (2016-05-28)
 
 - new Reno tweak: singleClickSidebarHeaders

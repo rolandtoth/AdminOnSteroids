@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 7,
+            'version'   => 8,
             'summary'   => __('Various admin hacks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -46,6 +46,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'LangTabHotkeySwitcher',
                 'AdminTweaks',
                 'RenoTweaks',
+                'LongClickDuration',
+                'HoverSaveDropdown',
                 'LoadCollapsedModuleInfos',
                 'fixScrollbarJump'
             ),
@@ -72,8 +74,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'AdminTweaks'                  => array(
                 'stickyHeader'
-            ),
-            'LoadCollapsedModuleInfos'     => 1
+            )
         );
     }
 
@@ -88,7 +89,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $root = $this->config->urls->siteModules . __CLASS__;
         $scripts = $this->config->scripts;
-        $styles = $this->config->styles;
 
         $enabledSubmodules = isset(self::$configData['enabledSubmodules']) ? self::$configData['enabledSubmodules'] : false;
 
@@ -173,6 +173,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
+        $f->addOption('HoverSaveDropdown', __('Show save dropdown on hover instead on click', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
