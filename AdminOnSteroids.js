@@ -1,7 +1,10 @@
 $(document).ready(function () {
 
+    var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
 
-    var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids);
+    if(AOSsettings == null) {
+        return false;
+    }
 
     // AutoCollapseModuleInfo
 
@@ -44,7 +47,6 @@ $(document).ready(function () {
     }
 
 
-
     // RenoTWeaks
 
 
@@ -52,6 +54,16 @@ $(document).ready(function () {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks,
             htmlClasses = '';
+
+        // enable single clicking on headers in sidebar
+        if (renoTweaksSettings.indexOf('singleClickSidebarHeaders') !== -1 && renoTweaksSettings.indexOf('alwaysVisibleSidebarItems') !== -1) {
+
+            $('#sidebar > #main-nav > li > a').on('click', function () {
+                window.location.href = $(this).attr('href');
+                return false;
+            })
+
+        }
 
         if (renoTweaksSettings.indexOf('stickyHeader') !== -1) {
             htmlClasses += ' aos_stickyHeader';

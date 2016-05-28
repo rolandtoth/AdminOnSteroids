@@ -1,5 +1,60 @@
 $defaultTransition: 0.25s ease-in;
 
+// module own CSS styles
+
+form[action$="AdminOnSteroids"] {
+
+  input[type="checkbox"] {
+    //margin-bottom: 16px;
+    //vertical-align: top;
+    //position: relative;
+    //margin-right: 30px;
+    //top: 3px;
+    //visibility: hidden;
+    //
+    //&:hover {
+    //  cursor: pointer;
+    //}
+    + span {
+      opacity: 0.7;
+      white-space: normal;
+      display: inline-block;
+    }
+    //&:after {
+    //  visibility: visible;
+    //  content: "•";
+    //  color: #aaa;
+    //  width: 36px;
+    //  height: 18px;
+    //  display: inline-block;
+    //  background: #fff;
+    //  font-size: 47px;
+    //  border: 1px solid #ccc;
+    //  border-radius: 10px;
+    //  line-height: 17px;
+    //  transition: all 0.12s;
+    //}
+    &:checked {
+      //visibility: hidden;
+      + span {
+        opacity: 1;
+      }
+      //&:after {
+      //  color: #444;
+      //  text-indent: 17px;
+      //}
+    }
+  }
+
+  input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
+  input#Inputfield_RenoTweaks_oneLineSidebarSubmenus {
+    margin-left: 20px;
+  }
+
+}
+
+// tweak styles
+
 // fixScrollbarJump
 html.aos_fixScrollbarJump:not(.modal) {
   width: 100vw;
@@ -296,6 +351,9 @@ html.AdminThemeReno {
                   }
                   &:hover {
                     opacity: 1;
+                    span {
+                      text-decoration: underline;
+                    }
                   }
                 }
               }

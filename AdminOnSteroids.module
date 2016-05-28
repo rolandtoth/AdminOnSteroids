@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 6,
+            'version'   => 7,
             'summary'   => __('Various admin hacks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -60,6 +60,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'LongClickDuration'            => 600,
             'RenoTweaks'                   => array(
+                'singleClickSidebarHeaders',
                 'stickyHeader',
                 'stickySidebar',
 //                'autoHideSidebar',
@@ -72,7 +73,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'AdminTweaks'                  => array(
                 'stickyHeader'
             ),
-            'LoadCollapsedModuleInfos'      => 1
+            'LoadCollapsedModuleInfos'     => 1
         );
     }
 
@@ -139,14 +140,22 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $configSettings['LongClickDuration'] = $defaultData['LongClickDuration'];
         }
 
-        // also add global js & css
+        // also add global JS
         $scripts->add($root . '/' . __CLASS__ . '.js');
-        $styles->add($root . '/' . __CLASS__ . '.css');
 
         // note: $configSettings overwrite $configData (intentional)
         $this->config->js("AdminOnSteroids", json_encode(array_merge(self::$configData, $configSettings)));
     }
 
+
+    public function ready() {
+
+        // add global CSS here to load it after module install
+        $root = $this->config->urls->siteModules . __CLASS__;
+        $styles = $this->config->styles;
+
+        $styles->add($root . '/' . __CLASS__ . '.css');
+    }
 
     public static function getModuleConfigInputfields(array $data) {
 
@@ -272,10 +281,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('stickyHeader', __('Make header sticky', __FILE__));
         $f->addOption('stickySidebar', __('Make sidebar sticky', __FILE__));
         $f->addOption('autoHideSidebar', __('Auto hide sidebar on left', __FILE__));
+        $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));
         $f->addOption('alwaysVisibleSidebarItems', __('Always show sidebar items (disable accordion)', __FILE__));
+        $f->addOption('singleClickSidebarHeaders', __('Single click navigation of sidebar headers', __FILE__));
         $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
         $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
-        $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
 
         if ($data['RenoTweaks']) {

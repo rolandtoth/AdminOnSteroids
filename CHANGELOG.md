@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.0.7 (2016-05-28)
+
+- new Reno tweak: singleClickSidebarHeaders
+- few CSS tweaks on the module's own admin page
+- load module CSS on ready() to make module CSS tweaks available right after install
+
+
 ### 0.0.6 (2016-05-27)
 
 - new tweaks: LoadCollapsedModuleInfos and fixScrollbarJump (Reno)
