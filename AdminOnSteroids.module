@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 8,
+            'version'   => 9,
             'summary'   => __('Various admin hacks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -96,9 +96,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             return false;
         }
 
-        $configSettings = array(
-            'isSuperUser' => $this->user->isSuperUser(),
-        );
+//        $configSettings = array(
+//            'isSuperUser' => $this->user->isSuperUser(),
+//        );
 
         //AutosizeTextareas
         $subModule = 'AutosizeTextareas';
@@ -110,7 +110,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         //DeselectRadios
         $subModule = 'DeselectRadios';
         if (in_array($subModule, $enabledSubmodules)) {
-            $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
+            if (!in_array('adminOnly', self::$configData['DeselectRadios']) || $this->wire('user')->isSuperUser()) {
+                $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
+            }
         }
 
         //FocusInputOnLangTabSwitch

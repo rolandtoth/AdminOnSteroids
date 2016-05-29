@@ -5,11 +5,11 @@ $(document).ready(function () {
         $radioButtons = $("input:radio");
 
     // enable only for superusers
-    if (ADRsettings.indexOf('adminOnly') !== -1) {
-        if (!AOSsettings.isSuperUser) {
-            return true;
-        }
-    }
+    //if (ADRsettings.indexOf('adminOnly') !== -1) {
+    //    if (!AOSsettings.isSuperUser) {
+    //        return true;
+    //    }
+    //}
 
     $radioButtons.filter(":checked").data("chk", true);
 

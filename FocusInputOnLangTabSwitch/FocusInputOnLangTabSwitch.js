@@ -1,16 +1,45 @@
-// todo make options below configurable (select all, move cursor to end)
-
 $(document).on('ready reloaded wiretabclick', function (e) {
 
     var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids),
         AAFsettings = AOSsettings.FocusInputOnLangTabSwitch,
-        AAFsettingsCKE = AOSsettings.FocusInputOnLangTabSwitchCKE;
+        AAFsettingsCKE = AOSsettings.FocusInputOnLangTabSwitchCKE,
+        aos_enableFocusInputs = false;
 
     $('.langTabs').on('tabsactivate', function (e, ui) {
 
+        e = e || window.event;
+
+        //var aos_enableFocusInputs = true;
+
+        // activate all lang tabs with same language (only when ctrl key is pressed)
+        if (e.ctrlKey || aos_enableFocusInputs) {
+
+            var index = $(e.target).find('.ui-tabs-active').index(),
+                targetInput = $(e.target).find('input, textarea').eq(index),
+                currentLangtab = $(this);
+
+            $('.langTabs').not(currentLangtab).each(function () {
+                if ($(this).hasClass('ui-tabs')) {
+                    $(this).tabs('option', 'active', index);
+                }
+            });
+
+            // set flag to prevent FocusInputOnLangTabSwitch submodule focusing inputs
+            aos_enableFocusInputs = false;
+
+            if (targetInput.length) {
+                targetInput.focus();
+            }
+
+            //return false;
+
+        } else {
+            aos_enableFocusInputs = true;
+        }
+
         var inputs = ui.newPanel.get(0).querySelectorAll('input, textarea');
 
-        if (inputs.length) {
+        if (inputs.length && aos_enableFocusInputs) {
 
             var input = inputs[0];
 
@@ -76,5 +105,6 @@ $(document).on('ready reloaded wiretabclick', function (e) {
                 }
             }
         }
+        //}
     });
 });
