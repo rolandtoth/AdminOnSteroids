@@ -73,18 +73,20 @@ $(document).ready(function () {
 
         function setupCheckbox(currentCheckbox) {
 
-            var nextCheckbox = currentCheckbox.parents('li').next('li').find('input');
+            var nextCheckbox = currentCheckbox.parent().parent('li').next('li').find('input');
 
-            if (window.getComputedStyle(nextCheckbox.get(0), null).getPropertyValue('margin-left') !== '0px') {
-                var isChecked = currentCheckbox.is(':checked');
-                nextCheckbox.parents('li').toggleClass('disabled', !isChecked);
-                // setting to disabled won't save value
-                //nextCheckbox.attr('disabled', !isChecked);
+            if (nextCheckbox.length) {
+
+                if (window.getComputedStyle(nextCheckbox.get(0), null).getPropertyValue('margin-left') !== '0px') {
+
+                    var isChecked = currentCheckbox.is(':checked');
+                    nextCheckbox.parents('li').toggleClass('disabled', !isChecked);
+                    // note: setting to disabled won't save the value
+                }
 
                 setupCheckbox(nextCheckbox);
             }
         }
-
 
         // js tweaks to form configuration page
         if ($('form[action$="AdminOnSteroids"]').length) {
