@@ -1,8 +1,29 @@
-$defaultTransition: 0.25s ease-in;
+$defaultTransition: 0.1s ease-in;
 
 // module own CSS styles
 
 form[action$="AdminOnSteroids"] {
+
+  label {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  #wrap_Inputfield_RenoTweaks {
+    li.disabled {
+      opacity: 0.7;
+      label {
+        &:hover {
+          cursor: not-allowed !important;
+        }
+      }
+    }
+  }
+
+  .AdminDataTable tr td:first-child {
+    color: inherit !important;
+  }
 
   input[type="checkbox"] {
     //margin-bottom: 16px;
@@ -11,48 +32,115 @@ form[action$="AdminOnSteroids"] {
     //margin-right: 30px;
     top: 5px;
     //visibility: hidden;
-    //
-    //&:hover {
-    //  cursor: pointer;
-    //}
+    //display: none;
+
+    &:hover {
+      cursor: pointer;
+    }
     + span {
       opacity: 0.7;
       white-space: normal;
       display: inline-block;
       padding-right: 20px;
+      //&:before {
+      //  visibility: visible;
+      //  content: "•";
+      //  color: rgba(0, 0, 0, 0.3);
+      //  width: 36px;
+      //  height: 18px;
+      //  margin-right: 8px;
+      //  display: inline-block;
+      //  //background: #fff;
+      //  font-size: 47px;
+      //  border: 1px solid #b1c3d4;
+      //  background: #f0f3f7;
+      //  border-radius: 10px;
+      //  line-height: 17px;
+      //  transition: all 0.12s;
+      //  position: relative;
+      //  //left: -16px;
+      //  top: 11px;
+      //}
     }
-    //&:after {
-    //  visibility: visible;
-    //  content: "•";
-    //  color: #aaa;
-    //  width: 36px;
-    //  height: 18px;
-    //  display: inline-block;
-    //  background: #fff;
-    //  font-size: 47px;
-    //  border: 1px solid #ccc;
-    //  border-radius: 10px;
-    //  line-height: 17px;
-    //  transition: all 0.12s;
-    //}
     &:checked {
-      //visibility: hidden;
       + span {
         opacity: 1;
+        //&:before {
+        //  color: rgba(0, 0, 0, 0.6);
+        //  text-indent: 17px;
+        //}
       }
-      //&:after {
-      //  color: #444;
-      //  text-indent: 17px;
-      //}
     }
   }
 
   input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
+  input#Inputfield_RenoTweaks_stickyHeaderCompact,
   input#Inputfield_RenoTweaks_oneLineSidebarSubmenus {
     margin-left: 21px;
   }
-
 }
+
+//form[action$="AdminOnSteroids"] {
+//
+//  label {
+//    &:hover {
+//      cursor: pointer;
+//    }
+//  }
+//
+//  input[type="checkbox"] {
+//    //margin-bottom: 16px;
+//    vertical-align: top;
+//    position: relative;
+//    //margin-right: 30px;
+//    top: 5px;
+//    visibility: hidden;
+//    display: none;
+//
+//    &:hover {
+//      cursor: pointer;
+//    }
+//    + span {
+//      opacity: 0.7;
+//      white-space: normal;
+//      display: inline-block;
+//      padding-right: 20px;
+//      &:before {
+//        visibility: visible;
+//        content: "•";
+//        color: rgba(0, 0, 0, 0.3);
+//        width: 36px;
+//        height: 18px;
+//        margin-right: 8px;
+//        display: inline-block;
+//        //background: #fff;
+//        font-size: 47px;
+//        border: 1px solid #b1c3d4;
+//        background: #f0f3f7;
+//        border-radius: 10px;
+//        line-height: 17px;
+//        transition: all 0.12s;
+//        position: relative;
+//        //left: -16px;
+//        top: 11px;
+//      }
+//    }
+//    &:checked {
+//      + span {
+//        opacity: 1;
+//        &:before {
+//          color: rgba(0, 0, 0, 0.6);
+//          text-indent: 17px;
+//        }
+//      }
+//    }
+//  }
+//
+//  input#Inputfield_RenoTweaks_singleClickSidebarHeaders + span,
+//  input#Inputfield_RenoTweaks_oneLineSidebarSubmenus + span {
+//    margin-left: 42px;
+//  }
+//}
 
 // tweak styles
 
@@ -64,48 +152,6 @@ html.aos_fixScrollbarJump:not(.modal) {
   #breadcrumbs,
   #masthead {
     width: 100vw !important;
-  }
-}
-
-//Default theme tweaks
-// note: the default theme adds theme name class only to body
-body.AdminThemeDefault {
-
-  // stickyHeader
-  &.aos_stickyHeader:not(.modal) {
-    @media only screen and (min-width: 960px) {
-
-      padding-top: 64px;
-
-      #masthead {
-        position: fixed;
-        z-index: 40;
-        width: 100%;
-        top: 0;
-        left: 0;
-      }
-
-      #breadcrumbs {
-        position: fixed;
-        z-index: 20;
-        top: 44px;
-        left: 0;
-        width: 100%;
-        border: none;
-      }
-
-      &.hasWireTabs {
-        padding-top: 100px;
-      }
-
-      #head_button {
-        margin-bottom: -1em;
-      }
-
-      #content {
-        padding-top: 52px;
-      }
-    }
   }
 }
 
@@ -123,6 +169,12 @@ html.AdminThemeReno {
   &.aos_stickyHeader:not(.modal) {
 
     @media only screen and (min-width: 960px) {
+
+      // fix for ckeditor max plugin
+      .cke_top {
+        z-index: 500;
+      }
+
       #masthead,
       #branding,
       .main-nav-toggle {
@@ -158,7 +210,7 @@ html.AdminThemeReno {
       #main {
         padding-top: 156px;
         &:not(.closed) #headline {
-          padding-left: 230px;
+          padding-left: 232px;
         }
       }
       ul.quicklinks {
@@ -167,8 +219,15 @@ html.AdminThemeReno {
 
       body.scrolled {
         #headline {
-          box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.1);
           padding: 1em 0 1em 1.33em;
+        }
+      }
+
+      &.aos_AlwaysShowSearch {
+        #search {
+          position: fixed;
+          z-index: 80;
         }
       }
     }
@@ -176,7 +235,7 @@ html.AdminThemeReno {
     @media only screen and (min-width: 1200px) {
       #main {
         &:not(.closed) #headline {
-          padding-left: 250px;
+          padding-left: 252px;
         }
       }
     }
@@ -185,6 +244,165 @@ html.AdminThemeReno {
       #headline {
         transition: padding-left $defaultTransition;
       }
+    }
+  }
+
+  // stickyHeaderCompact
+  &.aos_stickyHeaderCompact:not(.modal) {
+
+    @media only screen and (min-width: 960px) {
+
+      // fix for ckeditor max plugin
+      .cke_top {
+        z-index: 500;
+      }
+
+      //#masthead,
+      //  //#branding,
+      //.main-nav-toggle {
+      //  position: fixed;
+      //}
+      #branding,
+      .main-nav-toggle {
+        display: none;
+      }
+      #masthead {
+        top: -52px;
+      }
+      #breadcrumbs {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 5;
+        padding-top: 1em;
+        padding-bottom: 0.25em;
+        border-bottom: none;
+      }
+      #sidebar {
+        padding-top: 0;
+      }
+      #headline {
+        top: 33px;
+        position: fixed;
+        width: 100%;
+        left: 0;
+        z-index: 2;
+        border-bottom: 1px solid rgba(#000, 0.1);
+        padding: 1.33em 0 1.33em 1.33em;
+        //transition: padding-top 0.12s, padding-bottom 0.12s !important;
+        box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.07);
+      }
+      #main {
+        position: absolute;
+        left: 0;
+        overflow-x: hidden;
+        right: 0;
+        bottom: 0;
+        top: 103px;
+        padding-top: 0;
+        //background: #F0F3F7;
+        &:not(.closed) #headline {
+          padding-left: 232px;
+        }
+      }
+      #wrap #search {
+        left: auto;
+        top: 42px !important;
+        transform: none;
+        max-width: 300px;
+        right: 0;
+        z-index: 5;
+        input {
+          background: transparent;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          border-radius: 0;
+          padding: 0.6em 3em 0.6em 1em;
+          &:focus {
+            background: #F0F3F7;
+          }
+        }
+        label {
+          right: 0;
+          left: auto !important;
+          margin-top: 2px;
+        }
+      }
+
+      #ProcessPageSearchAutocomplete {
+        top: 44px !important;
+        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2) !important;
+      }
+
+      #ProcessPageSearchForm #ProcessPageSearchStatus {
+        right: 3.1em;
+      }
+
+      #masthead #topnav {
+        top: 52px;
+        .avatar.dropdown {
+          margin-right: -12px !important;
+
+        }
+        a, a:hover {
+          color: inherit !important;
+        }
+        li.dropdown ul {
+          box-shadow: 0 1px 7px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      &.aos_AlwaysShowSearch {
+        #search {
+          position: fixed;
+          z-index: 80;
+        }
+      }
+    }
+
+    @media only screen and (min-width: 1200px) {
+      #main {
+        &:not(.closed) #headline {
+          padding-left: 252px;
+        }
+      }
+    }
+
+    body.pw-ready {
+      #headline {
+        transition: padding-left $defaultTransition;
+      }
+      #wrap #search input {
+        transition: background $defaultTransition;
+      }
+    }
+  }
+
+  // AlwaysShowSearch
+  &.aos_AlwaysShowSearch:not(.modal),
+  &.aos_stickyHeaderCompact {
+    @media only screen and (min-width: 960px) {
+      #search {
+        top: 0 !important;
+        max-width: 480px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: none !important;
+        form {
+          max-width: 100%;
+        }
+        &:before {
+          display: none;
+        }
+        #ProcessPageSearchForm label {
+          width: 24px;
+        }
+        .search-close {
+          display: none;
+        }
+      }
+    }
+    #topnav .search-toggle {
+      display: none !important;
     }
   }
 
@@ -198,12 +416,15 @@ html.AdminThemeReno {
         padding-left: 1.5em !important;
       }
 
-      //#main,
-      //#branding,
-      //#masthead {
-      //  //padding-left: 2em;
-      //  transform: translateX(2em);
-      //}
+      // extra space on left to avoid accidental hover on sidebar toggle
+      #branding,
+      #content,
+      #headline,
+      #breadcrumbs,
+      #notices .NoticeMessage,
+      #masthead {
+        border-left: 16px solid transparent;
+      }
 
       #main {
         margin-left: 0;
@@ -398,6 +619,48 @@ html.AdminThemeReno {
     }
   }
 
+}
+
+//Default theme tweaks
+// note: the default theme adds theme name class only to body
+body.AdminThemeDefault {
+
+  // stickyHeader
+  &.aos_stickyHeader:not(.modal) {
+    @media only screen and (min-width: 960px) {
+
+      padding-top: 64px;
+
+      #masthead {
+        position: fixed;
+        z-index: 40;
+        width: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      #breadcrumbs {
+        position: fixed;
+        z-index: 20;
+        top: 44px;
+        left: 0;
+        width: 100%;
+        border: none;
+      }
+
+      &.hasWireTabs {
+        padding-top: 100px;
+      }
+
+      #head_button {
+        margin-bottom: -1em;
+      }
+
+      #content {
+        padding-top: 52px;
+      }
+    }
+  }
 }
 
 //.PageListItem {

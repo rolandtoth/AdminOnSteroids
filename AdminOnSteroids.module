@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 9,
+            'version'   => 10,
             'summary'   => __('Various admin hacks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -64,12 +64,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'RenoTweaks'                   => array(
                 'singleClickSidebarHeaders',
                 'stickyHeader',
+                'stickyHeaderCompact',
                 'stickySidebar',
 //                'autoHideSidebar',
                 'alwaysVisibleSidebarItems',
 //                'hideSidebarQuickLinks',
 //                'oneLineSidebarSubmenus',
                 'headButtonNextToTitle',
+                'AlwaysShowSearch',
                 'closeNoticeButtonToLeft'
             ),
             'AdminTweaks'                  => array(
@@ -156,7 +158,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $root = $this->config->urls->siteModules . __CLASS__;
         $styles = $this->config->styles;
 
-        $styles->add($root . '/' . __CLASS__ . '.css');
+//        $styles->add($root . '/' . __CLASS__ . '.css');
+        $styles->prepend($root . '/' . __CLASS__ . '.css');
     }
 
     public static function getModuleConfigInputfields(array $data) {
@@ -169,7 +172,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
         $f->columnWidth = 36;
-        $f->label = __('Therapies', __FILE__);
+        $f->label = __('Submodules', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->table = true;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
 
@@ -191,12 +196,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fset = wire('modules')->get("InputfieldFieldset");
         $fset->columnWidth = 64;
-        $fset->label = 'Tunings';
+//        $fset->label = 'Tunings';
+        $fset->collapsed = Inputfield::collapsedNever;
 
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'DeselectRadios');
         $f->label = 'DeselectRadios settings';
+        $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
         $f->showIf = 'enabledSubmodules=DeselectRadios';
@@ -211,8 +218,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitch');
-        $f->label = __('ActivateFieldsOnLangTabClick settings', __FILE__);
+        $f->label = __('FocusInputOnLangTabSwitch settings', __FILE__);
         $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
         $f->columnWidth = 50;
@@ -232,8 +240,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label = __('ActivateFieldsOnLangTabClick settings (CKEditor)', __FILE__);
+        $f->label = __('FocusInputOnLangTabSwitch settings (CKEditor)', __FILE__);
         $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
         $f->columnWidth = 50;
@@ -249,13 +258,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fset->add($f);
 
-
         $f = wire('modules')->get("InputfieldText");
         $f->attr('name', 'LongClickDuration');
-        $f->label = 'LongClickDuration settings';
+        $f->label = __('LongClickDuration (milliseconds)', __FILE__);
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
         $f->showIf = 'enabledSubmodules=LongClickDuration';
+        $f->attr('style', 'width: 100px;');
+        $f->collapsed = Inputfield::collapsedNever;
 
         $f->attr('value', (isset($data['LongClickDuration']) && (int)$data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
 
@@ -264,8 +274,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AdminTweaks');
-        $f->label = __('AdminTweaks settings', __FILE__);
+        $f->label = __('AdminTweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=AdminTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Make header sticky', __FILE__));
 
@@ -278,15 +289,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'RenoTweaks');
-        $f->label = __('RenoTweaks settings', __FILE__);
+        $f->label = __('RenoTweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=RenoTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
 
-        $f->addOption('stickyHeader', __('Make header sticky', __FILE__));
-        $f->addOption('stickySidebar', __('Make sidebar sticky', __FILE__));
-        $f->addOption('autoHideSidebar', __('Auto hide sidebar on left', __FILE__));
+        $f->addOption('stickyHeader', __('Sticky header', __FILE__));
+        $f->addOption('stickyHeaderCompact', __('Compact sticky header', __FILE__));
+        $f->addOption('stickySidebar', __('Sticky sidebar', __FILE__));
+        $f->addOption('autoHideSidebar', __('Autohide sidebar on left', __FILE__));
         $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));
         $f->addOption('alwaysVisibleSidebarItems', __('Always show sidebar items (disable accordion)', __FILE__));
         $f->addOption('singleClickSidebarHeaders', __('Single click navigation of sidebar headers', __FILE__));
+        $f->addOption('AlwaysShowSearch', __('Always show search field', __FILE__));
         $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
         $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));

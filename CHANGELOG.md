@@ -1,6 +1,15 @@
 #Changelog
 
 
+### 0.1.0 (2016-05-30)
+
+- new RenoTweak: AlwaysShowSearch
+- new RenoTweak: stickyHeaderCompact
+- HoverSaveDropdown supports "Save module", "Publish" and "Save unpublished" buttons
+- module configuration page tweaks
+
+
+
 ### 0.0.9 (2016-05-29)
 
 - FocusInputOnLangTabSwitch submodule: ctrl+click on a language tab will activate all the language tabs of the same language
