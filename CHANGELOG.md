@@ -1,7 +1,7 @@
 #Changelog
 
 
-### 0.1.2 (2016-06-03)
+### 0.1.3 (2016-06-03)
 
 - filterbox: works with ajax-loaded fields/tabs
 - filterbox: image src is also available for filter
