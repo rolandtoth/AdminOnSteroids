@@ -1,4 +1,37 @@
-$defaultTransition: 0.1s ease-in;
+//$defaultTransition: 0.1s ease-in;
+$defaultTransition: 0.12s;
+$defaultBoxShadow: 0 2px 6px -1px rgba(0, 0, 0, 0.12);
+//$defaultBoxShadow: 0 1px 1px 2px rgba(0, 0, 0, 0.02);
+
+//@keyframes fadeIn {
+//  from {
+//    opacity: 0;
+//  }
+//  to {
+//    opacity: 1;
+//  }
+//}
+//
+//@keyframes slideDown {
+//  from {
+//    //transform: translateY(-100%);
+//    transform: scaleY(0);
+//  }
+//  to {
+//    //transform: translateY(0);
+//    transform: scaleY(1);
+//  }
+//}
+
+// login page
+body.id-23 {
+  #headline {
+    padding-left: 1.33em !important;
+  }
+  #title {
+    float: none !important;
+  }
+}
 
 // module own CSS styles
 
@@ -75,6 +108,7 @@ form[action$="AdminOnSteroids"] {
 
   input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
   input#Inputfield_RenoTweaks_stickyHeaderCompact,
+  input#Inputfield_RenoTweaks_stickyCKEditorToolbar,
   input#Inputfield_RenoTweaks_oneLineSidebarSubmenus {
     margin-left: 21px;
   }
@@ -142,7 +176,77 @@ form[action$="AdminOnSteroids"] {
 //  }
 //}
 
+// FileFieldToolbar
+
+// FileFieldToolbar filterbox
+html.aos_filterbox {
+
+  .InputfieldFileFieldFilter {
+
+    position: relative;
+    margin-left: 20px;
+    display: inline-block;
+
+    input {
+      transition: background $defaultTransition;
+    }
+
+    &.hasValue input,
+    input:focus {
+      background: #fff !important;
+    }
+
+    input::-ms-clear {
+      display: none;
+    }
+
+    i {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 12px;
+      opacity: 0.5;
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &.hasValue {
+      i {
+        display: block;
+      }
+    }
+  }
+}
+
 // tweak styles
+
+html.aos_PagePreviewLink {
+
+  body.AdminThemeDefault {
+    #aos_PagePreviewLink {
+      i {
+        font-size: 0.84em !important;
+        color: inherit;
+      }
+    }
+  }
+
+  #aos_PagePreviewLink {
+    margin-left: 0.5em;
+    i {
+      color: rgba(0, 0, 0, 0.33);
+      font-size: 0.7em !important;
+    }
+    &:hover {
+      i {
+        color: inherit !important;
+      }
+    }
+  }
+}
 
 // fixScrollbarJump
 html.aos_fixScrollbarJump:not(.modal) {
@@ -161,6 +265,7 @@ html.AdminThemeReno {
   // disable all anims
   body:not(.pw-ready) {
     #branding:not(.hide), #masthead:not(.full), #sidebar:not(.hide), #main:not(.full), .main-nav-toggle:not(.full) {
+      //#branding, #masthead, #sidebar, #main, .main-nav-toggle {
       transition: none;
     }
   }
@@ -169,11 +274,6 @@ html.AdminThemeReno {
   &.aos_stickyHeader:not(.modal) {
 
     @media only screen and (min-width: 960px) {
-
-      // fix for ckeditor max plugin
-      .cke_top {
-        z-index: 500;
-      }
 
       #masthead,
       #branding,
@@ -193,8 +293,8 @@ html.AdminThemeReno {
         //height: 47px;
         width: 100%;
         z-index: 5;
-        padding-top: 1em;
-        padding-bottom: 0.25em;
+        //padding-top: 1em;
+        //padding-bottom: 0.25em;
         border-bottom: none;
       }
       #headline {
@@ -205,7 +305,7 @@ html.AdminThemeReno {
         z-index: 2;
         border-bottom: 1px solid rgba(#000, 0.1);
         padding: 1.33em 0 1.33em 1.33em;
-        transition: padding-top 0.12s, padding-bottom 0.12s !important;
+        //transition: padding-top 0.12s, padding-bottom 0.12s !important;
       }
       #main {
         padding-top: 156px;
@@ -219,12 +319,38 @@ html.AdminThemeReno {
 
       body.scrolled {
         #headline {
-          box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.1);
-          padding: 1em 0 1em 1.33em;
+          box-shadow: $defaultBoxShadow;
         }
       }
 
-      &.aos_AlwaysShowSearch {
+      .cke_top_fixed.cke_top {
+        //animation: fadeIn ease-in 0.1s;
+        //transform-origin: center top;
+        //animation: slideDown ease-in 0.12s;
+        z-index: 130;
+        height: auto;
+        -webkit-user-select: none;
+        top: 156px;
+        left: 0;
+        padding-left: 232px;
+        right: 0;
+        box-shadow: $defaultBoxShadow;
+        box-sizing: border-box;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+      }
+      #main.closed {
+        .cke_top_fixed.cke_top {
+          padding-left: 24px;
+        }
+      }
+
+      #sidebar {
+        z-index: 300;
+      }
+
+      &.aos_alwaysShowSearch {
         #search {
           position: fixed;
           z-index: 80;
@@ -238,6 +364,9 @@ html.AdminThemeReno {
           padding-left: 252px;
         }
       }
+      .cke_top_fixed.cke_top {
+        padding-left: 252px;
+      }
     }
 
     body.pw-ready {
@@ -248,13 +377,13 @@ html.AdminThemeReno {
   }
 
   // stickyHeaderCompact
+
   &.aos_stickyHeaderCompact:not(.modal) {
 
     @media only screen and (min-width: 960px) {
 
-      // fix for ckeditor max plugin
-      .cke_top {
-        z-index: 500;
+      .cke_top_fixed.cke_top {
+        top: 101px;
       }
 
       //#masthead,
@@ -274,9 +403,10 @@ html.AdminThemeReno {
         top: 0;
         width: 100%;
         z-index: 5;
-        padding-top: 1em;
-        padding-bottom: 0.25em;
+        //padding-top: 1em;
+        //padding-bottom: 0.25em;
         border-bottom: none;
+        background: #fff;
       }
       #sidebar {
         padding-top: 0;
@@ -288,17 +418,17 @@ html.AdminThemeReno {
         left: 0;
         z-index: 2;
         border-bottom: 1px solid rgba(#000, 0.1);
-        padding: 1.33em 0 1.33em 1.33em;
+        //padding: 1.33em 0 1.33em 1.33em;
         //transition: padding-top 0.12s, padding-bottom 0.12s !important;
-        box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.07);
+        background: #fff;
       }
       #main {
         position: absolute;
         left: 0;
-        overflow-x: hidden;
+        //overflow-x: hidden;
         right: 0;
         bottom: 0;
-        top: 103px;
+        top: 100px;
         padding-top: 0;
         //background: #F0F3F7;
         &:not(.closed) #headline {
@@ -309,28 +439,54 @@ html.AdminThemeReno {
         left: auto;
         top: 42px !important;
         transform: none;
-        max-width: 300px;
-        right: 0;
+        max-width: 360px;
+        right: -8px;
         z-index: 5;
+        position: fixed;
         input {
           background: transparent;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.16);
           border-radius: 0;
           padding: 0.6em 3em 0.6em 1em;
+          max-width: 120px;
+          transition: max-width $defaultTransition;
+          float: right;
+          position: relative;
+          z-index: 25;
           &:focus {
-            background: #F0F3F7;
+            background: rgba(#F0F3F7, 0.5);
+            max-width: 100%;
+            //  ~ span:before {
+            //    content: "";
+            //    background: rgba(255, 255, 255, 0.8);
+            //    position: fixed;
+            //    top: 0;
+            //    left: 0;
+            //    width: 100%;
+            //    z-index: -1;
+            //    height: 100%;
+            //  }
           }
         }
         label {
           right: 0;
           left: auto !important;
           margin-top: 2px;
+          z-index: 30;
+        }
+      }
+      body.scrolled {
+        #headline {
+          box-shadow: $defaultBoxShadow;
         }
       }
 
       #ProcessPageSearchAutocomplete {
-        top: 44px !important;
-        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2) !important;
+        position: fixed;
+        left: auto !important;
+        right: 26px !important;
+        top: 41px !important;
+        box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.12) !important;
       }
 
       #ProcessPageSearchForm #ProcessPageSearchStatus {
@@ -340,18 +496,19 @@ html.AdminThemeReno {
       #masthead #topnav {
         top: 52px;
         .avatar.dropdown {
-          margin-right: -12px !important;
+          margin-right: 0 !important;
 
         }
-        a, a:hover {
+        a, a:hover, a:after {
           color: inherit !important;
         }
         li.dropdown ul {
-          box-shadow: 0 1px 7px rgba(0, 0, 0, 0.2);
+          box-shadow: $defaultBoxShadow;
         }
+
       }
 
-      &.aos_AlwaysShowSearch {
+      &.aos_alwaysShowSearch {
         #search {
           position: fixed;
           z-index: 80;
@@ -378,7 +535,7 @@ html.AdminThemeReno {
   }
 
   // AlwaysShowSearch
-  &.aos_AlwaysShowSearch:not(.modal),
+  &.aos_alwaysShowSearch:not(.modal),
   &.aos_stickyHeaderCompact {
     @media only screen and (min-width: 960px) {
       #search {
@@ -562,7 +719,7 @@ html.AdminThemeReno {
                   opacity: 0.84;
                   &.current {
                     background: transparent;
-                    color: inherit;
+                    color: inherit !important;
                     opacity: 1;
                     font-weight: 600;
                     span {

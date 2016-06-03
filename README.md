@@ -43,10 +43,23 @@ Once checked, a radio button can't be cleared. This submodule removes this limit
 
 By default required fields can't be deselected but it can be enabled tweaking the submodule's settings.
 
+
+
+###FileFieldToolbar
+
+*Add filter box and sort buttons to file fields*
+
 ####Settings
 
-- **Only for SuperUsers**: disable the feature for non-SuperUsers
-- **Allow also for required fields**: enable unchecking for required fields too
+- **filterbox**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key.
+
+
+
+###PagePreviewLink
+
+*Add preview link next to page title*
+
+When enabled, an "eye" icon will be added next to the page title that links to the front-end target of the edited page. The target can be set to new tab/modal/panel.
 
 
 
@@ -119,6 +132,7 @@ A few usability mods targetting the Reno admin theme.
 
 - **Sticky header**: stick the header to the top of the browser window so it stays in place when scrolling down
 - **Compact sticky header**: hide the masthead to save vertical space. Search field and top naviation links are moved to the header. Available only if sticky header is on.
+- **Sticky CKEditor toolbar**: stick the CKEditor toolbar below the sticky header to make it always available. Currently works with only the first CKEditor on the page and is available only if sticky header is on. The toolbar is set to sticky only if the editor is focused. Clicking outside the editor or if the editor goes offscreen on page scroll will hide the toolbar.
 - **Sticky sidebar**: stick the sidebar to the top to make it always visible
 - **Autohide sidebar on left**: auto hide the sidebar so it's accessible by moving the mouse to the left side of the screen
 - **Always show sidebar items (disable accordion)**: make sidebar submenus more compact and do not hide them

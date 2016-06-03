@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.1.2 (2016-06-03)
+
+- new submodule: Add filter box and sort buttons to file fields (FileFieldToolbar). Currently only "filterbox" is available.
+- new submodule: add preview link next to page title (PagePreviewLink). Target can be set to new tab/modal/panel.
+- new RenoTweak: sticky CKEditor toolbar (available only if sticky header is on)
+- module configuration page updates
+
 ### 0.1.0 (2016-05-30)
 
 - new RenoTweak: AlwaysShowSearch
