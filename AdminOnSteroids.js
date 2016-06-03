@@ -229,159 +229,176 @@ $(document).ready(function () {
 
     if (AOSsettings.enabledSubmodules.indexOf('FileFieldToolbar') !== -1) {
 
-        // .InputfieldImageMax1 is added only later
-        setTimeout(function () {
+        var FileFieldToolbarSettings = AOSsettings.FileFieldToolbar,
+            $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='🔎' /><i class='fa fa-close'></i></span>"),
+            filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded)';
 
-            var FileFieldToolbarSettings = AOSsettings.FileFieldToolbar;
+        function setupFilterInput(field) {
+            if ($(filterFieldSelector).length) {
+                field.addClass('filterbox_loaded').find('.InputfieldHeader').append($filterInput.clone());
+            }
+        }
 
-            if (FileFieldToolbarSettings.indexOf('filterbox') !== -1 && $('.InputfieldImage.Inputfield:not(.InputfieldImageMax1)').length) {
 
-                var $filterInput = $("<span class='InputfieldFileFieldFilter'><input /><i class='fa fa-close'></i></span>");
+        if (FileFieldToolbarSettings.indexOf('filterbox') !== -1) {
 
-                $('.InputfieldImage.Inputfield:not(.InputfieldImageMax1)').each(function () {
-                    setup$filterInput($(this));
+
+            $(filterFieldSelector).each(function () {
+                setupFilterInput($(this));
+            });
+
+            $(document).on('opened reloaded', filterFieldSelector, function () {
+                $(filterFieldSelector).each(function () {
+                    setupFilterInput($(this));
                 });
 
-                function addFilterTargets(field) {
+            }).on('wiretabclick', function (e, $newTab) {
+                $newTab.find(filterFieldSelector).each(function () {
+                    setupFilterInput($(this));
+                });
+            });
 
-                    field.find('.gridImages > li').each(function () {
 
-                        var searchStrings = [],
-                            listItem = $(this);
+            function addFilterTargets(field) {
 
-                        searchStrings.push(listItem.find('.InputfieldImageEdit__name').text());
+                field.find('.gridImages > li').each(function () {
 
-                        var inputs = listItem.find('input[type="text"]');
+                    var searchStrings = [],
+                        listItem = $(this);
 
-                        $.each(inputs, function (el) {
-                            searchStrings.push(inputs[el].value);
+                    searchStrings.push(listItem.find('.InputfieldImageEdit__name').text());
+                    searchStrings.push(listItem.find('img').attr('src'));
+
+                    var inputs = listItem.find('input[type="text"]:not(.InputfieldFileSort)');
+
+                    $.each(inputs, function (el) {
+                        if (inputs[el].value) {
+                            searchStrings.push(inputs[el].value.trim());
+                        }
+                    });
+
+                    //console.log(searchStrings);
+
+                    listItem.attr('data-filter', searchStrings.join(" "));
+                });
+            }
+
+
+            function clearFilterbox(e) {
+
+                var target = e.target || e.srcElement,
+                    $inputField = $(target).closest('.InputfieldFileFieldFilter').find('input');
+
+                $inputField.removeClass('hasValue').val("").trigger('keypress').focus();
+            }
+
+
+            $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
+                var target = e.target || e.srcElement;
+                var field = $(target).closest('li.Inputfield');
+
+                // close editor to append changes
+                field.find('.InputfieldImageEdit__close').trigger('click');
+                addFilterTargets(field);
+
+                // prevent closing up field on ajax-loaded tab + ajax-loaded field
+                e.stopPropagation();
+            });
+
+
+            $(document).on('click', '.InputfieldFileFieldFilter i', function (e) {
+                clearFilterbox(e);
+            });
+
+            $(document).on('keydown', '.InputfieldFileFieldFilter input', function (e) {
+
+                e = e || window.event;
+
+                var target = e.target || e.srcElement;
+
+                if (e.keyCode === 27) { // ESC
+
+                    if (!target.value) {
+                        target.blur();  // if input is empty, remove focus
+                    } else {
+                        clearFilterbox(e);
+                    }
+                }
+            });
+
+            $(document).on('keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
+
+                var target = e.target || e.srcElement,
+                    filter = target.value.toLowerCase(),
+                    field = $(target).closest('li.Inputfield'),
+                    items = field.find('.gridImages > li'),
+                    count = 0,
+                    length = filter.length;
+
+                if (!target.value) {
+                    $(target).parent().removeClass('hasValue');
+                    //items.show();
+                    items.removeClass('hidden');
+                    return true;
+                }
+
+                $(target).parent().addClass('hasValue');
+
+                // close edit field
+                if (field.find('.InputfieldImageEdit--active').length) {
+                    field.find('.InputfieldImageEdit__close').trigger('click');
+                }
+
+                if (length > 1) {
+
+                    var filter_tags = filter.split(" "); // Split user input by spaces
+
+                    items.each(function () {
+
+                        var $this = $(this),
+                            matches = true,
+                            itemFilters = $this.attr('data-filter');
+
+                        if ((typeof itemFilters === typeof undefined || itemFilters === false)) {
+                            return;
+                        }
+
+                        // Match each splitted string against the whole tags string
+                        $.each(filter_tags, function (i, a_filter) {
+                            if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
+                                matches = false;
+                            }
                         });
 
-                        listItem.attr('data-filter', searchStrings.join(" "));
-                    });
-                }
-
-                function setup$filterInput(field) {
-
-                    field.find('.InputfieldHeader').append($filterInput.clone());
-
-                    $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
-                        var target = e.target || e.srcElement;
-                        var field = $(target).closest('li.Inputfield');
-
-                        // close editor to append changes
-                        field.find('.InputfieldImageEdit__close').trigger('click');
-                        addFilterTargets(field);
-                    });
-
-
-                    $(document).on('click', '.InputfieldFileFieldFilter i', function (e) {
-                        clearFilterbox(e);
-                    });
-
-
-                    $(document).on('keydown', '.InputfieldFileFieldFilter input', function (e) {
-
-                        e = e || window.event;
-
-                        if (e.keyCode === 27) {
-                            clearFilterbox(e);
-                        }
-                    });
-
-
-                    function clearFilterbox(e) {
-
-                        var target = e.target || e.srcElement;
-
-                        var inputField = $(target).closest('.InputfieldFileFieldFilter').find('input');
-
-                        inputField.removeClass('hasValue');
-                        inputField.val("");
-                        inputField.trigger('keypress').focus();
-                    }
-
-
-                    $(document).on('keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
-
-                        var target = e.target || e.srcElement,
-                            filter = target.value.toLowerCase(),
-                            field = $(target).closest('li.Inputfield'),
-                            items = field.find('.gridImages > li'),
-                            count = 0,
-                            length = filter.length;
-
-                        if (!target.value) {
-                            $(target).parent().removeClass('hasValue');
-                            items.show();
-                            return true;
-                        }
-
-                        $(target).parent().addClass('hasValue');
-
-                        // close edit field
-                        if (field.find('.InputfieldImageEdit--active').length) {
-                            field.find('.InputfieldImageEdit__close').trigger('click');
-                        }
-
-                        if (length > 1) {
-
-                            var filter_tags = filter.split(" "); // Split user input by spaces
-
-                            items.each(function () {
-
-                                var $this = $(this),
-                                    matches = true,
-                                    itemFilters = $this.attr('data-filter');
-
-                                if ((typeof itemFilters === typeof undefined || itemFilters === false)) {
-                                    return;
-                                }
-
-                                // Match each splitted string against the whole tags string
-                                $.each(filter_tags, function (i, a_filter) {
-                                    if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
-                                        matches = false;
-                                    }
-                                });
-
-                                if (matches) {
-                                    $this.show();
-                                    count++;
-                                } else {
-                                    $this.hide();
-                                }
-                            });
-
-                        } else {
-                            items.show();
+                        if (matches) {
+                            $this.removeClass('hidden');
+                            //$this.show();
                             count++;
+                        } else {
+                            //$this.hide();
+                            $this.addClass('hidden');
                         }
-
-                        if(items.find(':visible').length == 0) {
-                            e.preventDefault();
-                            return false;
-                        }
-
                     });
+
+                } else {
+                    //items.show();
+                    items.removeClass('hidden');
+                    count++;
                 }
-            }
-        }, 100);
+
+                //console.log(items.filter('.hidden').length);
+
+                if (items.filter('.hidden').length == items.length) {
+                //if (items.find(':visible').length == 0) {
+                    // allow escape, backspace, delete, leftarrow keyss only
+                    if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
     }
-
-
-    // todo make filterbox work with ajax-loaded fields/tabs
-    //$(document).on('reloaded', '.InputfieldImage', function () {
-    //
-    //
-    //}).on('wiretabclick', function (e, $newTab, $oldTab) {
-    //    $newTab.find(".InputfieldImage").each(function () {
-    //        initInputfield($(this));
-    //    });
-    //}).on('opened', '.InputfieldImage', function () {
-    //    //console.log('InputfieldImage opened');
-    //    initInputfield($(this));
-    //});
 
 
     if (renoTweaksSettings && renoTweaksSettings.indexOf('stickyCKEditorToolbar') !== -1) {

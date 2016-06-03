@@ -3,6 +3,16 @@
 
 ### 0.1.2 (2016-06-03)
 
+- filterbox: works with ajax-loaded fields/tabs
+- filterbox: image src is also available for filter
+- filterbox: hide input on closed field
+- filterbox: added unicode "search" icon character as placeholder (may be removed if not supported in other OSes, tested on Win)
+- filterbox: css animation to hide elements
+- other filterbox improvements
+
+
+### 0.1.2 (2016-06-03)
+
 - new submodule: Add filter box and sort buttons to file fields (FileFieldToolbar). Currently only "filterbox" is available.
 - new submodule: add preview link next to page title (PagePreviewLink). Target can be set to new tab/modal/panel.
 - new RenoTweak: sticky CKEditor toolbar (available only if sticky header is on)

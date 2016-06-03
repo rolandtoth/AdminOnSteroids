@@ -181,11 +181,24 @@ form[action$="AdminOnSteroids"] {
 // FileFieldToolbar filterbox
 html.aos_filterbox {
 
+  .ImageOuter.gridImage {
+    transition: all $defaultTransition;
+    transform-origin: center center;
+    &.hidden {
+      transform: scale(0);
+      width: 0;
+      padding: 0;
+      margin: 0;
+      border: 0;
+    }
+  }
+
   .InputfieldFileFieldFilter {
 
     position: relative;
-    margin-left: 20px;
+    margin-left: 24px;
     display: inline-block;
+    margin-top: -5px;
 
     input {
       transition: background $defaultTransition;
@@ -219,6 +232,14 @@ html.aos_filterbox {
       }
     }
   }
+
+  .InputfieldStateCollapsed,
+  .InputfieldImageMax1 {
+    .InputfieldFileFieldFilter {
+      display: none;
+    }
+  }
+
 }
 
 // tweak styles
@@ -410,6 +431,9 @@ html.AdminThemeReno {
       }
       #sidebar {
         padding-top: 0;
+      }
+      ul.quicklinks {
+        top: 0 !important;
       }
       #headline {
         top: 33px;
