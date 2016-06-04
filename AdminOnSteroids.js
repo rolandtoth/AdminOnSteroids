@@ -267,7 +267,8 @@ $(document).ready(function () {
                 }
             }
 
-            $(filterFieldSelector).each(function () {
+            // init filterbox except ajax-loaded fields
+            $(filterFieldSelector + ':not(.collapsed10)').each(function () {
                 setupFilterInput($(this));
             });
 
