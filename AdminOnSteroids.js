@@ -233,15 +233,39 @@ $(document).ready(function () {
             $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='🔎' /><i class='fa fa-close'></i></span>"),
             filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded)';
 
-        function setupFilterInput(field) {
-            if ($(filterFieldSelector).length) {
-                field.addClass('filterbox_loaded').find('.InputfieldHeader').append($filterInput.clone());
-            }
-        }
-
-
         if (FileFieldToolbarSettings.indexOf('filterbox') !== -1) {
 
+            // show filterbox when number of images in the field increases above 2
+            $(filterFieldSelector).on('DOMNodeInserted.aos_filterbox', function (e) {
+
+                var target = e.target || e.srcElement;
+
+                if ($(target).hasClass('ImageOuter gridImage')) {
+
+                    var field = $(target).closest('li.Inputfield');
+
+                    if (field.find('.ImageOuter.gridImage').length >= 2) {
+
+                        field.find('.InputfieldFileFieldFilter').css('display', 'inline-block');
+
+                        // remove event listener
+                        field.off('DOMNodeInserted.aos_filterbox');
+                    }
+                }
+            });
+
+            function setupFilterInput(field) {
+
+                if ($(filterFieldSelector).length) {
+
+                    field.addClass('filterbox_loaded').find('.InputfieldHeader').append($filterInput.clone());
+
+                    // hide filterbox if there's 1 or no images in the field
+                    if (field.find('.ImageOuter.gridImage:not(.gridImagePlaceHolder)').length < 2) {
+                        field.find('.InputfieldFileFieldFilter').css('display', 'none');
+                    }
+                }
+            }
 
             $(filterFieldSelector).each(function () {
                 setupFilterInput($(this));
@@ -389,7 +413,7 @@ $(document).ready(function () {
                 //console.log(items.filter('.hidden').length);
 
                 if (items.filter('.hidden').length == items.length) {
-                //if (items.find(':visible').length == 0) {
+                    //if (items.find(':visible').length == 0) {
                     // allow escape, backspace, delete, leftarrow keyss only
                     if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
                         return true;

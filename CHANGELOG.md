@@ -1,5 +1,9 @@
 #Changelog
 
+### 0.1.4 (2016-06-04)
+
+- show filterbox dynamically: show only if there's at least 2 items, hide otherways
+
 
 ### 0.1.3 (2016-06-03)
 

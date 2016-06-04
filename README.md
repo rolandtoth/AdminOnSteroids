@@ -51,7 +51,7 @@ By default required fields can't be deselected but it can be enabled tweaking th
 
 ####Settings
 
-- **filterbox**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key.
+- **filterbox**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
 
 
 
