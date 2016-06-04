@@ -244,7 +244,7 @@ $(document).ready(function () {
 
                     var field = $(target).closest('li.Inputfield');
 
-                    if (field.find('.ImageOuter.gridImage').length >= 2) {
+                    if (field.find('.ImageOuter.gridImage:not(.gridImagePlaceholder)').length > 1) {
 
                         field.find('.InputfieldFileFieldFilter').css('display', 'inline-block');
 
@@ -261,7 +261,7 @@ $(document).ready(function () {
                     field.addClass('filterbox_loaded').find('.InputfieldHeader').append($filterInput.clone());
 
                     // hide filterbox if there's 1 or no images in the field
-                    if (field.find('.ImageOuter.gridImage:not(.gridImagePlaceHolder)').length < 2) {
+                    if (field.find('.ImageOuter.gridImage:not(.gridImagePlaceholder)').length <= 1) {
                         field.find('.InputfieldFileFieldFilter').css('display', 'none');
                     }
                 }
