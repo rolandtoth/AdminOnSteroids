@@ -238,13 +238,15 @@ $(document).ready(function () {
             // show filterbox when number of images in the field increases above 2
             $(filterFieldSelector).on('DOMNodeInserted.aos_filterbox', function (e) {
 
+
                 var target = e.target || e.srcElement;
 
-                if ($(target).hasClass('ImageOuter gridImage')) {
+                if ($(target).hasClass('gridImage')) {
 
                     var field = $(target).closest('li.Inputfield');
 
-                    if (field.find('.ImageOuter.gridImage:not(.gridImagePlaceholder)').length > 1) {
+
+                    if (field.find('.gridImage:not(.gridImagePlaceholder)').length > 1) {
 
                         field.find('.InputfieldFileFieldFilter').css('display', 'inline-block');
 
@@ -261,7 +263,7 @@ $(document).ready(function () {
                     field.addClass('filterbox_loaded').find('.InputfieldHeader').append($filterInput.clone());
 
                     // hide filterbox if there's 1 or no images in the field
-                    if (field.find('.ImageOuter.gridImage:not(.gridImagePlaceholder)').length <= 1) {
+                    if (field.find('.gridImage:not(.gridImagePlaceholder)').length <= 1) {
                         field.find('.InputfieldFileFieldFilter').css('display', 'none');
                     }
                 }
