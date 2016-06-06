@@ -2,7 +2,7 @@
 
 /**
  * AdminOnSteroids
- * Various admin hacks
+ * Various admin tweaks
  *
  * @author Roland Toth (tpr)
  *
@@ -22,12 +22,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 14,
-            'summary'   => __('Various admin hacks'),
+            'version'   => 15,
+            'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
             'href'      => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
             'icon'      => 'medkit',
+            'requires' => array(
+                'PHP>=5.3.1',
+                'ProcessWire>=3.0.0'
+            ),
             'singular'  => true,
             'permanent' => false,
         );
@@ -189,7 +193,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
-        $f->addOption('FileFieldToolbar', __('Add filter box and sort buttons to file fields', __FILE__) . ' [...]');
+        $f->addOption('FileFieldToolbar', __('Add filter box and sort buttons to file/image fields', __FILE__) . ' [...]');
         $f->addOption('HoverSaveDropdown', __('Show save dropdown on hover instead on click', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));

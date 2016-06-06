@@ -27,6 +27,7 @@ function getParameterByName(name, url) {
 $(document).ready(function () {
 
     var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null,
+        bodyClasses = [],
         htmlClasses = [];
 
     // HoverSaveDropdown
@@ -84,10 +85,10 @@ $(document).ready(function () {
         var adminTweaksSettings = AOSsettings.AdminTweaks;
 
         if (adminTweaksSettings.indexOf('stickyHeader') !== -1) {
-            htmlClasses.push('aos_stickyHeader');
+            bodyClasses.push('aos_stickyHeader');
         }
 
-        $('body').addClass(htmlClasses);
+        $('body').addClass(bodyClasses.join(" "));
     }
 
 
@@ -231,24 +232,26 @@ $(document).ready(function () {
 
         var FileFieldToolbarSettings = AOSsettings.FileFieldToolbar,
             $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='🔎' /><i class='fa fa-close'></i></span>"),
-            filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded)';
+            filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
+            getItemSelector = function (field) {
+                return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
+            };
 
         if (FileFieldToolbarSettings.indexOf('filterbox') !== -1) {
+
 
             // show filterbox when number of images in the field increases above 2
             $(filterFieldSelector).on('DOMNodeInserted.aos_filterbox', function (e) {
 
+                var target = e.target || e.srcElement,
+                    field = $(target).closest('li.Inputfield'),
+                    itemSelector = getItemSelector(field);
 
-                var target = e.target || e.srcElement;
+                if ($(target).is(itemSelector)) {
 
-                if ($(target).hasClass('gridImage')) {
+                    if (field.find(itemSelector).length >= 2) {
 
-                    var field = $(target).closest('li.Inputfield');
-
-
-                    if (field.find('.gridImage:not(.gridImagePlaceholder)').length > 1) {
-
-                        field.find('.InputfieldFileFieldFilter').css('display', 'inline-block');
+                        field.find('.InputfieldFileFieldFilter').removeAttr('style');
 
                         // remove event listener
                         field.off('DOMNodeInserted.aos_filterbox');
@@ -256,14 +259,17 @@ $(document).ready(function () {
                 }
             });
 
+            // insert filterbox to the DOM
             function setupFilterInput(field) {
+
+                var itemSelector = getItemSelector(field);
 
                 if ($(filterFieldSelector).length) {
 
                     field.addClass('filterbox_loaded').find('.InputfieldHeader').append($filterInput.clone());
 
-                    // hide filterbox if there's 1 or no images in the field
-                    if (field.find('.gridImage:not(.gridImagePlaceholder)').length <= 1) {
+                    // hide filterbox if the field has less then 2 items to filter
+                    if (field.find(itemSelector).length < 2) {
                         field.find('.InputfieldFileFieldFilter').css('display', 'none');
                     }
                 }
@@ -288,12 +294,13 @@ $(document).ready(function () {
 
             function addFilterTargets(field) {
 
-                field.find('.gridImages > li').each(function () {
+                field.find(getItemSelector(field)).each(function () {
 
                     var searchStrings = [],
                         listItem = $(this);
 
                     searchStrings.push(listItem.find('.InputfieldImageEdit__name').text());
+                    searchStrings.push(listItem.find('.InputfieldFileName').text());
                     searchStrings.push(listItem.find('img').attr('src'));
 
                     var inputs = listItem.find('input[type="text"]:not(.InputfieldFileSort)');
@@ -303,8 +310,6 @@ $(document).ready(function () {
                             searchStrings.push(inputs[el].value.trim());
                         }
                     });
-
-                    //console.log(searchStrings);
 
                     listItem.attr('data-filter', searchStrings.join(" "));
                 });
@@ -320,31 +325,32 @@ $(document).ready(function () {
             }
 
 
+            // add/update data-filter values
             $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
-                var target = e.target || e.srcElement;
-                var field = $(target).closest('li.Inputfield');
+
+                var target = e.target || e.srcElement,
+                    field = $(target).closest('li.Inputfield');
 
                 // close editor to append changes
                 field.find('.InputfieldImageEdit__close').trigger('click');
                 addFilterTargets(field);
 
-                // prevent closing up field on ajax-loaded tab + ajax-loaded field
+                // prevent closing up field on ajax-loaded tab or field
                 e.stopPropagation();
             });
 
-
+            // click on close X
             $(document).on('click', '.InputfieldFileFieldFilter i', function (e) {
                 clearFilterbox(e);
             });
 
+            // clear filterbox on ESC, remove focus on second ESC
             $(document).on('keydown', '.InputfieldFileFieldFilter input', function (e) {
 
-                e = e || window.event;
-
-                var target = e.target || e.srcElement;
+                var e = e || window.event,
+                    target = e.target || e.srcElement;
 
                 if (e.keyCode === 27) { // ESC
-
                     if (!target.value) {
                         target.blur();  // if input is empty, remove focus
                     } else {
@@ -353,18 +359,18 @@ $(document).ready(function () {
                 }
             });
 
+            // filter items
             $(document).on('keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
 
                 var target = e.target || e.srcElement,
                     filter = target.value.toLowerCase(),
                     field = $(target).closest('li.Inputfield'),
-                    items = field.find('.gridImages > li'),
+                    items = field.find('[data-filter]'),
                     count = 0,
                     length = filter.length;
 
                 if (!target.value) {
                     $(target).parent().removeClass('hasValue');
-                    //items.show();
                     items.removeClass('hidden');
                     return true;
                 }
@@ -372,9 +378,9 @@ $(document).ready(function () {
                 $(target).parent().addClass('hasValue');
 
                 // close edit field
-                if (field.find('.InputfieldImageEdit--active').length) {
-                    field.find('.InputfieldImageEdit__close').trigger('click');
-                }
+                //if (field.find('.InputfieldImageEdit--active').length) {
+                field.find('.InputfieldImageEdit__close').trigger('click');
+                //}
 
                 if (length > 1) {
 
@@ -399,25 +405,19 @@ $(document).ready(function () {
 
                         if (matches) {
                             $this.removeClass('hidden');
-                            //$this.show();
                             count++;
                         } else {
-                            //$this.hide();
                             $this.addClass('hidden');
                         }
                     });
 
                 } else {
-                    //items.show();
                     items.removeClass('hidden');
                     count++;
                 }
 
-                //console.log(items.filter('.hidden').length);
-
                 if (items.filter('.hidden').length == items.length) {
-                    //if (items.find(':visible').length == 0) {
-                    // allow escape, backspace, delete, leftarrow keyss only
+                    // allow escape, backspace, delete, leftarrow keys only
                     if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
                         return true;
                     }

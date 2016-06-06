@@ -1,5 +1,13 @@
 #Changelog
 
+
+### 0.1.5 (2016-06-06)
+
+- extend filterbox to work with File fieldtype besides Image fields
+- fix for default theme sticky header (reported by horst)
+- module required version set to ProcessWire 3.0
+
+
 ### 0.1.4 (2016-06-04)
 
 - show filterbox dynamically: show only if there's at least 2 items, hide otherways
