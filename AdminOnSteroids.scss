@@ -191,7 +191,7 @@ html.aos_filterbox {
       width: 0;
       height: 0;
       padding: 0;
-      margin: 0;
+      margin: 0 !important;
       border: 0;
       overflow: hidden;
     }
@@ -460,7 +460,7 @@ html.AdminThemeReno {
         position: fixed;
         top: 0;
         width: 100%;
-        z-index: 5;
+        z-index: 200;
         //padding-top: 1em;
         //padding-bottom: 0.25em;
         border-bottom: none;
@@ -477,7 +477,7 @@ html.AdminThemeReno {
         position: fixed;
         width: 100%;
         left: 0;
-        z-index: 2;
+        z-index: 200;
         border-bottom: 1px solid rgba(#000, 0.1);
         //padding: 1.33em 0 1.33em 1.33em;
         //transition: padding-top 0.12s, padding-bottom 0.12s !important;
