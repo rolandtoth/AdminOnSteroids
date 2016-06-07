@@ -181,6 +181,13 @@ form[action$="AdminOnSteroids"] {
 // FileFieldToolbar filterbox
 html.aos_filterbox {
 
+  .Inputfield.filterbox_loaded {
+    > label {
+      padding-top: 14px;
+      padding-bottom: 13px;
+    }
+  }
+
   .ImageOuter.gridImage,
   .InputfieldFileItem {
     transition: all $defaultTransition;
@@ -203,7 +210,8 @@ html.aos_filterbox {
   //}
 
   body.AdminThemeDefault .InputfieldFileFieldFilter {
-    margin-top: -2px;
+    position: absolute;
+    margin-top: 0;
   }
 
   .InputfieldFileFieldFilter {
@@ -211,7 +219,7 @@ html.aos_filterbox {
     position: absolute;
     margin-left: 24px;
     display: inline-block;
-    margin-top: -7px;
+    margin-top: -4px;
 
     input {
       transition: all $defaultTransition;
@@ -455,12 +463,13 @@ html.AdminThemeReno {
       }
       #masthead {
         top: -52px;
+        z-index: 250;
       }
       #breadcrumbs {
         position: fixed;
         top: 0;
         width: 100%;
-        z-index: 200;
+        z-index: 182;
         //padding-top: 1em;
         //padding-bottom: 0.25em;
         border-bottom: none;
@@ -502,7 +511,7 @@ html.AdminThemeReno {
         transform: none;
         max-width: 360px;
         right: -8px;
-        z-index: 5;
+        z-index: 210;
         position: fixed;
         input {
           background: transparent;
@@ -513,7 +522,7 @@ html.AdminThemeReno {
           transition: max-width $defaultTransition;
           float: right;
           position: relative;
-          z-index: 25;
+          z-index: 220;
           &:focus {
             background: rgba(#F0F3F7, 0.5);
             max-width: 100%;
@@ -533,7 +542,7 @@ html.AdminThemeReno {
           right: 0;
           left: auto !important;
           margin-top: 2px;
-          z-index: 30;
+          z-index: 300;
         }
       }
       body.scrolled {
@@ -556,6 +565,7 @@ html.AdminThemeReno {
 
       #masthead #topnav {
         top: 52px;
+        z-index: 260;
         .avatar.dropdown {
           margin-right: 0 !important;
 
@@ -565,6 +575,7 @@ html.AdminThemeReno {
         }
         li.dropdown ul {
           box-shadow: $defaultBoxShadow;
+          z-index: 330;
         }
 
       }
