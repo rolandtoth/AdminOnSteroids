@@ -45,11 +45,11 @@ $(document).ready(function () {
     }
 
     // AutoCollapseModuleInfo
-    if (AOSsettings.enabledSubmodules.indexOf('LoadCollapsedModuleInfos') !== -1) {
-        if ($('#ModuleInfo').length) {
-            $('#ModuleInfo').addClass('InputfieldStateCollapsed');
-        }
-    }
+    //if (AOSsettings.enabledSubmodules.indexOf('LoadCollapsedModuleInfos') !== -1) {
+    //    if ($('#ModuleInfo').length) {
+    //        $('#ModuleInfo').addClass('InputfieldStateCollapsed');
+    //    }
+    //}
 
     // LongClickDuration
     if (AOSsettings.enabledSubmodules.indexOf('LongClickDuration') !== -1) {

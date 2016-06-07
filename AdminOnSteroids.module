@@ -22,13 +22,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 16,
+            'version'   => 17,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
             'href'      => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
             'icon'      => 'medkit',
-            'requires' => array(
+            'requires'  => array(
                 'PHP>=5.3.1',
                 'ProcessWire>=3.0.0'
             ),
@@ -162,6 +162,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // note: $configSettings overwrite $configData (intentional)
         $this->config->js("AdminOnSteroids", json_encode(array_merge(self::$configData, $configSettings)));
+
+        // Load module info fields collapsed
+        if (in_array('LoadCollapsedModuleInfos', $enabledSubmodules)) {
+
+            $this->addHookAfter('InputfieldMarkup::render', function ($event) {
+
+                $field = $event->object;
+
+                if ($field->id == 'ModuleInfo') {
+                    $field->addClass('InputfieldStateCollapsed');
+                }
+            });
+        }
     }
 
 

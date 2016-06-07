@@ -1,6 +1,11 @@
 #Changelog
 
 
+### 0.1.7 (2016-06-07)
+
+- Use field render hook on LoadCollapsedModuleInfos instead JavaScript (suggested by matjazp)
+
+
 ### 0.1.6 (2016-06-07)
 
 - datalist for filterbox
