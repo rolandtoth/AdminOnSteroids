@@ -239,7 +239,6 @@ $(document).ready(function () {
 
         if (FileFieldToolbarSettings.indexOf('filterbox') !== -1) {
 
-
             // show filterbox when number of images in the field increases above 2
             $(filterFieldSelector).on('DOMNodeInserted.aos_filterbox', function (e) {
 
@@ -272,6 +271,8 @@ $(document).ready(function () {
                     if (field.find(itemSelector).length < 2) {
                         field.find('.InputfieldFileFieldFilter').css('display', 'none');
                     }
+
+                    field.find('.InputfieldFileFieldFilter input').attr('list', field.attr('id'));
                 }
             }
 
@@ -292,15 +293,29 @@ $(document).ready(function () {
             });
 
 
+            // add data-filter attributes + update datalist
             function addFilterTargets(field) {
+
+                var searchField = field.find('.InputfieldFileFieldFilter input'),
+                    fieldId = field.attr('id').replace('_', '').toLocaleLowerCase(),
+                    datalistOptions = [],
+                    options = "";
 
                 field.find(getItemSelector(field)).each(function () {
 
-                    var searchStrings = [],
-                        listItem = $(this);
+                    var listItem = $(this),
+                        searchStrings = [];
 
-                    searchStrings.push(listItem.find('.InputfieldImageEdit__name').text());
-                    searchStrings.push(listItem.find('.InputfieldFileName').text());
+                    if (listItem.find('.InputfieldImageEdit__name').text() !== '') {
+                        searchStrings.push(listItem.find('.InputfieldImageEdit__name').text());
+                    }
+
+                    // console.log(listItem.find('.InputfieldFileName').text());
+
+                    if (listItem.find('.InputfieldFileName').length) {
+                        searchStrings.push(listItem.find('.InputfieldFileName').text());
+                    }
+
                     searchStrings.push(listItem.find('img').attr('src'));
 
                     var inputs = listItem.find('input[type="text"]:not(.InputfieldFileSort)');
@@ -312,7 +327,31 @@ $(document).ready(function () {
                     });
 
                     listItem.attr('data-filter', searchStrings.join(" "));
+
+                    datalistOptions.push(searchStrings);
                 });
+
+
+                // add/update datalist
+
+                $.each(datalistOptions, function (index, item) {
+                    // var firstItem = item[0];
+
+                    // item.shift();
+
+                    // options += '<option value="' + firstItem + '">' + item.join(" • ") + '</option>';
+                    options += '<option value="' + item[0] + '"></option>';
+                });
+
+                if (field.find('datalist#' + fieldId).length) {
+                    field.find('datalist#' + fieldId).empty().append(options);
+                } else {
+                    field.append( '<datalist id="' + fieldId + '">' + options + '</datalist>');
+                    searchField.attr('list', fieldId);
+                }
+
+                // try to refresh datalist
+                // field.focus();
             }
 
 
@@ -326,17 +365,26 @@ $(document).ready(function () {
 
 
             // add/update data-filter values
-            $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
+            // hover: firefox hack to make datalist available on first click
+            $(document).on('hover click', '.InputfieldFileFieldFilter input', function (e) {
+            // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
+            // $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
+            // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
 
                 var target = e.target || e.srcElement,
                     field = $(target).closest('li.Inputfield');
+
+                if($(target).is(':focus')) {
+                    return false;
+                }
 
                 // close editor to append changes
                 field.find('.InputfieldImageEdit__close').trigger('click');
                 addFilterTargets(field);
 
-                // prevent closing up field on ajax-loaded tab or field
+                // prevent closing up field on ajax-loaded tab or field or triggering file upload dialog
                 e.stopPropagation();
+                return false;
             });
 
             // click on close X
@@ -360,7 +408,8 @@ $(document).ready(function () {
             });
 
             // filter items
-            $(document).on('keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
+            // $(document).on('keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
+            $(document).on('input keypress keyup fielchange', '.InputfieldFileFieldFilter input', function (e) {
 
                 var target = e.target || e.srcElement,
                     filter = target.value.toLowerCase(),
@@ -382,7 +431,7 @@ $(document).ready(function () {
                 field.find('.InputfieldImageEdit__close').trigger('click');
                 //}
 
-                if (length > 1) {
+                if (length > 0) {
 
                     var filter_tags = filter.split(" "); // Split user input by spaces
 
@@ -459,8 +508,6 @@ $(document).ready(function () {
                 var bottomOffset = $firstCKEditor.offset().top + $firstCKEditor.height() - posTop();
                 // var editor_cke_height = cke_toolbar.outerHeight();
 
-                // console.log(topOffset + ', ' + bottomOffset);
-
                 if (topOffset < 70 && bottomOffset > 200) {
                     cke_toolbar.addClass('cke_top_fixed');
                     cke_contents.css('padding-top', editor_cke_height + "px");
@@ -486,13 +533,10 @@ $(document).ready(function () {
 
                 editor_cke_height = $firstCKEditor.find('.cke_top').outerHeight();
 
-                // console.log('The editor named ' + editor.name + ' is now ready');
-
                 // editor.on('focus', function (e) {
                 //     if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
                 //         $('html').addClass('aos_stickyCKEditorToolbar');
                 //         checkstickyCKEditorToolbar();
-                //         // console.log('The editor named ' + e.editor.name + ' is now focused');
                 //     }
                 // });
 
@@ -501,7 +545,6 @@ $(document).ready(function () {
                         $('html').addClass('aos_stickyCKEditorToolbar');
                         checkstickyCKEditorToolbar();
                         // isCKEfocused = true;
-                        // console.log('The editor named ' + e.editor.name + ' is now focused');
                     }
                 });
 
@@ -509,7 +552,6 @@ $(document).ready(function () {
                 //     if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
                 //         $('html').addClass('aos_stickyCKEditorToolbar');
                 //         checkstickyCKEditorToolbar();
-                //         // console.log('The editor named ' + e.editor.name + ' is now focused');
                 //     }
                 // });
 

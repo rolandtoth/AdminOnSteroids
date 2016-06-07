@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.1.6 (2016-06-07)
+
+- datalist for filterbox
+- filtered field height fix (reported by matjazp)
+
+
+
 ### 0.1.5 (2016-06-06)
 
 - extend filterbox to work with File fieldtype besides Image fields
