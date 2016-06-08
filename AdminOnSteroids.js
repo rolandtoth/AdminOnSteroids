@@ -30,8 +30,31 @@ $(document).ready(function () {
         bodyClasses = [],
         htmlClasses = [];
 
-    // HoverSaveDropdown
-    // note: copies do not need to modify
+
+    //var saveButton = $('#submit_save');
+    //
+    //if (saveButton.length && CKEDITOR) {
+    //
+    //    CKEDITOR.on('instanceReady', function (evt) {
+    //
+    //        var editor = evt.editor;
+    //
+    //        editor.document.on('keydown', function (e) {
+    //
+    //            if (e.data.getKeystroke() == CKEDITOR.CTRL + 83) {
+    //
+    //                e.data.$.preventDefault();
+    //
+    //                saveButton.trigger('click');
+    //                return false;
+    //            }
+    //        });
+    //    });
+    //}
+
+
+// HoverSaveDropdown
+// note: copies do not need to modify
     if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
         $('#pw-dropdown-toggle-submit_save, ' +
             '#pw-dropdown-toggle-submit_publish, ' +
@@ -44,14 +67,14 @@ $(document).ready(function () {
         return false;
     }
 
-    // AutoCollapseModuleInfo
-    //if (AOSsettings.enabledSubmodules.indexOf('LoadCollapsedModuleInfos') !== -1) {
-    //    if ($('#ModuleInfo').length) {
-    //        $('#ModuleInfo').addClass('InputfieldStateCollapsed');
-    //    }
-    //}
+// AutoCollapseModuleInfo
+//if (AOSsettings.enabledSubmodules.indexOf('LoadCollapsedModuleInfos') !== -1) {
+//    if ($('#ModuleInfo').length) {
+//        $('#ModuleInfo').addClass('InputfieldStateCollapsed');
+//    }
+//}
 
-    // LongClickDuration
+// LongClickDuration
     if (AOSsettings.enabledSubmodules.indexOf('LongClickDuration') !== -1) {
         // set custom long click duration
         if (jQuery && jQuery.longclick) {
@@ -62,13 +85,13 @@ $(document).ready(function () {
     }
 
 
-    // fixScrollbarJump
+// fixScrollbarJump
     if (AOSsettings.enabledSubmodules.indexOf('fixScrollbarJump') !== -1) {
         htmlClasses.push('aos_fixScrollbarJump');
     }
 
 
-    // FileFieldToolbar
+// FileFieldToolbar
     if (AOSsettings.enabledSubmodules.indexOf('FileFieldToolbar') !== -1) {
 
         htmlClasses.push('aos_fileFieldToolbar');
@@ -79,7 +102,7 @@ $(document).ready(function () {
     }
 
 
-    // Default admin theme tweaks
+// Default admin theme tweaks
     if (AOSsettings.enabledSubmodules.indexOf('AdminTweaks') !== -1 && $('body').hasClass('AdminThemeDefault')) {
 
         var adminTweaksSettings = AOSsettings.AdminTweaks;
@@ -92,7 +115,7 @@ $(document).ready(function () {
     }
 
 
-    // RenoTWeaks
+// RenoTWeaks
     if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks;
@@ -200,12 +223,12 @@ $(document).ready(function () {
     }
 
 
-    // DeselectRadios
+// DeselectRadios
     if (AOSsettings.enabledSubmodules.indexOf('DeselectRadios') !== -1) {
         htmlClasses.push('aos_DeselectRadios');
     }
 
-    // PagePreviewLink
+// PagePreviewLink
     if (AOSsettings.enabledSubmodules.indexOf('PagePreviewLink') !== -1) {
 
         htmlClasses.push('aos_PagePreviewLink');
@@ -226,7 +249,7 @@ $(document).ready(function () {
     $('html').addClass(htmlClasses.join(" "));
 
 
-    // FileFieldToolbar
+// FileFieldToolbar
 
     if (AOSsettings.enabledSubmodules.indexOf('FileFieldToolbar') !== -1) {
 
@@ -346,7 +369,7 @@ $(document).ready(function () {
                 if (field.find('datalist#' + fieldId).length) {
                     field.find('datalist#' + fieldId).empty().append(options);
                 } else {
-                    field.append( '<datalist id="' + fieldId + '">' + options + '</datalist>');
+                    field.append('<datalist id="' + fieldId + '">' + options + '</datalist>');
                     searchField.attr('list', fieldId);
                 }
 
@@ -367,14 +390,14 @@ $(document).ready(function () {
             // add/update data-filter values
             // hover: firefox hack to make datalist available on first click
             $(document).on('hover click', '.InputfieldFileFieldFilter input', function (e) {
-            // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
-            // $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
-            // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
+                // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
+                // $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
+                // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
 
                 var target = e.target || e.srcElement,
                     field = $(target).closest('li.Inputfield');
 
-                if($(target).is(':focus')) {
+                if ($(target).is(':focus')) {
                     return false;
                 }
 
@@ -390,6 +413,7 @@ $(document).ready(function () {
             // click on close X
             $(document).on('click', '.InputfieldFileFieldFilter i', function (e) {
                 clearFilterbox(e);
+                return false;
             });
 
             // clear filterbox on ESC, remove focus on second ESC
@@ -571,7 +595,8 @@ $(document).ready(function () {
         }
     }
 
-});
+})
+;
 
 
 // add "scrolled" body class
