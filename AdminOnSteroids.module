@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 17,
+            'version'   => 19,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -45,6 +45,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'enabledSubmodules'            => array(
                 'AutosizeTextareas',
+                'AsmTweaks',
                 'DeselectRadios',
                 'FileFieldToolbar',
                 'FocusInputOnLangTabSwitch',
@@ -59,6 +60,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'DeselectRadios'               => array(
                 'adminOnly'
+            ),
+            'AsmTweaks'                    => array(
+                'collapseAsmSections'
             ),
             'FileFieldToolbar'             => array(
                 'filterbox'
@@ -97,12 +101,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return __CLASS__;
     }
 
-    public function init() {
+    public function ___install() {
+        // apply default module settings on install
+        $this->wire('modules')->saveModuleConfigData($this, self::getDefaultData());
+    }
+
+
+    public function ready() {
 
         self::$configData = $this->modules->getModuleConfigData($this);
         $defaultData = self::getDefaultData();
 
+
         $root = $this->config->urls->siteModules . __CLASS__;
+        $styles = $this->config->styles;
         $scripts = $this->config->scripts;
 
         $enabledSubmodules = isset(self::$configData['enabledSubmodules']) ? self::$configData['enabledSubmodules'] : false;
@@ -110,10 +122,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         if (!$enabledSubmodules) {
             return false;
         }
-
-//        $configSettings = array(
-//            'isSuperUser' => $this->user->isSuperUser(),
-//        );
 
         //AutosizeTextareas
         $subModule = 'AutosizeTextareas';
@@ -128,6 +136,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             if (!in_array('adminOnly', self::$configData['DeselectRadios']) || $this->wire('user')->isSuperUser()) {
                 $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
             }
+        }
+
+        //DeselectRadios
+        $subModule = 'AsmTweaks';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
         }
 
         //FocusInputOnLangTabSwitch
@@ -157,6 +171,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $configSettings['LongClickDuration'] = $defaultData['LongClickDuration'];
         }
 
+        $styles->add($root . '/' . __CLASS__ . '.css');
+        $styles->prepend($root . '/' . __CLASS__ . '.css');
+
         // also add global JS
         $scripts->add($root . '/' . __CLASS__ . '.js');
 
@@ -178,15 +195,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
-    public function ready() {
-
-        // add global CSS here to load it after module install
-        $root = $this->config->urls->siteModules . __CLASS__;
-        $styles = $this->config->styles;
-
-//        $styles->add($root . '/' . __CLASS__ . '.css');
-        $styles->prepend($root . '/' . __CLASS__ . '.css');
-    }
+//    public function ready() {
+//
+//
+//    }
 
     public static function getModuleConfigInputfields(array $data) {
 
@@ -206,6 +218,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
+        $f->addOption('AsmTweaks', __('asmSelect tweaks', __FILE__) . ' [...]');
         $f->addOption('FileFieldToolbar', __('Add filter box and sort buttons to file/image fields', __FILE__) . ' [...]');
         $f->addOption('HoverSaveDropdown', __('Show save dropdown on hover instead on click', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
@@ -240,6 +253,23 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
 
         $f->attr('value', isset($data['DeselectRadios']) ? $data['DeselectRadios'] : $defaultData['DeselectRadios']);
+
+        $fset->add($f);
+
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'AsmTweaks');
+        $f->label = __('asmSelect settings', __FILE__);
+        $f->showIf = 'enabledSubmodules=AsmTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('collapseAsmSections', 'Collapse fieldset/tab items on double click');
+
+        if ($data['AsmTweaks']) {
+            $f->attr('value', $data['AsmTweaks']);
+        }
 
         $fset->add($f);
 

@@ -30,7 +30,6 @@ $(document).ready(function () {
         bodyClasses = [],
         htmlClasses = [];
 
-
     //var saveButton = $('#submit_save');
     //
     //if (saveButton.length && CKEDITOR) {
@@ -225,7 +224,15 @@ $(document).ready(function () {
 
 // DeselectRadios
     if (AOSsettings.enabledSubmodules.indexOf('DeselectRadios') !== -1) {
-        htmlClasses.push('aos_DeselectRadios');
+        htmlClasses.push('aos_deselectRadios');
+    }
+
+// AsmTweaks
+    if (AOSsettings.enabledSubmodules.indexOf('AsmTweaks') !== -1) {
+
+        if (AOSsettings.AsmTweaks.indexOf('collapseAsmSections') !== -1) {
+            htmlClasses.push('aos_collapseAsmSections');
+        }
     }
 
 // PagePreviewLink

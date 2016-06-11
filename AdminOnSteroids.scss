@@ -23,6 +23,56 @@ $defaultBoxShadow: 0 2px 6px -1px rgba(0, 0, 0, 0.12);
 //  }
 //}
 
+//body .pw-panel-container {
+//  width: auto;
+//
+//}
+
+// AsmTweaks
+html.aos_collapseAsmSections {
+
+  .Inputfields .asmListItem {
+    padding-left: 24px;
+  }
+
+  .asmFieldsetStart {
+    &:before {
+      content: '\f056';
+      font-family: FontAwesome;
+      font-size: 16px;
+      font-weight: 400;
+      float: left;
+      left: 8px;
+      top: 3px;
+      margin-right: 8px;
+      position: absolute;
+    }
+    &.collapsed {
+      a, i, span, &:before {
+        color: rgba(255, 255, 255, 0.66);
+      }
+      &:hover {
+        cursor: pointer;
+        &:before {
+          color: inherit;
+        }
+      }
+      &:before {
+        content: '\f055';
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
 // login page
 body.id-23 {
   #headline {
@@ -59,14 +109,9 @@ form[action$="AdminOnSteroids"] {
   }
 
   input[type="checkbox"] {
-    //margin-bottom: 16px;
     vertical-align: top;
     position: relative;
-    //margin-right: 30px;
     top: 5px;
-    //visibility: hidden;
-    //display: none;
-
     &:hover {
       cursor: pointer;
     }
@@ -75,34 +120,6 @@ form[action$="AdminOnSteroids"] {
       white-space: normal;
       display: inline-block;
       padding-right: 20px;
-      //&:before {
-      //  visibility: visible;
-      //  content: "•";
-      //  color: rgba(0, 0, 0, 0.3);
-      //  width: 36px;
-      //  height: 18px;
-      //  margin-right: 8px;
-      //  display: inline-block;
-      //  //background: #fff;
-      //  font-size: 47px;
-      //  border: 1px solid #b1c3d4;
-      //  background: #f0f3f7;
-      //  border-radius: 10px;
-      //  line-height: 17px;
-      //  transition: all 0.12s;
-      //  position: relative;
-      //  //left: -16px;
-      //  top: 11px;
-      //}
-    }
-    &:checked {
-      + span {
-        opacity: 1;
-        //&:before {
-        //  color: rgba(0, 0, 0, 0.6);
-        //  text-indent: 17px;
-        //}
-      }
     }
   }
 
@@ -113,68 +130,6 @@ form[action$="AdminOnSteroids"] {
     margin-left: 21px;
   }
 }
-
-//form[action$="AdminOnSteroids"] {
-//
-//  label {
-//    &:hover {
-//      cursor: pointer;
-//    }
-//  }
-//
-//  input[type="checkbox"] {
-//    //margin-bottom: 16px;
-//    vertical-align: top;
-//    position: relative;
-//    //margin-right: 30px;
-//    top: 5px;
-//    visibility: hidden;
-//    display: none;
-//
-//    &:hover {
-//      cursor: pointer;
-//    }
-//    + span {
-//      opacity: 0.7;
-//      white-space: normal;
-//      display: inline-block;
-//      padding-right: 20px;
-//      &:before {
-//        visibility: visible;
-//        content: "•";
-//        color: rgba(0, 0, 0, 0.3);
-//        width: 36px;
-//        height: 18px;
-//        margin-right: 8px;
-//        display: inline-block;
-//        //background: #fff;
-//        font-size: 47px;
-//        border: 1px solid #b1c3d4;
-//        background: #f0f3f7;
-//        border-radius: 10px;
-//        line-height: 17px;
-//        transition: all 0.12s;
-//        position: relative;
-//        //left: -16px;
-//        top: 11px;
-//      }
-//    }
-//    &:checked {
-//      + span {
-//        opacity: 1;
-//        &:before {
-//          color: rgba(0, 0, 0, 0.6);
-//          text-indent: 17px;
-//        }
-//      }
-//    }
-//  }
-//
-//  input#Inputfield_RenoTweaks_singleClickSidebarHeaders + span,
-//  input#Inputfield_RenoTweaks_oneLineSidebarSubmenus + span {
-//    margin-left: 42px;
-//  }
-//}
 
 // FileFieldToolbar
 

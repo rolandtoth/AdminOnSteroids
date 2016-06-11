@@ -45,6 +45,18 @@ By default required fields can't be deselected but it can be enabled tweaking th
 
 
 
+
+###AsmTweaks
+
+*asmSelect tweaks*
+
+####Settings
+
+- **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
+
+
+
+
 ###FileFieldToolbar
 
 *Add filter box and sort buttons to file fields*

@@ -1,6 +1,11 @@
 #Changelog
 
 
+### 0.1.9 (2016-06-11)
+
+- added first asmSelect tweak: collapseAsmSections
+
+
 ### 0.1.7 (2016-06-07)
 
 - Use field render hook on LoadCollapsedModuleInfos instead JavaScript (suggested by matjazp)
