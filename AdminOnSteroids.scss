@@ -31,7 +31,9 @@ $defaultBoxShadow: 0 2px 6px -1px rgba(0, 0, 0, 0.12);
 // AsmTweaks
 html.aos_collapseAsmSections {
 
-  .Inputfields .asmListItem {
+  .Inputfields .asmFieldsetStart ~ .asmListItem,
+  .Inputfields .asmFieldsetEnd,
+  .Inputfields .asmFieldsetStart {
     padding-left: 24px;
   }
 
