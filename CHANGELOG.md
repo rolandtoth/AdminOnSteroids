@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.2.0 (2016-06-15)
+
+- new AsmTweak: Move delete button to the left
+- AsmTweaks fixes
+
+
+
 ### 0.1.9 (2016-06-11)
 
 - added first asmSelect tweak: collapseAsmSections

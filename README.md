@@ -10,7 +10,6 @@ Various admin hacks to enhance ProcessWire admin.
 
 1. Enable or disable submodules and tweak their settings.
 
-1. Save the module to apply settings.
 
 To uninstall follow the uninstall instructions on the link above.
 
@@ -53,8 +52,7 @@ By default required fields can't be deselected but it can be enabled tweaking th
 ####Settings
 
 - **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
-
-
+- **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
 
 
 ###FileFieldToolbar

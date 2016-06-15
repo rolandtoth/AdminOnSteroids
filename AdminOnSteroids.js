@@ -233,6 +233,10 @@ $(document).ready(function () {
         if (AOSsettings.AsmTweaks.indexOf('collapseAsmSections') !== -1) {
             htmlClasses.push('aos_collapseAsmSections');
         }
+
+        if (AOSsettings.AsmTweaks.indexOf('leftAsmDelete') !== -1) {
+            htmlClasses.push('aos_leftAsmDelete');
+        }
     }
 
 // PagePreviewLink

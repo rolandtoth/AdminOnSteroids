@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 19,
+            'version'   => 20,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -62,7 +62,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'adminOnly'
             ),
             'AsmTweaks'                    => array(
-                'collapseAsmSections'
+                'collapseAsmSections',
+                'leftAsmDelete'
             ),
             'FileFieldToolbar'             => array(
                 'filterbox'
@@ -266,6 +267,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->notes = __('', __FILE__);
 
         $f->addOption('collapseAsmSections', 'Collapse fieldset/tab items on double click');
+        $f->addOption('leftAsmDelete', 'Move delete button to the left');
 
         if ($data['AsmTweaks']) {
             $f->attr('value', $data['AsmTweaks']);
