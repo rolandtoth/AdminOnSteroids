@@ -30,21 +30,34 @@ $defaultBoxShadow: 0 2px 6px -1px rgba(0, 0, 0, 0.12);
 
 // AsmTweaks
 html.aos_leftAsmDelete {
-  .Inputfields .asmListItem {
-    padding-left: 24px;
-    span.asmListItemStatus {
-      right: 12px;
+  body {
+
+    .Inputfields .asmListItem {
+      padding-left: 24px;
+      span.asmListItemStatus {
+        right: 12px;
+      }
+      .asmListItemRemove {
+        left: 12px;
+        right: auto;
+      }
     }
-    .asmListItemRemove {
-      left: 12px;
-      right: auto;
-    }
+    //.Inputfields .asmFieldsetStart,
+    //.Inputfields .asmFieldsetStart ~ .asmListItem {
+    //  padding-left: 48px;
+    //  .asmListItemRemove {
+    //    left: 34px;
+    //  }
+    //}
   }
   &.aos_collapseAsmSections {
-    .Inputfields .asmListItem {
-      padding-left: 48px !important;
-      .asmListItemRemove {
-        left: 34px;
+    body {
+      .Inputfields .asmFieldsetStart,
+      .Inputfields .asmFieldsetStart ~ .asmListItem {
+        padding-left: 48px;
+        .asmListItemRemove {
+          left: 34px;
+        }
       }
     }
   }
@@ -61,11 +74,11 @@ html.aos_collapseAsmSections {
     &:before {
       content: '\f056';
       font-family: FontAwesome;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 400;
       float: left;
       left: 8px;
-      top: 4px;
+      top: 3px;
       margin-right: 8px;
       position: absolute;
       color: rgba(255, 255, 255, 0.66);
@@ -874,8 +887,11 @@ body.AdminThemeDefault {
 
       #notices {
         position: relative;
-        top: 36px;
+        top: 33px;
         z-index: 60;
+        & ~ #content {
+          padding-top: 84px;
+        }
       }
 
       &.hasWireTabs {
@@ -888,6 +904,7 @@ body.AdminThemeDefault {
 
       #content {
         padding-top: 52px;
+
       }
     }
   }
