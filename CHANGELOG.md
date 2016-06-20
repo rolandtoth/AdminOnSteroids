@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.2.2 (2016-06-20)
+
+- Hotkeys submodule: currently only with ctrl+s to save page, even from within CKEditor
+- CSS fixes
+
+
+
 ### 0.2.1 (2016-06-20)
 
 - sticky admin tabs when compact sticky header is enabled

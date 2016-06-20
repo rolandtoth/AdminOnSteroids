@@ -30,28 +30,6 @@ $(document).ready(function () {
         bodyClasses = [],
         htmlClasses = [];
 
-    //var saveButton = $('#submit_save');
-    //
-    //if (saveButton.length && CKEDITOR) {
-    //
-    //    CKEDITOR.on('instanceReady', function (evt) {
-    //
-    //        var editor = evt.editor;
-    //
-    //        editor.document.on('keydown', function (e) {
-    //
-    //            if (e.data.getKeystroke() == CKEDITOR.CTRL + 83) {
-    //
-    //                e.data.$.preventDefault();
-    //
-    //                saveButton.trigger('click');
-    //                return false;
-    //            }
-    //        });
-    //    });
-    //}
-
-
 // HoverSaveDropdown
 // note: copies do not need to modify
     if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
@@ -65,13 +43,6 @@ $(document).ready(function () {
     if (AOSsettings == null) {
         return false;
     }
-
-// AutoCollapseModuleInfo
-//if (AOSsettings.enabledSubmodules.indexOf('LoadCollapsedModuleInfos') !== -1) {
-//    if ($('#ModuleInfo').length) {
-//        $('#ModuleInfo').addClass('InputfieldStateCollapsed');
-//    }
-//}
 
 // LongClickDuration
     if (AOSsettings.enabledSubmodules.indexOf('LongClickDuration') !== -1) {

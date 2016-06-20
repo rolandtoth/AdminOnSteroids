@@ -73,6 +73,16 @@ When enabled, an "eye" icon will be added next to the page title that links to t
 
 
 
+###Hotkeys
+
+*Hotkey tweaks*
+
+####Settings
+
+- **Save on ctrl+s**: save current page, even from within CKEditor. Works on various pages, eg. when editing Templates, Fieds, Roles, etc. Also disables the default browser Save as dialog even if there's no submit button on the page.
+
+
+
 ###FocusInputOnLangTabSwitch
 
 *Focus input on switching language tabs*

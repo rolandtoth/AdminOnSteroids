@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 21,
+            'version'   => 22,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -54,6 +54,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'RenoTweaks',
                 'LongClickDuration',
                 'HoverSaveDropdown',
+                'Hotkeys',
                 'PagePreviewLink',
                 'LoadCollapsedModuleInfos',
                 'fixScrollbarJump'
@@ -70,6 +71,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'FocusInputOnLangTabSwitch'    => array(
                 'focus'
+            ),
+            'Hotkeys'    => array(
+                'save'
             ),
             'FocusInputOnLangTabSwitchCKE' => array(
                 'focus'
@@ -151,6 +155,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
         }
 
+        //Hotkeys
+        $subModule = 'Hotkeys';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
+        }
+
         //LangTabHotkeySwitcher
         $subModule = 'LangTabHotkeySwitcher';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -224,6 +234,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('HoverSaveDropdown', __('Show save dropdown on hover instead on click', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
+        $f->addOption('Hotkeys', __('Hotkey tweaks', __FILE__) . ' [...]');
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
         $f->addOption('LoadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('PagePreviewLink', __('Add preview link next to page title', __FILE__));
@@ -266,8 +277,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
 
-        $f->addOption('collapseAsmSections', 'Collapse fieldset/tab items on double click');
-        $f->addOption('leftAsmDelete', 'Move delete button to the left');
+        $f->addOption('collapseAsmSections', __('Collapse fieldset/tab items on double click', __FILE__));
+        $f->addOption('leftAsmDelete', __('Move delete button to the left', __FILE__));
 
         if ($data['AsmTweaks']) {
             $f->attr('value', $data['AsmTweaks']);
@@ -286,10 +297,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->columnWidth = 50;
 
 
-        $f->addOption('focus', 'Focus');
-        $f->addOption('moveEnd', 'Move cursor to the end');
-        $f->addOption('selectAll', 'Select all');
-        $f->addOption('nothing', 'Do nothing');
+        $f->addOption('focus', __('Focus', __FILE__));
+        $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
+        $f->addOption('selectAll', __('Select all', __FILE__));
+        $f->addOption('nothing', __('Do nothing', __FILE__));
 
         if ($data['FocusInputOnLangTabSwitch']) {
             $f->attr('value', $data['FocusInputOnLangTabSwitch']);
@@ -307,10 +318,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->notes = __('', __FILE__);
         $f->columnWidth = 50;
 
-        $f->addOption('focus', 'Focus');
-        $f->addOption('moveEnd', 'Move cursor to the end');
-        $f->addOption('selectAll', 'Select all');
-        $f->addOption('nothing', 'Do nothing');
+        $f->addOption('focus', __('Focus', __FILE__));
+        $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
+        $f->addOption('selectAll', __('Select all', __FILE__));
+        $f->addOption('nothing', __('Do nothing', __FILE__));
 
         if ($data['FocusInputOnLangTabSwitchCKE']) {
             $f->attr('value', $data['FocusInputOnLangTabSwitchCKE']);
@@ -318,7 +329,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fset->add($f);
 
-        $f = wire('modules')->get("InputfieldRadios");
+        $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'FileFieldToolbar');
         $f->label = __('FileFieldToolbar settings', __FILE__);
         $f->showIf = 'enabledSubmodules=FileFieldToolbar';
@@ -326,10 +337,26 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
 
-        $f->addOption('filterbox', 'Filter box');
+        $f->addOption('filterbox', __('Filter box', __FILE__));
 
         if ($data['FileFieldToolbar']) {
             $f->attr('value', $data['FileFieldToolbar']);
+        }
+
+        $fset->add($f);
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'Hotkeys');
+        $f->label = __('Hotkeys settings', __FILE__);
+        $f->showIf = 'enabledSubmodules=Hotkeys';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('save', __('Save on ctrl+s', __FILE__));
+
+        if ($data['Hotkeys']) {
+            $f->attr('value', $data['Hotkeys']);
         }
 
         $fset->add($f);
