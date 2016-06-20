@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 20,
+            'version'   => 21,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -84,7 +84,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'stickyHeaderCompact',
                 'stickySidebar',
                 'stickyCKEditorToolbar',
-//                'autoHideSidebar',s
+//                'autoHideSidebar',
                 'alwaysVisibleSidebarItems',
 //                'hideSidebarQuickLinks',
 //                'oneLineSidebarSubmenus',

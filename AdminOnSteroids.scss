@@ -1,6 +1,6 @@
 //$defaultTransition: 0.1s ease-in;
 $defaultTransition: 0.12s;
-$defaultBoxShadow: 0 2px 6px -1px rgba(0, 0, 0, 0.12);
+$defaultBoxShadow: 0 2px 6px -1px rgba(0, 0, 0, 0.16);
 //$defaultBoxShadow: 0 1px 1px 2px rgba(0, 0, 0, 0.02);
 
 //@keyframes fadeIn {
@@ -390,7 +390,7 @@ html.AdminThemeReno {
         //animation: fadeIn ease-in 0.1s;
         //transform-origin: center top;
         //animation: slideDown ease-in 0.12s;
-        z-index: 130;
+        z-index: 222;
         height: auto;
         -webkit-user-select: none;
         top: 156px;
@@ -410,7 +410,7 @@ html.AdminThemeReno {
       }
 
       #sidebar {
-        z-index: 300;
+        z-index: 40;
       }
 
       &.aos_alwaysShowSearch {
@@ -446,14 +446,8 @@ html.AdminThemeReno {
     @media only screen and (min-width: 960px) {
 
       .cke_top_fixed.cke_top {
-        top: 101px;
+        top: 137px;
       }
-
-      //#masthead,
-      //  //#branding,
-      //.main-nav-toggle {
-      //  position: fixed;
-      //}
       #branding,
       .main-nav-toggle {
         display: none;
@@ -474,6 +468,7 @@ html.AdminThemeReno {
       }
       #sidebar {
         padding-top: 0;
+        z-index: 300;
       }
       ul.quicklinks {
         top: 0 !important;
@@ -523,16 +518,6 @@ html.AdminThemeReno {
           &:focus {
             background: rgba(#F0F3F7, 0.5);
             max-width: 100%;
-            //  ~ span:before {
-            //    content: "";
-            //    background: rgba(255, 255, 255, 0.8);
-            //    position: fixed;
-            //    top: 0;
-            //    left: 0;
-            //    width: 100%;
-            //    z-index: -1;
-            //    height: 100%;
-            //  }
           }
         }
         label {
@@ -599,6 +584,40 @@ html.AdminThemeReno {
       }
       #wrap #search input {
         transition: background $defaultTransition;
+      }
+    }
+
+    // stickyTabs
+    body.hasWireTabs {
+      @media only screen and (min-width: 960px) {
+        #content {
+          top: 34px;
+          .WireTabs {
+            position: fixed;
+            top: 102px;
+            left: 210px;
+            z-index: 210;
+            background: #fff;
+            box-shadow: $defaultBoxShadow;
+            a {
+              padding: 0.42em 1em 0.33em;
+              border: none;
+            }
+            li:first-child {
+              a {
+                padding-left: 1.5em;
+              }
+            }
+          }
+        }
+      }
+
+      @media only screen and (min-width: 1200px) {
+        #content {
+          .WireTabs {
+            left: 230px;
+          }
+        }
       }
     }
   }

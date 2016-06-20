@@ -1,6 +1,15 @@
 #Changelog
 
 
+### 0.2.1 (2016-06-20)
+
+- sticky admin tabs when compact sticky header is enabled
+- stickyCKEditorToolbar fix for multilanguage fields
+- module submitted to modules directory
+- CSS fixes
+
+
+
 ### 0.2.0 (2016-06-15)
 
 - new AsmTweak: Move delete button to the left

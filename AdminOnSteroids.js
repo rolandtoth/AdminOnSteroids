@@ -212,9 +212,10 @@ $(document).ready(function () {
             htmlClasses.push('aos_headButtonNextToTitle');
         }
 
-        // if (renoTweaksSettings.indexOf('stickyCKEditorToolbar') !== -1) {
-        //     htmlClasses.push('aos_stickyCKEditorToolbar';
-        // }
+        // class added dynamically
+         //if (renoTweaksSettings.indexOf('stickyCKEditorToolbar') !== -1) {
+         //    htmlClasses.push('aos_stickyCKEditorToolbar');
+         //}
 
         if (renoTweaksSettings.indexOf('closeNoticeButtonToLeft') !== -1) {
             htmlClasses.push('aos_closeNoticeButtonToLeft');
@@ -576,7 +577,9 @@ $(document).ready(function () {
                 // });
 
                 editor.on('selectionChange', function (e) {
-                    if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
+                    //if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
+                    // allow multlang editor toolbar support
+                    if ('wrap_' + e.editor.name.indexOf($firstCKEditor.attr('id')) !== -1) {
                         $('html').addClass('aos_stickyCKEditorToolbar');
                         checkstickyCKEditorToolbar();
                         // isCKEfocused = true;
@@ -591,7 +594,7 @@ $(document).ready(function () {
                 // });
 
                 editor.on('blur', function (e) {
-                    if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
+                    if ('wrap_' + e.editor.name.indexOf($firstCKEditor.attr('id')) !== -1) {
                         // isCKEfocused = false;
                         $firstCKEditor.find('.cke_top').removeClass('cke_top_fixed');
                         $firstCKEditor.find('.cke_contents').css('padding-top', "0px");
@@ -599,10 +602,6 @@ $(document).ready(function () {
                     }
                 });
             });
-
-            // setTimeout(function () {
-            //     $(window).trigger('addstickyCKEditorToolbar');
-            // }, 1200);
         }
     }
 

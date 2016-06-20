@@ -44,7 +44,6 @@ By default required fields can't be deselected but it can be enabled tweaking th
 
 
 
-
 ###AsmTweaks
 
 *asmSelect tweaks*
@@ -53,6 +52,7 @@ By default required fields can't be deselected but it can be enabled tweaking th
 
 - **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
 - **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
+
 
 
 ###FileFieldToolbar
@@ -141,7 +141,7 @@ A few usability mods targetting the default admin theme.
 A few usability mods targetting the Reno admin theme.
 
 - **Sticky header**: stick the header to the top of the browser window so it stays in place when scrolling down
-- **Compact sticky header**: hide the masthead to save vertical space. Search field and top naviation links are moved to the header. Available only if sticky header is on.
+- **Compact sticky header**: hide the masthead to save vertical space. Search field and top naviation links are moved to the header, plus the main form tabs are set to fixed position (sticky). Available only if sticky header is on.
 - **Sticky CKEditor toolbar**: stick the CKEditor toolbar below the sticky header to make it always available. Currently works with only the first CKEditor on the page and is available only if sticky header is on. The toolbar is set to sticky only if the editor is focused. Clicking outside the editor or if the editor goes offscreen on page scroll will hide the toolbar.
 - **Sticky sidebar**: stick the sidebar to the top to make it always visible
 - **Autohide sidebar on left**: auto hide the sidebar so it's accessible by moving the mouse to the left side of the screen
