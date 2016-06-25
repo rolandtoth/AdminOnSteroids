@@ -22,18 +22,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 22,
+            'version'   => 23,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
             'href'      => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
             'icon'      => 'medkit',
-            'requires'  => array(
-                'PHP>=5.3.1',
-                'ProcessWire>=3.0.0'
-            ),
+            'requires' => 'ProcessWire>=2.3.0, PHP>=5.3.8',
             'singular'  => true,
-            'permanent' => false,
+            'permanent' => false
         );
     }
 
@@ -47,6 +44,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'AutosizeTextareas',
                 'AsmTweaks',
                 'DeselectRadios',
+                'NoAnims',
                 'FileFieldToolbar',
                 'FocusInputOnLangTabSwitch',
                 'LangTabHotkeySwitcher',
@@ -72,7 +70,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'FocusInputOnLangTabSwitch'    => array(
                 'focus'
             ),
-            'Hotkeys'    => array(
+            'Hotkeys'                      => array(
                 'save'
             ),
             'FocusInputOnLangTabSwitchCKE' => array(
@@ -143,7 +141,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             }
         }
 
-        //DeselectRadios
+        //AsmTweaks
         $subModule = 'AsmTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
             $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
@@ -182,7 +180,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $configSettings['LongClickDuration'] = $defaultData['LongClickDuration'];
         }
 
-        $styles->add($root . '/' . __CLASS__ . '.css');
+//        $styles->add($root . '/' . __CLASS__ . '.css');
         $styles->prepend($root . '/' . __CLASS__ . '.css');
 
         // also add global JS
@@ -206,11 +204,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
-//    public function ready() {
-//
-//
-//    }
-
     public static function getModuleConfigInputfields(array $data) {
 
         $defaultData = self::getDefaultData();
@@ -229,6 +222,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
+        $f->addOption('NoAnims', __('Disable all admin animations', __FILE__));
         $f->addOption('AsmTweaks', __('asmSelect tweaks', __FILE__) . ' [...]');
         $f->addOption('FileFieldToolbar', __('Add filter box and sort buttons to file/image fields', __FILE__) . ' [...]');
         $f->addOption('HoverSaveDropdown', __('Show save dropdown on hover instead on click', __FILE__));

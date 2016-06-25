@@ -184,9 +184,9 @@ $(document).ready(function () {
         }
 
         // class added dynamically
-         //if (renoTweaksSettings.indexOf('stickyCKEditorToolbar') !== -1) {
-         //    htmlClasses.push('aos_stickyCKEditorToolbar');
-         //}
+        //if (renoTweaksSettings.indexOf('stickyCKEditorToolbar') !== -1) {
+        //    htmlClasses.push('aos_stickyCKEditorToolbar');
+        //}
 
         if (renoTweaksSettings.indexOf('closeNoticeButtonToLeft') !== -1) {
             htmlClasses.push('aos_closeNoticeButtonToLeft');
@@ -197,6 +197,12 @@ $(document).ready(function () {
 // DeselectRadios
     if (AOSsettings.enabledSubmodules.indexOf('DeselectRadios') !== -1) {
         htmlClasses.push('aos_deselectRadios');
+    }
+
+// NoAnims
+    if (AOSsettings.enabledSubmodules.indexOf('NoAnims') !== -1) {
+        $.fx.off = true;
+        htmlClasses.push('aos_noAnims');
     }
 
 // AsmTweaks

@@ -359,6 +359,10 @@ html.aos_fixScrollbarJump:not(.modal) {
   }
 }
 
+html.aos_noAnims * {
+  transition: none !important;
+}
+
 /*Reno theme tweaks*/
 html.AdminThemeReno {
 
@@ -874,6 +878,13 @@ html.AdminThemeReno {
                       text-decoration: underline;
                     }
                   }
+                }
+              }
+              ul.quicklinks {
+                width: auto !important;
+                a {
+                  min-width: 250px;
+                  padding: 0.5em 20px;
                 }
               }
             }

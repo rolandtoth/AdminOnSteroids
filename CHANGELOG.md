@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.2.3 (2016-06-25)
+
+- new submodule NoAnims: disable all admin animations
+- possible fix for module repository update showing "Requires 0.0.0 >= 0" (reported by matjazp)
+- CSS fixes
+
+
+
 ### 0.2.2 (2016-06-20)
 
 - Hotkeys submodule: currently only with ctrl+s to save page, even from within CKEditor

@@ -34,6 +34,14 @@ Hovering on the Save button in the page editor shows the dropdown menu instantly
 
 
 
+###NoAnims
+
+*Disable all admin animations*
+
+Disable all CSS and JavaScript animations in the admin to make things feel more snappy.
+
+
+
 ###DeselectRadios
 
 *Enable clearing checked radio buttons*
