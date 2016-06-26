@@ -1,6 +1,6 @@
 //$defaultTransition: 0.1s ease-in;
 $defaultTransition: 0.12s;
-$defaultBoxShadow: 0 2px 6px -1px rgba(0, 0, 0, 0.16);
+$defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
 //$defaultBoxShadow: 0 1px 1px 2px rgba(0, 0, 0, 0.02);
 
 //@keyframes fadeIn {
@@ -635,10 +635,11 @@ html.AdminThemeReno {
           top: 138px;
           .WireTabs {
             position: fixed;
-            top: 102px;
+            top: 100px;
             left: 210px;
             z-index: 210;
             background: #fff;
+            border-top: 1px solid rgba(0, 0, 0, .1);
             border-bottom: 1px solid rgba(0, 0, 0, .1);
             a {
               padding: 0.42em 1em 0.33em;

@@ -106,8 +106,6 @@ Saves an extra click to activate text input, textarea or CKEditor when switching
 
 Settings can be configured separately for CKEditor settings.
 
-**Bonus**: ctrl+clicking on a language tab will activate all the language tabs of the same language on current page. This can be handy for quickly checking content of other languages.
-
 
 
 ###LangTabHotkeySwitcher

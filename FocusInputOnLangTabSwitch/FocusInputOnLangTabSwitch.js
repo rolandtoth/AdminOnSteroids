@@ -2,55 +2,26 @@ $(document).on('ready reloaded wiretabclick', function (e) {
 
     var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids),
         AAFsettings = AOSsettings.FocusInputOnLangTabSwitch,
-        AAFsettingsCKE = AOSsettings.FocusInputOnLangTabSwitchCKE,
-        aos_enableFocusInputs = false;
+        AAFsettingsCKE = AOSsettings.FocusInputOnLangTabSwitchCKE;
 
     $('.langTabs').on('tabsactivate', function (e, ui) {
 
-        e = e || window.event;
-
-        //var aos_enableFocusInputs = true;
-
-        // activate all lang tabs with same language (only when ctrl key is pressed)
-        if (e.ctrlKey || aos_enableFocusInputs) {
-
-            var index = $(e.target).find('.ui-tabs-active').index(),
-                targetInput = $(e.target).find('input, textarea').eq(index),
-                currentLangtab = $(this);
-
-            $('.langTabs').not(currentLangtab).each(function () {
-                if ($(this).hasClass('ui-tabs')) {
-                    $(this).tabs('option', 'active', index);
-                }
-            });
-
-            // set flag to prevent FocusInputOnLangTabSwitch submodule focusing inputs
-            aos_enableFocusInputs = false;
-
-            if (targetInput.length) {
-                targetInput.focus();
-            }
-
-            //return false;
-
-        } else {
-            aos_enableFocusInputs = true;
-        }
+        //e = e || window.event;
 
         var inputs = ui.newPanel.get(0).querySelectorAll('input, textarea');
 
-        if (inputs.length && aos_enableFocusInputs) {
+        if (inputs.length) {
 
-            var input = inputs[0];
+            var input = inputs[0],
+                settings;
 
             if ($(input).hasClass('InputfieldCKEditorNormal')) {
 
                 var ckeLoaded = false,
-                    settings = AAFsettingsCKE;
+                    ckEditor_id = ui.newPanel.selector.replace('#langTab_', ''),
+                    editor = CKEDITOR.instances[ckEditor_id];
 
-                var ckEditor_id = ui.newPanel.selector.replace('#langTab_', '');
-
-                var editor = CKEDITOR.instances[ckEditor_id];
+                settings = AAFsettingsCKE;
 
                 if (editor) {
 
@@ -62,8 +33,8 @@ $(document).on('ready reloaded wiretabclick', function (e) {
 
                     setTimeout(function () {
 
-                        // set focus - this also remembers previous cursor position
                         if (settings == "focus") {
+                            // set focus - this also remembers previous cursor position
                             editor.focus();
 
                         } else if (settings == "moveEnd") {
@@ -77,25 +48,23 @@ $(document).on('ready reloaded wiretabclick', function (e) {
                                 range.select();
                             }
 
-                        } else if (settings == "selectAll") {
                             // select all
+                        } else if (settings == "selectAll") {
                             editor.execCommand('selectAll');
-
                         }
-
                     }, ckeLoaded ? 0 : 300);
                 }
 
             } else {
                 // regular text input or textarea
-                var settings = AAFsettings;
+                settings = AAFsettings;
 
                 if (settings == "focus") {
                     // focus
                     input.focus();
 
                 } else if (settings == "moveEnd") {
-                    // set cursor at the end
+                    // move cursor at the end
                     input.focus();
                     input.selectionStart = input.selectionEnd = input.value.length;
 
@@ -105,6 +74,5 @@ $(document).on('ready reloaded wiretabclick', function (e) {
                 }
             }
         }
-        //}
     });
 });

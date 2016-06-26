@@ -367,14 +367,14 @@ $(document).ready(function () {
             }
 
 
-            function clearFilterbox(e) {
-
-                var target = e.target || e.srcElement,
-                    $inputField = $(target).closest('.InputfieldFileFieldFilter').find('input');
-
-                $inputField.removeClass('hasValue').val("").trigger('keypress').focus();
+            function clearFilterbox(inputField) {
+                // firefox fix
+                setTimeout(function () {
+                    inputField.val('');
+                    inputField.trigger('keypress').focus();
+                    inputField.parent('span').removeClass('hasValue');
+                }, 0);
             }
-
 
             // add/update data-filter values
             // hover: firefox hack to make datalist available on first click
@@ -401,28 +401,32 @@ $(document).ready(function () {
 
             // click on close X
             $(document).on('click', '.InputfieldFileFieldFilter i', function (e) {
-                clearFilterbox(e);
+
+                e = e || window.event;
+                var target = e.target || e.srcElement;
+
+                clearFilterbox($(target).closest('.InputfieldFileFieldFilter').find('input'));
                 return false;
             });
 
             // clear filterbox on ESC, remove focus on second ESC
             $(document).on('keydown', '.InputfieldFileFieldFilter input', function (e) {
 
-                var e = e || window.event,
-                    target = e.target || e.srcElement;
+                e = e || window.event;
+                var target = e.target || e.srcElement;
 
                 if (e.keyCode === 27) { // ESC
                     if (!target.value) {
                         target.blur();  // if input is empty, remove focus
                     } else {
-                        clearFilterbox(e);
+                        clearFilterbox($(target).closest('.InputfieldFileFieldFilter').find('input'));
                     }
                 }
             });
 
             // filter items
             // $(document).on('keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
-            $(document).on('input keypress keyup fielchange', '.InputfieldFileFieldFilter input', function (e) {
+            $(document).on('input keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
 
                 var target = e.target || e.srcElement,
                     filter = target.value.toLowerCase(),
