@@ -1,7 +1,14 @@
 #Changelog
 
 
-### 0.2.5 (2016-06-26)
+### 0.2.5 (2016-06-28)
+
+- new RenoTweak: miniScrollbar for main content and sidebar (using perfect-scrollba.js)
+- added Language Translator page to the supported hotkey save pages
+
+
+
+### 0.2.4 (2016-06-26)
 
 - remove ctrl+click feature to activate all language tabs of the same language (core feature from ProcessWire 3.023)
 - FireFox fix for clearing filterbox

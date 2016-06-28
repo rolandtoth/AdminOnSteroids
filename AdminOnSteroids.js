@@ -191,6 +191,28 @@ $(document).ready(function () {
         if (renoTweaksSettings.indexOf('closeNoticeButtonToLeft') !== -1) {
             htmlClasses.push('aos_closeNoticeButtonToLeft');
         }
+
+        if (renoTweaksSettings.indexOf('miniScrollbar') !== -1 && window.Ps) {
+
+            var sidebarNav = document.querySelector('#main-nav'),
+                mainContent = document.querySelector('#main');
+
+            if (sidebarNav) {
+                Ps.initialize(sidebarNav, {
+                    wheelSpeed: 1,
+                    theme: 'pw-scrollbar',
+                    wheelPropagation: false
+                });
+            }
+
+            if (mainContent) {
+                Ps.initialize(mainContent, {
+                    wheelSpeed: 1,
+                    theme: 'pw-scrollbar',
+                    wheelPropagation: false
+                });
+            }
+        }
     }
 
 
@@ -586,8 +608,7 @@ $(document).ready(function () {
         }
     }
 
-})
-;
+});
 
 
 // add "scrolled" body class

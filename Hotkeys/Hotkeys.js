@@ -16,7 +16,7 @@ $(document).ready(function () {
         //    .eq(0);
 
         var aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
-            .filter('#submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile')
+            .filter('#submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
             .eq(0);
 
         $(document).on('keydown', function (e) {

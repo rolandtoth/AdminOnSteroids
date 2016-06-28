@@ -159,6 +159,7 @@ A few usability mods targetting the Reno admin theme.
 - **Sticky header**: stick the header to the top of the browser window so it stays in place when scrolling down
 - **Compact sticky header**: hide the masthead to save vertical space. Search field and top naviation links are moved to the header, plus the main form tabs are set to fixed position (sticky). Available only if sticky header is on.
 - **Sticky CKEditor toolbar**: stick the CKEditor toolbar below the sticky header to make it always available. Currently works with only the first CKEditor on the page and is available only if sticky header is on. The toolbar is set to sticky only if the editor is focused. Clicking outside the editor or if the editor goes offscreen on page scroll will hide the toolbar.
+- **Use mini scrollbar on main content and sidebar**: if enabled, the default browser scrollbar will be replaced with non-obtrusive scrollbar that is visible only on hovering the scroll area.
 - **Sticky sidebar**: stick the sidebar to the top to make it always visible
 - **Autohide sidebar on left**: auto hide the sidebar so it's accessible by moving the mouse to the left side of the screen
 - **Always show sidebar items (disable accordion)**: make sidebar submenus more compact and do not hide them
