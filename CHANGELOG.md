@@ -3,7 +3,7 @@
 
 ### 0.2.5 (2016-06-28)
 
-- new RenoTweak: miniScrollbar for main content and sidebar (using perfect-scrollba.js)
+- new RenoTweak: miniScrollbar for main content and sidebar (using perfect-scrollbar.js)
 - added Language Translator page to the supported hotkey save pages
 
 
@@ -51,9 +51,11 @@
 - added first asmSelect tweak: collapseAsmSections
 
 
+
 ### 0.1.7 (2016-06-07)
 
 - Use field render hook on LoadCollapsedModuleInfos instead JavaScript (suggested by matjazp)
+
 
 
 ### 0.1.6 (2016-06-07)
@@ -70,9 +72,11 @@
 - module required version set to ProcessWire 3.0
 
 
+
 ### 0.1.4 (2016-06-04)
 
 - show filterbox dynamically: show only if there's at least 2 items, hide otherways
+
 
 
 ### 0.1.3 (2016-06-03)
@@ -85,12 +89,15 @@
 - other filterbox improvements
 
 
+
 ### 0.1.2 (2016-06-03)
 
 - new submodule: Add filter box and sort buttons to file fields (FileFieldToolbar). Currently only "filterbox" is available.
 - new submodule: add preview link next to page title (PagePreviewLink). Target can be set to new tab/modal/panel.
 - new RenoTweak: sticky CKEditor toolbar (available only if sticky header is on)
 - module configuration page updates
+
+
 
 ### 0.1.0 (2016-05-30)
 
