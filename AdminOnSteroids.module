@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 25,
+            'version'   => 26,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -55,6 +55,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'Hotkeys',
                 'PagePreviewLink',
                 'LoadCollapsedModuleInfos',
+                'TabIndex',
                 'fixScrollbarJump'
             ),
             'DeselectRadios'               => array(
@@ -244,6 +245,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('LoadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('PagePreviewLink', __('Add preview link next to page title', __FILE__));
         $f->addOption('fixScrollbarJump', __('Prevent page jump when scrollbar appears', __FILE__));
+        $f->addOption('TabIndex', __('Add sequential tabindex to fields', __FILE__));
         $f->addOption('AdminTweaks', __('Default admin theme tweaks', __FILE__) . ' [...]');
         $f->addOption('RenoTweaks', __('Reno admin theme tweaks', __FILE__) . ' [...]');
 

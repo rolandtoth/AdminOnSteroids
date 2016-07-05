@@ -54,10 +54,18 @@ $(document).ready(function () {
         }
     }
 
-
 // fixScrollbarJump
     if (AOSsettings.enabledSubmodules.indexOf('fixScrollbarJump') !== -1) {
         htmlClasses.push('aos_fixScrollbarJump');
+    }
+
+// tabIndex
+    if (AOSsettings.enabledSubmodules.indexOf('TabIndex') !== -1) {
+        $(document).on('ready opened reloaded', filterFieldSelector, function () {
+            $('input, textarea, select').each(function (index) {
+                $(this).prop('tabindex', index);
+            });
+        });
     }
 
 

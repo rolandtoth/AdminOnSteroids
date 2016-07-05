@@ -140,6 +140,14 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 
 
+###TabIndex
+
+*Add sequential tabindex to fields*
+
+Enables jumping to next input in the admin with TAB key (or backwards with shift+TAB). By default the TAB key jumps to the next input on second or third trigger only (depending on whether there are language tabs or other buttons in the field wrap), this tweak fixes it.
+
+
+
 ###AdminTweaks
 
 *Apply default admin theme tweaks*

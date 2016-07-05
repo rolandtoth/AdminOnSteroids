@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.2.6 (2016-07-05)
+
+- option to add sequential tabindex to inputs to allow jumping to inputs using TAB)
+- added "Add new page" page to the supported hotkey save pages
+
+
+
 ### 0.2.5 (2016-06-28)
 
 - new RenoTweak: miniScrollbar for main content and sidebar (using perfect-scrollbar.js)
