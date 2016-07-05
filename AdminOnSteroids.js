@@ -61,10 +61,25 @@ $(document).ready(function () {
 
 // tabIndex
     if (AOSsettings.enabledSubmodules.indexOf('TabIndex') !== -1) {
-        $(document).on('ready opened reloaded', filterFieldSelector, function () {
+
+        function aos_updateTabIndices() {
             $('input, textarea, select').each(function (index) {
                 $(this).prop('tabindex', index);
             });
+        }
+
+        $(document).on('ready opened reloaded', function () {
+            aos_updateTabIndices();
+        });
+
+        // repeaters
+        $(document).on('reloaded', '.Inputfield', function () {
+            aos_updateTabIndices();
+        });
+
+        // profield table
+        $(document).on('click', 'a.InputfieldTableAddRow', function () {
+            aos_updateTabIndices();
         });
     }
 
