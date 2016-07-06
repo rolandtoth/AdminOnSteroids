@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.2.7 (2016-07-06)
+
+- new tweak Tooltips: hide field descriptions and notes to icons (requested by grimezy et al)
+
+
+
 ### 0.2.6 (2016-07-05)
 
 - option to add sequential tabindex to inputs to allow jumping to inputs using TAB)

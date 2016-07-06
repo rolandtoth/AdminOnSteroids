@@ -22,13 +22,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 26,
+            'version'   => 27,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
             'href'      => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
             'icon'      => 'medkit',
-            'requires' => 'ProcessWire>=3.0.0, PHP>=5.3.8',
+            'requires'  => 'ProcessWire>=3.0.0, PHP>=5.3.8',
             'singular'  => true,
             'permanent' => false
         );
@@ -55,6 +55,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'Hotkeys',
                 'PagePreviewLink',
                 'LoadCollapsedModuleInfos',
+                'Tooltips',
                 'TabIndex',
                 'fixScrollbarJump'
             ),
@@ -73,6 +74,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'Hotkeys'                      => array(
                 'save'
+            ),
+            'Tooltips'                     => array(
+                'description',
+                'notes'
+//                'overlayStyle'
             ),
             'FocusInputOnLangTabSwitchCKE' => array(
                 'focus'
@@ -152,7 +158,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         //RenoTweaks
         $subModule = 'RenoTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
-
             if (in_array('miniScrollbar', self::$configData[$subModule]) && in_array('stickyHeader', self::$configData[$subModule])) {
                 $scripts->add($root . '/lib/perfect-scrollbar/js/perfect-scrollbar.min.js');
 //                $styles->add($root . '/lib/perfect-scrollbar/css/perfect-scrollbar.min.css');
@@ -246,6 +251,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('PagePreviewLink', __('Add preview link next to page title', __FILE__));
         $f->addOption('fixScrollbarJump', __('Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('TabIndex', __('Add sequential tabindex to fields', __FILE__));
+        $f->addOption('Tooltips', __('Hide field descriptions and notes to tooltips', __FILE__) . ' [...]');
         $f->addOption('AdminTweaks', __('Default admin theme tweaks', __FILE__) . ' [...]');
         $f->addOption('RenoTweaks', __('Reno admin theme tweaks', __FILE__) . ' [...]');
 
@@ -395,6 +401,24 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         if ($data['PagePreviewLink']) {
             $f->attr('value', $data['PagePreviewLink']);
+        }
+
+        $fset->add($f);
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'Tooltips');
+        $f->label = __('Tooltips settings', __FILE__);
+        $f->showIf = 'enabledSubmodules=Tooltips';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('description', __('Enable for field descriptions', __FILE__));
+        $f->addOption('notes', __('Enable for field notes', __FILE__));
+        $f->addOption('overlayStyle', __('Use overlay style', __FILE__));
+
+        if ($data['Tooltips']) {
+            $f->attr('value', $data['Tooltips']);
         }
 
         $fset->add($f);

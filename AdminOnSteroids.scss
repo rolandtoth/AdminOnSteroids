@@ -78,6 +78,170 @@ html.aos_leftAsmDelete {
   }
 }
 
+// Tooltips
+@media only screen and (min-width: 960px) {
+
+  #content {
+    li:not(.translated):not(.untranslated):not(.noTooltip) { // disable in Language Translator
+
+      .aos_tooltips_blueprint {
+        position: absolute;
+        bottom: 100%;
+        left: -23px;
+        text-indent: -9999px;
+        background: #141414;
+        padding: 0;
+        margin: 0 0 -5px 0;
+        width: 0;
+        height: 0;
+        z-index: 9990;
+        backface-visibility: hidden;
+
+        // IE hack
+        pointer-events: none;
+        font-size: 1px;
+        letter-spacing: -1px;
+        color: transparent;
+        * {
+          visibility: hidden;
+        }
+
+        // info icon
+        &:before {
+          content: "\f05a";
+          text-indent: 0;
+          visibility: visible;
+          pointer-events: all;
+          font-family: FontAwesome, sans-serif;
+          position: absolute;
+          display: block;
+          padding: 4px;
+          margin-top: -8px;
+          top: 100%;
+          transform: translateY(16px);
+          left: 13px;
+          color: rgba(#000, 0.25);
+          background: #fff;
+          font-size: 14px;
+          line-height: 14px;
+          text-align: center;
+          border-radius: 100%;
+          transform-origin: 50% 50%;
+        }
+        &:hover,
+        &.tooltip-active {
+          * {
+            visibility: visible;
+          }
+          text-indent: 0;
+          padding: 8px 12px;
+          width: auto;
+          visibility: visible;
+          height: auto;
+          cursor: pointer;
+          font-size: 14px;
+          letter-spacing: 0;
+          color: #eee;
+          z-index: 9992;
+          &:before {
+            color: rgba(#000, 0.66);
+            cursor: pointer;
+            z-index: -1;
+          }
+          // arrow
+          &:after {
+            $size: 6px;
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 17px;
+            border: $size solid transparent;
+            border-top-color: #141414;
+          }
+          &.tooltip-active {
+            // enable selection
+            pointer-events: all;
+          }
+        }
+      }
+
+      .aos_tooltips_blueprint_overlay {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: auto !important;
+        min-height: 100%;
+        margin: 0 !important;
+        background-color: rgba(#141414, 0.88) !important;
+        &:hover,
+        &.tooltip-active {
+          padding: 12px 24px !important;
+        }
+        &:before {
+          left: -10px !important;
+          bottom: auto !important;
+          top: -4px !important;
+          margin: 0 !important;
+        }
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+html.aos_tooltips {
+
+  li[id^="wrap_Inputfield"], li.Inputfield {
+    position: relative;
+  }
+
+  &.aos_tooltipsDesc {
+    p.description {
+      @extend .aos_tooltips_blueprint;
+    }
+    &.aos_tooltipsOverlay {
+      p.description {
+        @extend .aos_tooltips_blueprint_overlay;
+      }
+    }
+  }
+
+  &.aos_tooltipsNotes {
+    p.notes {
+      @extend .aos_tooltips_blueprint;
+      &:before {
+        content: "\f27a" !important;
+        font-size: 13px !important;
+        line-height: 13px !important;
+      }
+    }
+    &.aos_tooltipsOverlay {
+      p.notes {
+        @extend .aos_tooltips_blueprint_overlay;
+        transform: translateY(0) !important;
+        &:before {
+          transform: translateY(17px) !important;
+        }
+      }
+      &.aos_tooltipsDesc {
+          p.notes:before {
+            transform: translateY(39px) !important;
+          }
+        }
+    }
+  }
+
+  // move down notes only if there's description
+  &.aos_tooltipsNotes.aos_tooltipsDesc {
+    p.notes {
+      transform: translateY(22px);
+    }
+  }
+
+}
+
 html.aos_collapseAsmSections {
   .Inputfields .asmFieldsetStart ~ .asmListItem,
   .Inputfields .asmFieldsetEnd,

@@ -148,6 +148,18 @@ Enables jumping to next input in the admin with TAB key (or backwards with shift
 
 
 
+###Tooltips
+
+*Hide field descriptions and notes to tooltips*
+
+Hide field descriptions and notes to an icon and show them on hover in a tooltip. To freeze the tooltip, double click on the icons.
+
+- **Enable for field descriptions**: allow moving field description to an icon
+- **Enable for field notes**: allow moving field notes to an icon
+- **Use overlay style**: when checked, the tooltip will cover the entire area of the field. This eliminates the z-index issues of the traditional tooltip style (other page elements may partly cover the tooltip).
+
+
+
 ###AdminTweaks
 
 *Apply default admin theme tweaks*

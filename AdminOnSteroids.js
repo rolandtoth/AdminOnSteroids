@@ -54,6 +54,30 @@ $(document).ready(function () {
         }
     }
 
+    // Tooltips
+    if (AOSsettings.enabledSubmodules.indexOf('Tooltips') !== -1) {
+
+        if (AOSsettings.Tooltips.indexOf('description') !== -1 || AOSsettings.Tooltips.indexOf('notes') !== -1) {
+            htmlClasses.push('aos_tooltips');
+        }
+
+        if (AOSsettings.Tooltips.indexOf('description') !== -1) {
+            htmlClasses.push('aos_tooltipsDesc');
+        }
+
+        if (AOSsettings.Tooltips.indexOf('notes') !== -1) {
+            htmlClasses.push('aos_tooltipsNotes');
+        }
+
+        if (AOSsettings.Tooltips.indexOf('overlayStyle') !== -1) {
+            htmlClasses.push('aos_tooltipsOverlay');
+        }
+
+        $(document).on('dblclick', '.aos_tooltipsDesc #content p.description, .aos_tooltipsNotes #content p.notes', function () {
+            $(this).toggleClass('tooltip-active');
+        });
+    }
+
 // fixScrollbarJump
     if (AOSsettings.enabledSubmodules.indexOf('fixScrollbarJump') !== -1) {
         htmlClasses.push('aos_fixScrollbarJump');
