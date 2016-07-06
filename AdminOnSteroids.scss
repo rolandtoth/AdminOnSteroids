@@ -196,6 +196,10 @@ html.aos_tooltips {
   li[id^="wrap_Inputfield"], li.Inputfield {
     position: relative;
   }
+  
+  li.InputfieldStateWasCollapsed {
+    overflow: visible !important;
+  }
 
   &.aos_tooltipsDesc {
     p.description {
