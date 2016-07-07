@@ -94,7 +94,7 @@ html.aos_leftAsmDelete {
         margin: 0 0 -5px 0;
         width: 0;
         height: 0;
-        z-index: 9990;
+        z-index: 1;
         backface-visibility: hidden;
 
         // IE hack
@@ -129,6 +129,7 @@ html.aos_leftAsmDelete {
           transform-origin: 50% 50%;
         }
         &:hover,
+        //&:active,
         &.tooltip-active {
           * {
             visibility: visible;
@@ -141,7 +142,7 @@ html.aos_leftAsmDelete {
           cursor: pointer;
           font-size: 14px;
           letter-spacing: 0;
-          z-index: 9992;
+          z-index: 9990;
           &, *:not(a) {
             // set everything white but links
             color: #eee;
@@ -1037,7 +1038,7 @@ html.AdminThemeReno {
               //}
             }
             a {
-              padding: 0.75em 0.5em 0.7em 1.3em;
+              padding: 0.5em 0.5em 0.5em 1.3em;
               //&.current:hover,
               &.parent:hover {
                 background-color: inherit !important;
@@ -1064,14 +1065,17 @@ html.AdminThemeReno {
             }
             > ul {
               display: block !important;
+              &:empty {
+                display: none !important;
+              }
               overflow: visible !important;
               height: auto !important;
-              padding: 12px 14px 6px 14px !important;
+              padding: 8px 14px 2px 14px !important;
               > li {
                 display: inline-block;
                 font-size: 0.92em;
                 a {
-                  padding: 0.33em 0.5em;
+                  padding: 0.2em 0.5em;
                   opacity: 0.84;
                   &.current {
                     background: transparent;

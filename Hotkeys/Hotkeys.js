@@ -3,6 +3,26 @@ $(document).ready(function () {
     var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids),
         HotkeysSettings = AOSsettings.Hotkeys;
 
+    function aos_triggerSave() {
+        $('body').addClass('aos_saving');
+        $('#wrap, body.AdminThemeDefault #content').addClass('ui-state-disabled');
+        aos_saveButton.trigger('click');
+    }
+
+    function setupCKESave() {
+        if (window.CKEDITOR) {
+            CKEDITOR.on('instanceReady', function (evt) {
+                evt.editor.document.on('keydown', function (e) {
+                    // ctrl+s
+                    if (e.data.getKeystroke() == CKEDITOR.CTRL + 83) {
+                        e.data.$.preventDefault();
+                        aos_triggerSave();
+                    }
+                });
+            });
+        }
+    }
+
     if (HotkeysSettings.indexOf('save') !== -1) {
 
         //var aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
@@ -16,12 +36,11 @@ $(document).ready(function () {
         //    .eq(0);
 
         var aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
-            .filter('#Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
+            .filter('#submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
             .eq(0);
 
         $(document).on('keydown', function (e) {
-
-            //console.log(aos_saveButton);
+            // console.log(aos_saveButton);
             //return false;
 
             if (e.ctrlKey && e.keyCode == 83) {
@@ -34,23 +53,11 @@ $(document).ready(function () {
         });
 
         // ctrl+s in CKEditor
-        if (window.CKEDITOR) {
-            CKEDITOR.on('instanceReady', function (evt) {
-                evt.editor.document.on('keydown', function (e) {
-                    // ctrl+s
-                    if (e.data.getKeystroke() == CKEDITOR.CTRL + 83) {
-                        e.data.$.preventDefault();
-                        aos_triggerSave();
-                    }
-                });
-            });
-        }
+        setupCKESave();
 
-        function aos_triggerSave() {
-            $('body').addClass('aos_saving');
-            $('#wrap, body.AdminThemeDefault #content').addClass('ui-state-disabled');
-            aos_saveButton.trigger('click');
-        }
+        // ctrl+s in CKEditor (repeaters)
+        $(document).on('reloaded', '.Inputfield', function () {
+            setupCKESave();
+        });
     }
-
 });

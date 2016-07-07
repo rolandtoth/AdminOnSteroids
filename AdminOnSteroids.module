@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 27,
+            'version'   => 28,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -118,21 +118,28 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
+//    public function replaceCSS(HookEvent $event) {
+//        $event->return = str_replace('/wire/modules/AdminTheme/AdminThemeReno/styles/main.css', '/site/modules/AdminOnSteroids/AdminOnSteroids.css', $event->return);
+//    }
+
+
     public function ready() {
 
         self::$configData = $this->modules->getModuleConfigData($this);
         $defaultData = self::getDefaultData();
-
-
-        $root = $this->config->urls->siteModules . __CLASS__;
-        $styles = $this->config->styles;
-        $scripts = $this->config->scripts;
 
         $enabledSubmodules = isset(self::$configData['enabledSubmodules']) ? self::$configData['enabledSubmodules'] : false;
 
         if (!$enabledSubmodules) {
             return false;
         }
+
+//        $this->addHookAfter('Page::render', $this, 'replaceCSS');
+
+
+        $root = $this->config->urls->siteModules . __CLASS__;
+        $styles = $this->config->styles;
+        $scripts = $this->config->scripts;
 
         //AutosizeTextareas
         $subModule = 'AutosizeTextareas';

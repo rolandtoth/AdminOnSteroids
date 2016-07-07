@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.2.8 (2016-07-07)
+
+- fix autosize textarea updating in wiretabs (and possibly elsewhere too)
+- Tooltips z-index fix (reported by Juergen)
+- Hotkeys fixes
+
+
+
 ### 0.2.7 (2016-07-06)
 
 - new tweak Tooltips: hide field descriptions and notes to icons (requested by grimezy et al)
