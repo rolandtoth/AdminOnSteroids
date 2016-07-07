@@ -141,8 +141,11 @@ html.aos_leftAsmDelete {
           cursor: pointer;
           font-size: 14px;
           letter-spacing: 0;
-          color: #eee;
           z-index: 9992;
+          &, *:not(a) {
+            // set everything white but links
+            color: #eee;
+          }
           &:before {
             color: rgba(#000, 0.66);
             cursor: pointer;
@@ -196,7 +199,7 @@ html.aos_tooltips {
   li[id^="wrap_Inputfield"], li.Inputfield {
     position: relative;
   }
-  
+
   li.InputfieldStateWasCollapsed {
     overflow: visible !important;
   }
@@ -230,10 +233,10 @@ html.aos_tooltips {
         }
       }
       &.aos_tooltipsDesc {
-          p.notes:before {
-            transform: translateY(39px) !important;
-          }
+        p.notes:before {
+          transform: translateY(39px) !important;
         }
+      }
     }
   }
 
