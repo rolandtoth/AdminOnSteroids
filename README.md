@@ -116,11 +116,12 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 
 
 
-###LoadCollapsedModuleInfos
+###ModuleTweaks
 
-*Load module info fields collapsed*
+*Module-related tweaks*
 
-When entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
+- **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items are still sortable by clicking on the table header.
+- **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
 
 
 

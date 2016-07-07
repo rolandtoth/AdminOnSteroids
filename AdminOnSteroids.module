@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 28,
+            'version'   => 29,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -54,7 +54,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'HoverSaveDropdown',
                 'Hotkeys',
                 'PagePreviewLink',
-                'LoadCollapsedModuleInfos',
+                'ModuleTweaks',
                 'Tooltips',
                 'TabIndex',
                 'fixScrollbarJump'
@@ -71,6 +71,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'FocusInputOnLangTabSwitch'    => array(
                 'focus'
+            ),
+            'ModuleTweaks'                 => array(
+                'loadCollapsedModuleInfos',
+                'compactModuleList'
             ),
             'Hotkeys'                      => array(
                 'save'
@@ -135,7 +139,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
 //        $this->addHookAfter('Page::render', $this, 'replaceCSS');
-
 
         $root = $this->config->urls->siteModules . __CLASS__;
         $styles = $this->config->styles;
@@ -213,17 +216,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // note: $configSettings overwrite $configData (intentional)
         $this->config->js("AdminOnSteroids", json_encode(array_merge(self::$configData, $configSettings)));
 
-        // Load module info fields collapsed
-        if (in_array('LoadCollapsedModuleInfos', $enabledSubmodules)) {
+        $subModule = 'ModuleTweaks';
+        if (in_array($subModule, $enabledSubmodules)) {
 
-            $this->addHookAfter('InputfieldMarkup::render', function ($event) {
-
-                $field = $event->object;
-
-                if ($field->id == 'ModuleInfo') {
-                    $field->addClass('InputfieldStateCollapsed');
-                }
-            });
+            if (in_array('loadCollapsedModuleInfos', self::$configData[$subModule])) {
+                // Load module info fields collapsed
+                $this->addHookAfter('InputfieldMarkup::render', function ($event) {
+                    $field = $event->object;
+                    if ($field->id == 'ModuleInfo') {
+                        $field->addClass('InputfieldStateCollapsed');
+                    }
+                });
+            }
         }
     }
 
@@ -254,7 +258,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('Hotkeys', __('Hotkey tweaks', __FILE__) . ' [...]');
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
-        $f->addOption('LoadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
+        $f->addOption('ModuleTweaks', __('Module-related tweaks', __FILE__) . ' [...]');
         $f->addOption('PagePreviewLink', __('Add preview link next to page title', __FILE__));
         $f->addOption('fixScrollbarJump', __('Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('TabIndex', __('Add sequential tabindex to fields', __FILE__));
@@ -324,6 +328,21 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         if ($data['FocusInputOnLangTabSwitch']) {
             $f->attr('value', $data['FocusInputOnLangTabSwitch']);
+        }
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'ModuleTweaks');
+        $f->label = __('Module-related tweaks', __FILE__);
+        $f->showIf = 'enabledSubmodules=ModuleTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('compactModuleList', __('Compact module list', __FILE__));
+        $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
+
+        if ($data['ModuleTweaks']) {
+            $f->attr('value', $data['ModuleTweaks']);
         }
 
         $fset->add($f);

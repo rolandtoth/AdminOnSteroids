@@ -30,6 +30,12 @@ $(document).ready(function () {
         bodyClasses = [],
         htmlClasses = [];
 
+    // $("form#modules_form tr").each(function () {
+    //     if (!$(this).children('th').length) {
+    //         $(this).appendTo($("form#modules_form tbody").first());
+    //     }
+    // });
+
 // HoverSaveDropdown
 // note: copies do not need to modify
     if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
@@ -115,6 +121,27 @@ $(document).ready(function () {
 
         if (AOSsettings.FileFieldToolbar.indexOf('filterbox') !== -1) {
             htmlClasses.push('aos_filterbox');
+        }
+    }
+
+// ModuleTweaks
+    if (AOSsettings.enabledSubmodules.indexOf('ModuleTweaks') !== -1) {
+
+        if (AOSsettings.ModuleTweaks.indexOf('compactModuleList') !== -1) {
+
+            $("form#modules_form > .Inputfields > .Inputfield").each(function () {
+
+                var tab = $(this),
+                    tbody = tab.find("tbody:eq(0)");
+
+                tab.find("tr").each(function () {
+                    if (!$(this).children('th').length) {
+                        $(this).appendTo(tbody);
+                    }
+                });
+            });
+
+            htmlClasses.push('aos_compactModuleList');
         }
     }
 

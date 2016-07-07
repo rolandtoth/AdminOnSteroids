@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.2.9 (2016-07-07)
+
+- New tweak compactModuleList: remove table headers and category titles from the module list page
+- New section created for module-related tweaks (currently contains compactModuleList and collapsedModuleInfos)
+
+
+
 ### 0.2.8 (2016-07-07)
 
 - fix autosize textarea updating in wiretabs (and possibly elsewhere too)

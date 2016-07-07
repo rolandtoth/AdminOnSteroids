@@ -26,6 +26,7 @@ $defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
   }
 }
 
+
 //
 //@keyframes slideDown {
 //  from {
@@ -129,7 +130,7 @@ html.aos_leftAsmDelete {
           transform-origin: 50% 50%;
         }
         &:hover,
-        //&:active,
+          //&:active,
         &.tooltip-active {
           * {
             visibility: visible;
@@ -217,25 +218,27 @@ html.aos_tooltips {
   }
 
   &.aos_tooltipsNotes {
-    p.notes {
-      @extend .aos_tooltips_blueprint;
-      &:before {
-        content: "\f27a" !important;
-        font-size: 13px !important;
-        line-height: 13px !important;
-      }
-    }
-    &.aos_tooltipsOverlay {
+    li:not(.translated):not(.untranslated):not(.noTooltip) {
       p.notes {
-        @extend .aos_tooltips_blueprint_overlay;
-        transform: translateY(0) !important;
+        @extend .aos_tooltips_blueprint;
         &:before {
-          transform: translateY(17px) !important;
+          content: "\f27a" !important;
+          font-size: 13px !important;
+          line-height: 13px !important;
         }
       }
-      &.aos_tooltipsDesc {
-        p.notes:before {
-          transform: translateY(39px) !important;
+      &.aos_tooltipsOverlay {
+        p.notes {
+          @extend .aos_tooltips_blueprint_overlay;
+          transform: translateY(0) !important;
+          &:before {
+            transform: translateY(17px) !important;
+          }
+        }
+        &.aos_tooltipsDesc {
+          p.notes:before {
+            transform: translateY(39px) !important;
+          }
         }
       }
     }
@@ -243,12 +246,14 @@ html.aos_tooltips {
 
   // move down notes only if there's description
   &.aos_tooltipsNotes.aos_tooltipsDesc {
-    p.notes {
-      transform: translateY(22px);
+    li:not(.translated):not(.untranslated):not(.noTooltip) {
+      p.notes {
+        transform: translateY(22px);
+      }
     }
   }
-
 }
+
 
 html.aos_collapseAsmSections {
   .Inputfields .asmFieldsetStart ~ .asmListItem,
@@ -494,8 +499,25 @@ html.aos_filterbox {
 
 }
 
-// tweak styles
+// ModuleTweaks
+html.aos_compactModuleList {
+  form#modules_form {
+    .modules_filter {
+      display: none;
+    }
+    .modules_section:not(:first-of-type) thead {
+      display: none;
+    }
+    table {
+      margin-bottom: 0;
+    }
+    h2 {
+      display: none;
+    }
+  }
+}
 
+// tweak styles
 html.aos_PagePreviewLink {
 
   body.AdminThemeDefault {
