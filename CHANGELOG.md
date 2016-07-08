@@ -1,6 +1,10 @@
 #Changelog
 
 
+- fix z-index issue (reported by Juergen)
+
+
+
 ### 0.2.9 (2016-07-07)
 
 - New tweak compactModuleList: remove table headers and category titles from the module list page

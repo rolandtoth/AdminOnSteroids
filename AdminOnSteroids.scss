@@ -416,11 +416,6 @@ html.aos_filterbox {
     }
   }
 
-  // filtered item display fix (matjazp)
-  //.InputfieldImageEditAll .gridImage {
-  //  display: inline-block;
-  //}
-
   body.AdminThemeDefault .InputfieldFileFieldFilter {
     position: absolute;
     margin-top: 0;
@@ -558,6 +553,13 @@ html.aos_noAnims * {
   transition: none !important;
 }
 
+.fixZIndex {
+  .InputfieldImageEditAll .gridImage,
+  .ui-slider-handle {
+    z-index: 1;
+  }
+}
+
 /*Reno theme tweaks*/
 html.AdminThemeReno {
 
@@ -573,6 +575,8 @@ html.AdminThemeReno {
   &.aos_stickyHeader:not(.modal) {
 
     @media only screen and (min-width: 960px) {
+
+      @extend .fixZIndex;
 
       #masthead,
       #branding,
@@ -1179,6 +1183,8 @@ body.AdminThemeDefault {
   // stickyHeader
   &.aos_stickyHeader:not(.modal) {
     @media only screen and (min-width: 960px) {
+
+      @extend .fixZIndex;
 
       padding-top: 64px;
 
