@@ -83,7 +83,8 @@ html.aos_leftAsmDelete {
 @media only screen and (min-width: 960px) {
 
   #content {
-    li:not(.translated):not(.untranslated):not(.noTooltip) { // disable in Language Translator
+    //li:not(.translated):not(.untranslated):not(.noTooltip) { // disable in Language Translator
+    form:not([action^="./?textdomain"]) { // disable in Language Translator
 
       .aos_tooltips_blueprint {
         position: absolute;
@@ -218,7 +219,8 @@ html.aos_tooltips {
   }
 
   &.aos_tooltipsNotes {
-    li:not(.translated):not(.untranslated):not(.noTooltip) {
+    //li:not(.translated):not(.untranslated):not(.noTooltip) {
+    form:not([action^="./?textdomain"]) {
       p.notes {
         @extend .aos_tooltips_blueprint;
         &:before {
@@ -246,7 +248,8 @@ html.aos_tooltips {
 
   // move down notes only if there's description
   &.aos_tooltipsNotes.aos_tooltipsDesc {
-    li:not(.translated):not(.untranslated):not(.noTooltip) {
+    //li:not(.translated):not(.untranslated):not(.noTooltip) {
+    form:not([action^="./?textdomain"]) {
       p.notes {
         transform: translateY(22px);
       }

@@ -1,7 +1,10 @@
 #Changelog
 
 
-- fix z-index issue (reported by Juergen)
+### 0.3.0 (2016-07-11)
+
+- force align dropdown menus to right of parent button
+- make tabindex start from 1 instead 0
 
 
 

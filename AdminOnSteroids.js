@@ -30,24 +30,21 @@ $(document).ready(function () {
         bodyClasses = [],
         htmlClasses = [];
 
-    // $("form#modules_form tr").each(function () {
-    //     if (!$(this).children('th').length) {
-    //         $(this).appendTo($("form#modules_form tbody").first());
-    //     }
-    // });
+    if (AOSsettings == null) {
+        return false;
+    }
 
-// HoverSaveDropdown
-// note: copies do not need to modify
+    // HoverSaveDropdown
+    // note: copies do not need to modify
     if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
         $('#pw-dropdown-toggle-submit_save, ' +
             '#pw-dropdown-toggle-submit_publish, ' +
             '#pw-dropdown-toggle-submit_save_unpublished, ' +
             '#pw-dropdown-toggle-Inputfield_submit_save_module')
             .removeClass('dropdown-toggle-click');
-    }
 
-    if (AOSsettings == null) {
-        return false;
+        // force align dropdown menus to right of parent button
+        $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
     }
 
 // LongClickDuration
@@ -94,7 +91,7 @@ $(document).ready(function () {
 
         function aos_updateTabIndices() {
             $('input, textarea, select').each(function (index) {
-                $(this).prop('tabindex', index);
+                $(this).prop('tabindex', index + 1);
             });
         }
 
