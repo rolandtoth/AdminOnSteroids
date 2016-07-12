@@ -270,7 +270,7 @@ $(document).ready(function () {
 
             if (sidebarNav) {
                 Ps.initialize(sidebarNav, {
-                    wheelSpeed: 1,
+                    wheelSpeed: 2,
                     theme: 'pw-scrollbar',
                     wheelPropagation: false
                 });
@@ -278,7 +278,7 @@ $(document).ready(function () {
 
             if (mainContent) {
                 Ps.initialize(mainContent, {
-                    wheelSpeed: 1,
+                    wheelSpeed: 2,
                     theme: 'pw-scrollbar',
                     wheelPropagation: false
                 });

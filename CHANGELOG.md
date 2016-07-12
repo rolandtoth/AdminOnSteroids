@@ -1,10 +1,12 @@
 #Changelog
 
 
-### 0.3.0 (2016-07-11)
+### 0.3.0 (2016-07-12)
 
 - force align dropdown menus to right of parent button
 - make tabindex start from 1 instead 0
+- Tooltips: fix for field notes overlay style not appearing & other styling improvements
+- miniScrollbar: increase wheel speed (was slow in Firefox)
 
 
 

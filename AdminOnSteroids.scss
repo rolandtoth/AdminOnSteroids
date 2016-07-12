@@ -26,7 +26,6 @@ $defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
   }
 }
 
-
 //
 //@keyframes slideDown {
 //  from {
@@ -95,6 +94,7 @@ html.aos_leftAsmDelete {
         padding: 0;
         margin: 0 0 -5px 0;
         width: 0;
+        line-height: 1.45;
         height: 0;
         z-index: 1;
         backface-visibility: hidden;
@@ -108,7 +108,7 @@ html.aos_leftAsmDelete {
           visibility: hidden;
         }
 
-        // info icon
+        // icon
         &:before {
           content: "\f05a";
           text-indent: 0;
@@ -147,7 +147,7 @@ html.aos_leftAsmDelete {
           z-index: 9990;
           &, *:not(a) {
             // set everything white but links
-            color: #eee;
+            color: #f8f8f8;
           }
           &:before {
             color: rgba(#000, 0.66);
@@ -178,7 +178,8 @@ html.aos_leftAsmDelete {
         bottom: auto !important;
         min-height: 100%;
         margin: 0 !important;
-        background-color: rgba(#141414, 0.88) !important;
+        font-size: 90%;
+        background-color: rgba(#1C2836, 0.88) !important;
         &:hover,
         &.tooltip-active {
           padding: 12px 24px !important;
@@ -229,18 +230,18 @@ html.aos_tooltips {
           line-height: 13px !important;
         }
       }
-      &.aos_tooltipsOverlay {
-        p.notes {
-          @extend .aos_tooltips_blueprint_overlay;
-          transform: translateY(0) !important;
-          &:before {
-            transform: translateY(17px) !important;
-          }
+    }
+    &.aos_tooltipsOverlay {
+      p.notes {
+        @extend .aos_tooltips_blueprint_overlay;
+        transform: translateY(0) !important;
+        &:before {
+          transform: translateY(17px) !important;
         }
-        &.aos_tooltipsDesc {
-          p.notes:before {
-            transform: translateY(39px) !important;
-          }
+      }
+      &.aos_tooltipsDesc {
+        p.notes:before {
+          transform: translateY(39px) !important;
         }
       }
     }
@@ -256,7 +257,6 @@ html.aos_tooltips {
     }
   }
 }
-
 
 html.aos_collapseAsmSections {
   .Inputfields .asmFieldsetStart ~ .asmListItem,
