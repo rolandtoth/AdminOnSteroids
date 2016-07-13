@@ -212,8 +212,11 @@ html.aos_tooltips {
     position: relative;
   }
 
+  // fix repeater/matrix repeater icon cutoffs
   li.InputfieldStateWasCollapsed {
-    overflow: visible !important;
+    &, .InputfieldContent {
+      overflow: visible !important;
+    }
   }
 
   &.aos_tooltipsDesc {
@@ -673,6 +676,11 @@ html.AdminThemeReno {
 
       @extend .fixZIndex;
 
+      #head_button {
+        margin-right: 24px;
+        margin-bottom: -8px;
+      }
+
       #masthead,
       #branding,
       .main-nav-toggle {
@@ -832,34 +840,36 @@ html.AdminThemeReno {
           padding-left: 232px;
         }
       }
-      #wrap #search {
-        left: auto;
-        top: 42px !important;
-        transform: none;
-        max-width: 360px;
-        right: -8px;
-        z-index: 210;
-        position: fixed;
-        input {
-          background: transparent;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.16);
-          border-radius: 0;
-          padding: 0.6em 3em 0.6em 1em;
-          max-width: 120px;
-          transition: max-width $defaultTransition;
-          float: right;
-          position: relative;
-          z-index: 220;
-          &:focus {
-            background: rgba(#F0F3F7, 0.5);
-            max-width: 100%;
+      #wrap {
+        #search {
+          left: auto;
+          top: 40px !important;
+          transform: none;
+          max-width: 360px;
+          z-index: 210;
+          position: fixed;
+          right: -8px;
+          input {
+            background: transparent;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+            border-radius: 0;
+            padding: 0.6em 3em 0.6em 1em;
+            max-width: 120px;
+            transition: max-width $defaultTransition;
+            float: right;
+            position: relative;
+            z-index: 220;
+            &:focus {
+              background: rgba(#F0F3F7, 0.5);
+              max-width: 100%;
+            }
           }
-        }
-        label {
-          right: 0;
-          left: auto !important;
-          margin-top: 2px;
-          z-index: 300;
+          label {
+            right: 0;
+            left: auto !important;
+            margin-top: 2px;
+            z-index: 300;
+          }
         }
       }
       body.scrolled {
@@ -961,6 +971,12 @@ html.AdminThemeReno {
             left: 230px;
           }
         }
+      }
+    }
+
+    &:not(.aos_headButtonNextToTitle) {
+      #search {
+        right: 120px !important;
       }
     }
   }
