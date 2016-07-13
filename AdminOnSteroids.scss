@@ -523,11 +523,12 @@ html.aos_compactModuleList {
     table.AdminDataList {
       .buttons {
         float: right;
-        //width: 100px;
-        //top: 2px;
-        //left: 8px;
-        button + button {
-          margin-left: 4px;
+        margin: 0;
+        button {
+
+          + button {
+            margin-left: 4px;
+          }
         }
         button[name="delete"] {
           background: #b93e42 !important;
@@ -539,11 +540,20 @@ html.aos_compactModuleList {
         }
       }
       p.module-summary {
-        //min-height: 26px;
-        float: left;
-        &, & + span {
-          //padding-left: 110px;
+        &, + span {
+          float: left;
+          display: inline-block;
+          //width: calc(100% - 120px);
           max-width: calc(100% - 120px);
+        }
+        + span {
+          //width: calc(100% - 200px);
+          //max-width: calc(100% - 120px);
+          clear: left;
+          + .buttons {
+            // compensation
+            margin-top: -20px;
+          }
         }
       }
       td:last-child {
@@ -579,7 +589,7 @@ html.aos_compactModuleList {
         }
       }
       button.ProcessModuleSettings {
-        display: none
+        display: none;
       }
     }
   }
