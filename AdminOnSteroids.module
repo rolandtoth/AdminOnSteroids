@@ -354,23 +354,7 @@ HTML;
             $f->attr('value', $data['FocusInputOnLangTabSwitch']);
         }
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
-        $f->attr('name', 'ModuleTweaks');
-        $f->label       = __('Module-related tweaks', __FILE__);
-        $f->showIf      = 'enabledSubmodules=ModuleTweaks';
-        $f->collapsed   = Inputfield::collapsedNever;
-        $f->description = __('', __FILE__);
-        $f->notes       = __('', __FILE__);
-
-        $f->addOption('compactModuleList', __('Compact module list', __FILE__));
-        $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
-
-        if ($data['ModuleTweaks']) {
-            $f->attr('value', $data['ModuleTweaks']);
-        }
-
         $fset->add($f);
-
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
@@ -391,6 +375,24 @@ HTML;
         }
 
         $fset->add($f);
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'ModuleTweaks');
+        $f->label       = __('Module-related tweaks', __FILE__);
+        $f->showIf      = 'enabledSubmodules=ModuleTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
+
+        $f->addOption('compactModuleList', __('Compact module list', __FILE__));
+        $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
+
+        if ($data['ModuleTweaks']) {
+            $f->attr('value', $data['ModuleTweaks']);
+        }
+
+        $fset->add($f);
+
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'FileFieldToolbar');
