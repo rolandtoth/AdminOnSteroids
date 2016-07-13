@@ -525,7 +525,6 @@ html.aos_compactModuleList {
         float: right;
         margin: 0;
         button {
-
           + button {
             margin-left: 4px;
           }
@@ -543,12 +542,9 @@ html.aos_compactModuleList {
         &, + span {
           float: left;
           display: inline-block;
-          //width: calc(100% - 120px);
           max-width: calc(100% - 120px);
         }
         + span {
-          //width: calc(100% - 200px);
-          //max-width: calc(100% - 120px);
           clear: left;
           + .buttons {
             // compensation
@@ -556,40 +552,53 @@ html.aos_compactModuleList {
           }
         }
       }
-      td:last-child {
-        position: relative;
-        //display:flex;
-        //flex-direction: column-reverse;
-      }
-      td:nth-child(2) {
-        br {
-          display: none;
-        }
-        small {
-          margin-left: 8px;
-          opacity: 0.7;
-        }
-      }
-      span.ConfigurableModule {
-        position: relative;
-        &:after {
-          content: "\f013";
-          font-family: FontAwesome, sans-serif;
-          position: absolute;
-          color: rgba(#364D68, 0.2);
-          margin-top: 1px;
-          margin-left: 8px;
-        }
-      }
-      td:hover {
-        span.ConfigurableModule {
-          &:after {
-            color: inherit;
+      @media only screen and (min-width: 960px) {
+        td:first-child {
+          position: relative;
+          i {
+            position: absolute;
+            right: 8px;
+            top: 10px;
+          }
+          a span {
+            position: static;
           }
         }
-      }
-      button.ProcessModuleSettings {
-        display: none;
+        td:last-child {
+          position: relative;
+          //display:flex;
+          //flex-direction: column-reverse;
+        }
+        td:nth-child(2) {
+          br {
+            display: none;
+          }
+          small {
+            margin-left: 8px;
+            opacity: 0.7;
+          }
+        }
+        span.ConfigurableModule {
+          position: relative;
+          &:after {
+            content: "\f013";
+            font-family: FontAwesome, sans-serif;
+            position: absolute;
+            color: rgba(#364D68, 0.2);
+            margin-top: 1px;
+            margin-left: 8px;
+          }
+        }
+        td:hover {
+          span.ConfigurableModule {
+            &:after {
+              color: inherit;
+            }
+          }
+        }
+        button.ProcessModuleSettings {
+          display: none;
+        }
       }
     }
   }
