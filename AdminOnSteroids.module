@@ -131,18 +131,29 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 //    public function replaceCSS(HookEvent $event) {
 //        $event->return = str_replace('/wire/modules/AdminTheme/AdminThemeReno/styles/main.css', '/site/modules/AdminOnSteroids/AdminOnSteroids.css', $event->return);
 //    }
-    public function setLoaderImage(HookEvent $event) {
+    public function addLoader(HookEvent $event) {
 
         $img = 'data:image/gif;base64,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';
 
-        $event->return = str_replace('<body', '<body style="visibility: hidden; overflow: hidden; background: url(' . $img . ') center 45% no-repeat;"', $event->return);
+        $aos_loader = <<< HTML
+ <style id="aos_loader">
+    body {visibility: hidden; overflow: hidden; background: url($img) center 47% no-repeat;"}
+</style>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('#aos_loader').parentNode.removeChild(document.querySelector('#aos_loader'));
+});
+</script>
+HTML;
+
+        $event->return = str_replace('</head>', $aos_loader . PHP_EOL . '</head>', $event->return);
     }
 
 
     public function ready() {
 
         self::$configData = $this->modules->getModuleConfigData($this);
-        $defaultData = self::getDefaultData();
+        $defaultData      = self::getDefaultData();
 
         $enabledSubmodules = isset(self::$configData['enabledSubmodules']) ? self::$configData['enabledSubmodules'] : false;
 
@@ -150,12 +161,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             return false;
         }
 
-        $this->addHookAfter('Page::render', $this, 'setLoaderImage');
+        $this->addHookAfter('Page::render', $this, 'addLoader');
 //        $this->addHookAfter('Page::render', $this, 'replaceCSS');
 //        $this->addHookAfter('Page::render', $this, 'addCSS');
 
-        $root = $this->config->urls->siteModules . __CLASS__;
-        $styles = $this->config->styles;
+        $root    = $this->config->urls->siteModules . __CLASS__;
+        $styles  = $this->config->styles;
         $scripts = $this->config->scripts;
 
         //AutosizeTextareas
@@ -182,7 +193,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         //RenoTweaks
         $subModule = 'RenoTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
-            if (in_array('miniScrollbar', self::$configData[$subModule]) && in_array('stickyHeader', self::$configData[$subModule])) {
+            if (in_array('miniScrollbar', self::$configData[ $subModule ]) && in_array('stickyHeader', self::$configData[ $subModule ])) {
                 $scripts->add($root . '/lib/perfect-scrollbar/js/perfect-scrollbar.min.js');
 //                $styles->add($root . '/lib/perfect-scrollbar/css/perfect-scrollbar.min.css');
             }
@@ -210,7 +221,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'LongClickDuration';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $LongClickDuration = (int)self::$configData['LongClickDuration'];
+            $LongClickDuration = (int) self::$configData['LongClickDuration'];
 
             //do not allow lower value than default 600
             $LongClickDuration = ($LongClickDuration < $defaultData['LongClickDuration']) ? $defaultData['LongClickDuration'] : $LongClickDuration;
@@ -232,7 +243,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'ModuleTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            if (in_array('loadCollapsedModuleInfos', self::$configData[$subModule])) {
+            if (in_array('loadCollapsedModuleInfos', self::$configData[ $subModule ])) {
                 // Load module info fields collapsed
                 $this->addHookAfter('InputfieldMarkup::render', function ($event) {
                     $field = $event->object;
@@ -248,18 +259,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     public static function getModuleConfigInputfields(array $data) {
 
         $defaultData = self::getDefaultData();
-        $data = array_merge(self::getDefaultData(), $data);
+        $data        = array_merge(self::getDefaultData(), $data);
 
         $wrapper = new InputfieldWrapper();
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
         $f->columnWidth = 36;
-        $f->label = __('Submodules', __FILE__);
-        $f->collapsed = Inputfield::collapsedNever;
-        $f->table = true;
+        $f->label       = __('Submodules', __FILE__);
+        $f->collapsed   = Inputfield::collapsedNever;
+        $f->table       = true;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
@@ -284,7 +295,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $wrapper->add($f);
 
 
-        $fset = wire('modules')->get("InputfieldFieldset");
+        $fset              = wire('modules')->get("InputfieldFieldset");
         $fset->columnWidth = 64;
 //        $fset->label = 'Tunings';
         $fset->collapsed = Inputfield::collapsedNever;
@@ -292,11 +303,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'DeselectRadios');
-        $f->label = 'DeselectRadios settings';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = 'DeselectRadios settings';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=DeselectRadios';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=DeselectRadios';
 
         $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
         $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
@@ -308,11 +319,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AsmTweaks');
-        $f->label = __('asmSelect settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=AsmTweaks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('asmSelect settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=AsmTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('collapseAsmSections', __('Collapse fieldset/tab items on double click', __FILE__));
         $f->addOption('leftAsmDelete', __('Move delete button to the left', __FILE__));
@@ -326,11 +337,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitch');
-        $f->label = __('FocusInputOnLangTabSwitch settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FocusInputOnLangTabSwitch settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
         $f->columnWidth = 50;
 
 
@@ -345,11 +356,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'ModuleTweaks');
-        $f->label = __('Module-related tweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=ModuleTweaks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Module-related tweaks', __FILE__);
+        $f->showIf      = 'enabledSubmodules=ModuleTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('compactModuleList', __('Compact module list', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
@@ -363,11 +374,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label = __('FocusInputOnLangTabSwitch settings (CKEditor)', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FocusInputOnLangTabSwitch settings (CKEditor)', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
         $f->columnWidth = 50;
 
         $f->addOption('focus', __('Focus', __FILE__));
@@ -383,11 +394,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'FileFieldToolbar');
-        $f->label = __('FileFieldToolbar settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=FileFieldToolbar';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FileFieldToolbar settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FileFieldToolbar';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('filterbox', __('Filter box', __FILE__));
 
@@ -399,11 +410,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Hotkeys');
-        $f->label = __('Hotkeys settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=Hotkeys';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Hotkeys settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=Hotkeys';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('save', __('Save on ctrl+s', __FILE__));
 
@@ -415,22 +426,22 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldText");
         $f->attr('name', 'LongClickDuration');
-        $f->label = __('LongClickDuration (milliseconds)', __FILE__);
+        $f->label       = __('LongClickDuration (milliseconds)', __FILE__);
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=LongClickDuration';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=LongClickDuration';
         $f->attr('style', 'width: 100px;');
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->attr('value', (isset($data['LongClickDuration']) && (int)$data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+        $f->attr('value', (isset($data['LongClickDuration']) && (int) $data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
 
         $fset->add($f);
 
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PagePreviewLink');
-        $f->label = __('PagePreviewLink', __FILE__);
-        $f->showIf = 'enabledSubmodules=PagePreviewLink';
+        $f->label      = __('PagePreviewLink', __FILE__);
+        $f->showIf     = 'enabledSubmodules=PagePreviewLink';
         $f->collapsúed = Inputfield::collapsedNever;
 //        $f->optionColumns = 3;
 
@@ -446,11 +457,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Tooltips');
-        $f->label = __('Tooltips settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=Tooltips';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Tooltips settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=Tooltips';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('description', __('Enable for field descriptions', __FILE__));
         $f->addOption('notes', __('Enable for field notes', __FILE__));
@@ -465,8 +476,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AdminTweaks');
-        $f->label = __('AdminTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=AdminTweaks';
+        $f->label     = __('AdminTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=AdminTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
@@ -480,8 +491,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'RenoTweaks');
-        $f->label = __('RenoTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=RenoTweaks';
+        $f->label     = __('RenoTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=RenoTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));

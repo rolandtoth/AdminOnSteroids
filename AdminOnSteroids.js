@@ -1,7 +1,3 @@
-window.addEventListener('DOMContentLoaded', function() {
-    document.body.removeAttribute('style');
-});
-
 function debounce(func, wait, immediate) {
     var timeout;
     return function () {
