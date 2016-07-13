@@ -1,5 +1,3 @@
-
-
 @mixin clearfix {
   &:after {
     content: "";
@@ -549,7 +547,7 @@ html.aos_compactModuleList {
         + span {
           clear: left;
           + .buttons {
-            // compensation
+            // pull up
             margin-top: -20px;
           }
         }
@@ -560,10 +558,13 @@ html.aos_compactModuleList {
           i {
             position: absolute;
             right: 8px;
-            top: 10px;
+            top: 11px;
           }
-          a span {
-            position: static;
+          a {
+            display: block;
+            span {
+              position: static;
+            }
           }
         }
         td:last-child {
