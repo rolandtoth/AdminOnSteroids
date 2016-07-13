@@ -141,7 +141,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 </style>
 <script>
 window.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('#aos_loader').parentNode.removeChild(document.querySelector('#aos_loader'));
+    document.head.removeChild(document.querySelector('#aos_loader'));
 });
 </script>
 HTML;
