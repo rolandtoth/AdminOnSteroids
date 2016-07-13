@@ -1,3 +1,5 @@
+
+
 @mixin clearfix {
   &:after {
     content: "";
@@ -586,7 +588,7 @@ html.aos_compactModuleList {
             position: absolute;
             color: rgba(#364D68, 0.2);
             margin-top: 1px;
-            margin-left: 8px;
+            padding-left: 7px;
           }
         }
         td:hover {

@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.3.2 (2016-07-13)
+
+- remove initial FOUC with a (fake) loader
+
+
+
 ### 0.3.1 (2016-07-13)
 
 - more compact module list

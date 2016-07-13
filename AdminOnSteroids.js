@@ -1,3 +1,7 @@
+window.addEventListener('DOMContentLoaded', function() {
+    document.body.removeAttribute('style');
+});
+
 function debounce(func, wait, immediate) {
     var timeout;
     return function () {
@@ -693,6 +697,8 @@ var addScrolledBodyClass = debounce(function () {
     // window.addEventListener(e, addScrolledBodyClass, false);
     window.addEventListener(e, addScrolledBodyClass);
 });
+
+
 
 function posTop() {
     return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
