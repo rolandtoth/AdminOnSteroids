@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 30,
+            'version'   => 31,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -122,6 +122,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
+//    public function addCSS(HookEvent $event) {
+//
+//        $css = file_get_contents(__DIR__ . '/AdminOnSteroids.css');
+//
+//        $event->return = str_replace('</head>', '<style>' . $css . '</style>' . '</head>', $event->return);
+//    }
 //    public function replaceCSS(HookEvent $event) {
 //        $event->return = str_replace('/wire/modules/AdminTheme/AdminThemeReno/styles/main.css', '/site/modules/AdminOnSteroids/AdminOnSteroids.css', $event->return);
 //    }
@@ -139,6 +145,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
 //        $this->addHookAfter('Page::render', $this, 'replaceCSS');
+//        $this->addHookAfter('Page::render', $this, 'addCSS');
 
         $root = $this->config->urls->siteModules . __CLASS__;
         $styles = $this->config->styles;
@@ -207,7 +214,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $configSettings['LongClickDuration'] = $defaultData['LongClickDuration'];
         }
 
-//        $styles->add($root . '/' . __CLASS__ . '.css');
         $styles->prepend($root . '/' . __CLASS__ . '.css');
 
         // also add global JS

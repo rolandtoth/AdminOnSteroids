@@ -1,3 +1,11 @@
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
 //$defaultTransition: 0.1s ease-in;
 $defaultTransition: 0.12s;
 $defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
@@ -511,6 +519,68 @@ html.aos_compactModuleList {
     }
     h2 {
       display: none;
+    }
+    table.AdminDataList {
+      .buttons {
+        float: right;
+        //width: 100px;
+        //top: 2px;
+        //left: 8px;
+        button + button {
+          margin-left: 4px;
+        }
+        button[name="delete"] {
+          background: #b93e42 !important;
+          border-color: #b93e42 !important;
+          &:hover {
+            background: saturate(#b93e42, 20%) !important;
+            border-color: saturate(#b93e42, 20%) !important;
+          }
+        }
+      }
+      p.module-summary {
+        //min-height: 26px;
+        float: left;
+        &, & + span {
+          //padding-left: 110px;
+          max-width: calc(100% - 120px);
+        }
+      }
+      td:last-child {
+        position: relative;
+        //display:flex;
+        //flex-direction: column-reverse;
+      }
+      td:nth-child(2) {
+        br {
+          display: none;
+        }
+        small {
+          margin-left: 8px;
+          opacity: 0.7;
+        }
+      }
+      span.ConfigurableModule {
+        position: relative;
+        &:after {
+          content: "\f013";
+          font-family: FontAwesome, sans-serif;
+          position: absolute;
+          color: rgba(#364D68, 0.2);
+          margin-top: 1px;
+          margin-left: 8px;
+        }
+      }
+      td:hover {
+        span.ConfigurableModule {
+          &:after {
+            color: inherit;
+          }
+        }
+      }
+      button.ProcessModuleSettings {
+        display: none
+      }
     }
   }
 }

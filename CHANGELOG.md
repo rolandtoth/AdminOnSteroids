@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.3.1 (2016-07-13)
+
+- more compact module list
+
+
+
 ### 0.3.0 (2016-07-12)
 
 - force align dropdown menus to right of parent button

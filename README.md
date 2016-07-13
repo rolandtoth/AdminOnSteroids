@@ -1,7 +1,7 @@
 Admin On Steroids
 ========================
 
-Various admin hacks to enhance ProcessWire admin.
+Various admin tweaks to enhance ProcessWire admin. See more at [https://processwire.com/talk/topic/13389-adminonsteroids/](https://processwire.com/talk/topic/13389-adminonsteroids/)
 
 
 ## Install
@@ -120,7 +120,7 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 
 *Module-related tweaks*
 
-- **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items are still sortable by clicking on the table header.
+- **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
 
 
