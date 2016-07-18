@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.3.3 (2016-07-18)
+
+- option to use miniScrollbar for sidebar or main content
+
+
+
 ### 0.3.2 (2016-07-13)
 
 - remove initial FOUC with a (fake) loader

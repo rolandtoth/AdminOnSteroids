@@ -22,7 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 32,
+            'version'   => 33,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -95,7 +95,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'singleClickSidebarHeaders',
                 'stickyHeader',
                 'stickyHeaderCompact',
-                'miniScrollbar',
+                'miniScrollbarSidebar',
+//                'miniScrollbarMain',
                 'stickySidebar',
                 'stickyCKEditorToolbar',
 //                'autoHideSidebar',
@@ -193,9 +194,10 @@ HTML;
         //RenoTweaks
         $subModule = 'RenoTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
-            if (in_array('miniScrollbar', self::$configData[ $subModule ]) && in_array('stickyHeader', self::$configData[ $subModule ])) {
+            if (in_array('stickyHeader', self::$configData[ $subModule ])) {
+            if (in_array('miniScrollbarSidebar', self::$configData[ $subModule ]) || in_array('miniScrollbarMain', self::$configData[ $subModule ])) {
                 $scripts->add($root . '/lib/perfect-scrollbar/js/perfect-scrollbar.min.js');
-//                $styles->add($root . '/lib/perfect-scrollbar/css/perfect-scrollbar.min.css');
+            }
             }
         }
 
@@ -500,7 +502,8 @@ HTML;
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
         $f->addOption('stickyHeaderCompact', __('Compact header', __FILE__));
         $f->addOption('stickyCKEditorToolbar', __('Sticky CKEditor toolbar', __FILE__));
-        $f->addOption('miniScrollbar', __('Use mini scrollbar on main content and sidebar', __FILE__));
+        $f->addOption('miniScrollbarSidebar', __('Use mini scrollbar for sidebar', __FILE__));
+        $f->addOption('miniScrollbarMain', __('Use mini scrollbar for main content', __FILE__));
         $f->addOption('stickySidebar', __('Sticky sidebar', __FILE__));
         $f->addOption('autoHideSidebar', __('Autohide sidebar', __FILE__));
         $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));

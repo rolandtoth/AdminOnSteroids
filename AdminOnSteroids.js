@@ -263,25 +263,23 @@ $(document).ready(function () {
             htmlClasses.push('aos_closeNoticeButtonToLeft');
         }
 
-        if (renoTweaksSettings.indexOf('miniScrollbar') !== -1 && window.Ps) {
+        // miniScrollbar
+        if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                mainContent = document.querySelector('#main');
-
-            if (sidebarNav) {
-                Ps.initialize(sidebarNav, {
+                mainContent = document.querySelector('#main'),
+                PsSettings = {
                     wheelSpeed: 2,
                     theme: 'pw-scrollbar',
                     wheelPropagation: false
-                });
+                };
+
+            if (sidebarNav && renoTweaksSettings.indexOf('miniScrollbarSidebar') !== -1) {
+                Ps.initialize(sidebarNav, PsSettings);
             }
 
-            if (mainContent) {
-                Ps.initialize(mainContent, {
-                    wheelSpeed: 2,
-                    theme: 'pw-scrollbar',
-                    wheelPropagation: false
-                });
+            if (mainContent && renoTweaksSettings.indexOf('miniScrollbarMain') !== -1) {
+                Ps.initialize(mainContent, PsSettings);
             }
         }
     }
