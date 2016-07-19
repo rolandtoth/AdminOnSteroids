@@ -678,6 +678,10 @@ html.AdminThemeReno {
 
       @extend .fixZIndex;
 
+      .pw-button-dropdown {
+        z-index: 10100 !important;
+      }
+
       #head_button {
         margin-right: 24px;
         margin-bottom: -8px;
