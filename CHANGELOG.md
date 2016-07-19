@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.3.4 (2016-07-19)
+
+- CSS fixes
+
+
+
 ### 0.3.3 (2016-07-18)
 
 - option to use miniScrollbar for sidebar or main content

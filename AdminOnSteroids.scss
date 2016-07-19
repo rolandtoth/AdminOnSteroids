@@ -136,6 +136,7 @@ html.aos_leftAsmDelete {
           line-height: 14px;
           text-align: center;
           border-radius: 100%;
+          z-index: 9980;
           transform-origin: 50% 50%;
         }
         &:hover,
@@ -370,7 +371,7 @@ form[action$="AdminOnSteroids"] {
       }
     }
   }
-  
+
   input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
   input#Inputfield_RenoTweaks_miniScrollbarSidebar,
   input#Inputfield_RenoTweaks_miniScrollbarMain,
@@ -1298,7 +1299,8 @@ body.AdminThemeDefault {
 
       @extend .fixZIndex;
 
-      padding-top: 64px;
+      padding-top: 100px;
+      //padding-top: 64px;
 
       #masthead {
         position: fixed;
@@ -1319,15 +1321,24 @@ body.AdminThemeDefault {
 
       #notices {
         position: relative;
-        top: 33px;
-        z-index: 60;
+        //top: 33px;
+        z-index: 19;
         & ~ #content {
-          padding-top: 84px;
+          //padding-top: 84px;
+          padding-top: 16px;
+          //padding-top: 52px;
         }
       }
 
       &.hasWireTabs {
-        padding-top: 100px;
+        #notices {
+          & ~ #content {
+            padding-top: 52px;
+          }
+        }
+        #content {
+          padding-top: 52px;
+        }
       }
 
       #head_button {
@@ -1335,8 +1346,7 @@ body.AdminThemeDefault {
       }
 
       #content {
-        padding-top: 52px;
-
+        padding-top: 16px;
       }
     }
   }
