@@ -214,12 +214,10 @@ HTML;
 
             // add breadcrumb tweaks
             if (in_array('breadcrumbTweaks', self::$configData[$subModule])) {
+                
+                $page = $this->pages->get('has_parent!=2, id=' . $this->input->get->id);
 
-                $page_id = $this->input->get->id;
-
-                if ($page_id) {
-                    $page = $this->pages->get($page_id);
-
+                if ($page->id) {
                     $homepage = $this->wire->pages->get(1);
                     $breadcrumbUrls = array();
 
