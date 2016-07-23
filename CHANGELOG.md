@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.3.5 (2016-07-23)
+
+- Add long-click and ctrl+click actions to breadcrumbs (Hotkeys submodule)
+- Add 'Add new template' page support for Hotkeys save
+
+
+
 ### 0.3.4 (2016-07-19)
 
 - CSS fixes

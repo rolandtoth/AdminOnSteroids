@@ -34,6 +34,7 @@ $(document).ready(function () {
         return false;
     }
 
+
     // HoverSaveDropdown
     // note: copies do not need to modify
     if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
@@ -691,7 +692,6 @@ var addScrolledBodyClass = debounce(function () {
     // window.addEventListener(e, addScrolledBodyClass, false);
     window.addEventListener(e, addScrolledBodyClass);
 });
-
 
 
 function posTop() {

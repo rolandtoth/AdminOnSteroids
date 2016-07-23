@@ -1,7 +1,35 @@
 $(document).ready(function () {
 
     var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids),
-        HotkeysSettings = AOSsettings.Hotkeys;
+        HotkeysSettings = AOSsettings.Hotkeys,
+        BreadcrumbsSettings = ProcessWire.config.AOS_breadcrumbs;
+
+
+    if (HotkeysSettings.indexOf('breadcrumbTweaks') && BreadcrumbsSettings) {
+
+        // add "data-*" markups
+        $('#breadcrumbs a').each(function (i) {
+            $(this).attr('data-url', BreadcrumbsSettings[i]['url']);
+            $(this).attr('data-editurl', BreadcrumbsSettings[i]['editUrl']);
+        });
+
+        $('#breadcrumbs').on('longclick', 'a', function (e) {
+            if ($(this).attr('data-url')) {
+                e.preventDefault();
+                var url = $(this).attr('data-url');
+                window.open(url);
+            }
+        });
+
+        $('#breadcrumbs').on('click', 'a', function (e) {
+            if (e.ctrlKey && $(this).attr('data-editurl')) {
+                e.preventDefault();
+                var url = $(this).attr('data-editurl');
+                window.location = url;
+            }
+        });
+    }
+
 
     function aos_triggerSave() {
         $('body').addClass('aos_saving');
@@ -25,18 +53,8 @@ $(document).ready(function () {
 
     if (HotkeysSettings.indexOf('save') !== -1) {
 
-        //var aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
-        //    .not('#Inputfield_clear_file_compiler')
-        //    .not('#upload')
-        //    .not('#download')
-        //    .not('#download_zip')
-        //    .not('.Inputfield_submit_bookmark')
-        //    .not('[name="install"]')
-        //    .not('[name="delete"]')
-        //    .eq(0);
-
         var aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
-            .filter('#submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
+            .filter('form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
             .eq(0);
 
         $(document).on('keydown', function (e) {
