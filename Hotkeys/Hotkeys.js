@@ -9,8 +9,17 @@ $(document).ready(function () {
 
         // add "data-*" markups
         $('#breadcrumbs a').each(function (i) {
-            $(this).attr('data-url', BreadcrumbsSettings[i]['url']);
-            $(this).attr('data-editurl', BreadcrumbsSettings[i]['editUrl']);
+
+            if(!BreadcrumbsSettings[i]) {
+                return false;
+            }
+
+            if(BreadcrumbsSettings[i]['url']) {
+                $(this).attr('data-url', BreadcrumbsSettings[i]['url']);
+            }
+            if(BreadcrumbsSettings[i]['editUrl']) {
+                $(this).attr('data-editurl', BreadcrumbsSettings[i]['editUrl']);
+            }
         });
 
         $('#breadcrumbs').on('longclick', 'a', function (e) {
