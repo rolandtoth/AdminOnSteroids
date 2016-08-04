@@ -213,5 +213,6 @@ A few usability mods targetting the Reno admin theme.
 - **Always show search field**: make the search field always available
 - **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items
+- **Set narrow pagelist items**: reduce the space between the main pagelist rows to save space
 - **One-line sidebar submenus (only with autoHideSidebar)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
