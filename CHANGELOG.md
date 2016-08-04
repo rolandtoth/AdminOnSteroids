@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.3.6 (2016-08-04)
+
+- added "Pagelist enhancements" tweak with pagelist thumbnail feature
+- added "narrow pagelist items" tweak to RenoTweaks
+- fix z-index issue with FieldtypeLeafletMapMarker (reported by Juergen)
+
+
 ### 0.3.5 (2016-07-23)
 
 - Add long-click and ctrl+click actions to breadcrumbs (Hotkeys submodule)

@@ -17,12 +17,13 @@
 class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     static $configData;
+    public $pageListThumbSettings;
 
     public static function getModuleInfo() {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 35,
+            'version'   => 36,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -53,6 +54,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'LongClickDuration',
                 'HoverSaveDropdown',
                 'Hotkeys',
+                'PageListThumbs',
                 'PagePreviewLink',
                 'ModuleTweaks',
                 'Tooltips',
@@ -91,6 +93,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'PagePreviewLink'              => array(
                 'pw-blank'
             ),
+            'PageListThumbs'               => array(
+                'PageListThumbStyle' => 'circle'
+            ),
             'LongClickDuration'            => 600,
             'RenoTweaks'                   => array(
                 'singleClickSidebarHeaders',
@@ -106,6 +111,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 //                'oneLineSidebarSubmenus',
                 'headButtonNextToTitle',
                 'alwaysShowSearch',
+                'compactPageList',
                 'closeNoticeButtonToLeft'
             ),
             'AdminTweaks'                  => array(
@@ -154,8 +160,9 @@ HTML;
 
     public function ready() {
 
-        self::$configData = $this->modules->getModuleConfigData($this);
-        $defaultData = self::getDefaultData();
+        self::$configData            = $this->modules->getModuleConfigData($this);
+        $defaultData                 = self::getDefaultData();
+        $this->pageListThumbSettings = array();
 
         $enabledSubmodules = isset(self::$configData['enabledSubmodules']) ? self::$configData['enabledSubmodules'] : false;
 
@@ -167,8 +174,8 @@ HTML;
 //        $this->addHookAfter('Page::render', $this, 'replaceCSS');
 //        $this->addHookAfter('Page::render', $this, 'addCSS');
 
-        $root = $this->config->urls->siteModules . __CLASS__;
-        $styles = $this->config->styles;
+        $root    = $this->config->urls->siteModules . __CLASS__;
+        $styles  = $this->config->styles;
         $scripts = $this->config->scripts;
 
         //AutosizeTextareas
@@ -195,8 +202,8 @@ HTML;
         //RenoTweaks
         $subModule = 'RenoTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
-            if (in_array('stickyHeader', self::$configData[$subModule])) {
-                if (in_array('miniScrollbarSidebar', self::$configData[$subModule]) || in_array('miniScrollbarMain', self::$configData[$subModule])) {
+            if (in_array('stickyHeader', self::$configData[ $subModule ])) {
+                if (in_array('miniScrollbarSidebar', self::$configData[ $subModule ]) || in_array('miniScrollbarMain', self::$configData[ $subModule ])) {
                     $scripts->add($root . '/lib/perfect-scrollbar/js/perfect-scrollbar.min.js');
                 }
             }
@@ -213,12 +220,12 @@ HTML;
         if (in_array($subModule, $enabledSubmodules)) {
 
             // add breadcrumb tweaks
-            if (in_array('breadcrumbTweaks', self::$configData[$subModule])) {
-                
+            if (in_array('breadcrumbTweaks', self::$configData[ $subModule ])) {
+
                 $page = $this->pages->get('has_parent!=2, id=' . $this->input->get->id);
 
                 if ($page->id) {
-                    $homepage = $this->wire->pages->get(1);
+                    $homepage       = $this->wire->pages->get(1);
                     $breadcrumbUrls = array();
 
                     foreach ($this->wire->pages->get(1)->and($page->parentsUntil(1)) as $p) {
@@ -246,7 +253,7 @@ HTML;
         $subModule = 'LongClickDuration';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $LongClickDuration = (int)self::$configData['LongClickDuration'];
+            $LongClickDuration = (int) self::$configData['LongClickDuration'];
 
             //do not allow lower value than default 600
             $LongClickDuration = ($LongClickDuration < $defaultData['LongClickDuration']) ? $defaultData['LongClickDuration'] : $LongClickDuration;
@@ -268,7 +275,7 @@ HTML;
         $subModule = 'ModuleTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            if (in_array('loadCollapsedModuleInfos', self::$configData[$subModule])) {
+            if (in_array('loadCollapsedModuleInfos', self::$configData[ $subModule ])) {
                 // Load module info fields collapsed
                 $this->addHookAfter('InputfieldMarkup::render', function ($event) {
                     $field = $event->object;
@@ -278,24 +285,110 @@ HTML;
                 });
             }
         }
+        $subModule = 'PageListThumbs';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addPageListThumb');
+        }
+    }
+
+
+    public function addPageListThumb(HookEvent $event) {
+
+        $page  = $event->arguments('page');
+        $field = null;
+
+        // intentional =
+        if (!($settings = $this->getPageThumbSettings())) {
+            return false;
+        }
+
+        // only one field name is passed (global)
+        if (count($settings) == 1 && strpos($settings[0], ':') === false) {
+
+            $field = $settings[0];
+
+        } else {
+            // multiple lines of settings passed
+            foreach ($settings as $pairs) {
+
+                $setting = explode(':', $pairs);
+
+                $f        = isset($setting[0]) ? trim($setting[0]) : null;
+                $selector = isset($setting[1]) ? trim($setting[1]) : null;
+
+                if (is_null($f) || !$page->$f || !($page->$f instanceof Pageimage)) {
+                    return false;
+                }
+
+                if (is_null($selector)) {
+                    // break if there's no selector (any page will match)
+                    $field = $f;
+                    break;
+
+                } elseif ($page->is($selector)) {
+                    // break if page matches
+                    $field = $f;
+                    break;
+                }
+            }
+        }
+
+        if (!is_null($field)) {
+
+            // set thumbnail style class
+            $class = (isset($this->PageListThumbStyle) && !empty($this->PageListThumbStyle)) ? ' class="' . $this->PageListThumbStyle . '"' : '';
+
+            if($this->PageListThumbStyle === 'square') {
+                $thumbSrc = $page->$field->size(48,48, array('cropping' => false))->url;
+            } else {
+                $thumbSrc = $page->$field->height(48)->url;
+            }
+
+            $event->return = '<em' . $class . '><img src="' . $thumbSrc . '" /></em>' . $event->return;
+        }
+
+        return true;
+    }
+
+
+    public function getPageThumbSettings() {
+
+        if ($this->pageListThumbSettings) {
+            return $this->pageListThumbSettings;
+        }
+
+        $thumbSettings = isset($this->data['PageListThumbSettings']) ? $this->data['PageListThumbSettings'] : null;
+
+        if (is_null($thumbSettings)) {
+            return false;
+        }
+
+        // build settings array
+        $settings = trim($thumbSettings);
+        $settings = explode("\n", $settings);
+        $settings = array_filter($settings, 'trim');
+
+        $this->pageListThumbSettings = $settings;
+
+        return $settings;
     }
 
 
     public static function getModuleConfigInputfields(array $data) {
 
         $defaultData = self::getDefaultData();
-        $data = array_merge(self::getDefaultData(), $data);
+        $data        = array_merge(self::getDefaultData(), $data);
 
         $wrapper = new InputfieldWrapper();
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
         $f->columnWidth = 36;
-        $f->label = __('Submodules', __FILE__);
-        $f->collapsed = Inputfield::collapsedNever;
-        $f->table = true;
+        $f->label       = __('Submodules', __FILE__);
+        $f->collapsed   = Inputfield::collapsedNever;
+        $f->table       = true;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
@@ -309,6 +402,7 @@ HTML;
         $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
         $f->addOption('ModuleTweaks', __('Module-related tweaks', __FILE__) . ' [...]');
         $f->addOption('PagePreviewLink', __('Add preview link next to page title', __FILE__));
+        $f->addOption('PageListThumbs', __('Pagelist thumbnails', __FILE__));
         $f->addOption('fixScrollbarJump', __('Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('TabIndex', __('Add sequential tabindex to fields', __FILE__));
         $f->addOption('Tooltips', __('Hide field descriptions and notes to tooltips', __FILE__) . ' [...]');
@@ -320,7 +414,7 @@ HTML;
         $wrapper->add($f);
 
 
-        $fset = wire('modules')->get("InputfieldFieldset");
+        $fset              = wire('modules')->get("InputfieldFieldset");
         $fset->columnWidth = 64;
 //        $fset->label = 'Tunings';
         $fset->collapsed = Inputfield::collapsedNever;
@@ -328,11 +422,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'DeselectRadios');
-        $f->label = 'DeselectRadios settings';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = 'DeselectRadios settings';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=DeselectRadios';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=DeselectRadios';
 
         $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
         $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
@@ -344,11 +438,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AsmTweaks');
-        $f->label = __('asmSelect settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=AsmTweaks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('asmSelect settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=AsmTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('collapseAsmSections', __('Collapse fieldset/tab items on double click', __FILE__));
         $f->addOption('leftAsmDelete', __('Move delete button to the left', __FILE__));
@@ -362,11 +456,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitch');
-        $f->label = __('FocusInputOnLangTabSwitch settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FocusInputOnLangTabSwitch settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
         $f->columnWidth = 50;
 
 
@@ -383,11 +477,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label = __('FocusInputOnLangTabSwitch settings (CKEditor)', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FocusInputOnLangTabSwitch settings (CKEditor)', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
         $f->columnWidth = 50;
 
         $f->addOption('focus', __('Focus', __FILE__));
@@ -403,11 +497,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'ModuleTweaks');
-        $f->label = __('Module-related tweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=ModuleTweaks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Module-related tweaks', __FILE__);
+        $f->showIf      = 'enabledSubmodules=ModuleTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('compactModuleList', __('Compact module list', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
@@ -421,11 +515,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'FileFieldToolbar');
-        $f->label = __('FileFieldToolbar settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=FileFieldToolbar';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FileFieldToolbar settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FileFieldToolbar';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('filterbox', __('Filter box', __FILE__));
 
@@ -437,11 +531,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Hotkeys');
-        $f->label = __('Hotkeys settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=Hotkeys';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Hotkeys settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=Hotkeys';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('save', __('Save on ctrl+s', __FILE__));
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
@@ -454,24 +548,66 @@ HTML;
 
         $f = wire('modules')->get("InputfieldText");
         $f->attr('name', 'LongClickDuration');
-        $f->label = __('LongClickDuration (milliseconds)', __FILE__);
+        $f->label       = __('LongClickDuration (milliseconds)', __FILE__);
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=LongClickDuration';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=LongClickDuration';
         $f->attr('style', 'width: 100px;');
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->attr('value', (isset($data['LongClickDuration']) && (int)$data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+        $f->attr('value', (isset($data['LongClickDuration']) && (int) $data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
 
         $fset->add($f);
 
 
+        $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
+        $fsetPageListThumbs->attr('name', 'PageListThumbs');
+        $fsetPageListThumbs->label  = __('Pagelist thumbmnails', __FILE__);
+        $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
+//        $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
+
+
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'PageListThumbStyle');
+        $f->label     = __('Pagelist thumbnail style', __FILE__);
+        $f->columnWidth     = 25;
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOption('default', __('default', __FILE__));
+        $f->addOption('square', __('square', __FILE__));
+        $f->addOption('circle', __('circle', __FILE__));
+
+        if (isset($data['PageListThumbStyle'])) {
+            $f->attr('value', $data['PageListThumbStyle']);
+        } else {
+            $f->attr('value', $data['PageListThumbs']['PageListThumbStyle']);
+        }
+
+        $fsetPageListThumbs->add($f);
+
+
+        $f = wire('modules')->get("InputfieldTextarea");
+        $f->attr('name', 'PageListThumbSettings');
+        $f->label = __('Pagelist thumbnail source', __FILE__);
+        $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
+        $f->rows      = 3;
+        $f->columnWidth     = 75;
+        $f->collapsed = Inputfield::collapsedNever;
+
+        if ($data['PageListThumbs'] && isset($data['PageListThumbSettings'])) {
+            $f->attr('value', $data['PageListThumbSettings']);
+        }
+
+        $fsetPageListThumbs->add($f);
+
+        $fset->add($fsetPageListThumbs);
+
+
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PagePreviewLink');
-        $f->label = __('PagePreviewLink', __FILE__);
-        $f->showIf = 'enabledSubmodules=PagePreviewLink';
-        $f->collapsúed = Inputfield::collapsedNever;
-//        $f->optionColumns = 3;
+        $f->label     = __('PagePreviewLink', __FILE__);
+        $f->showIf    = 'enabledSubmodules=PagePreviewLink';
+        $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('pw-blank', __('Preview in new tab', __FILE__));
         $f->addOption('pw-panel', __('Preview in panel', __FILE__));
@@ -483,13 +619,14 @@ HTML;
 
         $fset->add($f);
 
+
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Tooltips');
-        $f->label = __('Tooltips settings', __FILE__);
-        $f->showIf = 'enabledSubmodules=Tooltips';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Tooltips settings', __FILE__);
+        $f->showIf      = 'enabledSubmodules=Tooltips';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('description', __('Enable for field descriptions', __FILE__));
         $f->addOption('notes', __('Enable for field notes', __FILE__));
@@ -504,8 +641,8 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AdminTweaks');
-        $f->label = __('AdminTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=AdminTweaks';
+        $f->label     = __('AdminTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=AdminTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
@@ -519,8 +656,8 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'RenoTweaks');
-        $f->label = __('RenoTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=RenoTweaks';
+        $f->label     = __('RenoTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=RenoTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
@@ -533,9 +670,10 @@ HTML;
         $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));
         $f->addOption('alwaysVisibleSidebarItems', __('Always show sidebar items (disable accordion)', __FILE__));
         $f->addOption('singleClickSidebarHeaders', __('Single click navigation of sidebar headers', __FILE__));
+        $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
+        $f->addOption('compactPageList', __('Set narrow pagelist items', __FILE__));
         $f->addOption('alwaysShowSearch', __('Always show search field', __FILE__));
         $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
-        $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
 
         if ($data['RenoTweaks']) {

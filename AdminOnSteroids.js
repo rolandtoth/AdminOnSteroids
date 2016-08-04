@@ -87,6 +87,11 @@ $(document).ready(function () {
         htmlClasses.push('aos_fixScrollbarJump');
     }
 
+// PageListThumbs
+    if (AOSsettings.enabledSubmodules.indexOf('PageListThumbs') !== -1) {
+        htmlClasses.push('aos_PageListThumbs');
+    }
+
 // tabIndex
     if (AOSsettings.enabledSubmodules.indexOf('TabIndex') !== -1) {
 
@@ -222,6 +227,10 @@ $(document).ready(function () {
 
         if (renoTweaksSettings.indexOf('alwaysShowSearch') !== -1) {
             htmlClasses.push('aos_alwaysShowSearch');
+        }
+
+        if (renoTweaksSettings.indexOf('compactPageList') !== -1) {
+            htmlClasses.push('aos_compactPageList');
         }
 
         if (renoTweaksSettings.indexOf('stickyHeader') !== -1) {

@@ -162,6 +162,29 @@ Hide field descriptions and notes to an icon and show them on hover in a tooltip
 
 
 
+###PageListThumbs
+
+*Pagelist thumbnails*
+
+Add thumbnails to the main pagelist.
+
+- **Pagelist thumbnail style**: style of the thumbnail image (default rectangle, square or circle)
+- **Pagelist thumbnail source**: list of "fieldname: selector" pairs to set which page field to use for the thumbnail and what condition has the page meet to show it. The first matching field-selector pair will be used. If there's no match, no thumbnail will be displayed.
+
+Example:
+
+```
+featured_image: template=wine|basic-page, children.count=0, parent!=1
+featured_image: parent=1018
+hero_image
+```
+
+This example will use image field "featured_image" for pages using "wine" and "basic-page" templates that has no child pages and which parent is not "Home".
+The second line also uses "featured_image" field, but for pages having the page with id of 1018 as parent.
+The third line uses no selector (filter), so any pages not matching the first two lines will use the "hero_image" field for thumbnail.
+Pages having no "hero_image" field or there's no image uploaded will show no thumbnail.
+
+
 ###AdminTweaks
 
 *Apply default admin theme tweaks*
