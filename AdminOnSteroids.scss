@@ -712,11 +712,11 @@ html.AdminThemeReno {
 
       @extend .fixZIndex;
 
-      .ui-widget-overlay {
+      .ui-widget-overlay, .mfp-bg {
         z-index: 100000 + 1002;
       }
 
-      .ui-dialog {
+      .ui-dialog, .mfp-wrap {
         z-index: 100000 + 1022;
       }
 
