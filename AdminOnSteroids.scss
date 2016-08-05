@@ -712,6 +712,14 @@ html.AdminThemeReno {
 
       @extend .fixZIndex;
 
+      .ui-widget-overlay {
+        z-index: 100000 + 1002;
+      }
+
+      .ui-dialog {
+        z-index: 100000 + 1022;
+      }
+
       .pw-button-dropdown {
         z-index: 100000 + 10100 !important;
       }

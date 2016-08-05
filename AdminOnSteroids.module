@@ -23,7 +23,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 36,
+            'version'   => 37,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',

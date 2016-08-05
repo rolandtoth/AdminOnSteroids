@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.3.7 (2016-08-05)
+
+- modal dialog z-index issue fix
+
+
+
 ### 0.3.6 (2016-08-04)
 
 - added "Pagelist enhancements" tweak with pagelist thumbnail feature
