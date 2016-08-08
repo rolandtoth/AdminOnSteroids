@@ -1,6 +1,15 @@
 #Changelog
 
 
+### 0.3.9 (2016-08-08)
+
+- redesigned settings page
+- use smaller thumbnails if narrow pagelist items is checked (RenoTweaks)
+- skip commented lines in pagelist thumbnails (lines starting with "//")
+- fix early return in pagelist thumbs
+
+
+
 ### 0.3.8 (2016-08-08)
 
 - added 'FieldEditLinks' tweak: allows editing fields by ctrl-clicking on field labels in Page editor (or by clicking on field name that slides in)

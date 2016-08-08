@@ -314,6 +314,83 @@ body.id-23 {
 
 form[action$="AdminOnSteroids"] {
 
+  #wrap_Inputfield_enabledSubmodules {
+    > .InputfieldContent {
+      label {
+        //font-style: italic;
+        font-size: 94%;
+        line-height: 1.45;
+        margin-bottom: 6px;
+        strong {
+          margin-top: 1px;
+          font-style: normal;
+          display: block;
+          font-weight: bold;
+        }
+      }
+      ul {
+        @media only screen and (min-width: 960px) {
+          column-count: 2;
+          column-gap: 24px;
+        }
+        @media only screen and (min-width: 1280px) {
+          column-count: 3;
+          column-gap: 12px;
+        }
+      }
+    }
+
+  }
+
+  #Inputfield_tweaks {
+
+    #Inputfield_PageListThumbs {
+      label {
+        background: transparent;
+      }
+      .Inputfields {
+        label, .InputfieldContent {
+          padding-top: 0;
+          padding-left: 0;
+          border: none;
+        }
+      }
+    }
+
+    @media only screen and (min-width: 960px) {
+
+      > .InputfieldContent > .Inputfields {
+        > li {
+          position: relative;
+          //@include clearfix;
+
+          > label.InputfieldHeader,
+          > .InputfieldContent {
+            padding-top: 1em;
+            padding-bottom: 1em;
+          }
+          > label.InputfieldHeader {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            font-size: 94%;
+          }
+          > .InputfieldContent {
+            padding-left: 400px;
+            position: relative;
+            background: transparent;
+            //width: calc(100% - 360px);
+            width: 100%;
+            top: 1px;
+            border-left: none;
+          }
+        }
+      }
+    }
+  }
+
   label {
     &:hover {
       cursor: pointer;
@@ -658,6 +735,9 @@ html.aos_fixScrollbarJump:not(.modal) {
 
 // PageListThumbs
 html.aos_PageListThumbs {
+
+  $thumbSize: 48px;
+
   .PageListItem {
     @include clearfix;
     width: 100%;
@@ -666,19 +746,15 @@ html.aos_PageListThumbs {
       padding: 0;
       background: #F0F3F7;
       margin-right: 16px;
+      display: inline-block;
+      height: $thumbSize;
+      line-height: $thumbSize;
+      text-align: center;
       &.square {
-        display: inline-block;
-        width: 48px;
-        height: 48px;
-        line-height: 48px;
-        text-align: center;
+        width: $thumbSize;
       }
       &.circle {
-        display: inline-block;
-        width: 48px;
-        height: 48px;
-        line-height: 48px;
-        text-align: center;
+        width: $thumbSize;
         border-radius: 50%;
         overflow: hidden;
       }
@@ -686,6 +762,16 @@ html.aos_PageListThumbs {
     img {
       display: block;
       margin: 0 auto;
+    }
+  }
+  &.aos_compactPageList {
+    $thumbSize: 32px;
+    .PageListItem {
+      em {
+        width: $thumbSize;
+        height: $thumbSize;
+        line-height: $thumbSize;
+      }
     }
   }
 }
@@ -1293,8 +1379,12 @@ html.AdminThemeReno {
     @media only screen and (min-width: 960px) {
       #sidebar {
         position: fixed;
-        z-index: 19;
+        z-index: 9;
+        //.quicklinks {
+        //  top: 52px !important;
+        //}
       }
+
     }
   }
 

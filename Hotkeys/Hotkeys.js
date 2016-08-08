@@ -63,7 +63,7 @@ $(document).ready(function () {
     if (HotkeysSettings.indexOf('save') !== -1) {
 
         var aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
-            .filter('form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
+            .filter('.aos_hotkeySave, form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
             .eq(0);
 
         $(document).on('keydown', function (e) {

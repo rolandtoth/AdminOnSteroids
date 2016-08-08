@@ -24,7 +24,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 38,
+            'version'   => 39,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -378,17 +378,26 @@ HTML;
             $field = $settings[0];
 
         } else {
+
             // multiple lines of settings passed
             foreach ($settings as $pairs) {
+
+                if(strpos($pairs, '//') === 0) continue;
+
+//                bd($pairs);
 
                 $setting = explode(':', $pairs);
 
                 $f = isset($setting[0]) ? trim($setting[0]) : null;
                 $selector = isset($setting[1]) ? trim($setting[1]) : null;
 
+//                bd($f);
+//                bd($selector);
+
                 if (is_null($f) || !$page->$f || !($page->$f instanceof Pageimage)) {
-                    return false;
+                    continue;
                 }
+
 
                 if (is_null($selector)) {
                     // break if there's no selector (any page will match)
@@ -407,11 +416,12 @@ HTML;
 
             // set thumbnail style class
             $class = (isset($this->PageListThumbStyle) && !empty($this->PageListThumbStyle)) ? ' class="' . $this->PageListThumbStyle . '"' : '';
+            $thumbSize = ($this->RenoTweaks && in_array('compactPageList', $this->RenoTweaks)) ? 32 : 48;
 
             if ($this->PageListThumbStyle === 'square') {
-                $thumbSrc = $page->$field->size(48, 48, array('cropping' => false))->url;
+                $thumbSrc = $page->$field->size($thumbSize, $thumbSize, array('cropping' => false))->url;
             } else {
-                $thumbSrc = $page->$field->height(48)->url;
+                $thumbSrc = $page->$field->height($thumbSize)->url;
             }
 
             $event->return = '<em' . $class . '><img src="' . $thumbSrc . '" /></em>' . $event->return;
@@ -453,32 +463,33 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
-        $f->columnWidth = 36;
+//        $f->columnWidth = 36;
         $f->label = __('Submodules', __FILE__);
+        $f->description = __('Enable or disable submodules here.', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
-        $f->table = true;
-        $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+//        $f->table = true;
+//        $f->description = __('', __FILE__);
+//        $f->notes = __('', __FILE__);
 
-        $f->addOption('AutosizeTextareas', __('Autosize textareas according to content', __FILE__));
-        $f->addOption('DeselectRadios', __('Enable clearing checked radio buttons', __FILE__) . ' [...]');
-        $f->addOption('NoAnims', __('Disable all admin animations', __FILE__));
-        $f->addOption('AsmTweaks', __('asmSelect tweaks', __FILE__) . ' [...]');
-        $f->addOption('FileFieldToolbar', __('Add filter box and sort buttons to file/image fields', __FILE__) . ' [...]');
-        $f->addOption('FieldEditLinks', __('Edit fields by clicking on their labels', __FILE__) . ' [...]');
-        $f->addOption('HoverSaveDropdown', __('Show save dropdown on hover instead on click', __FILE__));
-        $f->addOption('FocusInputOnLangTabSwitch', __('Focus input on switching language tabs', __FILE__) . ' [...]');
-        $f->addOption('LangTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
-        $f->addOption('Hotkeys', __('Hotkey tweaks', __FILE__) . ' [...]');
-        $f->addOption('LongClickDuration', __('Custom long-click action duration', __FILE__) . ' [...]');
-        $f->addOption('ModuleTweaks', __('Module-related tweaks', __FILE__) . ' [...]');
-        $f->addOption('PagePreviewLink', __('Add preview link next to page title', __FILE__));
-        $f->addOption('PageListThumbs', __('Pagelist thumbnails', __FILE__));
-        $f->addOption('fixScrollbarJump', __('Prevent page jump when scrollbar appears', __FILE__));
-        $f->addOption('TabIndex', __('Add sequential tabindex to fields', __FILE__));
-        $f->addOption('Tooltips', __('Hide field descriptions and notes to tooltips', __FILE__) . ' [...]');
-        $f->addOption('AdminTweaks', __('Default admin theme tweaks', __FILE__) . ' [...]');
-        $f->addOption('RenoTweaks', __('Reno admin theme tweaks', __FILE__) . ' [...]');
+        $f->addOption('AutosizeTextareas', __('**AutosizeTextareas**Autosize textareas according to content', __FILE__));
+        $f->addOption('DeselectRadios', __('**DeselectRadios**Enable clearing checked radio buttons', __FILE__));
+        $f->addOption('NoAnims', __('**NoAnims**Disable all admin animations', __FILE__));
+        $f->addOption('AsmTweaks', __('**AsmTweaks**asmSelect tweaks', __FILE__));
+        $f->addOption('FileFieldToolbar', __('**FileFieldToolbar**Add filter box and sort buttons to file/image fields', __FILE__));
+        $f->addOption('FieldEditLinks', __('**FieldEditLinks**Edit fields by clicking on their labels', __FILE__));
+        $f->addOption('HoverSaveDropdown', __('**HoverSaveDropdown**Show save dropdown on hover instead on click', __FILE__));
+        $f->addOption('FocusInputOnLangTabSwitch', __('**FocusInputOnLangTabSwitch**Focus input on switching language tabs', __FILE__));
+        $f->addOption('LangTabHotkeySwitcher', __('**LangTabHotkeySwitcher**Switch language tabs on ctrl+arrow keys', __FILE__));
+        $f->addOption('Hotkeys', __('**Hotkeys**Hotkey tweaks', __FILE__));
+        $f->addOption('LongClickDuration', __('**LongClickDuration**Custom long-click action duration', __FILE__));
+        $f->addOption('ModuleTweaks', __('**ModuleTweaks**Module related tweaks', __FILE__));
+        $f->addOption('PagePreviewLink', __('**PagePreviewLink**Add preview link next to page title', __FILE__));
+        $f->addOption('PageListThumbs', __('**PageListThumbs**Add pagelist thumbnails', __FILE__));
+        $f->addOption('fixScrollbarJump', __('**fixScrollbarJump**Prevent page jump when scrollbar appears', __FILE__));
+        $f->addOption('TabIndex', __('**TabIndex**Add sequential tabindex to fields', __FILE__));
+        $f->addOption('Tooltips', __('**Tooltips**Hide field descriptions and notes to tooltips', __FILE__));
+        $f->addOption('AdminTweaks', __('**AdminTweaks**Default admin theme tweaks', __FILE__));
+        $f->addOption('RenoTweaks', __('**RenoTweaks**Reno admin theme tweaks', __FILE__));
 
         $f->attr('value', isset($data['enabledSubmodules']) ? $data['enabledSubmodules'] : $defaultData['enabledSubmodules']);
 
@@ -486,14 +497,15 @@ HTML;
 
 
         $fset = wire('modules')->get("InputfieldFieldset");
-        $fset->columnWidth = 64;
-//        $fset->label = 'Tunings';
+        $fset->attr('name', 'tweaks');
+//        $fset->columnWidth = 64;
+        $fset->label = __('Options for individual submodules', __FILE__);
         $fset->collapsed = Inputfield::collapsedNever;
 
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'DeselectRadios');
-        $f->label = 'DeselectRadios settings';
+//        $f->label = 'DeselectRadios';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
@@ -509,7 +521,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AsmTweaks');
-        $f->label = __('asmSelect settings', __FILE__);
+//        $f->label = __('asmTweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=AsmTweaks';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
@@ -527,12 +539,12 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitch');
-        $f->label = __('FocusInputOnLangTabSwitch settings', __FILE__);
+//        $f->label = __('FocusInputOnLangTabSwitch settings', __FILE__);
         $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
-        $f->columnWidth = 50;
+//        $f->columnWidth = 50;
 
 
         $f->addOption('focus', __('Focus', __FILE__));
@@ -548,12 +560,12 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label = __('FocusInputOnLangTabSwitch settings (CKEditor)', __FILE__);
+        $f->label = __('FocusInputOnLangTabSwitch CKEditor', __FILE__);
         $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
-        $f->columnWidth = 50;
+//        $f->columnWidth = 50;
 
         $f->addOption('focus', __('Focus', __FILE__));
         $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
@@ -568,7 +580,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'ModuleTweaks');
-        $f->label = __('Module-related tweaks', __FILE__);
+//        $f->label = __('Module-related tweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=ModuleTweaks';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
@@ -586,7 +598,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'FileFieldToolbar');
-        $f->label = __('FileFieldToolbar settings', __FILE__);
+//        $f->label = __('FileFieldToolbar settings', __FILE__);
         $f->showIf = 'enabledSubmodules=FileFieldToolbar';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
@@ -603,7 +615,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FieldEditLinks');
-        $f->label = __('FieldEditLinks settings', __FILE__);
+//        $f->label = __('FieldEditLinks settings', __FILE__);
         $f->showIf = 'enabledSubmodules=FieldEditLinks';
         $f->collapsed = Inputfield::collapsedNever;
 
@@ -620,7 +632,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Hotkeys');
-        $f->label = __('Hotkeys settings', __FILE__);
+//        $f->label = __('Hotkeys settings', __FILE__);
         $f->showIf = 'enabledSubmodules=Hotkeys';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
@@ -637,7 +649,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldText");
         $f->attr('name', 'LongClickDuration');
-        $f->label = __('LongClickDuration (milliseconds)', __FILE__);
+//        $f->label = __('LongClickDuration (milliseconds)', __FILE__);
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
         $f->showIf = 'enabledSubmodules=LongClickDuration';
@@ -651,15 +663,15 @@ HTML;
 
         $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
         $fsetPageListThumbs->attr('name', 'PageListThumbs');
-        $fsetPageListThumbs->label = __('Pagelist thumbnails', __FILE__);
+        $fsetPageListThumbs->label = __('PageListThumbs', __FILE__);
         $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
-//        $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
+        $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
 
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PageListThumbStyle');
-        $f->label = __('Pagelist thumbnail style', __FILE__);
-        $f->columnWidth = 25;
+        $f->label = __('Thumbnail style', __FILE__);
+//        $f->columnWidth = 25;
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('default', __('default', __FILE__));
@@ -677,10 +689,10 @@ HTML;
 
         $f = wire('modules')->get("InputfieldTextarea");
         $f->attr('name', 'PageListThumbSettings');
-        $f->label = __('Pagelist thumbnail source', __FILE__);
+        $f->label = __('Thumbnail source', __FILE__);
         $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
         $f->rows = 3;
-        $f->columnWidth = 75;
+//        $f->columnWidth = 75;
         $f->collapsed = Inputfield::collapsedNever;
 
         if ($data['PageListThumbs'] && isset($data['PageListThumbSettings'])) {

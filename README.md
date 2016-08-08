@@ -181,7 +181,7 @@ Hide field descriptions and notes to an icon and show them on hover in a tooltip
 Add thumbnails to the main pagelist.
 
 - **Pagelist thumbnail style**: style of the thumbnail image (default rectangle, square or circle)
-- **Pagelist thumbnail source**: list of "fieldname: selector" pairs to set which page field to use for the thumbnail and what condition has the page meet to show it. The first matching field-selector pair will be used. If there's no match, no thumbnail will be displayed.
+- **Pagelist thumbnail source**: list of "fieldname: selector" pairs to set which page field to use for the thumbnail and what condition has the page meet to show it. The first matching field-selector pair will be used. If there's no match, no thumbnail will be displayed. You can comment out items by adding "//" to the beginning of the lines, these will be skipped.
 
 Example:
 
