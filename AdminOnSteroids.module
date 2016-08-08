@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'autoload'  => 'template=admin',
             'href'      => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
             'icon'      => 'medkit',
-            'requires'  => 'ProcessWire>=3.0.0, PHP>=5.3.8',
+            'requires'  => 'ProcessWire>=2.8.0, PHP>=5.3.8',
             'singular'  => true,
             'permanent' => false
         );

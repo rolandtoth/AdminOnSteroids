@@ -7,6 +7,7 @@
 - added support for System Notifications module for stickyHeader (requested by szabesz)
 - added 'Only for SuperUsers' setting for Tooltips
 - fix sidebar quicklinks menu (flash menu) visibility (reported by Mike Rockett)
+- set module requirements to PW version 2.8 (suggested by Mike Rockett)
 - better visibility for sticky header dropdowns
 - various z-index fixes (panels, dropdowns, tracy debugger panels, etc)
 
