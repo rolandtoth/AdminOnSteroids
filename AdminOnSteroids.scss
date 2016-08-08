@@ -6,19 +6,9 @@
   }
 }
 
-//$defaultTransition: 0.1s ease-in;
 $defaultTransition: 0.12s;
 $defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
-//$defaultBoxShadow: 0 1px 1px 2px rgba(0, 0, 0, 0.02);
 
-//@keyframes fadeIn {
-//  from {
-//    opacity: 0;
-//  }
-//  to {
-//    opacity: 1;
-//  }
-//}
 @keyframes fadeOut {
   0% {
     opacity: 1;
@@ -34,22 +24,16 @@ $defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
   }
 }
 
-//
-//@keyframes slideDown {
-//  from {
-//    //transform: translateY(-100%);
-//    transform: scaleY(0);
-//  }
-//  to {
-//    //transform: translateY(0);
-//    transform: scaleY(1);
-//  }
-//}
-
-//body .pw-panel-container {
-//  width: auto;
-//
-//}
+#sidebar #main-nav {
+  // allow quicklinks menu (flash menu) to shop up
+  //overflow: hidden !important;
+  //overflow-x: visible !important;
+  //overflow-x: visible !important;
+  //overflow: visible !important;
+  //.quicklinks {
+  //  display: block !important;
+  //}
+}
 
 // AsmTweaks
 html.aos_leftAsmDelete {
@@ -104,7 +88,7 @@ html.aos_leftAsmDelete {
         width: 0;
         line-height: 1.45;
         height: 0;
-        z-index: 1;
+        z-index: 100000 + 1;
         backface-visibility: hidden;
 
         // IE hack
@@ -136,7 +120,7 @@ html.aos_leftAsmDelete {
           line-height: 14px;
           text-align: center;
           border-radius: 100%;
-          z-index: 9980;
+          //z-index: 9980;
           transform-origin: 50% 50%;
         }
         &:hover,
@@ -153,7 +137,7 @@ html.aos_leftAsmDelete {
           cursor: pointer;
           font-size: 14px;
           letter-spacing: 0;
-          z-index: 9990;
+          z-index: 100000 + 1;
           &, *:not(a) {
             // set everything white but links
             color: #f8f8f8;
@@ -379,6 +363,29 @@ form[action$="AdminOnSteroids"] {
   input#Inputfield_RenoTweaks_stickyCKEditorToolbar,
   input#Inputfield_RenoTweaks_oneLineSidebarSubmenus {
     margin-left: 21px;
+  }
+}
+
+// FieldEditLinks
+.Inputfield label {
+  .aos_field_name {
+    position: absolute;
+    opacity: 0;
+    font-size: 13px;
+    margin-left: 0;
+    transition: 0.06s all 0s;
+    &:hover {
+      transition-delay: 0s !important;
+      //opacity: 1 !important;
+      text-decoration: underline;
+    }
+  }
+  &:hover {
+    .aos_field_name {
+      margin-left: 16px;
+      opacity: 0.66;
+      transition: 0.12s all 0.5s;
+    }
   }
 }
 
@@ -684,7 +691,8 @@ html.aos_PageListThumbs {
 }
 
 html.aos_noAnims * {
-  transition: none !important;
+  //transition: none !important;
+  transition-duration: 0s !important;
 }
 
 .fixZIndex {
@@ -697,11 +705,12 @@ html.aos_noAnims * {
 /*Reno theme tweaks*/
 html.AdminThemeReno {
 
-  // disable all anims
+  // disable all animations
   body:not(.pw-ready) {
     #branding:not(.hide), #masthead:not(.full), #sidebar:not(.hide), #main:not(.full), .main-nav-toggle:not(.full) {
       //#branding, #masthead, #sidebar, #main, .main-nav-toggle {
-      transition: none;
+      //transition: none;
+      transition-duration: 0s;
     }
   }
 
@@ -712,6 +721,38 @@ html.AdminThemeReno {
 
       @extend .fixZIndex;
 
+      // System Notifications module
+      #NotificationGhosts {
+        z-index: 100000 + 20000 !important;
+      }
+
+      .NotificationMenu {
+        z-index: 100000 + 2000;
+        position: fixed;
+        top: 52px;
+        left: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        box-shadow: $defaultBoxShadow;
+        li:first-child {
+          box-shadow: inset 0 3px 3px rgba(#000, 0.075);
+        }
+      }
+
+      #ProcessPageSearchAutocomplete {
+        //position: fixed;
+        //left: auto !important;
+        //right: 26px !important;
+        //top: 41px !important;
+        z-index: 100000 + 20000 !important;
+        //box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.12) !important;
+      }
+
+      .tracy-panel {
+        z-index: 100000 + 20000 !important;
+      }
+
       .ui-widget-overlay, .mfp-bg {
         z-index: 100000 + 1002;
       }
@@ -720,7 +761,10 @@ html.AdminThemeReno {
         z-index: 100000 + 1022;
       }
 
-      .pw-button-dropdown {
+      .pw-button-dropdown,
+      .dropdown-menu,
+      #pw-panel-shade,
+      .pw-panel-container {
         z-index: 100000 + 10100 !important;
       }
 
@@ -732,13 +776,14 @@ html.AdminThemeReno {
       #masthead,
       #branding,
       .main-nav-toggle {
+        z-index: 100000 + 80;
         position: fixed;
       }
       #masthead {
         width: 100%;
-        z-index: 100000 + 45;
+        z-index: 100000 + 60;
         * {
-          z-index: 100000 + 46;
+          z-index: 100000 + 70;
         }
       }
       #breadcrumbs {
@@ -767,6 +812,7 @@ html.AdminThemeReno {
           padding-left: 232px;
         }
       }
+
       ul.quicklinks {
         top: 52px !important;
       }
@@ -835,6 +881,26 @@ html.AdminThemeReno {
   &.aos_stickyHeaderCompact:not(.modal) {
 
     @media only screen and (min-width: 960px) {
+
+      // System Notifications module
+      #NotificationGhosts {
+        top: 48px !important;
+      }
+
+      #NotificationBug {
+        top: 70px !important;
+        float: right;
+        left: auto !important;
+        right: auto !important;
+        position: relative;
+        margin: 0 12px 0 24px;
+        padding: 0;
+        display: inline-block !important;
+      }
+      .NotificationMenu {
+        left: 210px;
+        top: 100px;
+      }
 
       .cke_top_fixed.cke_top {
         top: 137px;
@@ -932,6 +998,7 @@ html.AdminThemeReno {
         left: auto !important;
         right: 26px !important;
         top: 41px !important;
+        //z-index: 100000 + 20000 !important;
         box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.12) !important;
       }
 
@@ -950,8 +1017,12 @@ html.AdminThemeReno {
           color: inherit !important;
         }
         li.dropdown ul {
-          box-shadow: $defaultBoxShadow;
-          z-index: 100000 + 330;
+          //box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.12);
+          box-shadow: none;
+          filter: drop-shadow(0 0 1px rgba(#000, 0.36));
+          border-radius: 1px;
+          border: none;
+          z-index: 100000 + 3300;
         }
 
       }
@@ -969,6 +1040,9 @@ html.AdminThemeReno {
         &:not(.closed) #headline {
           padding-left: 252px;
         }
+      }
+      .NotificationMenu {
+        left: 230px;
       }
     }
 
@@ -1012,6 +1086,9 @@ html.AdminThemeReno {
             }
           }
         }
+        .NotificationMenu {
+          top: 137px;
+        }
       }
 
       @media only screen and (min-width: 1200px) {
@@ -1029,7 +1106,6 @@ html.AdminThemeReno {
       }
     }
   }
-
 
   &.aos_compactPageList {
     .content .PageList .PageListItem {
@@ -1106,6 +1182,15 @@ html.AdminThemeReno {
             scrollbar-y-rail-width: 5px,
             scrollbar-y-width: 5px
     )));
+    //.ps-theme-pw-scrollbar {
+    //  overflow-x: visible !important;
+    //}
+
+  }
+
+  ul.quicklinks {
+    // hack because cannot have overflow-x and overflow-y work together as expected
+    position: fixed !important;
   }
 
   // autoHideSidebar
@@ -1217,7 +1302,7 @@ html.AdminThemeReno {
   &.aos_alwaysVisibleSidebarItems {
     @media only screen and (min-width: 960px) {
       #sidebar {
-        z-index: 19;
+        //z-index: 19;
         #main-nav {
           > li {
             > a {
@@ -1341,7 +1426,6 @@ html.AdminThemeReno {
       }
     }
   }
-
 }
 
 //Default theme tweaks
@@ -1353,6 +1437,10 @@ body.AdminThemeDefault {
     @media only screen and (min-width: 960px) {
 
       @extend .fixZIndex;
+
+      .NotificationMenu {
+        z-index: 9;
+      }
 
       padding-top: 100px;
       //padding-top: 64px;

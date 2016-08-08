@@ -1,6 +1,17 @@
 #Changelog
 
 
+### 0.3.8 (2016-08-08)
+
+- added 'FieldEditLinks' tweak: allows editing fields by ctrl-clicking on field labels in Page editor (or by clicking on field name that slides in)
+- added support for System Notifications module for stickyHeader (requested by szabesz)
+- added 'Only for SuperUsers' setting for Tooltips
+- fix sidebar quicklinks menu (flash menu) visibility (reported by Mike Rockett)
+- better visibility for sticky header dropdowns
+- various z-index fixes (panels, dropdowns, tracy debugger panels, etc)
+
+
+
 ### 0.3.7 (2016-08-05)
 
 - modal dialog z-index issue fix

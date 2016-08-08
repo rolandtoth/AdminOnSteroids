@@ -35,6 +35,40 @@ $(document).ready(function () {
     }
 
 
+     //edit field on ctrl+click title
+
+    // $('#ProcessPageEdit .Inputfield > label').each(function() {
+    //
+    //     var label = $(this),
+    //         text = label.text();
+    //
+    //     if(text.indexOf('::aos_field_name::') !== -1) {
+    //         var parts = text.split('::aos_field_name::');
+    //         // console.log(parts[0] + '<span class="aos_field_name">' + parts[1] +  '</span>');
+    //         label.contents().first().replaceWith(parts[0] + '<span class="aos_field_name">' + parts[1] +  '</span>');
+    //     }
+    // });
+
+    $(document).on('click', '#ProcessPageEdit .Inputfield > label', function (e) {
+        if (e.ctrlKey) {
+            var editFieldLink = $(this).parent().find('.aos_editurl');
+            if (editFieldLink.length) {
+                editFieldLink[0].click();
+                return false;
+            }
+        }
+    });
+
+    // edit field
+    $(document).on('click', '#ProcessPageEdit .Inputfield > label span', function () {
+        var editFieldLink = $(this).parent().parent().find('.aos_editurl');
+        if (editFieldLink.length) {
+            editFieldLink[0].click();
+            return false;
+        }
+    });
+
+
     // HoverSaveDropdown
     // note: copies do not need to modify
     if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
@@ -277,10 +311,12 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
+            // var sidebarNav = document.querySelector('#sidebar'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
                     theme: 'pw-scrollbar',
+                    suppressScrollX: true,
                     wheelPropagation: false
                 };
 

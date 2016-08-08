@@ -81,6 +81,17 @@ When enabled, an "eye" icon will be added next to the page title that links to t
 
 
 
+###FieldEditLinks
+
+*Edit fields by clicking on their labels*
+
+When enabled, hovering on a field's label in the page edit screen will show the field's name (slides in from the left).
+Clicking on this field name will open the field edit page in a new window, modal or panel (depending on module settings).
+
+Ctrl+clicking on the label itself also loads the field edit page.
+
+
+
 ###Hotkeys
 
 *Hotkey tweaks*
@@ -156,6 +167,7 @@ Enables jumping to next input in the admin with TAB key (or backwards with shift
 
 Hide field descriptions and notes to an icon and show them on hover in a tooltip. To freeze the tooltip, double click on the icons.
 
+- **Only for SuperUsers**: enable Tooltips only or SuperUsers
 - **Enable for field descriptions**: allow moving field description to an icon
 - **Enable for field notes**: allow moving field notes to an icon
 - **Use overlay style**: when checked, the tooltip will cover the entire area of the field. This eliminates the z-index issues of the traditional tooltip style (other page elements may partly cover the tooltip).
