@@ -1,0 +1,70 @@
+/**
+ * InputfieldURLChecker module for ProcessWire
+ * https://goo.gl/F8CAK8
+ */
+
+.iuc-button {
+    position: absolute;
+    margin-top: 1px;
+    right: 16px;
+    padding: 0 12px;
+    background: transparent;
+}
+
+.iuc-button.button-left {
+    right: auto;
+    left: 16px;
+}
+
+.iuc-button i {
+    color: rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+    -webkit-transition: color 0.2s;
+    -moz-transition: color 0.2s;
+    transition: color 0.2s;
+}
+
+.iuc-button.iuc-hide {
+    pointer-events: none !important;
+}
+
+.InputfieldURL .InputfieldContent {
+    position: relative;
+}
+
+.iuc-hidden {
+    display: none !important;
+}
+
+.InputfieldMultiplierInput {
+    position: relative;
+}
+
+.InputfieldMultiplierInput .iuc-button.button-left {
+    left: 8px;
+}
+
+.InputfieldMultiplierInput .iuc-button.button-right {
+    right: 8px;
+}
+
+.iuc-button.button-left ~ input {
+    padding-left: 36px !important;
+}
+
+.InputfieldURL input:focus + .iuc-button i {
+    color: rgba(0, 0, 0, 0.32);
+}
+
+.iuc-button:not(.iuc-hide):hover i {
+    color: inherit !important;
+}
+
+.iuc-button:active i {
+    font-size: 0.88em !important;
+}
+
+.collapsed7.InputfieldURL .InputfieldContent a:hover,
+.collapsed8.InputfieldURL .InputfieldContent a:hover {
+    text-decoration: underline;
+}
