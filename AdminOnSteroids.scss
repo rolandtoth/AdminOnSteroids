@@ -785,9 +785,13 @@ html.aos_PageListThumbs {
     $thumbSize: 32px;
     .PageListItem {
       em {
-        width: $thumbSize;
         height: $thumbSize;
         line-height: $thumbSize;
+        margin-right: 10px;
+        &.square,
+        &.circle {
+          width: $thumbSize;
+        }
       }
     }
   }
