@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.4.0 (2016-08-09)
+
+- added InputfieldURLChecker as submodule
+- order submodules alphabetically
+
+
 ### 0.3.9 (2016-08-08)
 
 - redesigned settings page

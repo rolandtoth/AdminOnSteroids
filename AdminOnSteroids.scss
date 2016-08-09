@@ -329,13 +329,21 @@ form[action$="AdminOnSteroids"] {
         }
       }
       ul {
+        > li {
+          break-inside: avoid;
+        }
         @media only screen and (min-width: 960px) {
           column-count: 2;
-          column-gap: 24px;
+          column-gap: 16px;
         }
         @media only screen and (min-width: 1280px) {
           column-count: 3;
-          column-gap: 12px;
+        }
+        @media only screen and (min-width: 1680px) {
+          column-count: 4;
+        }
+        @media only screen and (min-width: 2100px) {
+          column-count: 5;
         }
       }
     }
@@ -344,6 +352,7 @@ form[action$="AdminOnSteroids"] {
 
   #Inputfield_tweaks {
 
+    #Inputfield_InputfieldURLChecker,
     #Inputfield_PageListThumbs {
       label {
         background: transparent;
@@ -360,9 +369,10 @@ form[action$="AdminOnSteroids"] {
     @media only screen and (min-width: 960px) {
 
       > .InputfieldContent > .Inputfields {
+
         > li {
           position: relative;
-          //@include clearfix;
+          break-inside: avoid;
 
           > label.InputfieldHeader,
           > .InputfieldContent {
@@ -378,7 +388,7 @@ form[action$="AdminOnSteroids"] {
             font-size: 94%;
           }
           > .InputfieldContent {
-            padding-left: 400px;
+            padding-left: 360px;
             position: relative;
             background: transparent;
             //width: calc(100% - 360px);
@@ -387,6 +397,13 @@ form[action$="AdminOnSteroids"] {
             border-left: none;
           }
         }
+      }
+    }
+    @media only screen and (min-width: 1920px) {
+      > .InputfieldContent > .Inputfields {
+        column-gap: 16px;
+        column-count: 2;
+        column-fill: balance; // Firefox only
       }
     }
   }
@@ -821,18 +838,15 @@ html.AdminThemeReno {
         margin: 0;
         padding: 0;
         box-shadow: $defaultBoxShadow;
+        max-height: 75vh;
+        overflow-y: auto !important;
         li:first-child {
           box-shadow: inset 0 3px 3px rgba(#000, 0.075);
         }
       }
 
       #ProcessPageSearchAutocomplete {
-        //position: fixed;
-        //left: auto !important;
-        //right: 26px !important;
-        //top: 41px !important;
         z-index: 100000 + 20000 !important;
-        //box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.12) !important;
       }
 
       .tracy-panel {
@@ -979,7 +993,7 @@ html.AdminThemeReno {
         left: auto !important;
         right: auto !important;
         position: relative;
-        margin: 0 12px 0 24px;
+        margin: 0 8px 0 24px;
         padding: 0;
         display: inline-block !important;
       }
@@ -1049,7 +1063,13 @@ html.AdminThemeReno {
           max-width: 360px;
           z-index: 100000 + 210;
           position: fixed;
-          right: -8px;
+          //right: -8px;
+          right: 0;
+          text-align: right;
+          form {
+            display: inline-block;
+            //float: right;
+          }
           input {
             background: transparent;
             border-bottom: 1px solid rgba(0, 0, 0, 0.16);
@@ -1058,6 +1078,7 @@ html.AdminThemeReno {
             max-width: 120px;
             transition: max-width $defaultTransition;
             float: right;
+            color: inherit;
             position: relative;
             z-index: 100000 + 220;
             &:focus {
@@ -1284,7 +1305,6 @@ html.AdminThemeReno {
     @media only screen and (min-width: 960px) {
 
       //padding-left: 1em;
-
       #headline {
         padding-left: 1.5em !important;
       }
@@ -1328,6 +1348,8 @@ html.AdminThemeReno {
 
       #sidebar {
         transform: translateX(-100%);
+
+        z-index: 100000 + 8000 !important;
 
         &:before {
           content: "";

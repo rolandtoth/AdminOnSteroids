@@ -17,28 +17,29 @@ To uninstall follow the uninstall instructions on the link above.
 ## Submodules
 
 
+###AdminTweaks
+
+*Apply default admin theme tweaks*
+
+A few usability mods targetting the default admin theme.
+
+- **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
+
+
+###AsmTweaks
+
+*asmSelect tweaks*
+
+- **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
+- **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
+
+
 
 ###AutosizeTextareas
 
 *Autosize textareas according to content*
 
 Adds auto-grow functionality to fit textarea to its content. The submodule has no settings to configure.
-
-
-
-###HoverSaveDropdown
-
-*Show save dropdown on hover instead on click*
-
-Hovering on the Save button in the page editor shows the dropdown menu instantly instead on click.
-
-
-
-###NoAnims
-
-*Disable all admin animations*
-
-Disable all CSS and JavaScript animations in the admin to make things feel more snappy.
 
 
 
@@ -49,35 +50,6 @@ Disable all CSS and JavaScript animations in the admin to make things feel more 
 Once checked, a radio button can't be cleared. This submodule removes this limitation.
 
 By default required fields can't be deselected but it can be enabled tweaking the submodule's settings.
-
-
-
-###AsmTweaks
-
-*asmSelect tweaks*
-
-####Settings
-
-- **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
-- **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
-
-
-
-###FileFieldToolbar
-
-*Add filter box and sort buttons to file fields*
-
-####Settings
-
-- **filterbox**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
-
-
-
-###PagePreviewLink
-
-*Add preview link next to page title*
-
-When enabled, an "eye" icon will be added next to the page title that links to the front-end target of the edited page. The target can be set to new tab/modal/panel.
 
 
 
@@ -92,14 +64,19 @@ Ctrl+clicking on the label itself also loads the field edit page.
 
 
 
-###Hotkeys
+###FileFieldToolbar
 
-*Hotkey tweaks*
+*Add filter box and sort buttons to file fields*
 
-####Settings
+- **filterbox**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
 
-- **Save on ctrl+s**: save current page, even from within CKEditor. Works on various pages, eg. when editing Templates, Fieds, Roles, etc. Also disables the default browser Save as dialog even if there's no submit button on the page.
-- **Add long-click and ctrl+click actions to breadcrumbs**: if enabled, long-click on a breadcrumb item will open the corresponding front-end page in a new tab/window, and holding the Ctrl key when clicking on them will navigate to their edit screen.
+
+
+###FixScrollbarJump
+
+*Prevent page jump when scrollbar appears*
+
+Disable page jump and elements repositioning when the height of the page changes and the scrollbar appears or disappears.
 
 
 
@@ -109,14 +86,42 @@ Ctrl+clicking on the label itself also loads the field edit page.
 
 Saves an extra click to activate text input, textarea or CKEditor when switching on language tabs.
 
-####Settings
-
 - **Focus**: activates the target input so the previous cursor position is restored
 - **Move cursor to the end**: sets the cursor to the end of the input's content
 - **Select all**: selects all content of the target input
 - **Do nothing**: disables setting focus for the current field type
 
-Settings can be configured separately for CKEditor settings.
+Settings can be configured separately for CKEditor fields.
+
+
+
+###Hotkeys
+
+*Hotkey tweaks*
+
+- **Save on ctrl+s**: save current page, even from within CKEditor. Works on various pages, eg. when editing Templates, Fieds, Roles, etc. Also disables the default browser Save as dialog even if there's no submit button on the page.
+- **Add long-click and ctrl+click actions to breadcrumbs**: if enabled, long-click on a breadcrumb item will open the corresponding front-end page in a new tab/window, and holding the Ctrl key when clicking on them will navigate to their edit screen.
+
+
+
+###HoverSaveDropdown
+
+*Show save dropdown on hover instead on click*
+
+Hovering on the Save button in the page editor shows the dropdown menu instantly instead on click.
+
+
+
+###InputfieldURLChecker
+
+*Add button or hotkey to FieldtypeURL to check URL*
+
+Enhance URL fields with a button to check typed url. It can open the URL in a new window, panel or modal. Comes with hotkey modes too.
+
+- **Mode**: button and/or hotkey modes. The button mode has an additional setting to place it in the left or right side of the field.
+- **Open URL in...**: URLs can be opened in a new tab (default), modal or panel. **Note**: modal and panel modes will fail if the target website doesn't allow embedding.
+- **Force HTTP prefix**: if checked, links will always have "http://" prefix, even if the field itself doesn't contain it. This ensures opening external links instead of relative ones.
+- **Enabled templates and Enabled fields**: here you can set templates and/or fields where the module will be enabled. If none selected, module will be active on all templates and all URL type fields. Note: if used, the module will be disabled on all non-listed fields/templates.
 
 
 
@@ -125,6 +130,14 @@ Settings can be configured separately for CKEditor settings.
 *Switch language tabs on ctrl+arrow keys*
 
 Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+left hotkeys. Also adds ctrl+up, ctrl+down hotkeys to collapse/expand language fields. The latter doesn't work on CKEditor fields.
+
+
+
+###LongClickDuration
+
+*Custom long-click action duration*
+
+Long-clicking on Edit or View links on the Page tree opens a modal to edit/view the page. The default value is 600 milliseconds which you can modify here. Note that you can add only greater value than the default.
 
 
 
@@ -137,40 +150,11 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 
 
 
-###Prevent page jump when the scrollbar appears
+###NoAnims
 
-*Prevent page jump when scrollbar appears*
+*Disable all admin animations*
 
-Disable page jump and elements repositioning when the height of the page changes and the scrollbar appears or disappears.
-
-
-
-###LongClickDuration
-
-*Custom long-click action duration*
-
-Long-clicking on Edit or View links on the Page tree opens a modal to edit/view the page. The default value is 600 milliseconds which you can modify here. Note that you can add only greater value than the default.
-
-
-
-###TabIndex
-
-*Add sequential tabindex to fields*
-
-Enables jumping to next input in the admin with TAB key (or backwards with shift+TAB). By default the TAB key jumps to the next input on second or third trigger only (depending on whether there are language tabs or other buttons in the field wrap), this tweak fixes it.
-
-
-
-###Tooltips
-
-*Hide field descriptions and notes to tooltips*
-
-Hide field descriptions and notes to an icon and show them on hover in a tooltip. To freeze the tooltip, double click on the icons.
-
-- **Only for SuperUsers**: enable Tooltips only or SuperUsers
-- **Enable for field descriptions**: allow moving field description to an icon
-- **Enable for field notes**: allow moving field notes to an icon
-- **Use overlay style**: when checked, the tooltip will cover the entire area of the field. This eliminates the z-index issues of the traditional tooltip style (other page elements may partly cover the tooltip).
+Disable all CSS and JavaScript animations in the admin to make things feel more snappy.
 
 
 
@@ -197,13 +181,12 @@ The third line uses no selector (filter), so any pages not matching the first tw
 Pages having no "hero_image" field or there's no image uploaded will show no thumbnail.
 
 
-###AdminTweaks
 
-*Apply default admin theme tweaks*
+###PagePreviewLink
 
-A few usability mods targetting the default admin theme.
+*Add preview link next to page title*
 
-- **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
+When enabled, an "eye" icon will be added next to the page title that links to the front-end target of the edited page. The target can be set to new tab/modal/panel.
 
 
 
@@ -228,3 +211,24 @@ A few usability mods targetting the Reno admin theme.
 - **Set narrow pagelist items**: reduce the space between the main pagelist rows to save space
 - **One-line sidebar submenus (only with autoHideSidebar)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
+
+
+
+###TabIndex
+
+*Add sequential tabindex to fields*
+
+Enables jumping to next input in the admin with TAB key (or backwards with shift+TAB). By default the TAB key jumps to the next input on second or third trigger only (depending on whether there are language tabs or other buttons in the field wrap), this tweak fixes it.
+
+
+
+###Tooltips
+
+*Hide field descriptions and notes to tooltips*
+
+Hide field descriptions and notes to an icon and show them on hover in a tooltip. To freeze the tooltip, double click on the icons.
+
+- **Only for SuperUsers**: enable Tooltips only or SuperUsers
+- **Enable for field descriptions**: allow moving field description to an icon
+- **Enable for field notes**: allow moving field notes to an icon
+- **Use overlay style**: when checked, the tooltip will cover the entire area of the field. This eliminates the z-index issues of the traditional tooltip style (other page elements may partly cover the tooltip).
