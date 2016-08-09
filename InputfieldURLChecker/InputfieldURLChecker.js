@@ -23,18 +23,24 @@ $(document).ready(function () {
     IUC.btnHeight = $('.' + IUC.dummyFieldSelector).outerHeight() - 2;
     $('.' + IUC.dummyFieldSelector).remove();
 
-    $(document).on('ready reloaded wiretabclick', initIUC);
+    $(document).on('ready reloaded wiretabclick opened', initIUC);
+
+    // repeaters
+    $(document).on('reloaded', '.Inputfield', initIUC);
+
+    // profield table
+    $(document).on('click', 'a.InputfieldTableAddRow', initIUC);
 
     function initIUC() {
 
         $(IUC.selector).not('[' + IUC.dataLoaded + '="1"]').each(function () {
 
-            var currInput = $(this).next('input:not([type="hidden"])');
+            var currInput = $(this).siblings('input:not([type="hidden"])');
 
             // set link height
             setTimeout(function () {
                 if (IUC.btnHeight > 0) {
-                    currInput.prev(IUC.selector).css({
+                    currInput.parent().children(IUC.selector).css({
                         'height': IUC.btnHeight + 'px',
                         'line-height': IUC.btnHeight + 'px'
                     });
@@ -46,10 +52,11 @@ $(document).ready(function () {
         $(IUC.selector + '[' + IUC.dataMode + '!=""][' + IUC.dataMode + ']').not('[' + IUC.dataLoaded + '="1"]').each(function () {
 
             var mode = $(this).attr(IUC.dataMode),
-                input = $(this).next('input:not([type="hidden"])');
+                input = $(this).parent().children('input:not([type="hidden"])');
 
             // always add buttonMode because hotkey modes will trigger this
             addButtonMode(input);
+            addFieldListener(input);
 
             if (mode.indexOf('ctrl-shift-click') !== -1) {
                 addHotkeyMode(input, 'click', 'ctrl-shift-click');
@@ -65,15 +72,12 @@ $(document).ready(function () {
 
     function addButtonMode(obj) {
 
-        addFieldListener(obj);
-
-        obj.prev(IUC.selector).on('click', function (e) {
+        obj.parent().children(IUC.selector).on('click', function (e) {
 
             var url = $(this).attr('href').trim(),
                 pwPanel = $(IUC.pwPanelSelector);
 
             if (url === "") {
-                e.preventDefault();
                 $(this).addClass(IUC.linkHiddenClass);
                 return false;
 
@@ -81,12 +85,13 @@ $(document).ready(function () {
                 // workaround because pw-panel is not dynamic
                 // do not update iframe if it has the same url loaded
                 if (pwPanel.length && pwPanel.attr('src') !== url) {
-                // update panel title
-                //$('.pw-panel-container-loaded .pw-panel-button small.ui-button-text').text(url);
+                    // update panel title
+                    //$('.pw-panel-container-loaded .pw-panel-button small.ui-button-text').text(url);
 
-                pwPanel.attr('src', url);
+                    pwPanel.attr('src', url);
                 }
             }
+            //return false;
         });
     }
 
@@ -104,8 +109,7 @@ $(document).ready(function () {
             if ((mode === 'ctrl-shift-enter' && isCtrlShiftPressed && isEnterPressed) ||
                 (mode === 'ctrl-shift-click' && isCtrlShiftPressed)) {
 
-                //obj.prev($(IUC.selector).trigger('click'));
-                obj.prev($(IUC.selector).get(0).click());
+                obj.parent().children(IUC.selector).get(0).click();
 
                 return false;
             }
@@ -117,7 +121,7 @@ $(document).ready(function () {
 
         obj.on('keyup fieldchange', function () {
 
-            var link = obj.prev(IUC.selector),
+            var link = obj.parent().children(IUC.selector),
                 url = getUrl(obj.val(), link.attr(IUC.dataForceHttp)).trim();
 
             link.attr('href', url).toggleClass(IUC.linkHiddenClass, url == "")

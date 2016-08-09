@@ -48,7 +48,7 @@
     right: 8px;
 }
 
-.iuc-button.button-left + input {
+.iuc-button.button-left ~ input {
     padding-left: 36px !important;
 }
 
@@ -68,9 +68,3 @@
 .collapsed8.InputfieldURL .InputfieldContent a:hover {
     text-decoration: underline;
 }
-
-/*.pw-panel-container-loaded .pw-panel-button {*/
-    /*transform-origin: 100% 0;*/
-    /*transform: rotate(90deg);*/
-    /*border-radius: 5px 5px 0 0 !important;*/
-/*}*/
