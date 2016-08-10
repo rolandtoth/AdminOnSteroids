@@ -14,6 +14,11 @@ Various admin tweaks to enhance ProcessWire admin. See more at [https://processw
 To uninstall follow the uninstall instructions on the link above.
 
 
+## Enable module
+
+Toggle for enabling/disabling the module.
+
+
 ## Submodules
 
 

@@ -5,6 +5,7 @@
 ### 0.4.2 (2016-08-10)
 
 - modalModuleEdit option to ModalTweaks: edit modules in a modal dialog
+- compactModuleList module names are "full-cell" sized for better clickability
 - breadcrumbs ctrl+click fix for Default admin theme
 
 
