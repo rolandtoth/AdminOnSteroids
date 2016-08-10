@@ -34,8 +34,8 @@ $(document).ready(function () {
         return false;
     }
 
-    // enable/disable module checkbox tweaks
-    $('form[action$="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
+    // AOS: enable/disable module checkbox click
+    $('form[action*="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
         $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
     });
 
@@ -69,7 +69,7 @@ $(document).ready(function () {
         $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
     }
 
-// LongClickDuration
+    // LongClickDuration
     if (AOSsettings.enabledSubmodules.indexOf('LongClickDuration') !== -1) {
         // set custom long click duration
         if (jQuery && jQuery.longclick) {
@@ -151,6 +151,36 @@ $(document).ready(function () {
 // ModuleTweaks
     if (AOSsettings.enabledSubmodules.indexOf('ModuleTweaks') !== -1) {
 
+        if (AOSsettings.ModuleTweaks.indexOf('modalModuleEdit') !== -1) {
+
+            $('#modules_form td > a')
+                .addClass('pw-modal')
+                .attr('data-autoclose', '#Inputfield_submit_save_module.needsReload')
+                .attr('data-buttons', '#Inputfield_submit_save_module');
+
+            $('#modules_form td > a').on('pw-modal-closed', function (event, ui) {
+                if ($('body').hasClass('needsReload')) {
+                    location.reload();
+                }
+            });
+
+            $('#ModuleEditForm button#Inputfield_submit_save_module').click(function () {
+                var button = $(this);
+
+                if (window.frameElement) {
+                    if ($('input#uninstall').is(':checked')) {
+                        // add this class to make the modal auto-close
+                        button.addClass('needsReload');
+                        // add class to parent frame to check for reload
+                        $('body', window.parent.document).addClass('needsReload');
+                    }
+                }
+            });
+
+            htmlClasses.push('aos_modalModuleEdit');
+        }
+
+
         if (AOSsettings.ModuleTweaks.indexOf('compactModuleList') !== -1) {
 
             $("form#modules_form > .Inputfields > .Inputfield").each(function () {
@@ -183,10 +213,17 @@ $(document).ready(function () {
     }
 
 
-// RenoTWeaks
+    // RenoTWeaks
+
     if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks;
+
+        // $('#sidebar').on('longclick', 'a.has-quicklinks', function (e) {
+        //     $(this).children('.quicklink-open').trigger('mouseenter');
+        //         return false;
+        // });
+
 
         function setupCheckbox(currentCheckbox) {
 
@@ -219,7 +256,7 @@ $(document).ready(function () {
         }
 
         // js tweaks to form configuration page
-        if ($('form[action$="AdminOnSteroids"]').length) {
+        if ($('form[action*="AdminOnSteroids"]').length) {
 
             var RenoTweaksSelector = '#wrap_Inputfield_RenoTweaks';
 
@@ -298,8 +335,8 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // var sidebarNav = document.querySelector('#sidebar'),
-                //     mainContent = document.querySelector('#main'),
+            // var sidebarNav = document.querySelector('#sidebar'),
+            //     mainContent = document.querySelector('#main'),
                 mainContent = document.querySelector('#content'),
                 PsSettings = {
                     wheelSpeed: 2,

@@ -8,16 +8,18 @@ $(document).ready(function () {
     if (HotkeysSettings.indexOf('breadcrumbTweaks') && BreadcrumbsSettings) {
 
         // add "data-*" markups
-        $('#breadcrumbs a').each(function (i) {
+        // skip first item in Default admin theme (.pw-panel)
+        $('#breadcrumbs a:not(.pw-panel)').each(function (i) {
 
-            if(!BreadcrumbsSettings[i]) {
-                return false;
+            // Default admin theme has an extra element in the beginning of the breadcrumb
+            if (!BreadcrumbsSettings[i]) {
+                return true;    // = continue
             }
 
-            if(BreadcrumbsSettings[i]['url']) {
+            if (BreadcrumbsSettings[i]['url']) {
                 $(this).attr('data-url', BreadcrumbsSettings[i]['url']);
             }
-            if(BreadcrumbsSettings[i]['editUrl']) {
+            if (BreadcrumbsSettings[i]['editUrl']) {
                 $(this).attr('data-editurl', BreadcrumbsSettings[i]['editUrl']);
             }
         });

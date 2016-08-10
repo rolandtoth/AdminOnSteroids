@@ -1,6 +1,14 @@
 #Changelog
 
 
+
+### 0.4.2 (2016-08-10)
+
+- modalModuleEdit option to ModalTweaks: edit modules in a modal dialog
+- breadcrumbs ctrl+click fix for Default admin theme
+
+
+
 ### 0.4.1 (2016-08-10)
 
 - workaround to use panel mode for repeaters and other fixes for InputfieldURLChecker

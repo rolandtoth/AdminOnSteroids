@@ -328,7 +328,7 @@ body.id-23 {
 //  }
 //}
 
-form[action$="AdminOnSteroids"] {
+form[action*="AdminOnSteroids"] {
 
   #wrap_Inputfield_enabledSubmodules {
     > .InputfieldContent {
@@ -628,6 +628,19 @@ html.aos_filterbox {
 }
 
 // ModuleTweaks
+html.aos_modalModuleEdit {
+
+  .ui-dialog-buttonpane {
+    border-top: 1px solid rgba(#000, 0.12);
+    width: 100%;
+    .ui-dialog-buttonset {
+      float: left;
+      margin-left: 12px;
+
+    }
+  }
+}
+
 html.aos_compactModuleList {
   form#modules_form {
     .modules_filter {
@@ -684,6 +697,12 @@ html.aos_compactModuleList {
           }
           a {
             display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            padding-top: 7px;
             span {
               position: static;
             }
@@ -710,7 +729,7 @@ html.aos_compactModuleList {
             font-family: FontAwesome, sans-serif;
             position: absolute;
             color: rgba(#364D68, 0.2);
-            margin-top: 1px;
+            margin-top: 0;
             padding-left: 7px;
           }
         }
