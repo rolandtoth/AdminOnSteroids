@@ -34,20 +34,10 @@ $(document).ready(function () {
         return false;
     }
 
-
-     //edit field on ctrl+click title
-
-    // $('#ProcessPageEdit .Inputfield > label').each(function() {
-    //
-    //     var label = $(this),
-    //         text = label.text();
-    //
-    //     if(text.indexOf('::aos_field_name::') !== -1) {
-    //         var parts = text.split('::aos_field_name::');
-    //         // console.log(parts[0] + '<span class="aos_field_name">' + parts[1] +  '</span>');
-    //         label.contents().first().replaceWith(parts[0] + '<span class="aos_field_name">' + parts[1] +  '</span>');
-    //     }
-    // });
+    // enable/disable module checkbox tweaks
+    $('form[action$="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
+        $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
+    });
 
     $(document).on('click', '#ProcessPageEdit .Inputfield > label', function (e) {
         if (e.ctrlKey) {
@@ -72,11 +62,8 @@ $(document).ready(function () {
     // HoverSaveDropdown
     // note: copies do not need to modify
     if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
-        $('#pw-dropdown-toggle-submit_save, ' +
-            '#pw-dropdown-toggle-submit_publish, ' +
-            '#pw-dropdown-toggle-submit_save_unpublished, ' +
-            '#pw-dropdown-toggle-Inputfield_submit_save_module')
-            .removeClass('dropdown-toggle-click');
+
+        $('.dropdown-toggle-click').removeClass('dropdown-toggle-click');
 
         // force align dropdown menus to right of parent button
         $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
@@ -311,8 +298,9 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // var sidebarNav = document.querySelector('#sidebar'),
-                mainContent = document.querySelector('#main'),
+                // var sidebarNav = document.querySelector('#sidebar'),
+                //     mainContent = document.querySelector('#main'),
+                mainContent = document.querySelector('#content'),
                 PsSettings = {
                     wheelSpeed: 2,
                     theme: 'pw-scrollbar',
@@ -325,6 +313,7 @@ $(document).ready(function () {
             }
 
             if (mainContent && renoTweaksSettings.indexOf('miniScrollbarMain') !== -1) {
+                console.log('ps');
                 Ps.initialize(mainContent, PsSettings);
             }
         }

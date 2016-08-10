@@ -24,15 +24,9 @@ $defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
   }
 }
 
-#sidebar #main-nav {
-  // allow quicklinks menu (flash menu) to shop up
-  //overflow: hidden !important;
-  //overflow-x: visible !important;
-  //overflow-x: visible !important;
-  //overflow: visible !important;
-  //.quicklinks {
-  //  display: block !important;
-  //}
+// try to avoid pwPanel jump to top
+body {
+  overflow: auto !important;
 }
 
 // AsmTweaks
@@ -311,6 +305,28 @@ body.id-23 {
 }
 
 // module own CSS styles
+
+.aos_disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  -webkit-filter: saturate(0);
+}
+
+//body {
+//  *:not(img) {
+//  filter: saturate(50%) hue-rotate(180deg) contrast(100%) invert(90%);
+//  }
+//}
+
+//#wrap {
+//body {
+//  filter: saturate(50%) hue-rotate(180deg) contrast(100%) invert(90%);
+//  img {
+//    transform: translate3d(0,0,1px);
+//    will-change: filter;
+//    filter: none !important;
+//  }
+//}
 
 form[action$="AdminOnSteroids"] {
 
@@ -843,6 +859,7 @@ html.AdminThemeReno {
         padding: 0;
         box-shadow: $defaultBoxShadow;
         max-height: 75vh;
+        overflow-x: hidden !important;
         overflow-y: auto !important;
         li:first-child {
           box-shadow: inset 0 3px 3px rgba(#000, 0.075);
@@ -911,9 +928,34 @@ html.AdminThemeReno {
         //transition: padding-top 0.12s, padding-bottom 0.12s !important;
       }
       #main {
-        padding-top: 156px;
         &:not(.closed) #headline {
           padding-left: 232px;
+        }
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        padding-top: 0;
+        overflow-y: hidden;
+        #content {
+          // layout scrolbar fix
+          border-top: 156px solid transparent;
+          top: 0;
+          max-height: 100%;
+          overflow: auto;
+          &.ps-theme-pw-scrollbar {
+            overflow: hidden !important;
+          }
+          padding-bottom: 0;
+          // placeholder to push down bottom (Firefox)
+          &:after {
+            content: "";
+            display: block;
+            position: relative;
+            height: 49px;
+            background-color: transparent;
+          }
         }
       }
 
@@ -986,6 +1028,10 @@ html.AdminThemeReno {
 
     @media only screen and (min-width: 960px) {
 
+      body {
+        overflow: hidden !important;
+      }
+
       // System Notifications module
       #NotificationGhosts {
         top: 48px !important;
@@ -997,7 +1043,7 @@ html.AdminThemeReno {
         left: auto !important;
         right: auto !important;
         position: relative;
-        margin: 0 8px 0 24px;
+        margin: 0 0 0 24px;
         padding: 0;
         display: inline-block !important;
       }
@@ -1047,16 +1093,11 @@ html.AdminThemeReno {
         background: #fff;
       }
       #main {
-        position: absolute;
-        left: 0;
-        //overflow-x: hidden;
-        right: 0;
-        bottom: 0;
-        top: 100px;
-        padding-top: 0;
-        //background: #F0F3F7;
         &:not(.closed) #headline {
           padding-left: 232px;
+        }
+        #content {
+          border-top: 100px solid transparent;
         }
       }
       #wrap {
@@ -1170,7 +1211,10 @@ html.AdminThemeReno {
     body.hasWireTabs {
       @media only screen and (min-width: 960px) {
         #main {
-          top: 134px;
+          #content {
+            // layout fix to scroll div only the fixed header
+            border-top: 134px solid transparent;
+          }
           .WireTabs {
             position: fixed;
             top: 100px;
@@ -1287,12 +1331,13 @@ html.AdminThemeReno {
             border-radius: 2,
             rail-default-opacity: 0,
             bar-bg: transparent,
-            bar-container-hover-bg: rgba(0, 0, 0, 0.2),
-            rail-hover-bg: transparent,
-            bar-hover-bg: rgba(0, 0, 0, 0.25),
-            scrollbar-y-rail-width: 5px,
-            scrollbar-y-width: 5px
+            bar-container-hover-bg: rgba(#2F4248, 0.5),
+            rail-hover-bg: rgba(#2F4248, 0.2),
+            bar-hover-bg: rgba(#2F4248, 0.75),
+            scrollbar-y-rail-width: 7px,
+            scrollbar-y-width: 7px
     )));
+
     //.ps-theme-pw-scrollbar {
     //  overflow-x: visible !important;
     //}
@@ -1497,7 +1542,7 @@ html.AdminThemeReno {
                 width: auto !important;
                 a {
                   min-width: 250px;
-                  padding: 0.5em 20px;
+                  padding: 0.25em 20px;
                 }
               }
             }

@@ -3,7 +3,11 @@
 
 ### 0.4.1 (2016-08-10)
 
-- workaround to use panel mode for repeaters (InputfieldURLChecker)
+- workaround to use panel mode for repeaters and other fixes for InputfieldURLChecker
+- added "Enable module" toggle
+- layout improvements for sticky and compact headers (RenoTweak)
+- miniScrollbar now works with stickyHeader (previously only with compactHeader)
+- more general solution for HoverSaveDropdown
 
 
 

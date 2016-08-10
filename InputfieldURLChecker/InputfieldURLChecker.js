@@ -26,9 +26,13 @@ $(document).ready(function () {
     $(document).on('ready reloaded wiretabclick opened', initIUC);
 
     // repeaters
+
     // $(document).on('reloaded', '.Inputfield', initIUC);  // runs on all inputfields!
     // $(document).on('reloaded', '.InputfieldRepeaterItem', function() {
-    $(document).on('reloaded', '.Inputfield.pw-panel-items', function () {
+
+    $(document).on('reloaded', '.InputfieldRepeaterItem .Inputfield:not(.pw-panel-items)', initIUC);
+
+    $(document).on('reloaded', '.InputfieldRepeaterItem .Inputfield.pw-panel-items', function () {
         pwPanels.init();
         initIUC();
     });
@@ -94,6 +98,7 @@ $(document).ready(function () {
                 // do not update iframe if it has the same url loaded
                 if (pwPanel.length && pwPanel.attr('src') !== url) {
                     pwPanel.attr('src', url);
+                    return false;
                 }
             }
             // return false;

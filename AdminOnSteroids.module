@@ -64,6 +64,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'TabIndex',
                 'fixScrollbarJump'
             ),
+            'enabled'                      => 1,
             'DeselectRadios'               => array(
                 'adminOnly'
             ),
@@ -179,10 +180,13 @@ HTML;
 
         self::$configData = $this->modules->getModuleConfigData($this);
 
+        if (!$this->enabled) {
+            return;
+        }
+
         $configData = self::$configData;
 
         $defaultData                 = self::getDefaultData();
-        $this->pageListThumbSettings = array();
 
 
         if (!isset($configData['enabledSubmodules'])) {
@@ -190,6 +194,7 @@ HTML;
         }
 
         $enabledSubmodules = $configData['enabledSubmodules'];
+        $this->pageListThumbSettings = array();
 
         $editedPageId = $this->sanitizer->int($this->config->input->get->id);
 
@@ -445,7 +450,7 @@ HTML;
 
             $editLinkAttrsArray['class'][] = $configData['IUC_target'];
 
-            if($configData['IUC_target'] === 'pw-panel') {
+            if ($configData['IUC_target'] === 'pw-panel') {
                 // disable load on hover
                 $editLinkAttrsArray['class'][] = 'pw-panel-reload';
             }
@@ -563,15 +568,26 @@ HTML;
 
         $wrapper = new InputfieldWrapper();
 
+        // AdminTweaks ----------------------------------------------- //
+
+        $f            = wire('modules')->get('InputfieldCheckbox');
+        $f->name      = 'enabled';
+        $f->label     = __('Enable module', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $data[ $f->name ]);
+        $f->checked = ($f->value == 1) ? 'checked' : $data[ $f->name ];
+
+        $wrapper->add($f);
+
+        // Submodules ----------------------------------------------- //
+
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
-//        $f->columnWidth = 36;
         $f->label       = __('Submodules', __FILE__);
         $f->description = __('Enable or disable submodules here.', __FILE__);
+//        $f->showIf      = 'enabled=1';
         $f->collapsed   = Inputfield::collapsedNever;
 //        $f->table = true;
-//        $f->description = __('', __FILE__);
-//        $f->notes = __('', __FILE__);
 
         $f->addOption('AdminTweaks', __('**AdminTweaks**Default admin theme tweaks', __FILE__));
         $f->addOption('AsmTweaks', __('**AsmTweaks**asmSelect tweaks', __FILE__));
@@ -599,9 +615,11 @@ HTML;
         $wrapper->add($f);
 
 
+        // Tweaks Fieldset ----------------------------------------------- //
+
         $fset = wire('modules')->get("InputfieldFieldset");
         $fset->attr('name', 'tweaks');
-//        $fset->columnWidth = 64;
+//        $fset->showIf    = 'enabled=1';
         $fset->label     = __('Options for individual submodules', __FILE__);
         $fset->collapsed = Inputfield::collapsedNever;
 
@@ -626,10 +644,8 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AsmTweaks');
-        $f->showIf      = 'enabledSubmodules=AsmTweaks';
-        $f->collapsed   = Inputfield::collapsedNever;
-        $f->description = __('', __FILE__);
-        $f->notes       = __('', __FILE__);
+        $f->showIf    = 'enabledSubmodules=AsmTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('collapseAsmSections', __('Collapse fieldset/tab items on double click', __FILE__));
         $f->addOption('leftAsmDelete', __('Move delete button to the left', __FILE__));
