@@ -26,10 +26,16 @@ $(document).ready(function () {
     $(document).on('ready reloaded wiretabclick opened', initIUC);
 
     // repeaters
-    $(document).on('reloaded', '.Inputfield', initIUC);
+    // $(document).on('reloaded', '.Inputfield', initIUC);  // runs on all inputfields!
+    // $(document).on('reloaded', '.InputfieldRepeaterItem', function() {
+    $(document).on('reloaded', '.Inputfield.pw-panel-items', function () {
+        pwPanels.init();
+        initIUC();
+    });
 
-    // profield table
+    // ProFields table
     $(document).on('click', 'a.InputfieldTableAddRow', initIUC);
+
 
     function initIUC() {
 
@@ -72,26 +78,25 @@ $(document).ready(function () {
 
     function addButtonMode(obj) {
 
-        obj.parent().children(IUC.selector).on('click', function (e) {
+        obj.parent().children(IUC.selector).on('click', function () {
 
-            var url = $(this).attr('href').trim(),
-                pwPanel = $(IUC.pwPanelSelector);
+            var url = $(this).attr('href') ? $(this).attr('href').trim() : false,
+                pwPanel = $(IUC.pwPanelSelector + ':eq(0)');
 
-            if (url === "") {
+            if (!url) {
+
                 $(this).addClass(IUC.linkHiddenClass);
                 return false;
 
             } else {
+
                 // workaround because pw-panel is not dynamic
                 // do not update iframe if it has the same url loaded
                 if (pwPanel.length && pwPanel.attr('src') !== url) {
-                    // update panel title
-                    //$('.pw-panel-container-loaded .pw-panel-button small.ui-button-text').text(url);
-
                     pwPanel.attr('src', url);
                 }
             }
-            //return false;
+            // return false;
         });
     }
 
@@ -156,7 +161,7 @@ $(document).ready(function () {
  *
  * @param url
  * @param forcePrefix
- * @returns {*}
+ * @returns {string}
  */
 function getUrl(url, forcePrefix) {
     var prefix = 'http';

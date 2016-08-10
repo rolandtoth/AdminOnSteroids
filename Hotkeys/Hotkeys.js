@@ -83,7 +83,8 @@ $(document).ready(function () {
         setupCKESave();
 
         // ctrl+s in CKEditor (repeaters)
-        $(document).on('reloaded', '.Inputfield', function () {
+        // $(document).on('reloaded', '.Inputfield', function () {
+        $(document).on('reloaded', '.InputfiesldRepeaterItem', function () {
             setupCKESave();
         });
     }
