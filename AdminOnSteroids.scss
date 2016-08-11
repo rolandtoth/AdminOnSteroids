@@ -304,7 +304,7 @@ body.id-23 {
   }
 }
 
-// module own CSS styles
+// module's own CSS styles
 
 .aos_disabled {
   pointer-events: none;
@@ -466,12 +466,14 @@ form[action*="AdminOnSteroids"] {
     }
   }
 
+  // push these items to the right to mimic hiearchy
   input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
+  //input#Inputfield_RenoTweaks_inlineSidebarItems,
   input#Inputfield_RenoTweaks_miniScrollbarSidebar,
   input#Inputfield_RenoTweaks_miniScrollbarMain,
   input#Inputfield_RenoTweaks_stickyHeaderCompact,
   input#Inputfield_RenoTweaks_stickyCKEditorToolbar,
-  input#Inputfield_RenoTweaks_oneLineSidebarSubmenus {
+  input#Inputfield_RenoTweaks_oneLineSidebarItems {
     margin-left: 21px;
   }
 }
@@ -636,10 +638,18 @@ html.aos_modalModuleEdit {
     .ui-dialog-buttonset {
       float: left;
       margin-left: 12px;
-
+      button {
+        display: inline-block !important;
+        //opacity: 1 !important;
+        visibility: visible !important;
+        i {
+          margin-left: -8px;
+        }
+      }
     }
   }
 }
+
 
 html.aos_compactModuleList {
   form#modules_form {
@@ -1350,11 +1360,11 @@ html.AdminThemeReno {
             border-radius: 2,
             rail-default-opacity: 0,
             bar-bg: transparent,
-            bar-container-hover-bg: rgba(#2F4248, 0.5),
+            bar-container-hover-bg: rgba(#2F4248, 0.4),
             rail-hover-bg: rgba(#2F4248, 0.2),
-            bar-hover-bg: rgba(#2F4248, 0.75),
-            scrollbar-y-rail-width: 7px,
-            scrollbar-y-width: 7px
+            bar-hover-bg: rgba(#2F4248, 0.5),
+            scrollbar-y-rail-width: 6px,
+            scrollbar-y-width: 6px
     )));
 
     //.ps-theme-pw-scrollbar {
@@ -1482,26 +1492,95 @@ html.AdminThemeReno {
   &.aos_alwaysVisibleSidebarItems {
     @media only screen and (min-width: 960px) {
       #sidebar {
-        //z-index: 19;
         #main-nav {
           > li {
             > a {
               font-weight: 600;
-              //header icons
               > i {
                 margin: 5px 8px 0 0;
                 float: right;
               }
-              //li a:hover {
-              //  background-color: inherit !important;
-              //}
             }
             a {
               padding: 0.5em 0.5em 0.5em 1.3em;
-              //&.current:hover,
               &.parent:hover {
                 background-color: inherit !important;
               }
+              //&.has-quicklinks {
+              //  span {
+              //    display: inline-block;
+              //    padding-right: 18px;
+              //  }
+              //}
+              //i.quicklink-open {
+              //  visibility: visible;
+              //  opacity: 0.33;
+              //  padding: 5px 10px;
+              //  color: inherit !important;
+              //  &:hover {
+              //    opacity: 1;
+              //    color: inherit !important;
+              //  }
+              //}
+              &:after {
+                display: none;
+              }
+            }
+            > ul {
+              display: block !important;
+              &:empty {
+                display: none !important;
+              }
+              overflow: visible !important;
+              height: auto !important;
+              //padding: 8px 12px 2px 12px !important;
+              > li {
+                a {
+                  //padding: 0.2em 0.5em;
+                  opacity: 0.84;
+                  &.current {
+                    background: transparent;
+                    color: inherit !important;
+                    opacity: 1;
+                    font-weight: 600;
+                    span {
+                      i {
+                        display: none;
+                      }
+                    }
+                  }
+                //  &:hover {
+                //    opacity: 1;
+                //    background-color: inherit !important;
+                //
+                //    span {
+                //      text-decoration: underline;
+                //    }
+                //  }
+                }
+              }
+              //ul.quicklinks {
+              //  width: auto !important;
+              //  a {
+              //    min-width: 250px;
+              //    padding: 0.25em 20px;
+              //  }
+              //}
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // inlineSidebarItems
+  //&.aos_inlineSidebarItems.aos_alwaysVisibleSidebarItems {
+  &.aos_inlineSidebarItems {
+    @media only screen and (min-width: 960px) {
+      #sidebar {
+        #main-nav {
+          > li {
+            a {
               &.has-quicklinks {
                 span {
                   display: inline-block;
@@ -1518,43 +1597,21 @@ html.AdminThemeReno {
                   color: inherit !important;
                 }
               }
-              &:after {
-                display: none;
-              }
             }
             > ul {
-              display: block !important;
-              &:empty {
-                display: none !important;
-              }
-              overflow: visible !important;
-              height: auto !important;
-              padding: 8px 14px 2px 14px !important;
+              padding: 8px 12px 2px 12px !important;
               > li {
                 display: inline-block;
-                font-size: 0.92em;
+                font-size: 0.94em;
                 a {
                   padding: 0.2em 0.5em;
-                  opacity: 0.84;
-                  &.current {
-                    background: transparent;
-                    color: inherit !important;
-                    opacity: 1;
-                    font-weight: 600;
-                    span {
-                      i {
-                        display: none;
+                    &:hover {
+                      opacity: 1;
+                      background-color: inherit !important;
+                      span {
+                        text-decoration: underline;
                       }
                     }
-                  }
-                  &:hover {
-                    opacity: 1;
-                    background-color: inherit !important;
-
-                    span {
-                      text-decoration: underline;
-                    }
-                  }
                 }
               }
               ul.quicklinks {
@@ -1585,8 +1642,8 @@ html.AdminThemeReno {
     //}
   }
 
-  // oneLineSidebarSubmenus (only with autoHideSidebar)
-  &.aos_oneLineSidebarSubmenus.aos_autoHideSidebar {
+  // oneLineSidebarItems (only with autoHideSidebar)
+  &.aos_oneLineSidebarItems.aos_autoHideSidebar {
     //@media only screen and (min-width: 960px) {
     #sidebar {
       z-index: 19;

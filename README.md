@@ -210,6 +210,7 @@ A few usability mods targetting the Reno admin theme.
 - **Sticky sidebar**: stick the sidebar to the top to make it always visible
 - **Autohide sidebar on left**: auto hide the sidebar so it's accessible by moving the mouse to the left side of the screen
 - **Always show sidebar items (disable accordion)**: make sidebar submenus more compact and do not hide them
+- **Inline sidebar items instead of stacking**: check this if you would like sidebar items to appear next to each other and not in full row. This results in a much lower sidebar if you have many items in it.
 - **Single click sidebar headers**: by default the sidebar header links need double-click to open the corresponding menu page because single click is used by the accordion. This tweak will remove this limitation. It's available only if "Always show sidebar items" tweak is on.
 - **Always show search field**: make the search field always available
 - **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach

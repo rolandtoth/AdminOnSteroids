@@ -2,6 +2,13 @@
 
 
 
+### 0.4.3 (2016-08-11)
+
+- modalModuleEdit: added ESC close and secondary Submit button for submit+exit
+- RenoTweaks: optional inline mode for sidebar items
+
+
+
 ### 0.4.2 (2016-08-10)
 
 - modalModuleEdit option to ModalTweaks: edit modules in a modal dialog
@@ -266,7 +273,7 @@
 
 ### 0.0.5 (2016-05-27)
 
-- added Reno tweaks hideSidebarQuickLinks and oneLineSidebarSubmenus
+- added Reno tweaks hideSidebarQuickLinks and oneLineSidebarItems
 - various bugfixes
 
 

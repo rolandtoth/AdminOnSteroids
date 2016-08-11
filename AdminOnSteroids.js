@@ -151,12 +151,28 @@ $(document).ready(function () {
 // ModuleTweaks
     if (AOSsettings.enabledSubmodules.indexOf('ModuleTweaks') !== -1) {
 
+
         if (AOSsettings.ModuleTweaks.indexOf('modalModuleEdit') !== -1) {
 
             $('#modules_form td > a')
                 .addClass('pw-modal')
-                .attr('data-autoclose', '#Inputfield_submit_save_module.needsReload')
-                .attr('data-buttons', '#Inputfield_submit_save_module');
+                .attr('data-autoclose', '#Inputfield_submit_save_module.needsReload, #Inputfield_submit_save_module_forceClose')
+                .attr('data-buttons', '#Inputfield_submit_save_module, #Inputfield_submit_save_module_forceClose');
+
+
+            // clone the Submit button (only if in iframe)
+            var submitBtn = $('#ModuleEditForm button#Inputfield_submit_save_module');
+
+            if (window.frameElement && submitBtn.length) {
+
+                var submitBtnClone = submitBtn.clone(false);
+
+                submitBtnClone
+                    .attr('id', submitBtnClone.attr('id') + '_forceClose')
+                    .addClass('ui-priority-secondary')
+                    .appendTo(submitBtn.parent())
+                    .children('.ui-button-text').before('<i class="fa fa-fw fa-close"></i>');
+            }
 
             $('#modules_form td > a').on('pw-modal-closed', function (event, ui) {
                 if ($('body').hasClass('needsReload')) {
@@ -165,15 +181,28 @@ $(document).ready(function () {
             });
 
             $('#ModuleEditForm button#Inputfield_submit_save_module').click(function () {
+
                 var button = $(this);
 
-                if (window.frameElement) {
-                    if ($('input#uninstall').is(':checked')) {
-                        // add this class to make the modal auto-close
-                        button.addClass('needsReload');
-                        // add class to parent frame to check for reload
-                        $('body', window.parent.document).addClass('needsReload');
-                    }
+                // allow save on non-modal Modules page
+                if (!window.frameElement) return true;
+
+                // add class to parent frame to check for reload in callback
+                if ($('input#uninstall').is(':checked')) {
+                    // add this class to make the modal auto-close
+                    button.addClass('needsReload');
+                    $('body', window.parent.document).addClass('needsReload');
+                }
+            });
+
+            // add ESC close
+            $(document).on('keydown', function (e) {
+
+                e = e || window.event;
+                var closeBtn = $('.ui-dialog-titlebar-close');
+
+                if (e.keyCode === 27 && closeBtn.length) { // ESC
+                    closeBtn.trigger('click');
                 }
             });
 
@@ -234,8 +263,6 @@ $(document).ready(function () {
                 if (window.getComputedStyle(nextCheckbox.get(0), null).getPropertyValue('margin-left') !== '0px') {
 
                     var parentCheckbox = getParentCheckbox(currentCheckbox);
-
-                    // console.log(parentCheckbox.next('span').text());
 
                     var isChecked = parentCheckbox.is(':checked');
                     nextCheckbox.parent().parent('li').toggleClass('disabled', !isChecked);
@@ -302,6 +329,10 @@ $(document).ready(function () {
             htmlClasses.push('aos_stickySidebar');
         }
 
+        if (renoTweaksSettings.indexOf('inlineSidebarItems') !== -1) {
+            htmlClasses.push('aos_inlineSidebarItems');
+        }
+
         if (renoTweaksSettings.indexOf('autoHideSidebar') !== -1) {
             htmlClasses.push('aos_autoHideSidebar');
         }
@@ -314,8 +345,8 @@ $(document).ready(function () {
             htmlClasses.push('aos_hideSidebarQuickLinks');
         }
 
-        if (renoTweaksSettings.indexOf('oneLineSidebarSubmenus') !== -1) {
-            htmlClasses.push('aos_oneLineSidebarSubmenus');
+        if (renoTweaksSettings.indexOf('oneLineSidebarItems') !== -1) {
+            htmlClasses.push('aos_oneLineSidebarItems');
         }
 
         if (renoTweaksSettings.indexOf('headButtonNextToTitle') !== -1) {
@@ -335,8 +366,8 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // var sidebarNav = document.querySelector('#sidebar'),
-            //     mainContent = document.querySelector('#main'),
+                // var sidebarNav = document.querySelector('#sidebar'),
+                //     mainContent = document.querySelector('#main'),
                 mainContent = document.querySelector('#content'),
                 PsSettings = {
                     wheelSpeed: 2,

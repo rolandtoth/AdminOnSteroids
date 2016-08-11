@@ -24,7 +24,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 42,
+            'version'   => 43,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -127,7 +127,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 //                'autoHideSidebar',
                 'alwaysVisibleSidebarItems',
 //                'hideSidebarQuickLinks',
-//                'oneLineSidebarSubmenus',
+//                'inlineSidebarItems',
+//                'oneLineSidebarItems',
                 'headButtonNextToTitle',
                 'alwaysShowSearch',
                 'compactPageList',
@@ -991,11 +992,12 @@ HTML;
         $f->addOption('miniScrollbarSidebar', __('Use mini scrollbar for sidebar', __FILE__));
         $f->addOption('miniScrollbarMain', __('Use mini scrollbar for main content', __FILE__));
         $f->addOption('stickySidebar', __('Sticky sidebar', __FILE__));
-        $f->addOption('autoHideSidebar', __('Autohide sidebar', __FILE__));
-        $f->addOption('oneLineSidebarSubmenus', __('One-line sidebar submenus (only with autoHideSidebar)', __FILE__));
         $f->addOption('alwaysVisibleSidebarItems', __('Always show sidebar items (disable accordion)', __FILE__));
         $f->addOption('singleClickSidebarHeaders', __('Single click navigation of sidebar headers', __FILE__));
+        $f->addOption('inlineSidebarItems', __('Inline sidebar items instead of stacking', __FILE__));
         $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
+        $f->addOption('autoHideSidebar', __('Autohide sidebar', __FILE__));
+        $f->addOption('oneLineSidebarItems', __('One-line sidebar submenus', __FILE__));
         $f->addOption('compactPageList', __('Set narrow pagelist items', __FILE__));
         $f->addOption('alwaysShowSearch', __('Always show search field', __FILE__));
         $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
