@@ -309,24 +309,8 @@ body.id-23 {
 .aos_disabled {
   pointer-events: none;
   opacity: 0.6;
-  -webkit-filter: saturate(0);
+  filter: saturate(0);
 }
-
-//body {
-//  *:not(img) {
-//  filter: saturate(50%) hue-rotate(180deg) contrast(100%) invert(90%);
-//  }
-//}
-
-//#wrap {
-//body {
-//  filter: saturate(50%) hue-rotate(180deg) contrast(100%) invert(90%);
-//  img {
-//    transform: translate3d(0,0,1px);
-//    will-change: filter;
-//    filter: none !important;
-//  }
-//}
 
 form[action*="AdminOnSteroids"] {
 
@@ -468,7 +452,7 @@ form[action*="AdminOnSteroids"] {
 
   // push these items to the right to mimic hiearchy
   input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
-  //input#Inputfield_RenoTweaks_inlineSidebarItems,
+    //input#Inputfield_RenoTweaks_inlineSidebarItems,
   input#Inputfield_RenoTweaks_miniScrollbarSidebar,
   input#Inputfield_RenoTweaks_miniScrollbarMain,
   input#Inputfield_RenoTweaks_stickyHeaderCompact,
@@ -650,7 +634,6 @@ html.aos_modalModuleEdit {
   }
 }
 
-
 html.aos_compactModuleList {
   form#modules_form {
     .modules_filter {
@@ -784,14 +767,48 @@ html.aos_PagePreviewLink {
   }
 }
 
+
+// Reno theme search tweaks on lower resolutions
+//@media only screen and (max-width: 960px) {
+//
+//  #search {
+//    top: 0;
+//    max-width: 200px;
+//    #ProcessPageSearchQuery {
+//      //padding-right: 32px;
+//    }
+//    .search-close {
+//      display: none;
+//      position: absolute;
+//      top: 4px;
+//      right: 8px;
+//    }
+//  }
+//}
+//
+@media only screen and (max-width: 1100px) {
+
+  #search {
+    width: auto;
+  }
+  #ProcessPageSearchForm {
+    width: auto;
+  }
+}
+
+
+
+
 // fixScrollbarJump
-html.aos_fixScrollbarJump:not(.modal) {
-  width: 100vw;
-  overflow-x: hidden;
-  #headline,
-  #breadcrumbs,
-  #masthead {
-    width: 100vw !important;
+@media only screen and (min-width: 960px) {
+  html.aos_fixScrollbarJump:not(.modal) {
+    width: 100vw;
+    overflow-x: hidden;
+    #headline,
+    #breadcrumbs,
+    #masthead {
+      width: 100vw !important;
+    }
   }
 }
 
@@ -875,11 +892,13 @@ html.AdminThemeReno {
 
       // System Notifications module
       #NotificationGhosts {
-        z-index: 100000 + 20000 !important;
+        //z-index: 100000 + 20000 !important;
+        z-index: 100000 + 240 !important;
       }
 
       .NotificationMenu {
-        z-index: 100000 + 2000;
+        //z-index: 100000 + 2000;
+        z-index: 100000 + 240;
         position: fixed;
         top: 52px;
         left: 0;
@@ -1072,9 +1091,23 @@ html.AdminThemeReno {
         left: auto !important;
         right: auto !important;
         position: relative;
-        margin: 0 0 0 24px;
+        margin: 0 0 0 40px;
         padding: 0;
         display: inline-block !important;
+        .qty {
+          //color: #fff;
+          font-weight: normal;
+          background: #E2E9EF;
+        }
+        // do not show quantity if it's 0
+        //&[data-qty="0"] {
+        //  display: none !important;
+        //  //.qty {
+        //  //  width: 0 !important;
+        //  //  overflow: hidden;
+        //  //  padding: 0;
+        //  //}
+        //}
       }
       .NotificationMenu {
         left: 210px;
@@ -1138,7 +1171,7 @@ html.AdminThemeReno {
           z-index: 100000 + 210;
           position: fixed;
           //right: -8px;
-          right: 0;
+          right: 8px;
           text-align: right;
           form {
             display: inline-block;
@@ -1191,11 +1224,19 @@ html.AdminThemeReno {
         top: 52px;
         z-index: 100000 + 260;
         .avatar.dropdown {
-          margin-right: 0 !important;
-
+          margin-right: -0.5em !important;
+          a {
+            padding-right: 0.5em;
+          }
+        }
+        .avatar img {
+          margin-top: -1px;
         }
         a, a:hover, a:after {
           color: inherit !important;
+        }
+        a {
+          margin-left: 1px;
         }
         li.dropdown ul {
           //box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.12);
@@ -1549,14 +1590,14 @@ html.AdminThemeReno {
                       }
                     }
                   }
-                //  &:hover {
-                //    opacity: 1;
-                //    background-color: inherit !important;
-                //
-                //    span {
-                //      text-decoration: underline;
-                //    }
-                //  }
+                  //  &:hover {
+                  //    opacity: 1;
+                  //    background-color: inherit !important;
+                  //
+                  //    span {
+                  //      text-decoration: underline;
+                  //    }
+                  //  }
                 }
               }
               //ul.quicklinks {
@@ -1605,13 +1646,13 @@ html.AdminThemeReno {
                 font-size: 0.94em;
                 a {
                   padding: 0.2em 0.5em;
-                    &:hover {
-                      opacity: 1;
-                      background-color: inherit !important;
-                      span {
-                        text-decoration: underline;
-                      }
+                  &:hover {
+                    opacity: 1;
+                    background-color: inherit !important;
+                    span {
+                      text-decoration: underline;
                     }
+                  }
                 }
               }
               ul.quicklinks {
