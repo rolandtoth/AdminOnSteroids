@@ -76,7 +76,7 @@ html.aos_leftAsmDelete {
         bottom: 100%;
         left: -23px;
         text-indent: -9999px;
-        background: #141414;
+        background: #1C2836;
         padding: 0;
         margin: 0 0 -5px 0;
         width: 0;
@@ -149,7 +149,7 @@ html.aos_leftAsmDelete {
             top: 100%;
             left: 17px;
             border: $size solid transparent;
-            border-top-color: #141414;
+            border-top-color: #1C2836;
           }
           &.tooltip-active {
             // enable selection
@@ -462,28 +462,84 @@ form[action*="AdminOnSteroids"] {
   }
 }
 
-// FieldEditLinks
-.Inputfield label {
-  .aos_field_name {
-    position: absolute;
-    opacity: 0;
-    font-size: 13px;
-    margin-left: 0;
-    transition: 0.06s all 0s;
-    &:hover {
-      transition-delay: 0s !important;
-      //opacity: 1 !important;
-      text-decoration: underline;
+// FieldAndTemplateEditLinks
+
+@mixin aos_tooltip($bgcolor: #1C2836, $margin: 0) {
+  visibility: hidden;
+  transform: scale(0);
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  background: $bgcolor;
+  color: #fff;
+  margin: $margin;
+  font-size: 12px;
+  padding: 5px 10px 4px;
+  line-height: 1.5;
+  z-index: 100000 + 10000;
+  backface-visibility: hidden;
+  transition: 0.2s opacity;
+  &:hover {
+    transition-delay: 0s !important;
+    background: lighten($bgcolor, 7%);
+    text-decoration: none;
+    &:before {
+      border-top-color: lighten($bgcolor, 7%);
     }
   }
-  &:hover {
-    .aos_field_name {
-      margin-left: 16px;
-      opacity: 0.66;
-      transition: 0.12s all 0.5s;
-    }
+  i {
+    margin-left: 6px;
+    font-size: 13px !important;
+    opacity: 0.7;
+  }
+  &:before {
+    $size: 6px;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 10px;
+    border: $size solid transparent;
+    border-top-color: $bgcolor;
+  }
+  // placeholder to keep hover state
+  &:after {
+    content: "";
+    height: 12px;
+    background: transparent;
+    width: 133%;
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
   }
 }
+
+// both for Reno & Default themes
+h1,
+#breadcrumbs li.title,
+label {
+  position: relative;
+  &:hover {
+    .aos_EditField,
+    .aos_EditTemplate {
+      visibility: visible;
+      transform: scale(1);
+      opacity: 1;
+      transition: 0.07s all 0.5s;
+    }
+  }
+  .aos_EditTemplate {
+    font-style: normal;
+    @include aos_tooltip($margin: 0 0 12px);
+  }
+
+  .aos_EditField {
+    font-style: normal;
+    @include aos_tooltip($margin: -8px 0 0 10px);
+  }
+}
+
 
 // Hotkeys
 body.aos_saving {
@@ -767,7 +823,6 @@ html.aos_PagePreviewLink {
   }
 }
 
-
 // Reno theme search tweaks on lower resolutions
 //@media only screen and (max-width: 960px) {
 //
@@ -795,9 +850,6 @@ html.aos_PagePreviewLink {
     width: auto;
   }
 }
-
-
-
 
 // fixScrollbarJump
 @media only screen and (min-width: 960px) {
@@ -1725,7 +1777,7 @@ body.AdminThemeDefault {
 
       #masthead {
         position: fixed;
-        z-index: 40;
+        z-index: 30;
         width: 100%;
         top: 0;
         left: 0;
@@ -1733,7 +1785,7 @@ body.AdminThemeDefault {
 
       #breadcrumbs {
         position: fixed;
-        z-index: 20;
+        z-index: 30;
         top: 44px;
         left: 0;
         width: 100%;

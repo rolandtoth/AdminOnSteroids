@@ -58,14 +58,16 @@ By default required fields can't be deselected but it can be enabled tweaking th
 
 
 
-###FieldEditLinks
+###FieldAndTemplateEditLinks
 
-*Edit fields by clicking on their labels*
+*Add shortcut links to templates and fields*
 
-When enabled, hovering on a field's label in the page edit screen will show the field's name (slides in from the left).
-Clicking on this field name will open the field edit page in a new window, modal or panel (depending on module settings).
+When enabled, hovering on a field's label in the page edit screen will show the field's name in a toolip.
+Clicking on this tooltip will open the field edit page in a new window, modal or panel (depending on module settings).
 
-Ctrl+clicking on the label itself also loads the field edit page.
+For a shortcut link for the template edit page hover on the title of the page.
+
+This feature is available only for SuperUsers.
 
 
 

@@ -17,6 +17,7 @@
 class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     static $configData;
+    public $adminTheme;
     public $pageListThumbSettings;
     protected $editedPage;
 
@@ -24,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 43,
+            'version'   => 44,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -48,7 +49,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'DeselectRadios',
                 'NoAnims',
                 'FileFieldToolbar',
-                'FieldEditLinks',
+                'FieldAndTemplateEditLinks',
                 'FocusInputOnLangTabSwitch',
                 'LangTabHotkeySwitcher',
                 'AdminTweaks',
@@ -93,25 +94,30 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'notes'
 //                'overlayStyle'
             ),
-            'InputfieldURLChecker'         => array(
-                'IUC_mode'              => array(
-                    'button'
-                ),
-                'IUC_button_position'   => 'button-left',
-                'IUC_target'            => 'pw-blank',
-                'IUC_force_http'        => 1,
-                'IUC_enabled_templates' => array(),
-                'IUC_enabled_fields'    => array()
+//            'InputfieldURLChecker'         => array(
+//                'IUC_mode'              => array(
+//                    'button'
+//                ),
+//                'IUC_button_position'   => 'button-left',
+//                'IUC_target'            => 'pw-blank',
+//                'IUC_force_http'        => 1,
+//                'IUC_enabled_templates' => array(),
+//                'IUC_enabled_fields'    => array()
+//            ),
+            'IUC_mode'              => array(
+                'button'
             ),
+            'IUC_button_position'   => 'button-left',
+            'IUC_target'            => 'pw-blank',
+            'IUC_force_http'        => 1,
+            'IUC_enabled_templates' => array(),
+            'IUC_enabled_fields'    => array(),
+
             'FocusInputOnLangTabSwitchCKE' => array(
                 'focus'
             ),
-            'PagePreviewLink'              => array(
-                'pw-blank'
-            ),
-            'FieldEditLinks'               => array(
-                'pw-blank'
-            ),
+            'PagePreviewLink'              => 'pw-blank',
+            'FieldAndTemplateEditLinks'    => 'pw-blank',
             'PageListThumbs'               => array(
                 'PageListThumbStyle' => 'circle'
             ),
@@ -164,12 +170,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $img = 'data:image/gif;base64,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';
 
         $aos_loader = <<< HTML
- <style id="aos_loader">
+<style id="aos_loader">
     body {visibility: hidden; overflow: hidden; background: url($img) center 47% no-repeat;"}
 </style>
 <script>
 window.addEventListener('DOMContentLoaded', function() {
-    document.head.removeChild(document.querySelector('#aos_loader'));
+if(document.head.querySelector('#aos_loader')) document.head.removeChild(document.querySelector('#aos_loader'));
 });
 </script>
 HTML;
@@ -180,11 +186,13 @@ HTML;
 
     public function ready() {
 
-        self::$configData = $this->modules->getModuleConfigData($this);
-
         if (!$this->enabled) {
             return;
         }
+
+        $this->adminTheme = $this->user->admin_theme;
+
+        self::$configData = $this->modules->getModuleConfigData($this);
 
         $configData = self::$configData;
 
@@ -195,7 +203,7 @@ HTML;
             return;
         }
 
-        $enabledSubmodules = $configData['enabledSubmodules'];
+        $enabledSubmodules           = $configData['enabledSubmodules'];
         $this->pageListThumbSettings = array();
 
         $editedPageId = $this->sanitizer->int($this->config->input->get->id);
@@ -213,8 +221,8 @@ HTML;
 //        $this->addHookAfter('Page::render', $this, 'replaceCSS');
 //        $this->addHookAfter('Page::render', $this, 'addCSS');
 
-        $root = $this->config->urls->siteModules . __CLASS__;
-        $styles = $this->config->styles;
+        $root    = $this->config->urls->siteModules . __CLASS__;
+        $styles  = $this->config->styles;
         $scripts = $this->config->scripts;
 
 
@@ -225,19 +233,24 @@ HTML;
             $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
         }
 
-        //FieldEditLinks
-        $subModule = 'FieldEditLinks';
+        //FieldAndTemplateEditLinks
+        $subModule = 'FieldAndTemplateEditLinks';
         if (in_array($subModule, $enabledSubmodules)) {
 
             if ($this->user->hasRole('superuser') && !is_null($this->editedPage)) {
 
                 // add edit field link only if the edited page is not a special page (eg. admin)
                 if ($this->editedPage->template && $this->editedPage->template->flags === 0) {
+
+                    $this->addHookAfter('Page::render', $this, 'addTemplateEditLink');
+
                     $this->addHookAfter('Inputfield::renderValue', $this, 'addFieldEditLinks');
                     $this->addHookAfter('Inputfield::render', $this, 'addFieldEditLinks');
+
                 }
             }
         }
+
 
         //DeselectRadios
         $subModule = 'DeselectRadios';
@@ -269,8 +282,8 @@ HTML;
         //RenoTweaks
         $subModule = 'RenoTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
-            if (in_array('stickyHeader', $configData[$subModule])) {
-                if (in_array('miniScrollbarSidebar', $configData[$subModule]) || in_array('miniScrollbarMain', $configData[$subModule])) {
+            if (in_array('stickyHeader', $configData[ $subModule ])) {
+                if (in_array('miniScrollbarSidebar', $configData[ $subModule ]) || in_array('miniScrollbarMain', $configData[ $subModule ])) {
                     $scripts->add($root . '/lib/perfect-scrollbar/js/perfect-scrollbar.min.js');
                 }
             }
@@ -288,12 +301,12 @@ HTML;
         if (in_array($subModule, $enabledSubmodules)) {
 
             // add breadcrumb tweaks
-            if (in_array('breadcrumbTweaks', $configData[$subModule])) {
+            if (in_array('breadcrumbTweaks', $configData[ $subModule ])) {
 
                 $page = $this->pages->get('has_parent!=2, id=' . $this->input->get->id);
 
                 if ($page->id) {
-                    $homepage = $this->wire->pages->get(1);
+                    $homepage       = $this->wire->pages->get(1);
                     $breadcrumbUrls = array();
 
                     foreach ($this->wire->pages->get(1)->and($page->parentsUntil(1)) as $p) {
@@ -321,7 +334,7 @@ HTML;
         $subModule = 'LongClickDuration';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $LongClickDuration = (int)$configData['LongClickDuration'];
+            $LongClickDuration = (int) $configData['LongClickDuration'];
 
             //do not allow lower value than default 600
             $LongClickDuration = ($LongClickDuration < $defaultData['LongClickDuration']) ? $defaultData['LongClickDuration'] : $LongClickDuration;
@@ -341,7 +354,7 @@ HTML;
         if (isset($configData['Tooltips']) && (in_array('superuseronly', $configData['Tooltips']) && !$this->user->isSuperUser())) {
             // delete from array by value
             if (($key = array_search('Tooltips', $enabledSubmodules)) !== false) {
-                $configData['enabledSubmodules'][$key] = 'Tooltips_disabled';
+                $configData['enabledSubmodules'][ $key ] = 'Tooltips_disabled';
                 unset($configData['Tooltips']);
                 // note: unset didn't work (because there will be a hole in keys?)
 //                unset($configData['enabledSubmodules'][$key]);
@@ -351,7 +364,7 @@ HTML;
         $subModule = 'ModuleTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            if (in_array('loadCollapsedModuleInfos', $configData[$subModule])) {
+            if (in_array('loadCollapsedModuleInfos', $configData[ $subModule ])) {
                 // Load module info fields collapsed
                 $this->addHookAfter('InputfieldMarkup::render', function ($event) {
                     $field = $event->object;
@@ -377,6 +390,32 @@ HTML;
     }
 
 
+    public function addTemplateEditLink(HookEvent $event) {
+
+
+        if (!$this->editedPage || $this->editedPage->template == 'admin') {
+            return;
+        }
+
+        $template = $this->editedPage->template;
+
+        $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
+
+        $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+
+        $templateEditUrl  = '' . $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
+        $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . ' <i class="fa fa-pencil"></i></a>';
+
+
+        if ($this->adminTheme == 'AdminThemeDefault') {
+            $event->return = str_replace('<li class=\'title\'>', '<li class="title">' . $templateEditLink, $event->return);
+        } else {
+            $event->return = str_replace('</h1>', $templateEditLink . '</h1>', $event->return);
+        }
+
+    }
+
+
     public function addFieldEditLinks(HookEvent $event) {
 
         $inputfield = $event->object;
@@ -384,6 +423,7 @@ HTML;
         if ($inputfield->type == 'hidden') {
             return;
         }
+
         if (strpos($event->return, 'data-editurl')) {
             return;
         }
@@ -391,29 +431,32 @@ HTML;
 
         if ($field = $this->fields->get($inputfield->name)) {
 
-            $editUrl = $this->config->urls->admin . 'setup/field/edit?id=' . $field->id;
+            $editFieldUrl = $this->config->urls->admin . 'setup/field/edit?id=' . $field->id;
 
             // needed to allow HTML in label
             $inputfield->entityEncodeLabel = false;
-            $inputfield->label = $inputfield->label . ' <span class="aos_field_name">' . $inputfield->name . '</span>';
+            $inputfield->label             = $inputfield->label . ' <em class="aos_EditField">' . $inputfield->name . ' <i class="fa fa-pencil"></i></em>';
 //            $inputfield->label = $inputfield->label . '::aos_field_name::' . $inputfield->name;
 
             // use hidden link to be able to use modal/panel
             // note: link is not added to the label tag because it won't be clickable
-            $target = isset(self::$configData['FieldEditLinks']) ? self::$configData['FieldEditLinks'] : '';
 
-            $inputfield->appendMarkup = '<a href="' . $editUrl . '" class="' . $target . ' aos_editurl" target="_blank" style="display: none !important;">Edit</a>';
+            $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
+
+            $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+
+            $inputfield->appendMarkup = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
         }
     }
 
     public function addIUCLink(HookEvent $event) {
 
-        $inputfield = $event->object;
-        $url = $inputfield->value ? $inputfield->value : '';
-        $configData = $this->modules->getModuleConfigData($this);
-        $editedPage = $this->editedPage;
+        $inputfield         = $event->object;
+        $url                = $inputfield->value ? $inputfield->value : '';
+        $configData         = $this->modules->getModuleConfigData($this);
+        $editedPage         = $this->editedPage;
         $editLinkAttrsArray = array();
-        $editLinkAttrs = '';
+        $editLinkAttrs      = '';
 
 
         if (!empty($configData['IUC_enabled_templates']) && !in_array($editedPage->template->name, $configData['IUC_enabled_templates'])) {
@@ -426,8 +469,9 @@ HTML;
 
         // process locked fields
         if (in_array($inputfield->collapsed, array(7, 8))) {
-            $target = isset($configData['IUC_target']) ? $configData['IUC_target'] : '';
-            $event->return = '<a href="' . $event->return . '" target="_blank" class="iuc iuc-locked-link pw-panel-reload ' . $target . '">' . $event->return . '</a>';
+            $target        = isset($configData['IUC_target']) ? $configData['IUC_target'] : '';
+            $target        = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+            $event->return = '<a href="' . $event->return . '" target="_blank" class="iuc iuc-locked-link ' . $target . '">' . $event->return . '</a>';
 
             return true;
         }
@@ -440,7 +484,7 @@ HTML;
             $editLinkAttrsArray['data-iuc-mode'][] = $mode;
 
             if (in_array('button', $configData['IUC_mode'])) {
-                $buttonPosition = isset($configData['IUC_button_position']) ? $configData['IUC_button_position'] : '';
+                $buttonPosition                = isset($configData['IUC_button_position']) ? $configData['IUC_button_position'] : '';
                 $editLinkAttrsArray['class'][] = 'iuc iuc-button ' . $buttonPosition;
             } else {
                 $editLinkAttrsArray['class'][] = 'iuc iuc-hidden';
@@ -450,6 +494,7 @@ HTML;
         if (isset($configData['IUC_target'])) {
 
             // add wrap class for repeaters (only if mode is pw-panel)
+
             if ($configData['IUC_target'] === 'pw-panel' && strpos($inputfield->attr('id'), '_repeater') !== false) {
                 $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' pw-panel-items');
             }
@@ -480,7 +525,7 @@ HTML;
 
     public function addPageListThumb(HookEvent $event) {
 
-        $page = $event->arguments('page');
+        $page  = $event->arguments('page');
         $field = null;
 
         // intentional =
@@ -504,7 +549,7 @@ HTML;
 
                 $setting = explode(':', $pairs);
 
-                $f = isset($setting[0]) ? trim($setting[0]) : null;
+                $f        = isset($setting[0]) ? trim($setting[0]) : null;
                 $selector = isset($setting[1]) ? trim($setting[1]) : null;
 
                 if (is_null($f) || !$page->$f || !($page->$f instanceof Pageimage)) {
@@ -528,7 +573,7 @@ HTML;
         if (!is_null($field)) {
 
             // set thumbnail style class
-            $class = (isset($this->PageListThumbStyle) && !empty($this->PageListThumbStyle)) ? ' class="' . $this->PageListThumbStyle . '"' : '';
+            $class     = (isset($this->PageListThumbStyle) && !empty($this->PageListThumbStyle)) ? ' class="' . $this->PageListThumbStyle . '"' : '';
             $thumbSize = ($this->RenoTweaks && in_array('compactPageList', $this->RenoTweaks)) ? 32 : 48;
 
             if ($this->PageListThumbStyle === 'square') {
@@ -570,18 +615,18 @@ HTML;
     public function getModuleConfigInputfields(array $data) {
 
         $defaultData = self::getDefaultData();
-        $data = array_merge(self::getDefaultData(), $data);
+        $data        = array_merge(self::getDefaultData(), $data);
 
         $wrapper = new InputfieldWrapper();
 
         // AdminTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get('InputfieldCheckbox');
-        $f->name = 'enabled';
-        $f->label = __('Enable module', __FILE__);
+        $f            = wire('modules')->get('InputfieldCheckbox');
+        $f->name      = 'enabled';
+        $f->label     = __('Enable module', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
-        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $data[$f->name]);
-        $f->checked = ($f->value == 1) ? 'checked' : $data[$f->name];
+        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $data[ $f->name ]);
+        $f->checked = ($f->value == 1) ? 'checked' : $data[ $f->name ];
 
         $wrapper->add($f);
 
@@ -589,7 +634,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
-        $f->label = __('Submodules', __FILE__);
+        $f->label       = __('Submodules', __FILE__);
         $f->description = __('Enable or disable submodules here.', __FILE__);
 //        $f->showIf      = 'enabled=1';
         $f->collapsed = Inputfield::collapsedNever;
@@ -599,7 +644,7 @@ HTML;
         $f->addOption('AsmTweaks', __('**AsmTweaks**asmSelect tweaks', __FILE__));
         $f->addOption('AutosizeTextareas', __('**AutosizeTextareas**Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('**DeselectRadios**Enable clearing checked radio buttons', __FILE__));
-        $f->addOption('FieldEditLinks', __('**FieldEditLinks**Edit fields by clicking on their labels', __FILE__));
+        $f->addOption('FieldAndTemplateEditLinks', __('**FieldAndTemplateEditLinks**Add shortcut links to templates and fields', __FILE__));
         $f->addOption('FileFieldToolbar', __('**FileFieldToolbar**Add filter box and sort buttons to file/image fields', __FILE__));
         $f->addOption('fixScrollbarJump', __('**FixScrollbarJump**Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch', __('**FocusInputOnLangTabSwitch**Focus input on switching language tabs', __FILE__));
@@ -626,7 +671,7 @@ HTML;
         $fset = wire('modules')->get("InputfieldFieldset");
         $fset->attr('name', 'tweaks');
 //        $fset->showIf    = 'enabled=1';
-        $fset->label = __('Options for individual submodules', __FILE__);
+        $fset->label     = __('Options for individual submodules', __FILE__);
         $fset->collapsed = Inputfield::collapsedNever;
 
 
@@ -634,8 +679,8 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AdminTweaks');
-        $f->label = __('AdminTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=AdminTweaks';
+        $f->label     = __('AdminTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=AdminTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
@@ -650,7 +695,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AsmTweaks');
-        $f->showIf = 'enabledSubmodules=AsmTweaks';
+        $f->showIf    = 'enabledSubmodules=AsmTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('collapseAsmSections', __('Collapse fieldset/tab items on double click', __FILE__));
@@ -666,10 +711,10 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'DeselectRadios');
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=DeselectRadios';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=DeselectRadios';
 
         $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
         $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
@@ -678,19 +723,19 @@ HTML;
 
         $fset->add($f);
 
-        // FieldEditLinks ----------------------------------------------- //
+        // FieldAndTemplateEditLinks ----------------------------------------------- //
 
         $f = wire('modules')->get("InputfieldRadios");
-        $f->attr('name', 'FieldEditLinks');
-        $f->showIf = 'enabledSubmodules=FieldEditLinks';
+        $f->attr('name', 'FieldAndTemplateEditLinks');
+        $f->showIf    = 'enabledSubmodules=FieldAndTemplateEditLinks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('pw-blank', __('Open in new tab', __FILE__));
         $f->addOption('pw-panel', __('Open in panel', __FILE__));
         $f->addOption('pw-modal', __('Open in modal', __FILE__));
 
-        if ($data['FieldEditLinks']) {
-            $f->attr('value', $data['FieldEditLinks']);
+        if ($data['FieldAndTemplateEditLinks']) {
+            $f->attr('value', $data['FieldAndTemplateEditLinks']);
         }
 
         $fset->add($f);
@@ -699,10 +744,10 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'FileFieldToolbar');
-        $f->showIf = 'enabledSubmodules=FileFieldToolbar';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->showIf      = 'enabledSubmodules=FileFieldToolbar';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('filterbox', __('Filter box', __FILE__));
 
@@ -716,10 +761,10 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitch');
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
 
         $f->addOption('focus', __('Focus', __FILE__));
@@ -735,19 +780,19 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label = __('FocusInputOnLangTabSwitch CKEditor', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FocusInputOnLangTabSwitch CKEditor', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('focus', __('Focus', __FILE__));
         $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
         $f->addOption('selectAll', __('Select all', __FILE__));
         $f->addOption('nothing', __('Do nothing', __FILE__));
 
-        if ($data['FocusInputOnLangTabSwitchCKE']) {
-            $f->attr('value', $data['FocusInputOnLangTabSwitchCKE']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -756,60 +801,67 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Hotkeys');
-        $f->showIf = 'enabledSubmodules=Hotkeys';
+        $f->showIf    = 'enabledSubmodules=Hotkeys';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('save', __('Save on ctrl+s', __FILE__));
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
 
-        if ($data['Hotkeys']) {
-            $f->attr('value', $data['Hotkeys']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
 
         // InputfieldURLChecker ----------------------------------------------- //
 
-        $dataIUC = $data['InputfieldURLChecker'];
+//        $dataIUC = $data['InputfieldURLChecker'];
 
         $fsetIUC = wire('modules')->get("InputfieldFieldset");
         $fsetIUC->attr('name', 'InputfieldURLChecker');
-        $fsetIUC->label = __('InputfieldURLChecker', __FILE__);
-        $fsetIUC->showIf = 'enabledSubmodules=InputfieldURLChecker';
+        $fsetIUC->label     = __('InputfieldURLChecker', __FILE__);
+        $fsetIUC->showIf    = 'enabledSubmodules=InputfieldURLChecker';
         $fsetIUC->collapsed = Inputfield::collapsedNever;
 
         // Mode
-        $f = wire('modules')->get('InputfieldCheckboxes');
-        $f->name = 'IUC_mode';
-        $f->label = __('Mode', __FILE__);
+        $f              = wire('modules')->get('InputfieldCheckboxes');
+        $f->name        = 'IUC_mode';
+        $f->label       = __('Mode', __FILE__);
         $f->columnWidth = 50;
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->addOption('button', __('Button', 'IUC'));
         $f->addOption('ctrl-shift-click', __('Ctrl + Shift + Click', 'IUC'));
         $f->addOption('ctrl-shift-enter', __('Ctrl + Shift + Enter', 'IUC'));
 
-        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $dataIUC[$f->name]);
+//        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
         $fsetIUC->add($f);
 
         // Mode - button
-        $f = wire('modules')->get('InputfieldRadios');
-        $f->name = 'IUC_button_position';
-        $f->label = __('Button position', __FILE__);
-        $f->collapsed = Inputfield::collapsedNever;
+        $f              = wire('modules')->get('InputfieldRadios');
+        $f->name        = 'IUC_button_position';
+        $f->label       = __('Button position', __FILE__);
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->columnWidth = 50;
         $f->addOption('button-left', __('Left side of the field', 'IUC'));
         $f->addOption('button-right', __('Right side of the field', 'IUC'));
-        $f->showIf = 'IUC_mode=button';
+        $f->showIf     = 'IUC_mode=button';
         $f->requiredIf = 'IUC_mode=button';
 
-        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $dataIUC[$f->name]);
+//        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
         $fsetIUC->add($f);
 
         // Target
-        $f = wire('modules')->get('InputfieldRadios');
-        $f->name = 'IUC_target';
+        $f        = wire('modules')->get('InputfieldRadios');
+        $f->name  = 'IUC_target';
         $f->label = __('Open URL in...', __FILE__);
 //        $f->notes     = __('Iframe mode fails if the target website does not allow iframe embed.', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
@@ -817,35 +869,46 @@ HTML;
         $f->addOption('pw-panel', __('panel', __FILE__));
         $f->addOption('pw-modal', __('modal', __FILE__));
 
-        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $dataIUC[$f->name]);
+//        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
         $fsetIUC->add($f);
 
-        $f = wire('modules')->get('InputfieldCheckbox');
-        $f->name = 'IUC_force_http';
-        $f->label = __('Force HTTP prefix', __FILE__);
+        $f            = wire('modules')->get('InputfieldCheckbox');
+        $f->name      = 'IUC_force_http';
+        $f->label     = __('Force HTTP prefix', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $dataIUC[$f->name]);
+//        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
 
-        $f->checked = ($f->value == 1) ? 'checked' : $data[$f->name];
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $f->checked = (isset($f->value) && $f->value == 1) ? 'checked' : $data[ $f->name ];
 
 
         $fsetIUC->add($f);
 
         // Enabled templates
-        $f = wire('modules')->get('InputfieldAsmSelect');
-        $f->name = 'IUC_enabled_templates';
+        $f        = wire('modules')->get('InputfieldAsmSelect');
+        $f->name  = 'IUC_enabled_templates';
         $f->label = __('Enabled templates', __FILE__);
         $f->attr('data-asm-placeholder', __('Add templates...', __FILE__));
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->columnWidth = 50;
 
         foreach (wire('templates') as $t) {
             $f->addOption($t->name, self::getFormattedOptionName($t));
         }
 
-        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $dataIUC[$f->name]);
+//        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
         $fsetIUC->add($f);
 
@@ -857,10 +920,10 @@ HTML;
 
         if (count($url_fields) > 0) {
 
-            $f = wire('modules')->get('InputfieldAsmSelect');
-            $f->name = 'IUC_enabled_fields';
-            $f->label = __('Enabled fields', __FILE__);
-            $f->collapsed = Inputfield::collapsedNever;
+            $f              = wire('modules')->get('InputfieldAsmSelect');
+            $f->name        = 'IUC_enabled_fields';
+            $f->label       = __('Enabled fields', __FILE__);
+            $f->collapsed   = Inputfield::collapsedNever;
             $f->columnWidth = 50;
 
             foreach ($url_fields as $url_field) {
@@ -869,13 +932,16 @@ HTML;
 
             $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
 
-            $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $dataIUC[$f->name]);
+//            $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
+            if ($data[$f->name]) {
+                $f->attr('value', $data[$f->name]);
+            }
 
         } else {
 
             // add info that no URL type fields are available
-            $f = wire('modules')->get('InputfieldMarkup');
-            $f->name = 'no_url_fields';
+            $f        = wire('modules')->get('InputfieldMarkup');
+            $f->name  = 'no_url_fields';
             $f->label = __('Enabled fields', __FILE__);
             // doesn't work
             // $f->collapsed = Inputfield::collapsedNever;
@@ -891,12 +957,12 @@ HTML;
         $f = wire('modules')->get("InputfieldText");
         $f->attr('name', 'LongClickDuration');
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=LongClickDuration';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=LongClickDuration';
         $f->attr('style', 'width: 100px;');
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->attr('value', (isset($data['LongClickDuration']) && (int)$data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+        $f->attr('value', (isset($data['LongClickDuration']) && (int) $data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
 
         $fset->add($f);
 
@@ -904,10 +970,10 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'ModuleTweaks');
-        $f->showIf = 'enabledSubmodules=ModuleTweaks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->showIf      = 'enabledSubmodules=ModuleTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('compactModuleList', __('Compact module list', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
@@ -923,14 +989,14 @@ HTML;
 
         $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
         $fsetPageListThumbs->attr('name', 'PageListThumbs');
-        $fsetPageListThumbs->label = __('PageListThumbs', __FILE__);
-        $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
+        $fsetPageListThumbs->label     = __('PageListThumbs', __FILE__);
+        $fsetPageListThumbs->showIf    = 'enabledSubmodules=PageListThumbs';
         $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
 
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PageListThumbStyle');
-        $f->label = __('Thumbnail style', __FILE__);
+        $f->label     = __('Thumbnail style', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('default', __('default', __FILE__));
@@ -949,7 +1015,7 @@ HTML;
         $f->attr('name', 'PageListThumbSettings');
         $f->label = __('Thumbnail source', __FILE__);
         $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
-        $f->rows = 3;
+        $f->rows      = 3;
         $f->collapsed = Inputfield::collapsedNever;
 
         if ($data['PageListThumbs'] && isset($data['PageListThumbSettings'])) {
@@ -964,8 +1030,8 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PagePreviewLink');
-        $f->label = __('PagePreviewLink', __FILE__);
-        $f->showIf = 'enabledSubmodules=PagePreviewLink';
+        $f->label     = __('PagePreviewLink', __FILE__);
+        $f->showIf    = 'enabledSubmodules=PagePreviewLink';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('pw-blank', __('Preview in new tab', __FILE__));
@@ -982,8 +1048,8 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'RenoTweaks');
-        $f->label = __('RenoTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=RenoTweaks';
+        $f->label     = __('RenoTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=RenoTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
@@ -1013,11 +1079,11 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Tooltips');
-        $f->label = __('Tooltips', __FILE__);
-        $f->showIf = 'enabledSubmodules=Tooltips';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Tooltips', __FILE__);
+        $f->showIf      = 'enabledSubmodules=Tooltips';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('superuseronly', __('Only for SuperUsers', __FILE__));
         $f->addOption('description', __('Enable for field descriptions', __FILE__));

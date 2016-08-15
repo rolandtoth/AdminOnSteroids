@@ -34,6 +34,26 @@ $(document).ready(function () {
         return false;
     }
 
+
+    // $('#sidebar > ul > li:eq(-1)').after('<a href="" id="aos_toggle">AOS</a>');
+    //
+    // $('#aos_toggle').on('click', function () {
+    //
+    //     var toggle = $(this);
+    //
+    //     // $('script[src$="AdminOnSteroids.js"]').attr('type', function (index, attr) {
+    //     //     return (!attr || attr == 'text/javascript' || attr == "") ? 'application/json' : 'text/javascript';
+    //     // });
+    //
+    //     $('link[href$="AdminOnSteroids.css"]').attr('media', function (index, attr) {
+    //         return attr == 'disabled' ? 'screen' : 'disabled';
+    //     });
+    //
+    //     return false;
+    // });
+
+
+
     // AOS: enable/disable module checkbox click
     $('form[action*="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
         $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
@@ -96,10 +116,9 @@ $(document).ready(function () {
     //});
 
 
-
     $(document).on('click', '#ProcessPageEdit .Inputfield > label', function (e) {
         if (e.ctrlKey) {
-            var editFieldLink = $(this).parent().find('.aos_editurl');
+            var editFieldLink = $(this).parent().find('.aos_EditFieldLink');
             if (editFieldLink.length) {
                 editFieldLink[0].click();
                 return false;
@@ -108,8 +127,8 @@ $(document).ready(function () {
     });
 
 // edit field
-    $(document).on('click', '#ProcessPageEdit .Inputfield > label span', function () {
-        var editFieldLink = $(this).parent().parent().find('.aos_editurl');
+    $(document).on('click', '#ProcessPageEdit .Inputfield > label .aos_EditField', function () {
+        var editFieldLink = $(this).parent().parent().find('.aos_EditFieldLink');
         if (editFieldLink.length) {
             editFieldLink[0].click();
             return false;
@@ -424,8 +443,8 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // var sidebarNav = document.querySelector('#sidebar'),
-            //     mainContent = document.querySelector('#main'),
+                // var sidebarNav = document.querySelector('#sidebar'),
+                //     mainContent = document.querySelector('#main'),
                 mainContent = document.querySelector('#content'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -490,8 +509,15 @@ $(document).ready(function () {
     $('html').addClass(htmlClasses.join(" "));
 
 
-// FileFieldToolbar
 
+    // var pageTitleSelector = ($('body').hasClass('AdminThemeDefault') ? '#breadcrumbs li.title' : '#headline #title');
+
+    // $(pageTitleSelector).append('<a href="' + '#' + '" id="aos_EditTemplate" class="' + AOSsettings.PagePreviewLink + '" target="_blank"><i class="fa fa-cog"></i> Edit template</a>');
+
+
+
+
+// FileFieldToolbar
     if (AOSsettings.enabledSubmodules.indexOf('FileFieldToolbar') !== -1) {
 
         var FileFieldToolbarSettings = AOSsettings.FileFieldToolbar,

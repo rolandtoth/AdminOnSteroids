@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.4.4 (2016-08-15)
+
+- FieldEditLinks renamed to FieldAndTemplateEditLinks and allows editing of page template by clicking on the tooltip that appears on hovering on the page title
+- field and template edit links appears in tooltips
+- fix default configdata issues on install
+
+
 
 ### 0.4.3 (2016-08-11)
 
