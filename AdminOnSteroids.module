@@ -47,7 +47,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'AutosizeTextareas',
                 'AsmTweaks',
                 'DeselectRadios',
-                'NoAnims',
+//                'NoAnims',
                 'FileFieldToolbar',
                 'FieldAndTemplateEditLinks',
                 'FocusInputOnLangTabSwitch',
@@ -94,16 +94,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'notes'
 //                'overlayStyle'
             ),
-//            'InputfieldURLChecker'         => array(
-//                'IUC_mode'              => array(
-//                    'button'
-//                ),
-//                'IUC_button_position'   => 'button-left',
-//                'IUC_target'            => 'pw-blank',
-//                'IUC_force_http'        => 1,
-//                'IUC_enabled_templates' => array(),
-//                'IUC_enabled_fields'    => array()
-//            ),
             'IUC_mode'              => array(
                 'button'
             ),
@@ -123,9 +113,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'LongClickDuration'            => 600,
             'RenoTweaks'                   => array(
-                'singleClickSidebarHeaders',
+//                'singleClickSidebarHeaders',
                 'stickyHeader',
-                'stickyHeaderCompact',
+//                'stickyHeaderCompact',
                 'miniScrollbarSidebar',
 //                'miniScrollbarMain',
                 'stickySidebar',
