@@ -7,7 +7,7 @@
 }
 
 $defaultTransition: 0.12s;
-$defaultBoxShadow: 0 4px 5px -2px rgba(0, 0, 0, 0.12);
+$defaultBoxShadow: 0 4px 8px -5px rgba(#465b69, 0.5);
 
 @keyframes fadeOut {
   0% {
@@ -248,6 +248,11 @@ html.aos_tooltips {
   }
 }
 
+// inlined!
+//a.aos_toggle {
+//  color: inherit !important;
+//}
+
 html.aos_collapseAsmSections {
   .Inputfields .asmFieldsetStart ~ .asmListItem,
   .Inputfields .asmFieldsetEnd,
@@ -480,6 +485,7 @@ form[action*="AdminOnSteroids"] {
   z-index: 100000 + 10000;
   backface-visibility: hidden;
   transition: 0.2s opacity;
+  white-space: nowrap;
   &:hover {
     transition-delay: 0s !important;
     background: lighten($bgcolor, 7%);
@@ -516,13 +522,15 @@ form[action*="AdminOnSteroids"] {
 }
 
 // both for Reno & Default themes
-h1,
+h1 span,
 #breadcrumbs li.title,
-label {
+#ProcessPageEdit .Inputfield label .title {
   position: relative;
+  display: inline-block;
   &:hover {
     .aos_EditField,
     .aos_EditTemplate {
+      display: inline-block;
       visibility: visible;
       transform: scale(1);
       opacity: 1;
@@ -536,10 +544,9 @@ label {
 
   .aos_EditField {
     font-style: normal;
-    @include aos_tooltip($margin: -8px 0 0 10px);
+    @include aos_tooltip($margin: 0 0 8px -5px);
   }
 }
-
 
 // Hotkeys
 body.aos_saving {
@@ -1032,18 +1039,23 @@ html.AdminThemeReno {
           padding-left: 232px;
         }
         position: absolute;
+        top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
-        top: 0;
+        // this would crop the footer
+        //bottom: 0;
         padding-top: 0;
-        overflow-y: hidden;
+        //height: 100%;
+        //overflow-y: hidden;
+        border-top: 156px solid transparent;
+        max-height: 100%;
+        overflow: auto;
         #content {
           // layout scrolbar fix
-          border-top: 156px solid transparent;
+          //border-top: 156px solid transparent;
           top: 0;
-          max-height: 100%;
-          overflow: auto;
+          //max-height: 100%;
+          //overflow: auto;
           &.ps-theme-pw-scrollbar {
             overflow: hidden !important;
           }
@@ -1063,11 +1075,11 @@ html.AdminThemeReno {
         top: 52px !important;
       }
 
-      body.scrolled {
+      //body.scrolled {
         #headline {
           box-shadow: $defaultBoxShadow;
         }
-      }
+      //}
 
       .cke_top_fixed.cke_top {
         //animation: fadeIn ease-in 0.1s;
@@ -1128,9 +1140,9 @@ html.AdminThemeReno {
 
     @media only screen and (min-width: 960px) {
 
-      body {
-        overflow: hidden !important;
-      }
+      //body {
+      //  overflow: hidden !important;
+      //}
 
       // System Notifications module
       #NotificationGhosts {
@@ -1207,11 +1219,12 @@ html.AdminThemeReno {
         background: #fff;
       }
       #main {
+        border-top: 100px solid transparent;
         &:not(.closed) #headline {
           padding-left: 232px;
         }
         #content {
-          border-top: 100px solid transparent;
+          //border-top: 100px solid transparent;
         }
       }
       #wrap {
@@ -1253,11 +1266,11 @@ html.AdminThemeReno {
           }
         }
       }
-      body.scrolled {
+      //body.scrolled {
         #headline {
           box-shadow: $defaultBoxShadow;
         }
-      }
+      //}
 
       #ProcessPageSearchAutocomplete {
         position: fixed;
@@ -1333,14 +1346,16 @@ html.AdminThemeReno {
     body.hasWireTabs {
       @media only screen and (min-width: 960px) {
         #main {
+          // layout fix to scroll div only the fixed header
+          border-top: 134px solid transparent;
           #content {
-            // layout fix to scroll div only the fixed header
-            border-top: 134px solid transparent;
           }
           .WireTabs {
             position: fixed;
             top: 100px;
             left: 210px;
+            right: 0;
+            width: auto;
             z-index: 100000 + 210;
             background: #fff;
             border-top: 1px solid rgba(0, 0, 0, .1);
@@ -1356,13 +1371,13 @@ html.AdminThemeReno {
             }
           }
         }
-        &.scrolled {
+        //&.scrolled {
           #main {
             .WireTabs {
               box-shadow: $defaultBoxShadow;
             }
           }
-        }
+        //}
         .NotificationMenu {
           top: 137px;
         }
@@ -1386,8 +1401,8 @@ html.AdminThemeReno {
 
   &.aos_compactPageList {
     .content .PageList .PageListItem {
-      padding-top: 0.3em;
-      padding-bottom: 0.3em;
+      padding-top: 0.33em;
+      padding-bottom: 0.33em;
     }
   }
 
@@ -1621,6 +1636,7 @@ html.AdminThemeReno {
             }
             > ul {
               display: block !important;
+              padding-bottom: 0.2em;
               &:empty {
                 display: none !important;
               }
@@ -1629,8 +1645,9 @@ html.AdminThemeReno {
               //padding: 8px 12px 2px 12px !important;
               > li {
                 a {
-                  //padding: 0.2em 0.5em;
-                  opacity: 0.84;
+                  padding-top: 0.33em;
+                  padding-bottom: 0.33em;
+                  //opacity: 0.84;
                   &.current {
                     background: transparent;
                     color: inherit !important;

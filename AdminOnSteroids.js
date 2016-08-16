@@ -53,7 +53,6 @@ $(document).ready(function () {
     // });
 
 
-
     // AOS: enable/disable module checkbox click
     $('form[action*="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
         $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
@@ -116,24 +115,26 @@ $(document).ready(function () {
     //});
 
 
-    $(document).on('click', '#ProcessPageEdit .Inputfield > label', function (e) {
-        if (e.ctrlKey) {
-            var editFieldLink = $(this).parent().find('.aos_EditFieldLink');
+    // $(document).on('click', '#ProcessPageEdit .Inputfield > label', function (e) {
+    //     if (e.ctrlKey) {
+    //         var editFieldLink = $(this).parent().find('.aos_EditFieldLink');
+    //         if (editFieldLink.length) {
+    //             editFieldLink[0].click();
+    //             return false;
+    //         }
+    //     }
+    // });
+
+// FieldAndTemplateEditLinks
+    if (AOSsettings.enabledSubmodules.indexOf('FieldAndTemplateEditLinks') !== -1) {
+        $(document).on('click', '#ProcessPageEdit .Inputfield > label .aos_EditField', function () {
+            var editFieldLink = $(this).parents('label').eq(0).find('.aos_EditFieldLink');
             if (editFieldLink.length) {
                 editFieldLink[0].click();
                 return false;
             }
-        }
-    });
-
-// edit field
-    $(document).on('click', '#ProcessPageEdit .Inputfield > label .aos_EditField', function () {
-        var editFieldLink = $(this).parent().parent().find('.aos_EditFieldLink');
-        if (editFieldLink.length) {
-            editFieldLink[0].click();
-            return false;
-        }
-    });
+        });
+    }
 
 
 // HoverSaveDropdown
@@ -443,14 +444,13 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // var sidebarNav = document.querySelector('#sidebar'),
-                //     mainContent = document.querySelector('#main'),
-                mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
+                mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
                     theme: 'pw-scrollbar',
                     suppressScrollX: true,
-                    wheelPropagation: false
+                    wheelPropagation: true
                 };
 
             if (sidebarNav && renoTweaksSettings.indexOf('miniScrollbarSidebar') !== -1) {
@@ -458,7 +458,6 @@ $(document).ready(function () {
             }
 
             if (mainContent && renoTweaksSettings.indexOf('miniScrollbarMain') !== -1) {
-                console.log('ps');
                 Ps.initialize(mainContent, PsSettings);
             }
         }
@@ -501,7 +500,7 @@ $(document).ready(function () {
                 pageViewUrl = $('a#_ProcessPageEditView').attr('href');
 
             if (pageTitle.children('.pageTitleLink').length == 0) {
-                pageTitle.append('<a href="' + pageViewUrl + '" id="aos_PagePreviewLink" class="' + AOSsettings.PagePreviewLink + '" target="_blank"><i class="fa fa-external-link"></i></a>');
+                pageTitle.wrapInner('<span>').append('<a href="' + pageViewUrl + '" id="aos_PagePreviewLink" class="' + AOSsettings.PagePreviewLink + '" target="_blank"><i class="fa fa-external-link"></i></a>');
             }
         }
     }
@@ -509,12 +508,9 @@ $(document).ready(function () {
     $('html').addClass(htmlClasses.join(" "));
 
 
-
     // var pageTitleSelector = ($('body').hasClass('AdminThemeDefault') ? '#breadcrumbs li.title' : '#headline #title');
 
     // $(pageTitleSelector).append('<a href="' + '#' + '" id="aos_EditTemplate" class="' + AOSsettings.PagePreviewLink + '" target="_blank"><i class="fa fa-cog"></i> Edit template</a>');
-
-
 
 
 // FileFieldToolbar

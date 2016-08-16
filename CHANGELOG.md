@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.4.5 (2016-08-16)
+
+- FieldAndTemplateEditLinks: active only when hovering on element text (not full row)
+- Added AOS enabled/disabled toggle to the footer (only for SuperUsers)
+- fixed overlapped footer in Reno theme
+
+
+
 ### 0.4.4 (2016-08-15)
 
 - FieldEditLinks renamed to FieldAndTemplateEditLinks and allows editing of page template by clicking on the tooltip that appears on hovering on the page title

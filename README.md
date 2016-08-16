@@ -14,9 +14,14 @@ Various admin tweaks to enhance ProcessWire admin. See more at [https://processw
 To uninstall follow the uninstall instructions on the link above.
 
 
+
+
 ## Enable module
 
-Toggle for enabling/disabling the module.
+Checkbox to toggle enable/disable state of the module.
+
+There's another way to do this: there's a link in the bottom of the footer "AdminOnSteroids enabled" (on any admin page).
+Clicking on this link will also enable/disable the module (and reloads the current page). Available only for SuperUsers.
 
 
 ## Submodules

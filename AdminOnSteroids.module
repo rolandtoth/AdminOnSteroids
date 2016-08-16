@@ -25,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 44,
+            'version'   => 45,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -43,7 +43,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
      */
     static public function getDefaultData() {
         return array(
-            'enabledSubmodules'            => array(
+            'enabledSubmodules'         => array(
                 'AutosizeTextareas',
                 'AsmTweaks',
                 'DeselectRadios',
@@ -65,43 +65,43 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'TabIndex',
                 'fixScrollbarJump'
             ),
-            'enabled'                      => 1,
-            'DeselectRadios'               => array(
+            'enabled'                   => 1,
+            'DeselectRadios'            => array(
                 'adminOnly'
             ),
-            'AsmTweaks'                    => array(
+            'AsmTweaks'                 => array(
                 'collapseAsmSections',
                 'leftAsmDelete'
             ),
-            'FileFieldToolbar'             => array(
+            'FileFieldToolbar'          => array(
                 'filterbox'
             ),
-            'FocusInputOnLangTabSwitch'    => array(
+            'FocusInputOnLangTabSwitch' => array(
                 'focus'
             ),
-            'ModuleTweaks'                 => array(
+            'ModuleTweaks'              => array(
                 'loadCollapsedModuleInfos',
                 'compactModuleList',
                 'modalModuleEdit'
             ),
-            'Hotkeys'                      => array(
+            'Hotkeys'                   => array(
                 'save',
                 'breadcrumbTweaks'
             ),
-            'Tooltips'                     => array(
+            'Tooltips'                  => array(
                 'superuseronly',
                 'description',
                 'notes'
 //                'overlayStyle'
             ),
-            'IUC_mode'              => array(
+            'IUC_mode'                  => array(
                 'button'
             ),
-            'IUC_button_position'   => 'button-left',
-            'IUC_target'            => 'pw-blank',
-            'IUC_force_http'        => 1,
-            'IUC_enabled_templates' => array(),
-            'IUC_enabled_fields'    => array(),
+            'IUC_button_position'       => 'button-left',
+            'IUC_target'                => 'pw-blank',
+            'IUC_force_http'            => 1,
+            'IUC_enabled_templates'     => array(),
+            'IUC_enabled_fields'        => array(),
 
             'FocusInputOnLangTabSwitchCKE' => array(
                 'focus'
@@ -174,7 +174,38 @@ HTML;
     }
 
 
+    public function init() {
+
+
+    }
+
     public function ready() {
+
+
+        if ($this->user->isSuperUser()) {
+
+            if ($this->input->toggle == 1) {
+                $configData            = $this->modules->getModuleConfigData($this);
+                $configData['enabled'] = ($this->enabled == 1) ? 0 : 1;
+                $this->modules->saveModuleConfigData($this, $configData);
+
+                $this->session->redirect($_SERVER['HTTP_REFERER']);
+
+                $this->halt();
+            }
+
+            $this->addHookAfter('AdminTheme::getExtraMarkup', function ($event) {
+                $parts        = $event->return;
+                $enabledText  = 'AdminOnSteroids ' . __('enabled', __FILE__);   // AdminOnSteroids is enabled
+                $disabledText = 'AdminOnSteroids ' . __('disabled', __FILE__);   // AdminOnSteroids is disabled
+
+                $mouseover = 'onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'"';
+
+                $parts['footer'] = $parts['footer'] . '<p style="opacity:1;"><a href="' . $this->config->urls->admin . 'module/edit?name=AdminOnSteroids&toggle=1" class="aos_toggle" style="color: inherit !important; margin-left: 0;"><i class="fa fa-medkit"></i> <span ' . $mouseover . '>' . ($this->enabled ? $enabledText : $disabledText) . '</span></a></p>';
+                $event->return   = $parts;
+            });
+        }
+
 
         if (!$this->enabled) {
             return;
@@ -208,6 +239,7 @@ HTML;
         }
 
         $this->addHookAfter('Page::render', $this, 'addLoader');
+
 //        $this->addHookAfter('Page::render', $this, 'replaceCSS');
 //        $this->addHookAfter('Page::render', $this, 'addCSS');
 
@@ -425,8 +457,7 @@ HTML;
 
             // needed to allow HTML in label
             $inputfield->entityEncodeLabel = false;
-            $inputfield->label             = $inputfield->label . ' <em class="aos_EditField">' . $inputfield->name . ' <i class="fa fa-pencil"></i></em>';
-//            $inputfield->label = $inputfield->label . '::aos_field_name::' . $inputfield->name;
+            $inputfield->label             = '<span class="title">' . '<em class="aos_EditField">' . $inputfield->name . ' <i class="fa fa-pencil"></i></em>' . $inputfield->label . '</span>';
 
             // use hidden link to be able to use modal/panel
             // note: link is not added to the label tag because it won't be clickable
@@ -781,8 +812,8 @@ HTML;
         $f->addOption('selectAll', __('Select all', __FILE__));
         $f->addOption('nothing', __('Do nothing', __FILE__));
 
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
         }
 
         $fset->add($f);
@@ -797,8 +828,8 @@ HTML;
         $f->addOption('save', __('Save on ctrl+s', __FILE__));
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
 
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
         }
 
         $fset->add($f);
@@ -824,8 +855,8 @@ HTML;
         $f->addOption('ctrl-shift-enter', __('Ctrl + Shift + Enter', 'IUC'));
 
 //        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
         }
 
         $fsetIUC->add($f);
@@ -843,8 +874,8 @@ HTML;
 
 //        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
 
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
         }
 
         $fsetIUC->add($f);
@@ -861,8 +892,8 @@ HTML;
 
 //        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
 
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
         }
 
         $fsetIUC->add($f);
@@ -874,8 +905,8 @@ HTML;
 
 //        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
 
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
         }
 
         $f->checked = (isset($f->value) && $f->value == 1) ? 'checked' : $data[ $f->name ];
@@ -896,8 +927,8 @@ HTML;
         }
 
 //        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
         }
 
         $fsetIUC->add($f);
@@ -923,8 +954,8 @@ HTML;
             $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
 
 //            $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
-            if ($data[$f->name]) {
-                $f->attr('value', $data[$f->name]);
+            if ($data[ $f->name ]) {
+                $f->attr('value', $data[ $f->name ]);
             }
 
         } else {
@@ -1050,7 +1081,7 @@ HTML;
         $f->addOption('stickySidebar', __('Sticky sidebar', __FILE__));
         $f->addOption('alwaysVisibleSidebarItems', __('Always show sidebar items (disable accordion)', __FILE__));
         $f->addOption('singleClickSidebarHeaders', __('Single click navigation of sidebar headers', __FILE__));
-        $f->addOption('inlineSidebarItems', __('Inline sidebar items instead of stacking', __FILE__));
+        $f->addOption('inlineSidebarItems', __('Inline sidebar items', __FILE__));
         $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
         $f->addOption('autoHideSidebar', __('Autohide sidebar', __FILE__));
         $f->addOption('oneLineSidebarItems', __('One-line sidebar submenus', __FILE__));
