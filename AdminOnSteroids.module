@@ -173,12 +173,6 @@ HTML;
         $event->return = str_replace('</head>', $aos_loader . PHP_EOL . '</head>', $event->return);
     }
 
-
-    public function init() {
-
-
-    }
-
     public function ready() {
 
 
@@ -647,7 +641,8 @@ HTML;
         $f->label     = __('Enable module', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
         $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $data[ $f->name ]);
-        $f->checked = ($f->value == 1) ? 'checked' : $data[ $f->name ];
+
+        $f->checked = ($f->value == 1) ? 'checked' : '';
 
         $wrapper->add($f);
 
@@ -682,7 +677,7 @@ HTML;
         $f->addOption('TabIndex', __('**TabIndex**Add sequential tabindex to fields', __FILE__));
         $f->addOption('Tooltips', __('**Tooltips**Hide field descriptions and notes to tooltips', __FILE__));
 
-        $f->attr('value', isset($data['enabledSubmodules']) ? $data['enabledSubmodules'] : $defaultData['enabledSubmodules']);
+        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
         $wrapper->add($f);
 
@@ -706,8 +701,8 @@ HTML;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
 
-        if ($data['AdminTweaks']) {
-            $f->attr('value', $data['AdminTweaks']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -722,8 +717,8 @@ HTML;
         $f->addOption('collapseAsmSections', __('Collapse fieldset/tab items on double click', __FILE__));
         $f->addOption('leftAsmDelete', __('Move delete button to the left', __FILE__));
 
-        if ($data['AsmTweaks']) {
-            $f->attr('value', $data['AsmTweaks']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -740,7 +735,7 @@ HTML;
         $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
         $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
 
-        $f->attr('value', isset($data['DeselectRadios']) ? $data['DeselectRadios'] : $defaultData['DeselectRadios']);
+        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
         $fset->add($f);
 
@@ -755,8 +750,8 @@ HTML;
         $f->addOption('pw-panel', __('Open in panel', __FILE__));
         $f->addOption('pw-modal', __('Open in modal', __FILE__));
 
-        if ($data['FieldAndTemplateEditLinks']) {
-            $f->attr('value', $data['FieldAndTemplateEditLinks']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -772,8 +767,8 @@ HTML;
 
         $f->addOption('filterbox', __('Filter box', __FILE__));
 
-        if ($data['FileFieldToolbar']) {
-            $f->attr('value', $data['FileFieldToolbar']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -793,8 +788,8 @@ HTML;
         $f->addOption('selectAll', __('Select all', __FILE__));
         $f->addOption('nothing', __('Do nothing', __FILE__));
 
-        if ($data['FocusInputOnLangTabSwitch']) {
-            $f->attr('value', $data['FocusInputOnLangTabSwitch']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -909,7 +904,7 @@ HTML;
             $f->attr('value', $data[ $f->name ]);
         }
 
-        $f->checked = (isset($f->value) && $f->value == 1) ? 'checked' : $data[ $f->name ];
+        $f->checked = $f->value == 1 ? 'checked' : '';
 
 
         $fsetIUC->add($f);
@@ -983,7 +978,7 @@ HTML;
         $f->attr('style', 'width: 100px;');
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->attr('value', (isset($data['LongClickDuration']) && (int) $data['LongClickDuration'] >= $defaultData['LongClickDuration']) ? $data['LongClickDuration'] : $defaultData['LongClickDuration']);
+        $f->attr('value', (isset($data[$f->name]) && (int) $data[$f->name] >= $defaultData[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
         $fset->add($f);
 
@@ -1000,8 +995,8 @@ HTML;
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('modalModuleEdit', __('Edit modules in modal dialog', __FILE__));
 
-        if ($data['ModuleTweaks']) {
-            $f->attr('value', $data['ModuleTweaks']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -1024,10 +1019,10 @@ HTML;
         $f->addOption('square', __('square', __FILE__));
         $f->addOption('circle', __('circle', __FILE__));
 
-        if (isset($data['PageListThumbStyle'])) {
-            $f->attr('value', $data['PageListThumbStyle']);
+        if (isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
         } else {
-            $f->attr('value', $data['PageListThumbs']['PageListThumbStyle']);
+            $f->attr('value', $data['PageListThumbs'][$f->name]);
         }
 
         $fsetPageListThumbs->add($f);
@@ -1039,8 +1034,8 @@ HTML;
         $f->rows      = 3;
         $f->collapsed = Inputfield::collapsedNever;
 
-        if ($data['PageListThumbs'] && isset($data['PageListThumbSettings'])) {
-            $f->attr('value', $data['PageListThumbSettings']);
+        if ($data['PageListThumbs'] && isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fsetPageListThumbs->add($f);
@@ -1059,8 +1054,8 @@ HTML;
         $f->addOption('pw-panel', __('Preview in panel', __FILE__));
         $f->addOption('pw-modal', __('Preview in modal', __FILE__));
 
-        if ($data['PagePreviewLink']) {
-            $f->attr('value', $data['PagePreviewLink']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -1090,8 +1085,8 @@ HTML;
         $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
 
-        if ($data['RenoTweaks']) {
-            $f->attr('value', $data['RenoTweaks']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
@@ -1111,8 +1106,8 @@ HTML;
         $f->addOption('notes', __('Enable for field notes', __FILE__));
         $f->addOption('overlayStyle', __('Use overlay style', __FILE__));
 
-        if ($data['Tooltips']) {
-            $f->attr('value', $data['Tooltips']);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
