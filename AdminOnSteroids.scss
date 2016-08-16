@@ -268,7 +268,7 @@ html.aos_tooltips {
     pointer-events: none;
     opacity: 0.33;
     filter: saturate(0);
-    box-shadow: inset 0 0 4px rgba(0,0,0, 0.33) !important;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.33) !important;
     border-color: inherit;
   }
   &.restore {
@@ -1070,8 +1070,10 @@ html.AdminThemeReno {
         //transition: padding-top 0.12s, padding-bottom 0.12s !important;
       }
       #main {
-        &:not(.closed) #headline {
-          padding-left: 232px;
+        &:not(.closed) {
+          #headline {
+            padding-left: 232px;
+          }
         }
         position: absolute;
         top: 0;
@@ -1383,12 +1385,18 @@ html.AdminThemeReno {
         #main {
           // layout fix to scroll div only the fixed header
           border-top: 134px solid transparent;
-          #content {
+
+          &:not(.closed) {
+            .WireTabs {
+              left: 210px;
+            }
           }
+
           .WireTabs {
+            transition: left $defaultTransition;
             position: fixed;
             top: 100px;
-            left: 210px;
+            left: 0;
             right: 0;
             width: auto;
             z-index: 100000 + 210;
@@ -1419,10 +1427,15 @@ html.AdminThemeReno {
       }
 
       @media only screen and (min-width: 1200px) {
-        #content {
-          .WireTabs {
-            left: 230px;
+        #main {
+          &:not(.closed) {
+            .WireTabs {
+              left: 230px;
+            }
           }
+          //.WireTabs {
+          //  left: 0;
+          //}
         }
       }
     }
