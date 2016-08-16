@@ -444,7 +444,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+            // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -504,6 +504,67 @@ $(document).ready(function () {
             }
         }
     }
+
+    //PageListUnselect
+    if (AOSsettings.enabledSubmodules.indexOf('PageListUnselect') !== -1) {
+
+        $(document).on('pageSelected', function (e, obj) {
+            // console.log('pageSelected');
+            // console.log(obj.id);
+            // console.log(obj.url);
+            // console.log(obj.title);
+            // console.log(obj.a);
+
+            var clearButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.clear'),
+                restoreButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.restore');
+
+            if (obj.id !== 0) {
+                clearButton.removeClass('empty');
+                // restoreButton.removeClass('empty').removeClass('initial');
+            } else {
+                clearButton.addClass('empty');
+            }
+
+            restoreButton.removeClass('empty').removeClass('initial');
+        });
+
+        $(document).on('click', '.aos_pagelist_unselect', function () {
+
+            var button = $(this),
+                parentEl = button.parent(),
+                input = button.parent().find('input'),
+                titleElem = button.parent().find('.PageListSelectName .label_title');
+
+            // try without .label_title (on pageSelected the span disappears)
+            if (!titleElem.length) {
+                titleElem = button.parent().find('.PageListSelectName');
+            }
+
+            if (button.hasClass('clear')) {
+                // clear
+                input.removeAttr('value');
+                titleElem.html('');
+                button.addClass('empty');
+
+                parentEl.find('button.restore[data-value-original!=""]').removeClass('empty');
+                parentEl.find('button.restore').removeClass('initial');
+            } else {
+                // restore
+                input.val(button.attr('data-value-original'));
+                titleElem.html(button.attr('data-title-original'));
+                button.addClass('empty');
+                parentEl.find('button.clear').removeClass('empty');
+            }
+
+            // if pagelist is open, close it
+            if(parentEl.find('.PageListItemOpen').length) {
+                parentEl.find('a.PageListSelectActionToggle').trigger('click');
+            }
+
+            return false;
+        });
+    }
+
 
     $('html').addClass(htmlClasses.join(" "));
 

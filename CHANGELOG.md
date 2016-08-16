@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.4.6 (2016-08-16)
+
+- new PageListUnselect submodule: rewrite of Bernhard Baumrock's PageListSelectUnselectButton module
+
+
+
 ### 0.4.5 (2016-08-16)
 
 - FieldAndTemplateEditLinks: active only when hovering on element text (not full row)

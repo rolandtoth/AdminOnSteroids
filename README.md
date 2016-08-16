@@ -195,6 +195,18 @@ Pages having no "hero_image" field or there's no image uploaded will show no thu
 
 
 
+###PageListUnselect
+
+*Add unselect and restore buttons to PageListSelect fields*
+
+This is a rewrite of Bernhard Baumrock's PageListSelectUnselectButton module which allows clearing of PageListSelect field value using a dedicated button.
+
+Additionally, this tweak adds a "restore" functionality too. Note that if there is no previous value to restore, the restore button will not show up.
+
+Many thanks for Bernhard for the idea and help!
+
+
+
 ###PagePreviewLink
 
 *Add preview link next to page title*
