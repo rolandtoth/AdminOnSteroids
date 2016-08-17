@@ -6,8 +6,9 @@
   }
 }
 
+$colorDelete: #B93E42;
 $defaultTransition: 0.12s;
-$defaultBoxShadow: 0 4px 8px -5px rgba(#465b69, 0.5);
+$defaultBoxShadow: 0 4px 8px -5px rgba(#465b69, 0.25);
 
 @keyframes fadeOut {
   0% {
@@ -250,15 +251,18 @@ html.aos_tooltips {
 
 .aos_pagelist_unselect {
   float: left;
-  margin-right: 8px;
+  margin-right: 5px;
   margin-top: 2px !important;
-  height: 19px;
-  width: 19px;
+  width: 21px;
+  height: 20px;
   text-align: center;
+  border-radius: 2px !important;
+  transition-duration: 0.1s !important;
   i {
     font-size: 12px !important;
-    top: -1px;
+    //top: 1px;
     position: relative;
+    display: block;
   }
   &, &:hover {
     padding: 0 !important;
@@ -268,14 +272,36 @@ html.aos_tooltips {
     pointer-events: none;
     opacity: 0.33;
     filter: saturate(0);
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.33) !important;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.25) !important;
     border-color: inherit;
+  }
+  &.clear {
+    //background-color: $colorDelete !important;
+    //border-color: $colorDelete !important;
+    //width: 19px;
+    background-color: transparent !important;
+    border-color: transparent !important;
+
+    color: $colorDelete !important;
+    //i {
+    //  font-size: 13px !important;
+    //}
+    &:hover {
+      background-color: $colorDelete !important;
+      border-color: $colorDelete !important;
+      i {
+        color: #fff;
+      }
+      ~ .PageListRoot .PageListSelectName {
+        text-decoration: line-through;
+      }
+    }
   }
   &.restore {
     // entirely hide if there's nothing to restore
-    &[data-value-original=""] {
-      display: none;
-    }
+    //&[data-value-original=""] {
+    //  display: none;
+    //}
     position: absolute;
     float: none;
     right: 12px;
@@ -756,11 +782,11 @@ html.aos_compactModuleList {
           }
         }
         button[name="delete"] {
-          background: #b93e42 !important;
-          border-color: #b93e42 !important;
+          background: $colorDelete !important;
+          border-color: $colorDelete !important;
           &:hover {
-            background: saturate(#b93e42, 20%) !important;
-            border-color: saturate(#b93e42, 20%) !important;
+            background: saturate($colorDelete, 20%) !important;
+            border-color: saturate($colorDelete, 20%) !important;
           }
         }
       }
