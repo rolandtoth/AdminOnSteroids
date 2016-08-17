@@ -486,6 +486,7 @@ HTML;
         $event->return = $restoreButton . $clearButton . $event->return;
     }
 
+
     public function addIUCLink(HookEvent $event) {
 
         $inputfield = $event->object;
@@ -503,6 +504,7 @@ HTML;
         if (!empty($configData['IUC_enabled_fields']) && !in_array($inputfield->name, $configData['IUC_enabled_fields'])) {
             return false;
         }
+
 
         // process locked fields
         if (in_array($inputfield->collapsed, array(7, 8))) {
@@ -554,7 +556,9 @@ HTML;
 
         $editLinkMarkup = '<a href="' . $url . '"' . $editLinkAttrs . ' target="_blank"><i class="fa fa-arrow-right"></i></a>';
 
-        $inputfield->prependMarkup = $editLinkMarkup;
+//        $inputfield->prependMarkup = $editLinkMarkup;
+
+        $event->return = $editLinkMarkup . $event->return;
 
         return false;
     }
