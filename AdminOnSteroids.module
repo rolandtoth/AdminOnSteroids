@@ -654,7 +654,7 @@ HTML;
 
                 $classes[] = 'addlink';
 
-                $img = '<a href="' . $page->editUrl() . '" class="aos_pageListLink">' . $img . '</a>';
+                $img = '<a href="' . rtrim($this->config->urls->httpRoot, '/') . $page->editUrl() . '" class="aos_pageListLink">' . $img . '</a>';
             }
         }
 

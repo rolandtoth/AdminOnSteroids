@@ -1084,6 +1084,18 @@ html.aos_PageListThumbs {
         }
       }
     }
+    // disable in PageListSelect field
+    .PageListSelectHeader {
+      figure {
+        display: none !important;
+      }
+    }
+    // but allow the image in the pagelist without edit link
+    .PageListSelectHeader ~ .PageList {
+      figure a {
+        pointer-events: none !important;
+      }
+    }
   }
 }
 
