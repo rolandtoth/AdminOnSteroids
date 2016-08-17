@@ -1,6 +1,15 @@
 #Changelog
 
 
+### 0.4.7 (2016-08-17)
+
+- added "Settings" for PagelistThumbs with options right-aligned thumbs and edit page on thumb click
+- PagelistThumbs uses the first image if supplied field is a multi-image field
+- fix InputfieldURLChecker malfunction with ajax-loaded fields
+- PageListUnselect improvements
+
+
+
 ### 0.4.6 (2016-08-16)
 
 - new PageListUnselect submodule: rewrite of Bernhard Baumrock's PageListSelectUnselectButton module

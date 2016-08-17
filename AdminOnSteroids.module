@@ -25,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 46,
+            'version'   => 47,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -110,7 +110,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'PagePreviewLink'              => 'pw-blank',
             'FieldAndTemplateEditLinks'    => 'pw-blank',
             'PageListThumbs'               => array(
-                'PageListThumbStyle' => 'circle'
+                'PageListThumbStyle' => 'circle',
+                'ThumbSettings'      => array(
+                    'alignright',
+                    'addlink'
+                )
             ),
             'LongClickDuration'            => 600,
             'RenoTweaks'                   => array(
@@ -191,12 +195,12 @@ HTML;
 
             $this->addHookAfter('AdminTheme::getExtraMarkup', function ($event) {
                 $parts = $event->return;
-                $enabledText = 'AdminOnSteroids ' . __('enabled', __FILE__);   // AdminOnSteroids is enabled
-                $disabledText = 'AdminOnSteroids ' . __('disabled', __FILE__);   // AdminOnSteroids is disabled
+                $enabledText = 'AdminOnSteroids ' . __('loaded', __FILE__);   // AdminOnSteroids is loaded
+                $disabledText = 'AdminOnSteroids ' . __('idle', __FILE__);   // AdminOnSteroids is idle
 
                 $mouseover = 'onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'"';
 
-                $parts['footer'] = $parts['footer'] . '<p style="opacity:1;"><a href="' . $this->config->urls->admin . 'module/edit?name=AdminOnSteroids&toggle=1" class="aos_toggle" style="color: inherit !important; margin-left: 0;"><i class="fa fa-medkit"></i> <span ' . $mouseover . '>' . ($this->enabled ? $enabledText : $disabledText) . '</span></a></p>';
+                $parts['footer'] = $parts['footer'] . '<p style="opacity:1;"><a href="' . $this->config->urls->admin . 'module/edit?name=AdminOnSteroids&toggle=1" class="aos_toggle" style="opacity: 0.75; color: inherit !important; margin-left: 0;"><i class="fa fa-medkit"></i> <span ' . $mouseover . '>' . ($this->enabled ? $enabledText : $disabledText) . '</span></a></p>';
                 $event->return = $parts;
             });
         }
@@ -475,13 +479,13 @@ HTML;
 
         $field = $event->object;
 
-        $originalTitle = ($field->value  && $this->pages->get($field->value)) ? $this->pages->get($field->value)->title : '';
+        $originalTitle = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->title : '';
 
         $restoreTitleTag = strlen($originalTitle) ? 'title="' . __('Restore', __FILE__) . ' &quot;' . $originalTitle . '&quot;"' : '';
 
         $clearButton = '<button class="aos_pagelist_unselect clear ui-button ' . ($field->value ? '' : 'empty') . '" title="' . __('Clear', __FILE__) . '"><i class="fa fa-times-circle"></i></button>';
 
-        $restoreButton = $field->value ? '<button class="aos_pagelist_unselect restore ui-button initial" ' .  $restoreTitleTag  . ' data-title-original="' . $originalTitle . '" data-value-original="' . $field->value . '" ><i class="fa fa-undo"></i></button>' : '';
+        $restoreButton = $field->value ? '<button class="aos_pagelist_unselect restore ui-button initial" ' . $restoreTitleTag . ' data-title-original="' . $originalTitle . '" data-value-original="' . $field->value . '" ><i class="fa fa-undo"></i></button>' : '';
 
         $event->return = $restoreButton . $clearButton . $event->return;
     }
@@ -593,10 +597,9 @@ HTML;
                 $f = isset($setting[0]) ? trim($setting[0]) : null;
                 $selector = isset($setting[1]) ? trim($setting[1]) : null;
 
-                if (is_null($f) || !$page->$f || !($page->$f instanceof Pageimage)) {
+                if (is_null($f) || !$page->$f || (!$page->$f instanceof Pageimage && !$page->$f instanceof Pageimages) || count($page->$f) == 0) {
                     continue;
                 }
-
 
                 if (is_null($selector)) {
                     // break if there's no selector (any page will match)
@@ -611,20 +614,56 @@ HTML;
             }
         }
 
-        if (!is_null($field)) {
+        if (is_null($field)) {
+            return false;
+        }
 
-            // set thumbnail style class
-            $class = (isset($this->PageListThumbStyle) && !empty($this->PageListThumbStyle)) ? ' class="' . $this->PageListThumbStyle . '"' : '';
-            $thumbSize = ($this->RenoTweaks && in_array('compactPageList', $this->RenoTweaks)) ? 32 : 48;
+        $field = ($page->$field instanceof Pageimages) ? $page->$field->first() : $page->$field;
 
-            if ($this->PageListThumbStyle === 'square') {
-                $thumbSrc = $page->$field->size($thumbSize, $thumbSize, array('cropping' => false))->url;
-            } else {
-                $thumbSrc = $page->$field->height($thumbSize)->url;
+
+        $classes = array();
+
+        $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('compactPageList', $this->RenoTweaks))) ? 32 : 48;
+
+
+        if (isset($this->PageListThumbStyle) && !empty($this->PageListThumbStyle)) {
+            $classes[] = $this->PageListThumbStyle;
+        }
+
+
+        if (in_array('square', $classes)) {
+//                $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => false))->url;
+            $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true))->url;
+//                $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true, 'forceNew' => true))->url;
+        } else {
+            $thumbSrc = $field->height($thumbSize)->url;
+        }
+
+        $thumbSettings = isset($this->ThumbSettings) ? $this->ThumbSettings : null;
+
+
+        $img = '<img src="' . $thumbSrc . '" />';
+
+        if (!is_null($thumbSettings)) {
+
+            if (in_array('alignright', $thumbSettings)) {
+                $classes[] = 'alignright';
             }
 
-            $event->return = '<em' . $class . '><img src="' . $thumbSrc . '" /></em>' . $event->return;
+            if (in_array('addlink', $thumbSettings)) {
+
+                $classes[] = 'addlink';
+
+                $img = '<a href="' . $page->editUrl() . '" class="aos_pageListLink">' . $img . '</a>';
+            }
         }
+
+        if (!empty($classes)) {
+            $classes = implode(' ', $classes);
+        }
+
+        $event->return = '<figure class="' . $classes . '">' . $img . '</figure>' . $event->return;
+
 
         return true;
     }
@@ -1042,13 +1081,13 @@ HTML;
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PageListThumbStyle');
-        $f->label = __('Thumbnail style', __FILE__);
+        $f->label = __('Style', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->addOption('default', __('default', __FILE__));
-        $f->addOption('square', __('square', __FILE__));
         $f->addOption('circle', __('circle', __FILE__));
-        $f->optionColumns = 3;
+        $f->addOption('square', __('square', __FILE__));
+        $f->addOption('default', __('default', __FILE__));
+        $f->optionColumns = 4;
 
         if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
@@ -1058,15 +1097,33 @@ HTML;
 
         $fsetPageListThumbs->add($f);
 
+
         $f = wire('modules')->get("InputfieldTextarea");
         $f->attr('name', 'PageListThumbSettings');
-        $f->label = __('Thumbnail source', __FILE__);
+        $f->label = __('Source', __FILE__);
         $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
         $f->rows = 3;
         $f->collapsed = Inputfield::collapsedNever;
 
         if ($data['PageListThumbs'] && isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetPageListThumbs->add($f);
+
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'ThumbSettings');
+        $f->label = __('Settings', __FILE__); // Thumb settings
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOption('alignright', __('Align thumbs to right', __FILE__));
+        $f->addOption('addlink', __('Edit page on thumb click', __FILE__));
+
+        if (isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
+        } else {
+            $f->attr('value', $data['PageListThumbs'][$f->name]);
         }
 
         $fsetPageListThumbs->add($f);
@@ -1112,7 +1169,7 @@ HTML;
         $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
         $f->addOption('autoHideSidebar', __('Autohide sidebar', __FILE__));
         $f->addOption('oneLineSidebarItems', __('One-line sidebar submenus', __FILE__));
-        $f->addOption('compactPageList', __('Set narrow pagelist items', __FILE__));
+        $f->addOption('compactPageList', __('Use narrow pagelist rows', __FILE__));
         $f->addOption('alwaysShowSearch', __('Always show search field', __FILE__));
         $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));

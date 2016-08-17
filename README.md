@@ -177,8 +177,9 @@ Disable all CSS and JavaScript animations in the admin to make things feel more 
 
 Add thumbnails to the main pagelist.
 
-- **Pagelist thumbnail style**: style of the thumbnail image (default rectangle, square or circle)
-- **Pagelist thumbnail source**: list of "fieldname: selector" pairs to set which page field to use for the thumbnail and what condition has the page meet to show it. The first matching field-selector pair will be used. If there's no match, no thumbnail will be displayed. You can comment out items by adding "//" to the beginning of the lines, these will be skipped.
+- **Style**: appearance of the thumbnail image (circle, square or default rectangle)
+- **Source**: list of "fieldname: selector" pairs to set which page field to use for the thumbnail and what condition has the page meet to show it. The first matching field-selector pair will be used. If there's no match, no thumbnail will be displayed. You can comment out items by adding "//" to the beginning of the lines, these will be skipped. If a multi-image field is supplied, its first image will be used.
+
 
 Example:
 
@@ -192,6 +193,13 @@ This example will use image field "featured_image" for pages using "wine" and "b
 The second line also uses "featured_image" field, but for pages having the page with id of 1018 as parent.
 The third line uses no selector (filter), so any pages not matching the first two lines will use the "hero_image" field for thumbnail.
 Pages having no "hero_image" field or there's no image uploaded will show no thumbnail.
+
+
+**Settings**
+- *Align thumbs to right*: place thumbnails to the right of the pagelist
+- *Edit page on thumb click*: allows opening the page for editing instead toggling the open/close state of the item
+
+Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Default theme always gets the smaller thumb size (32px vs 48px).
 
 
 
@@ -234,7 +242,7 @@ A few usability mods targetting the Reno admin theme.
 - **Always show search field**: make the search field always available
 - **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items
-- **Set narrow pagelist items**: reduce the space between the main pagelist rows to save space
+- **Use narrow pagelist rows**: reduce the space between the main pagelist rows to save space
 - **One-line sidebar submenus (only with autoHideSidebar)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
 

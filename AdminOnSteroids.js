@@ -188,6 +188,22 @@ $(document).ready(function () {
 
 // PageListThumbs
     if (AOSsettings.enabledSubmodules.indexOf('PageListThumbs') !== -1) {
+
+        $(document).on('mousedown', 'a.aos_pageListLink', function (e) {
+
+            e = e || window.event;
+
+            // allow left and middle click only
+            if (e.which === 1) {
+                window.location = $(this).attr('href');
+                return false;
+            }
+            if (e.which === 2) {
+                window.open($(this).attr('href'));
+                return false;
+            }
+        });
+
         htmlClasses.push('aos_PageListThumbs');
     }
 
@@ -557,7 +573,7 @@ $(document).ready(function () {
             }
 
             // if pagelist is open, close it
-            if(parentEl.find('.PageListItemOpen').length) {
+            if (parentEl.find('.PageListItemOpen').length) {
                 parentEl.find('a.PageListSelectActionToggle').trigger('click');
             }
 

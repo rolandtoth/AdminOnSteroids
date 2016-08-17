@@ -423,7 +423,7 @@ form[action*="AdminOnSteroids"] {
 
   input[type=checkbox],
   input[type=radio] {
-    &:not(:checked){
+    &:not(:checked) {
       opacity: 0.64;
     }
   }
@@ -947,44 +947,140 @@ html.aos_PagePreviewLink {
 // PageListThumbs
 html.aos_PageListThumbs {
 
-  $thumbSize: 48px;
-
-  .PageListItem {
-    @include clearfix;
-    width: 100%;
-    em {
-      vertical-align: middle;
-      padding: 0;
-      background: #F0F3F7;
-      margin-right: 16px;
-      display: inline-block;
-      height: $thumbSize;
-      line-height: $thumbSize;
-      text-align: center;
-      &.square {
-        width: $thumbSize;
+  @media only screen and (max-width: 960px) {
+    .PageListItem {
+      figure, i {
+        display: none !important;
       }
-      &.circle {
-        width: $thumbSize;
-        border-radius: 50%;
-        overflow: hidden;
-      }
-    }
-    img {
-      display: block;
-      margin: 0 auto;
     }
   }
-  &.aos_compactPageList {
-    $thumbSize: 32px;
+
+  @media only screen and (min-width: 960px) {
+    $thumbSize: 48px;
+
     .PageListItem {
-      em {
-        height: $thumbSize;
+      @include clearfix;
+      width: 100%;
+      a {
+        border-radius: 0 !important;
+      }
+      > a {
+        > figure {
+          vertical-align: middle;
+        }
+      }
+      figure {
+        padding: 0;
+        //background: #F0F3F7;
+        display: inline-block;
         line-height: $thumbSize;
-        margin-right: 10px;
+        height: $thumbSize;
+        text-align: center;
+        font-style: normal;
+        position: relative;
+        margin: -5px 12px -5px 0;
+        // required for cropping with border-radius
+        z-index: 20;
+        a {
+          display: block;
+          padding: 0;
+          position: relative;
+        }
+        // create a pseudo to make items align vertically (:before on next item)
+        + *:before {
+          content: "";
+          height: $thumbSize - 10px;
+          display: inline-block;
+          width: 0;
+          visibility: hidden !important;
+          pointer-events: none;
+          vertical-align: middle;
+          margin: 0;
+          padding: 0 !important;
+        }
         &.square,
         &.circle {
           width: $thumbSize;
+          //img {
+          //  display: block;
+          //}
+        }
+        &.circle {
+          &, a:after {
+            border-radius: 100% !important;
+            overflow: hidden;
+          }
+        }
+
+        &.alignright {
+          float: right;
+          margin-right: 4px !important;
+          margin-left: 12px !important;
+        }
+
+        &.addlink {
+          a {
+            backface-visibility: hidden;
+            overflow: hidden;
+            position: relative;
+            &:after {
+              text-align: center;
+              content: "\f044";
+              font-family: 'Fontawesome';
+              font-size: 18px;
+              color: #fff;
+              position: absolute;
+              left: 0;
+              right: 0;
+              text-indent: 2px;
+              top: 0;
+              bottom: 0;
+              margin: 0;
+              padding: 0;
+              background: rgba(#1C2836, 0.21);
+              transform: scale(0);
+              opacity: 0;
+              visibility: hidden;
+              transition: all $defaultTransition;
+            }
+            &:hover {
+              &:after {
+                opacity: 1;
+                visibility: visible;
+                transform: scale(1);
+              }
+            }
+          }
+        }
+
+      }
+      img {
+        display: block;
+        margin: 0 auto;
+      }
+    }
+    &.aos_compactPageList,
+    body.AdminThemeDefault {
+      $thumbSize: 32px;
+      .PageListItem {
+        figure {
+          height: $thumbSize;
+          line-height: $thumbSize;
+          margin: -2px 10px -2px 0;
+          + *:before {
+            height: $thumbSize - 4px;
+          }
+          &.square,
+          &.circle {
+            width: $thumbSize;
+          }
+          &.addlink {
+            a {
+              &:after {
+                font-size: 15px;
+              }
+            }
+          }
         }
       }
     }
@@ -1502,8 +1598,8 @@ html.AdminThemeReno {
 
   &.aos_compactPageList {
     .content .PageList .PageListItem {
-      padding-top: 0.33em;
-      padding-bottom: 0.33em;
+      padding-top: 0.4em;
+      padding-bottom: 0.4em;
     }
   }
 
