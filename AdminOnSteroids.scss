@@ -1206,6 +1206,21 @@ html.AdminThemeReno {
         top: 48px !important;
       }
 
+      .content #fieldgroupContext {
+        top: 105px;
+        position: fixed;
+        z-index: 100000 + 2000;
+        select {
+          padding: 3px 1px 3px 3px;
+          &:hover {
+            cursor: pointer;
+          }
+          &:not(:focus) {
+            border-color: transparent;
+          }
+        }
+      }
+
       #NotificationBug {
         top: 70px !important;
         float: right;
