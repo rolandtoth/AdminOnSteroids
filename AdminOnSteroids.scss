@@ -251,12 +251,11 @@ html.aos_tooltips {
 
 .aos_pagelist_unselect {
   float: left;
-  margin-right: 5px;
   margin-top: 2px !important;
   width: 21px;
   height: 20px;
   text-align: center;
-  border-radius: 2px !important;
+  //border-radius: 2px !important;
   transition-duration: 0.1s !important;
   i {
     font-size: 12px !important;
@@ -276,21 +275,17 @@ html.aos_tooltips {
     border-color: inherit;
   }
   &.clear {
-    //background-color: $colorDelete !important;
-    //border-color: $colorDelete !important;
-    //width: 19px;
     background-color: transparent !important;
     border-color: transparent !important;
-
     color: $colorDelete !important;
-    //i {
-    //  font-size: 13px !important;
-    //}
+    margin-left: -3px;
+    margin-right: 3px;
     &:hover {
-      background-color: $colorDelete !important;
-      border-color: $colorDelete !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
       i {
-        color: #fff;
+        transform: scale(1.3);
+        transform-origin: center;
       }
       ~ .PageListRoot .PageListSelectName {
         text-decoration: line-through;
@@ -305,7 +300,6 @@ html.aos_tooltips {
     position: absolute;
     float: none;
     right: 12px;
-    margin-right: 0;
   }
 }
 
