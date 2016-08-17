@@ -251,17 +251,19 @@ html.aos_tooltips {
 
 .aos_pagelist_unselect {
   float: left;
-  margin-top: 2px !important;
-  width: 21px;
-  height: 20px;
+  margin-top: 1px !important;
+  //width: 22px;
+  padding: 0 !important;
+  //height: 21px;
+  //line-height: 21px;
   text-align: center;
+  border: none !important;
   //border-radius: 2px !important;
   transition-duration: 0.1s !important;
   i {
-    font-size: 12px !important;
-    //top: 1px;
-    position: relative;
-    display: block;
+    //font-size: 12px !important;
+    padding: 4px 5px !important;
+    display: inline-block;
   }
   &, &:hover {
     padding: 0 !important;
@@ -271,20 +273,19 @@ html.aos_tooltips {
     pointer-events: none;
     opacity: 0.33;
     filter: saturate(0);
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.25) !important;
+    //box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.25) !important;
     border-color: inherit;
   }
   &.clear {
     background-color: transparent !important;
-    border-color: transparent !important;
-    color: $colorDelete !important;
     margin-left: -3px;
-    margin-right: 3px;
+    margin-right: 5px;
+    color: #8d939e !important;
     &:hover {
+      color: $colorDelete !important;
       background-color: transparent !important;
-      border-color: transparent !important;
       i {
-        transform: scale(1.3);
+        transform: scale(1.2);
         transform-origin: center;
       }
       ~ .PageListRoot .PageListSelectName {
@@ -300,6 +301,9 @@ html.aos_tooltips {
     position: absolute;
     float: none;
     right: 12px;
+    //&:not(:hover) {
+    //  background: #8d939e;
+    //}
   }
 }
 

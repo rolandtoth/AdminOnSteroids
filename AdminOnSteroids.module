@@ -479,7 +479,7 @@ HTML;
 
         $restoreTitleTag = strlen($originalTitle) ? 'title="' . __('Restore', __FILE__) . ' &quot;' . $originalTitle . '&quot;"' : '';
 
-        $clearButton = '<button class="aos_pagelist_unselect clear ui-button ' . ($field->value ? '' : 'empty') . '" title="' . __('Clear', __FILE__) . '"><i class="fa fa-times"></i></button>';
+        $clearButton = '<button class="aos_pagelist_unselect clear ui-button ' . ($field->value ? '' : 'empty') . '" title="' . __('Clear', __FILE__) . '"><i class="fa fa-times-circle"></i></button>';
 
         $restoreButton = $field->value ? '<button class="aos_pagelist_unselect restore ui-button initial" ' .  $restoreTitleTag  . ' data-title-original="' . $originalTitle . '" data-value-original="' . $field->value . '" ><i class="fa fa-undo"></i></button>' : '';
 
