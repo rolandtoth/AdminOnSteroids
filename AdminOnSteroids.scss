@@ -407,7 +407,21 @@ form[action*="AdminOnSteroids"] {
         }
       }
     }
+  }
 
+  .Inputfields .InputfieldRadiosColumns {
+    > li {
+      width: auto !important;
+      //margin-right: 8px;
+    }
+
+  }
+
+  input[type=checkbox],
+  input[type=radio] {
+    &:not(:checked){
+      opacity: 0.64;
+    }
   }
 
   #Inputfield_tweaks {

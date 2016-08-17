@@ -768,6 +768,7 @@ HTML;
         $f->attr('name', 'FieldAndTemplateEditLinks');
         $f->showIf = 'enabledSubmodules=FieldAndTemplateEditLinks';
         $f->collapsed = Inputfield::collapsedNever;
+        $f->optionColumns = 3;
 
         $f->addOption('pw-blank', __('Open in new tab', __FILE__));
         $f->addOption('pw-panel', __('Open in panel', __FILE__));
@@ -805,11 +806,11 @@ HTML;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
 
-
         $f->addOption('focus', __('Focus', __FILE__));
         $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
         $f->addOption('selectAll', __('Select all', __FILE__));
         $f->addOption('nothing', __('Do nothing', __FILE__));
+        $f->optionColumns = 4;
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -829,6 +830,7 @@ HTML;
         $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
         $f->addOption('selectAll', __('Select all', __FILE__));
         $f->addOption('nothing', __('Do nothing', __FILE__));
+        $f->optionColumns = 4;
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -907,6 +909,7 @@ HTML;
         $f->addOption('pw-blank', __('new tab', __FILE__));
         $f->addOption('pw-panel', __('panel', __FILE__));
         $f->addOption('pw-modal', __('modal', __FILE__));
+        $f->optionColumns = 3;
 
 //        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
 
@@ -1041,6 +1044,7 @@ HTML;
         $f->addOption('default', __('default', __FILE__));
         $f->addOption('square', __('square', __FILE__));
         $f->addOption('circle', __('circle', __FILE__));
+        $f->optionColumns = 3;
 
         if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
@@ -1076,6 +1080,7 @@ HTML;
         $f->addOption('pw-blank', __('Preview in new tab', __FILE__));
         $f->addOption('pw-panel', __('Preview in panel', __FILE__));
         $f->addOption('pw-modal', __('Preview in modal', __FILE__));
+        $f->optionColumns = 3;
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
