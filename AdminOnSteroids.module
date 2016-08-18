@@ -444,7 +444,11 @@ HTML;
         if ($this->adminTheme == 'AdminThemeDefault') {
             $event->return = str_replace('<li class=\'title\'>', '<li class="title">' . $templateEditLink, $event->return);
         } else {
-            $event->return = str_replace('</h1>', $templateEditLink . '</h1>', $event->return);
+            // add span (on some templates it's missing)
+            $event->return = str_replace('<h1 id="title">', '<h1 id="title"><span>', $event->return);
+            $event->return = str_replace('</h1>', '</span></h1>', $event->return);
+
+            $event->return = str_replace('</span></h1>', $templateEditLink . '</span></h1>', $event->return);
         }
 
     }
