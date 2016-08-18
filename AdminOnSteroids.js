@@ -257,19 +257,22 @@ $(document).ready(function () {
             if (window.frameElement && submitBtn.length) {
 
                 var submitBtnClone = submitBtn.clone(false),
-                    submitBtnCloneRefresh = submitBtnClone.clone();
+                    submitBtnCloneRefresh = submitBtnClone.clone(),
+                    loc = AOSsettings.loc;
+
+                submitBtn.children('.ui-button-text').html(loc['save']);
 
                 submitBtnClone
                     .attr('id', submitBtn.attr('id') + '_forceClose')
                     .addClass('ui-priority-secondary')
                     .appendTo(submitBtn.parent())
-                    .children('.ui-button-text').before('<i class="fa fa-fw fa-close"></i>');
+                    .children('.ui-button-text').html(loc['save_and_exit']).before('<i class="fa fa-fw fa-close"></i>');
 
                 submitBtnCloneRefresh
                     .attr('id', submitBtn.attr('id') + '_forceCloseRefresh')
                     .addClass('ui-priority-secondary')
                     .appendTo(submitBtn.parent())
-                    .children('.ui-button-text').before('<i class="fa fa-fw fa-refresh"></i>');
+                    .children('.ui-button-text').html(loc['save_and_reload']).before('<i class="fa fa-fw fa-refresh"></i>');
 
                 submitBtnClone.on('click', function () {
 

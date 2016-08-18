@@ -47,31 +47,41 @@ $(document).ready(function () {
         var aos_saveButton = false;
 
         if (window.frameElement) {
-            // in modal
 
+            // in iframe
             aos_saveButton = $('.ui-dialog-buttonset button[role="button"]', window.parent.document).eq(0);
-            // console.log(aos_saveButton.attr('class'));
-
 
         } else {
 
             aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
                 .filter('.aos_hotkeySave, form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
                 .eq(0);
-        }
 
+            // modal opened, but controls have focus (outside the iframe)
+            if(aos_saveButton.length == 0) {
+                aos_saveButton = $('.ui-dialog-buttonset button[role="button"]').eq(0);
+            }
+        }
 
         return aos_saveButton;
     }
+
 
     function aos_triggerSave() {
 
         var aos_saveButton = getSaveButton();
 
         if (aos_saveButton.length) {
+
             $('body').addClass('aos_saving');
             $('#wrap, body.AdminThemeDefault #content').addClass('ui-state-disabled');
-            aos_saveButton.trigger('click');
+
+            aos_saveButton.addClass('ui-state-disabled').focus();
+
+            // IE fix
+            setTimeout(function() {
+                aos_saveButton.click();
+            }, 100);
         }
     }
 

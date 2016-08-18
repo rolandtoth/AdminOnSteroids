@@ -3,8 +3,9 @@
 
 ### 0.4.8 (2016-08-18)
 
-- support for ctrl+s when edit modules in a modal
-- added "Submit and reload" button for modalModuleEdit
+- support for ctrl+s in modals
+- added "Submit + Reload" button for modalModuleEdit
+- added translatable strings for Save, Save + Exit, Save + Reload
 - fix for malfunctional field edit links (reported by szabesz)
 
 

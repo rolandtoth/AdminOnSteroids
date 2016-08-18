@@ -408,6 +408,14 @@ HTML;
 
         // note: $configSettings overwrite $configData (intentional)
 //        $this->config->js("AdminOnSteroids", json_encode(array_merge($configData, $configSettings)));
+
+        // add translations
+        $configData['loc'] = array(
+            'save' => __('Save', __FILE__),
+            'save_and_exit' => __('Save + Exit', __FILE__),
+            'save_and_reload' => __('Save + Reload', __FILE__)
+        );
+
         $this->config->js("AdminOnSteroids", json_encode($configData));
     }
 

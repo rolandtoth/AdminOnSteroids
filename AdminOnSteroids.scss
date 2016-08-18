@@ -621,6 +621,22 @@ h1 span,
   }
 }
 
+// placeholder element to make hover easier
+#ProcessPageEdit .Inputfield label .title {
+  &:before {
+    content: "";
+    width: 150%;
+    height: 133%;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    z-index: 0;
+    bottom: -10%;
+    background: transparent !important;
+    min-width: 80px;
+  }
+}
+
 // Hotkeys
 body.aos_saving {
   pointer-events: none;
