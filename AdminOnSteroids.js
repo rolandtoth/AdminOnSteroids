@@ -127,8 +127,8 @@ $(document).ready(function () {
 
 // FieldAndTemplateEditLinks
     if (AOSsettings.enabledSubmodules.indexOf('FieldAndTemplateEditLinks') !== -1) {
-        $(document).on('click', '#ProcessPageEdit .Inputfield > label .aos_EditField', function () {
-            var editFieldLink = $(this).parents('label').eq(0).find('.aos_EditFieldLink');
+        $(document).on('click', '#ProcessPageEdit .Inputfield .aos_EditField', function () {
+            var editFieldLink = $(this).parents('.Inputfield').eq(0).find('.aos_EditFieldLink');
             if (editFieldLink.length) {
                 editFieldLink[0].click();
                 return false;
@@ -197,8 +197,7 @@ $(document).ready(function () {
             if (e.which === 1) {
                 window.location = $(this).attr('href');
                 return false;
-            }
-            if (e.which === 2) {
+            } else if (e.which === 2) {
                 window.open($(this).attr('href'));
                 return false;
             }
@@ -245,27 +244,44 @@ $(document).ready(function () {
 // ModuleTweaks
     if (AOSsettings.enabledSubmodules.indexOf('ModuleTweaks') !== -1) {
 
-
         if (AOSsettings.ModuleTweaks.indexOf('modalModuleEdit') !== -1) {
 
             $('#modules_form td > a')
                 .addClass('pw-modal')
-                .attr('data-autoclose', '#Inputfield_submit_save_module.needsReload, #Inputfield_submit_save_module_forceClose')
-                .attr('data-buttons', '#Inputfield_submit_save_module, #Inputfield_submit_save_module_forceClose');
-
+                .attr('data-autoclose', '#Inputfield_submit_save_module.needsReload, #Inputfield_submit_save_module_forceClose, #Inputfield_submit_save_module_forceCloseRefresh')
+                .attr('data-buttons', '#Inputfield_submit_save_module, #Inputfield_submit_save_module_forceClose, #Inputfield_submit_save_module_forceCloseRefresh');
 
             // clone the Submit button (only if in iframe)
             var submitBtn = $('#ModuleEditForm button#Inputfield_submit_save_module');
 
             if (window.frameElement && submitBtn.length) {
 
-                var submitBtnClone = submitBtn.clone(false);
+                var submitBtnClone = submitBtn.clone(false),
+                    submitBtnCloneRefresh = submitBtnClone.clone();
 
                 submitBtnClone
-                    .attr('id', submitBtnClone.attr('id') + '_forceClose')
+                    .attr('id', submitBtn.attr('id') + '_forceClose')
                     .addClass('ui-priority-secondary')
                     .appendTo(submitBtn.parent())
                     .children('.ui-button-text').before('<i class="fa fa-fw fa-close"></i>');
+
+                submitBtnCloneRefresh
+                    .attr('id', submitBtn.attr('id') + '_forceCloseRefresh')
+                    .addClass('ui-priority-secondary')
+                    .appendTo(submitBtn.parent())
+                    .children('.ui-button-text').before('<i class="fa fa-fw fa-refresh"></i>');
+
+                submitBtnClone.on('click', function () {
+
+                    if ($('input#uninstall').is(':checked')) {
+                        $(this).addClass('needsReload');
+                        $('body', window.parent.document).addClass('needsReload');
+                    }
+                });
+
+                submitBtnCloneRefresh.on('click', function () {
+                    $('body', window.parent.document).addClass('needsReload');
+                })
             }
 
             $('#modules_form td > a').on('pw-modal-closed', function (event, ui) {
@@ -274,20 +290,28 @@ $(document).ready(function () {
                 }
             });
 
-            $('#ModuleEditForm button#Inputfield_submit_save_module').click(function () {
-
-                var button = $(this);
-
-                // allow save on non-modal Modules page
-                if (!window.frameElement) return true;
-
-                // add class to parent frame to check for reload in callback
-                if ($('input#uninstall').is(':checked')) {
-                    // add this class to make the modal auto-close
-                    button.addClass('needsReload');
-                    $('body', window.parent.document).addClass('needsReload');
-                }
+            $(document).on('pw-modal-opened', function (event, ui) {
+                // set focus on modal iframe to make ctrl+s work (without clicking on the iframe)
+                setTimeout(function () {
+                    if (ui.event.currentTarget && ui.event.currentTarget.contentWindow) {
+                        ui.event.currentTarget.contentWindow.focus();
+                    }
+                }, 250);
             });
+
+            // $('#ModuleEditForm button#Inputfield_submit_save_module').on('click', function () {
+            //
+            //     var button = $(this);
+            //
+            //     // allow save on non-modal Modules page
+            //     if (!window.frameElement) return true;
+            //
+            //     // add class to parent frame to check for reload in callback
+            //     if ($('input#uninstall').is(':checked')) {
+            //         button.addClass('needsReload');
+            //         $('body', window.parent.document).addClass('needsReload');
+            //     }
+            // });
 
             // add ESC close
             $(document).on('keydown', function (e) {
@@ -460,7 +484,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,

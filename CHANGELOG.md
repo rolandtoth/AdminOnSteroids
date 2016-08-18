@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.4.8 (2016-08-18)
+
+- support for ctrl+s when edit modules in a modal
+- added "Submit and reload" button for modalModuleEdit
+- fix for malfunctional field edit links (reported by szabesz)
+
+
+
 ### 0.4.7 (2016-08-17)
 
 - added "Settings" for PagelistThumbs with options right-aligned thumbs and edit page on thumb click

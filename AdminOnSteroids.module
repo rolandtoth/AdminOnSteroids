@@ -25,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 47,
+            'version'   => 48,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -454,7 +454,6 @@ HTML;
             return;
         }
 
-
         if ($field = $this->fields->get($inputfield->name)) {
 
             $editFieldUrl = $this->config->urls->admin . 'setup/field/edit?id=' . $field->id;
@@ -470,7 +469,11 @@ HTML;
 
             $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
-            $inputfield->appendMarkup = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
+//            $inputfield->appendMarkup = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
+
+//            bd($event->return . '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>');
+
+            $event->return .= '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
         }
     }
 
