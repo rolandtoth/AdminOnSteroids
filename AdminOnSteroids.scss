@@ -25,6 +25,30 @@ $defaultBoxShadow: 0 4px 8px -5px rgba(#465b69, 0.25);
   }
 }
 
+@keyframes spinIn {
+  0% {
+    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+  //50% {
+  //}
+  100% {
+    color: inherit;
+    transform: rotate(360.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+}
+
+@keyframes spinOut {
+  100% {
+    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+  //50% {
+  //}
+  0% {
+    color: inherit;
+    transform: rotate(180.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+}
+
 // try to avoid pwPanel jump to top
 body {
   overflow: auto !important;
@@ -359,12 +383,79 @@ html.aos_collapseAsmSections {
 }
 
 // login page
-body.id-23 {
-  #headline {
-    padding-left: 1.33em !important;
-  }
-  #title {
-    float: none !important;
+@media only screen and (min-width: 960px) {
+  html.aos_centeredLogin:not(.modal) {
+    body.id-23.AdminThemeReno {
+
+      #headline {
+        padding-left: 1.33em !important;
+      }
+
+      #title {
+        float: none !important;
+      }
+
+      @media only screen and (min-width: 960px) {
+
+        #wrap {
+
+          #headline {
+            box-shadow: none;
+            padding-right: 20px !important;
+            padding-left: 20px !important;
+          }
+
+          #title {
+            padding: 0 !important;
+          }
+
+          #main {
+            text-align: center;
+          }
+
+          form#ProcessLoginForm {
+            > ul {
+              width: 360px;
+              display: inline-block;
+              li {
+                float: none;
+                width: 100%;
+              }
+            }
+            + * {
+              margin-top: 32px;
+            }
+          }
+
+          #notices {
+            border-bottom: none;
+          }
+
+          .NoticeMessage {
+            padding-right: 20px !important;
+            padding-left: 20px !important;
+          }
+
+          ul.Inputfields {
+            #login_name,
+            #login_pass {
+              text-align: center;
+            }
+          }
+
+          .notice-remove {
+            float: none;
+            position: relative !important;
+            left: -10px !important;
+            margin-left: -40px;
+          }
+
+          #footer {
+            border: none;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -618,6 +709,9 @@ h1 span,
   .aos_EditField {
     font-style: normal;
     @include aos_tooltip($margin: 0 0 8px -5px);
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
@@ -772,14 +866,24 @@ html.aos_modalModuleEdit {
     border-top: 1px solid rgba(#000, 0.12);
     width: 100%;
     .ui-dialog-buttonset {
-      float: left;
+      float: none;
+      text-align: center;
       margin-left: 12px;
       button {
         display: inline-block !important;
         //opacity: 1 !important;
         visibility: visible !important;
+        min-width: 92px;
+        margin-right: 6px;
+        &:not(:first-child) {
+          span {
+            font-weight: normal;
+          }
+        }
         i {
-          margin-left: -8px;
+          margin: 0 4px 0 -6px;
+          position: relative;
+          top: 1px;
         }
       }
     }
@@ -870,23 +974,46 @@ html.aos_compactModuleList {
         span.ConfigurableModule {
           position: relative;
           &:after {
+            transform-origin: 50%;
+            backface-visibility: hidden;
             content: "\f013";
             font-family: FontAwesome, sans-serif;
             position: absolute;
-            color: rgba(#364D68, 0.2);
+            font-size: 28px;
+            color: rgba(#364D68, 0.25);
             margin-top: 0;
-            padding-left: 7px;
+            margin-left: 0;
+            transform: scale(0.61);
+            animation: spinOut 0.5s forwards;
           }
+        }
+        span.not_installed > span.ConfigurableModule:after {
+          display: none;
         }
         td:hover {
           span.ConfigurableModule {
             &:after {
-              color: inherit;
+              //animation: spin 2.1s infinite;
+              animation: spinIn 0.84s forwards;
+              //color: inherit;
             }
           }
         }
         button.ProcessModuleSettings {
           display: none;
+        }
+      }
+    }
+  }
+  &.aos_noAnims {
+    form#modules_form {
+      table.AdminDataList {
+        td:hover {
+          span.ConfigurableModule {
+            &:after {
+              color: inherit !important;
+            }
+          }
         }
       }
     }
@@ -1115,9 +1242,11 @@ html.aos_PageListThumbs {
   }
 }
 
-html.aos_noAnims * {
-  //transition: none !important;
-  transition-duration: 0s !important;
+html.aos_noAnims {
+  *, *:after, *:before {
+    transition-duration: 0s !important;
+    animation: none !important;
+  }
 }
 
 .fixZIndex {
@@ -1544,6 +1673,15 @@ html.AdminThemeReno {
       }
       .NotificationMenu {
         left: 230px;
+      }
+    }
+
+    body.id-23 {
+      #headline {
+        padding-left: 24px !important;
+      }
+      .NotificationMenu {
+        left: 0 !important;
       }
     }
 

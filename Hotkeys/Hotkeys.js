@@ -1,5 +1,13 @@
 $(document).ready(function () {
 
+    // $('body').removeClass('aos_saving');
+    // $('#wrap, body.AdminThemeDefault #content').removeClass('ui-state-disabled');
+    //
+    // if (window.frameElement) {
+    //     $('body', window.parent.document).removeClass('aos_saving');
+    //     $('#wrap, body.AdminThemeDefault #content', window.parent.document).removeClass('ui-state-disabled');
+    // }
+
     var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids),
         HotkeysSettings = AOSsettings.Hotkeys,
         BreadcrumbsSettings = ProcessWire.config.AOS_breadcrumbs;
@@ -73,8 +81,15 @@ $(document).ready(function () {
 
         if (aos_saveButton.length) {
 
-            $('body').addClass('aos_saving');
-            $('#wrap, body.AdminThemeDefault #content').addClass('ui-state-disabled');
+            var context = $('html');
+
+            if ($('iframe.pw-modal-window', window.parent.document).length) {
+                context = $('iframe.pw-modal-window', window.parent.document).contents().find('html');
+            }
+
+            // these are removed on document ready
+            $('body', context).addClass('aos_saving');
+            $('#wrap, body.AdminThemeDefault #content', context).addClass('ui-state-disabled');
 
             aos_saveButton.addClass('ui-state-disabled').focus();
 

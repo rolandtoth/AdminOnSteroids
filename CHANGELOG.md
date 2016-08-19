@@ -1,6 +1,15 @@
 #Changelog
 
 
+### 0.4.9 (2016-08-19)
+
+- added "centeredLogin" to RenoTweaks: align login page items to center
+- modalModuleEdit: align action buttons to center in the modal
+- modalModuleEdit: fix ctrl+s overlay added to parent document instead of modal's body
+- animated compactModuleList settings icon (cog)
+
+
+
 ### 0.4.8 (2016-08-18)
 
 - support for ctrl+s in modals

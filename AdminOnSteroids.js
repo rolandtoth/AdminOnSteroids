@@ -13,15 +13,15 @@ function debounce(func, wait, immediate) {
     };
 }
 
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
+// function getParameterByName(name, url) {
+//     if (!url) url = window.location.href;
+//     name = name.replace(/[\[\]]/g, "\\$&");
+//     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+//         results = regex.exec(url);
+//     if (!results) return null;
+//     if (!results[2]) return '';
+//     return decodeURIComponent(results[2].replace(/\+/g, " "));
+// }
 
 
 $(document).ready(function () {
@@ -206,6 +206,7 @@ $(document).ready(function () {
         htmlClasses.push('aos_PageListThumbs');
     }
 
+
 // tabIndex
     if (AOSsettings.enabledSubmodules.indexOf('TabIndex') !== -1) {
 
@@ -220,7 +221,7 @@ $(document).ready(function () {
         });
 
         // repeaters
-        $(document).on('reloaded', '.Inputfield', function () {
+        $(document).on('reloaded', '.InputfieldRepeater', function () {
             aos_updateTabIndices();
         });
 
@@ -429,6 +430,10 @@ $(document).ready(function () {
                 window.location.href = $(this).attr('href');
                 return false;
             });
+        }
+
+        if (renoTweaksSettings.indexOf('centeredLogin') !== -1 && $('body').hasClass('id-23')) {
+            htmlClasses.push('aos_centeredLogin');
         }
 
         if (renoTweaksSettings.indexOf('alwaysShowSearch') !== -1) {

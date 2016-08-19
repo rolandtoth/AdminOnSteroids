@@ -45,6 +45,7 @@ $(document).ready(function () {
 
         $(IUC.selector).not('[' + IUC.dataLoaded + '="1"]').each(function () {
 
+
             var currInput = $(this).siblings('input:not([type="hidden"])');
 
             // set link height

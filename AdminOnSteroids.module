@@ -25,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 48,
+            'version'   => 49,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -133,7 +133,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'headButtonNextToTitle',
                 'alwaysShowSearch',
                 'compactPageList',
-                'closeNoticeButtonToLeft'
+                'closeNoticeButtonToLeft',
+                'centeredLogin'
             ),
             'AdminTweaks'                  => array(
                 'stickyHeader'
@@ -181,6 +182,8 @@ HTML;
     public function ready() {
 
 
+
+
         if ($this->user->isSuperUser()) {
 
             if ($this->input->toggle == 1) {
@@ -194,7 +197,9 @@ HTML;
             }
 
             $this->addHookAfter('AdminTheme::getExtraMarkup', function ($event) {
+
                 $parts = $event->return;
+
                 $enabledText = 'AdminOnSteroids ' . __('loaded', __FILE__);   // AdminOnSteroids is loaded
                 $disabledText = 'AdminOnSteroids ' . __('idle', __FILE__);   // AdminOnSteroids is idle
 
@@ -291,6 +296,9 @@ HTML;
 
             $this->addHookAfter('InputfieldURL::renderValue', $this, 'addIUCLink');
             $this->addHookAfter('InputfieldURL::render', $this, 'addIUCLink');
+
+//            $this->addHookAfter('InputfieldTable::render', $this, 'addIUCLink');
+//            $this->addHookAfter('InputfieldTable::renderValue', $this, 'addIUCLink');
         }
 
 
@@ -510,7 +518,7 @@ HTML;
 
         $inputfield = $event->object;
         $url = $inputfield->value ? $inputfield->value : '';
-        $configData = $this->modules->getModuleConfigData($this);
+        $configData = self::$configData;
         $editedPage = $this->editedPage;
         $editLinkAttrsArray = array();
         $editLinkAttrs = '';
@@ -1187,6 +1195,7 @@ HTML;
         $f->addOption('compactPageList', __('Use narrow pagelist rows', __FILE__));
         $f->addOption('alwaysShowSearch', __('Always show search field', __FILE__));
         $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
+        $f->addOption('centeredLogin', __('Center login form', __FILE__));
         $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
 
         if ($data[$f->name]) {
