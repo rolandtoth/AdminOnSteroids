@@ -1,6 +1,11 @@
 #Changelog
 
 
+### 0.5.0 (2016-08-19)
+
+- added "centeredLogin" to (default) AdminTweaks
+
+
 ### 0.4.9 (2016-08-19)
 
 - added "centeredLogin" to RenoTweaks: align login page items to center

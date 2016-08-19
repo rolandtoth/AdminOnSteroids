@@ -360,6 +360,10 @@ $(document).ready(function () {
             bodyClasses.push('aos_stickyHeader');
         }
 
+        if (adminTweaksSettings.indexOf('centeredLogin') !== -1 && $('body').hasClass('id-23')) {
+            htmlClasses.push('aos_centeredLogin');
+        }
+
         $('body').addClass(bodyClasses.join(" "));
     }
 

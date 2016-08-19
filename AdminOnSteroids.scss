@@ -382,78 +382,68 @@ html.aos_collapseAsmSections {
   }
 }
 
-// login page
+// login page (both Default and Reno themes)
 @media only screen and (min-width: 960px) {
   html.aos_centeredLogin:not(.modal) {
-    body.id-23.AdminThemeReno {
+
+    body.id-23 {
+
+      text-align: center;
 
       #headline {
-        padding-left: 1.33em !important;
+        box-shadow: none;
+        padding-right: 20px !important;
+        padding-left: 20px !important;
       }
 
       #title {
+        padding: 0 !important;
         float: none !important;
       }
 
-      @media only screen and (min-width: 960px) {
+      #main {
+        text-align: center;
+      }
 
-        #wrap {
-
-          #headline {
-            box-shadow: none;
-            padding-right: 20px !important;
-            padding-left: 20px !important;
-          }
-
-          #title {
-            padding: 0 !important;
-          }
-
-          #main {
-            text-align: center;
-          }
-
-          form#ProcessLoginForm {
-            > ul {
-              width: 360px;
-              display: inline-block;
-              li {
-                float: none;
-                width: 100%;
-              }
-            }
-            + * {
-              margin-top: 32px;
-            }
-          }
-
-          #notices {
-            border-bottom: none;
-          }
-
-          .NoticeMessage {
-            padding-right: 20px !important;
-            padding-left: 20px !important;
-          }
-
-          ul.Inputfields {
-            #login_name,
-            #login_pass {
-              text-align: center;
-            }
-          }
-
-          .notice-remove {
+      form#ProcessLoginForm {
+        > ul {
+          width: 360px;
+          display: inline-block;
+          li {
             float: none;
-            position: relative !important;
-            left: -10px !important;
-            margin-left: -40px;
-          }
-
-          #footer {
-            border: none;
+            width: 100%;
           }
         }
+        + * {
+          margin-top: 32px;
+        }
+      }
+
+      #notices {
+        border-bottom: none;
+      }
+
+      .NoticeMessage {
+        padding-right: 20px !important;
+        padding-left: 20px !important;
+      }
+
+      ul.Inputfields {
+        #login_name,
+        #login_pass {
+          text-align: center;
+        }
+      }
+
+      .notice-remove {
+        float: none;
+        position: relative !important;
+        left: -10px !important;
+        margin-left: -40px;
+      }
+
+      #footer {
+        border: none;
       }
     }
   }

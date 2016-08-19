@@ -25,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 49,
+            'version'   => 50,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -71,8 +71,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'adminOnly'
             ),
             'AsmTweaks'                 => array(
-                'collapseAsmSections',
-                'leftAsmDelete'
+                'collapseAsmSections'
+//                'leftAsmDelete'
             ),
             'FileFieldToolbar'          => array(
                 'filterbox'
@@ -137,7 +137,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'centeredLogin'
             ),
             'AdminTweaks'                  => array(
-                'stickyHeader'
+                'stickyHeader',
+                'centeredLogin'
             )
         );
     }
@@ -789,6 +790,7 @@ HTML;
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('stickyHeader', __('Sticky header', __FILE__));
+        $f->addOption('centeredLogin', __('Center login form', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
