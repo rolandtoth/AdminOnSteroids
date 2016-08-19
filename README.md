@@ -34,6 +34,7 @@ Clicking on this link will also enable/disable the module (and reloads the curre
 A few usability mods targetting the default admin theme.
 
 - **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
+- **Center login form**: align login page items to center
 
 
 ###AsmTweaks
