@@ -1,6 +1,15 @@
 #Changelog
 
 
+### 0.5.1 (2016-08-20)
+
+- fix for flickering hoverSaveDropdown issue
+- fix for main menu submenu gap in Default theme (reported by bernhard)
+- fix for gap in Default theme under page tabs when Prev/Next Tabs module is installed (reported by ceberlin)
+- other CSS fixes/improvements
+
+
+
 ### 0.5.0 (2016-08-19)
 
 - added "centeredLogin" to (default) AdminTweaks

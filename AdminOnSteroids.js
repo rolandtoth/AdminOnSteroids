@@ -145,6 +145,8 @@ $(document).ready(function () {
 
         // force align dropdown menus to right of parent button
         $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
+
+        htmlClasses.push('aos_hoverSaveDropdown');
     }
 
 // LongClickDuration

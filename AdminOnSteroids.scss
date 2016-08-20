@@ -382,6 +382,15 @@ html.aos_collapseAsmSections {
   }
 }
 
+@media only screen and (min-width: 960px) {
+  // fix for PrevNextTabs module
+  .AdminThemeDefault {
+    ul.WireTabs {
+      overflow: hidden !important;
+    }
+  }
+}
+
 // login page (both Default and Reno themes)
 @media only screen and (min-width: 960px) {
   html.aos_centeredLogin:not(.modal) {
@@ -407,11 +416,15 @@ html.aos_collapseAsmSections {
 
       form#ProcessLoginForm {
         > ul {
-          width: 360px;
+          width: 300px;
           display: inline-block;
           li {
             float: none;
             width: 100%;
+            label {
+              padding-left: 1em;
+              padding-right: 1em;
+            }
           }
         }
         + * {
@@ -1514,6 +1527,7 @@ html.AdminThemeReno {
       .cke_top_fixed.cke_top {
         top: 137px;
       }
+
       #branding,
       .main-nav-toggle {
         display: none;
@@ -1571,9 +1585,10 @@ html.AdminThemeReno {
           //right: -8px;
           right: 8px;
           text-align: right;
+          width: auto;
           form {
             display: inline-block;
-            //float: right;
+            width: auto;
           }
           input {
             background: transparent;
@@ -2140,10 +2155,10 @@ body.AdminThemeDefault {
 
       .NotificationMenu {
         z-index: 9;
+        margin-top: 3px;
       }
 
       padding-top: 100px;
-      //padding-top: 64px;
 
       #masthead {
         position: fixed;
@@ -2156,7 +2171,7 @@ body.AdminThemeDefault {
       #breadcrumbs {
         position: fixed;
         z-index: 30;
-        top: 44px;
+        top: 47px;
         left: 0;
         width: 100%;
         border: none;
@@ -2164,12 +2179,9 @@ body.AdminThemeDefault {
 
       #notices {
         position: relative;
-        //top: 33px;
         z-index: 19;
         & ~ #content {
-          //padding-top: 84px;
-          padding-top: 16px;
-          //padding-top: 52px;
+          padding-top: 20px;
         }
       }
 
@@ -2185,12 +2197,56 @@ body.AdminThemeDefault {
       }
 
       #head_button {
-        margin-bottom: -1em;
+        margin-bottom: -16px;
+        top: -7px;
       }
 
       #content {
-        padding-top: 16px;
+        padding-top: 20px;
       }
     }
   }
+}
+
+html.aos_hoverSaveDropdown {
+  //@media only screen and (min-width: 960px) {
+    // fix hover dropwdown flicker
+    .ui-button {
+      //&.pw-dropdown-toggle {
+
+      &.pw-button-dropdown-main {
+        border-radius: 4px !important;
+        span {
+          pointer-events: none;
+          //padding-right: 0;
+          &:after {
+            content: "\f107";
+            font-family: 'FontAwesome', sans-serif;
+            position: relative;
+            //left: 3px;
+            margin-left: 6px;
+            top: 1px;
+            //padding-right: 0.6em;
+            display: inline-block;
+          }
+        }
+      }
+
+      &[id^="pw-dropdown-toggle-"] {
+        //+ button {
+        &, span {
+          width: 0 !important;
+          overflow: hidden;
+          visibility: hidden;
+          padding-right: 0 !important;
+          padding-left: 0 !important;
+          pointer-events: none;
+          border: none !important;
+          &:after {
+            display: none !important;
+          }
+        }
+      }
+    }
+  //}
 }
