@@ -691,7 +691,9 @@ form[action*="AdminOnSteroids"] {
 // both for Reno & Default themes
 h1 span,
 #breadcrumbs li.title,
-#ProcessPageEdit .Inputfield label .title {
+//#ProcessPageEdit .Inputfield label .title,
+#ProcessPageEdit .aos_hasTooltip .title,
+ .InputfieldCheckbox label {
   position: relative;
   display: inline-block;
   &:hover {

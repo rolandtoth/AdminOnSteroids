@@ -1,7 +1,11 @@
 #Changelog
 
 
-### 0.5.2 (2016-08-22)
+### 0.5.3 (2016-08-22)
+
+- fixed FieldEditLink not showing up with InputfieldCheckbox where label was empty (reported by ceberlin)
+
+
 
 - FileFieldToolbar submodule renamed to FileFieldTweaks
 - added to download link (icon) to FileFieldTweaks

@@ -25,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 52,
+            'version'   => 53,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -483,6 +483,7 @@ HTML;
             $event->return = str_replace('</span></h1>', $templateEditLink . '</span></h1>', $event->return);
         }
 
+
     }
 
 
@@ -500,11 +501,17 @@ HTML;
 
         if ($field = $this->fields->get($inputfield->name)) {
 
+            // add class to wrapper to be able to use :hover even if label is unavailable (eg. checkbox field)
+            $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' aos_hasTooltip');
+
+
             $editFieldUrl = $this->config->urls->admin . 'setup/field/edit?id=' . $field->id;
+
+            $editFieldTooltip = '<em class="aos_EditField">' . $inputfield->name . ' <i class="fa fa-pencil"></i></em>';
 
             // needed to allow HTML in label
             $inputfield->entityEncodeLabel = false;
-            $inputfield->label = '<span class="title">' . '<em class="aos_EditField">' . $inputfield->name . ' <i class="fa fa-pencil"></i></em>' . $inputfield->label . '</span>';
+            $inputfield->label = '<span class="title">' . $editFieldTooltip . $inputfield->label . '</span>';
 
             // use hidden link to be able to use modal/panel
             // note: link is not added to the label tag because it won't be clickable
@@ -512,6 +519,11 @@ HTML;
             $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
 
             $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+
+            // add tooltip if there's no label (checkbox)
+            if ($inputfield instanceof InputfieldCheckbox) {
+                $event->return = str_replace('</label>', $editFieldTooltip . '</label>', $event->return);
+            }
 
 //            $inputfield->appendMarkup = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
 
