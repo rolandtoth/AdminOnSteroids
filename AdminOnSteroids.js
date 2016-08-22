@@ -234,12 +234,12 @@ $(document).ready(function () {
     }
 
 
-// FileFieldToolbar
-    if (AOSsettings.enabledSubmodules.indexOf('FileFieldToolbar') !== -1) {
+// FileFieldTweaks
+    if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
 
-        htmlClasses.push('aos_fileFieldToolbar');
+        htmlClasses.push('aos_fileFieldTweaks');
 
-        if (AOSsettings.FileFieldToolbar.indexOf('filterbox') !== -1) {
+        if (AOSsettings.FileFieldTweaks.indexOf('filterbox') !== -1) {
             htmlClasses.push('aos_filterbox');
         }
     }
@@ -628,17 +628,17 @@ $(document).ready(function () {
     // $(pageTitleSelector).append('<a href="' + '#' + '" id="aos_EditTemplate" class="' + AOSsettings.PagePreviewLink + '" target="_blank"><i class="fa fa-cog"></i> Edit template</a>');
 
 
-// FileFieldToolbar
-    if (AOSsettings.enabledSubmodules.indexOf('FileFieldToolbar') !== -1) {
+// FileFieldTweaks
+    if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
 
-        var FileFieldToolbarSettings = AOSsettings.FileFieldToolbar,
+        var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
             $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='🔎' /><i class='fa fa-close'></i></span>"),
             filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
             getItemSelector = function (field) {
                 return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
             };
 
-        if (FileFieldToolbarSettings.indexOf('filterbox') !== -1) {
+        if (FileFieldTweaksSettings.indexOf('filterbox') !== -1) {
 
             // show filterbox when number of images in the field increases above 2
             $(filterFieldSelector).on('DOMNodeInserted.aos_filterbox', function (e) {

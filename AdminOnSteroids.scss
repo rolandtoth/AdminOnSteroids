@@ -756,9 +756,9 @@ body.aos_saving {
   }
 }
 
-// FileFieldToolbar
+// FileFieldTweaks
 
-// FileFieldToolbar filterbox
+// FileFieldTweaks filterbox
 html.aos_filterbox {
 
   .Inputfield.filterbox_loaded {
@@ -1286,7 +1286,8 @@ html.AdminThemeReno {
 
       .NotificationMenu {
         //z-index: 100000 + 2000;
-        z-index: 100000 + 240;
+        //z-index: 100000 + 240;
+        z-index: 100000 + 55;
         position: fixed;
         top: 52px;
         left: 0;
@@ -2208,45 +2209,62 @@ body.AdminThemeDefault {
   }
 }
 
+.aos_downloadAsset {
+  position: relative;
+  z-index: 99;
+  float: right;
+  margin-left: 2px;
+  .gridImage & {
+    display: none;
+  }
+  i {
+    padding: 10px 12px 8px;
+    display: inline-block;
+    .InputfieldImageEdit__buttons & {
+      font-size: 18px !important;
+      margin-right: -8px;
+    }
+    .InputfieldFileItem & {
+      color: #fff;
+    }
+  }
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 html.aos_hoverSaveDropdown {
   //@media only screen and (min-width: 960px) {
-    // fix hover dropwdown flicker
-    .ui-button {
-      //&.pw-dropdown-toggle {
+  .ui-button {
 
-      &.pw-button-dropdown-main {
-        border-radius: 4px !important;
-        span {
-          pointer-events: none;
-          //padding-right: 0;
-          &:after {
-            content: "\f107";
-            font-family: 'FontAwesome', sans-serif;
-            position: relative;
-            //left: 3px;
-            margin-left: 6px;
-            top: 1px;
-            //padding-right: 0.6em;
-            display: inline-block;
-          }
-        }
-      }
-
-      &[id^="pw-dropdown-toggle-"] {
-        //+ button {
-        &, span {
-          width: 0 !important;
-          overflow: hidden;
-          visibility: hidden;
-          padding-right: 0 !important;
-          padding-left: 0 !important;
-          pointer-events: none;
-          border: none !important;
-          &:after {
-            display: none !important;
-          }
+    &.pw-button-dropdown-main {
+      border-radius: 4px !important;
+      span {
+        pointer-events: none;
+        &:after {
+          content: "\f107";
+          font-family: 'FontAwesome', sans-serif;
+          position: relative;
+          margin-left: 6px;
+          top: 1px;
+          display: inline-block;
         }
       }
     }
-  //}
+
+    &[id^="pw-dropdown-toggle-"] {
+      &, span {
+        width: 0 !important;
+        overflow: hidden;
+        visibility: hidden;
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+        pointer-events: none;
+        border: none !important;
+        &:after {
+          display: none !important;
+        }
+      }
+    }
+  }
 }

@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.5.2 (2016-08-22)
+
+- FileFieldToolbar submodule renamed to FileFieldTweaks
+- added to download link (icon) to FileFieldTweaks
+- fixed z-index issue that caused Profile dropdown to be overlapped by Notification menu (reported by Juergen)
+
+
+
 ### 0.5.1 (2016-08-20)
 
 - fix for flickering hoverSaveDropdown issue
@@ -13,6 +21,7 @@
 ### 0.5.0 (2016-08-19)
 
 - added "centeredLogin" to (default) AdminTweaks
+
 
 
 ### 0.4.9 (2016-08-19)

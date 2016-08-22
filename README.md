@@ -77,11 +77,12 @@ This feature is available only for SuperUsers.
 
 
 
-###FileFieldToolbar
+###FileFieldTweaks
 
-*Add filter box and sort buttons to file fields*
+*File/image inputfield enhancements*
 
-- **filterbox**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
+- **Filter box**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
+- **Add asset download link**: adds download links (icons) to image or file assets. In case of images, the icon is located to the right of the Edit buttons after you click on an image. The original image will be available for download. For file fields the icon is appended to the fields' label. Note: the download link uses the "download" HTML5 attribute which is not available n IE - in this case the link will open in a new tab/window.
 
 
 

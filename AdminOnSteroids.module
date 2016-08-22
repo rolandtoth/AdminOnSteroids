@@ -25,7 +25,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 51,
+            'version'   => 52,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -48,7 +48,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'AsmTweaks',
                 'DeselectRadios',
 //                'NoAnims',
-                'FileFieldToolbar',
+                'FileFieldTweaks',
                 'FieldAndTemplateEditLinks',
                 'FocusInputOnLangTabSwitch',
                 'LangTabHotkeySwitcher',
@@ -74,8 +74,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'collapseAsmSections'
 //                'leftAsmDelete'
             ),
-            'FileFieldToolbar'          => array(
-                'filterbox'
+            'FileFieldTweaks'           => array(
+                'filterbox',
+                'downloadAssetButton'
             ),
             'FocusInputOnLangTabSwitch' => array(
                 'focus'
@@ -180,10 +181,8 @@ HTML;
         $event->return = str_replace('</head>', $aos_loader . PHP_EOL . '</head>', $event->return);
     }
 
+
     public function ready() {
-
-
-
 
         if ($this->user->isSuperUser()) {
 
@@ -415,13 +414,22 @@ HTML;
             $this->addHookAfter('InputfieldPageListSelect::render', $this, 'addPageListUnselectButtons');
         }
 
+        $subModule = 'FileFieldTweaks';
+        if (in_array($subModule, $enabledSubmodules)) {
+            if (in_array('downloadAssetButton', $configData[$subModule])) {
+//                $this->addHookAfter('ProcessPageEditImageSelect::executeVariations', $this, 'addDownloadAssetLink');
+                $this->addHookAfter('InputfieldImage::renderButtons', $this, 'addDownloadAssetLink');
+                $this->addHookAfter('InputfieldFile::renderItem', $this, 'addDownloadAssetLink');
+            }
+        }
+
         // note: $configSettings overwrite $configData (intentional)
 //        $this->config->js("AdminOnSteroids", json_encode(array_merge($configData, $configSettings)));
 
         // add translations
         $configData['loc'] = array(
-            'save' => __('Save', __FILE__),
-            'save_and_exit' => __('Save + Exit', __FILE__),
+            'save'            => __('Save', __FILE__),
+            'save_and_exit'   => __('Save + Exit', __FILE__),
             'save_and_reload' => __('Save + Reload', __FILE__)
         );
 
@@ -430,6 +438,21 @@ HTML;
 
     public function getFormattedOptionName($obj) {
         return !empty($obj->label) ? $obj->label . ' (' . $obj->name . ')' : $obj->name;
+    }
+
+
+    public function addDownloadAssetLink(HookEvent $event) {
+
+        $markup = $event->return;
+        $url = $event->arguments[0]->url;
+
+//        if($event->object instanceof InputfieldImage) return;
+
+        $downloadLink = '<a href="' . $url . '" target="_blank" class="aos_downloadAsset" download title="' . __('Download', __FILE__) . '"><i class="fa fa-download"></i></a>';
+
+        $markup = $downloadLink . $markup;
+
+        $event->return = $markup;
     }
 
 
@@ -750,7 +773,7 @@ HTML;
         $f->addOption('AutosizeTextareas', __('**AutosizeTextareas**Autosize textareas according to content', __FILE__));
         $f->addOption('DeselectRadios', __('**DeselectRadios**Enable clearing checked radio buttons', __FILE__));
         $f->addOption('FieldAndTemplateEditLinks', __('**FieldAndTemplateEditLinks**Add shortcut links to templates and fields', __FILE__));
-        $f->addOption('FileFieldToolbar', __('**FileFieldToolbar**Add filter box and sort buttons to file/image fields', __FILE__));
+        $f->addOption('FileFieldTweaks', __('**FileFieldTweaks**File/image inputfield enhancements', __FILE__));
         $f->addOption('fixScrollbarJump', __('**FixScrollbarJump**Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch', __('**FocusInputOnLangTabSwitch**Focus input on switching language tabs', __FILE__));
         $f->addOption('Hotkeys', __('**Hotkeys**Hotkey tweaks', __FILE__));
@@ -848,16 +871,17 @@ HTML;
 
         $fset->add($f);
 
-        // FileFieldToolbar ----------------------------------------------- //
+        // FileFieldTweaks ----------------------------------------------- //
 
         $f = wire('modules')->get("InputfieldCheckboxes");
-        $f->attr('name', 'FileFieldToolbar');
-        $f->showIf = 'enabledSubmodules=FileFieldToolbar';
+        $f->attr('name', 'FileFieldTweaks');
+        $f->showIf = 'enabledSubmodules=FileFieldTweaks';
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
 
         $f->addOption('filterbox', __('Filter box', __FILE__));
+        $f->addOption('downloadAssetButton', __('Add asset download link', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

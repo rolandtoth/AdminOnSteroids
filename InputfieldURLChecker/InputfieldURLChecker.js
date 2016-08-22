@@ -5,6 +5,13 @@
 
 $(document).ready(function () {
 
+    //$('.InputfieldRepeater').on('reloaded', '.InputfieldRepeaterItem', function () {
+    //    console.log($(this));
+    //});
+    //$(document).on('reloaded', '.InputfieldRepeaterItem', function () {
+    //    console.log($(this));
+    //});
+
     var IUC = {
         selector: 'a.iuc',
         asmSelectPlaceholder: 'data-asm-placeholder',
