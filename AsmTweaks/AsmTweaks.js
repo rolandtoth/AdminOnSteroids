@@ -3,7 +3,7 @@ $(document).ready(function () {
     var AOSsettings = AOSsettings || JSON.parse(ProcessWire.config.AdminOnSteroids),
         AsmTweaksSettings = AOSsettings.AsmTweaks;
 
-    if (AsmTweaksSettings.indexOf('collapseAsmSections') !== -1) {
+    if (AsmTweaksSettings.indexOf('asmCollapse') !== -1) {
 
         $(document).on('dblclick', '.asmFieldset', function () {
 

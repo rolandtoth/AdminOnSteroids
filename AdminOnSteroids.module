@@ -18,14 +18,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     static $configData;
     public $adminTheme;
-    public $pageListThumbSettings;
     protected $editedPage;
+    protected $PageListThumbs_items;
+    protected $settingsFile = __DIR__ . '/settings.php';
+    protected $htmlClasses;
 
     public static function getModuleInfo() {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 53,
+            'version'   => 54,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -43,7 +45,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
      */
     static public function getDefaultData() {
         return array(
-            'enabledSubmodules'         => array(
+            'enabledSubmodules'            => array(
                 'AutosizeTextareas',
                 'AsmTweaks',
                 'DeselectRadios',
@@ -53,93 +55,96 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'FocusInputOnLangTabSwitch',
                 'LangTabHotkeySwitcher',
                 'AdminTweaks',
+                'NavItems',
                 'RenoTweaks',
                 'LongClickDuration',
-                'HoverSaveDropdown',
+                'HoverDropdown',
                 'Hotkeys',
                 'InputfieldURLChecker',
                 'PageListThumbs',
                 'PageListUnselect',
-                'PagePreviewLink',
+                'PagePreviewBtn',
                 'ModuleTweaks',
-                'Tooltips',
+//                'Tooltips',
                 'TabIndex',
-                'fixScrollbarJump'
+                'ScrollFix'
             ),
-            'enabled'                   => 1,
-            'DeselectRadios'            => array(
+            'enabled'                      => 1,
+            'NavItems'                     => 1,
+            'DeselectRadios'               => array(
                 'adminOnly'
             ),
-            'AsmTweaks'                 => array(
-                'collapseAsmSections'
-//                'leftAsmDelete'
+            'AsmTweaks'                    => array(
+                'asmCollapse'
+//                'asmLeftX'
             ),
-            'FileFieldTweaks'           => array(
+            'FileFieldTweaks'              => array(
                 'filterbox',
                 'downloadAssetButton'
             ),
-            'FocusInputOnLangTabSwitch' => array(
+            'FocusInputOnLangTabSwitch'    => array(
                 'focus'
             ),
-            'ModuleTweaks'              => array(
-                'loadCollapsedModuleInfos',
-                'compactModuleList',
-                'modalModuleEdit'
-            ),
-            'Hotkeys'                   => array(
+            'Hotkeys'                      => array(
                 'save',
                 'breadcrumbTweaks'
             ),
-            'Tooltips'                  => array(
-                'superuseronly',
-                'description',
-                'notes'
-//                'overlayStyle'
+            'ModuleTweaks'                 => array(
+                'loadCollapsedModuleInfos',
+                'moduleCompact',
+//                'moduleModal'
             ),
-            'IUC_mode'                  => array(
+            'NavItems_pages'               => array(),
+            'NavItems_custom'              => array(),
+            'Tooltips'                     => array(
+                'superuseronly',
+                'tooltipDesc',
+                'tooltipNotes'
+//                'tooltipOverlay'
+            ),
+            'IUC_mode'                     => array(
                 'button'
             ),
-            'IUC_button_position'       => 'button-left',
-            'IUC_target'                => 'pw-blank',
-            'IUC_force_http'            => 1,
-            'IUC_enabled_templates'     => array(),
-            'IUC_enabled_fields'        => array(),
-
+            'IUC_buttonPosition'           => 'button-left',
+            'IUC_target'                   => 'pw-blank',
+            'IUC_forceHttp'                => 1,
+            'IUC_enabledTemplates'         => array(),
+            'IUC_enabledFields'            => array(),
             'FocusInputOnLangTabSwitchCKE' => array(
                 'focus'
             ),
-            'PagePreviewLink'              => 'pw-blank',
+            'PagePreviewBtn'               => 'pw-blank',
             'FieldAndTemplateEditLinks'    => 'pw-blank',
-            'PageListThumbs'               => array(
-                'PageListThumbStyle' => 'circle',
-                'ThumbSettings'      => array(
-                    'alignright',
-                    'addlink'
-                )
+            'PageListThumbs'               => array(),
+            'PageListThumbs_style'         => 'circle',
+            'PageListThumbs_items'         => '',
+            'PageListThumbs_options'       => array(
+                'alignright',
+                'addlink'
             ),
             'LongClickDuration'            => 600,
             'RenoTweaks'                   => array(
-//                'singleClickSidebarHeaders',
-                'stickyHeader',
-//                'stickyHeaderCompact',
-                'miniScrollbarSidebar',
-//                'miniScrollbarMain',
-                'stickySidebar',
-                'stickyCKEditorToolbar',
-//                'autoHideSidebar',
-                'alwaysVisibleSidebarItems',
-//                'hideSidebarQuickLinks',
-//                'inlineSidebarItems',
-//                'oneLineSidebarItems',
-                'headButtonNextToTitle',
-                'alwaysShowSearch',
-                'compactPageList',
-                'closeNoticeButtonToLeft',
-                'centeredLogin'
+//                'sbSingleClickHeads',
+                'headSticky',
+//                'headStickyCompact',
+                'miniScrollSb',
+//                'miniScrollMain',
+                'sbSticky',
+                'stickyCKEBar',
+//                'sbAutoHide',
+                'sbItemsVisible',
+//                'sbQuickLinksHide',
+//                'sbItemsInline',
+//                'sbItemsRow',
+                'headBtnToTitle',
+                'openSearch',
+                'pListCompact',
+                'noticeLeftX',
+                'centerLogin'
             ),
             'AdminTweaks'                  => array(
-                'stickyHeader',
-                'centeredLogin'
+                'headSticky',
+                'centerLogin'
             )
         );
     }
@@ -149,37 +154,109 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
     public function ___install() {
-        // apply default module settings on install
-        $this->wire('modules')->saveModuleConfigData($this, self::getDefaultData());
+
+        // apply default module settings on install or use settings.php
+
+        @$settings = file_get_contents($this->settingsFile);
+
+        $settings = $settings ? json_decode($settings, true) : self::getDefaultData();
+
+        $this->wire('modules')->saveModuleConfigData($this, $settings);
+    }
+
+    public function ___uninstall() {
+
+        // save current config to settings.php
+        @file_put_contents($this->settingsFile, json_encode($this->modules->getModuleConfigData($this)));
     }
 
 
-//    public function addCSS(HookEvent $event) {
-//
-//        $css = file_get_contents(__DIR__ . '/AdminOnSteroids.css');
-//
-//        $event->return = str_replace('</head>', '<style>' . $css . '</style>' . '</head>', $event->return);
-//    }
-//    public function replaceCSS(HookEvent $event) {
-//        $event->return = str_replace('/wire/modules/AdminTheme/AdminThemeReno/styles/main.css', '/site/modules/AdminOnSteroids/AdminOnSteroids.css', $event->return);
-//    }
-    public function addLoader(HookEvent $event) {
+    public function addClasses(HookEvent $event) {
 
-        $img = 'data:image/gif;base64,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';
+        $allowedHtmlClasses = array(
+            'AdminThemeDefault',
+            'asmCollapse',
+            'asmLeftX',
+            'centerLogin',
+            'filterbox',
+            'headBtnToTitle',
+            'headSticky',
+            'headStickyCompact',
+            'HoverDropdown',
+            'moduleCompact',
+            'moduleModal',
+            'noAnim',
+            'noticeLeftX',
+            'openSearch',
+            'pListCompact',
+            'PageListThumbs',
+            'PagePreviewBtn',
+            'sbAutoHide',
+            'sbItemsInline',
+            'sbItemsRow',
+            'sbItemsVisible',
+            'sbQuickLinksHide',
+            'sbSticky',
+            'ScrollFix',
+            'tooltipDesc',
+            'tooltipNotes',
+            'tooltipOverlay',
+        );
 
-        $aos_loader = <<< HTML
-<style id="aos_loader">
-    body {visibility: hidden; overflow: hidden; background: url($img) center 47% no-repeat;"}
-</style>
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-if(document.head.querySelector('#aos_loader')) document.head.removeChild(document.querySelector('#aos_loader'));
-});
-</script>
-HTML;
+        foreach (self::$configData['enabledSubmodules'] as $submodule) {
+//            $htmlClasses[] = preg_replace('/[aeiou]/', '', strtolower($submodule));
+            $this->addDOMClass($submodule);
 
-        $event->return = str_replace('</head>', $aos_loader . PHP_EOL . '</head>', $event->return);
+            if (isset(self::$configData[$submodule]) && is_array(self::$configData[$submodule])) {
+                foreach (self::$configData[$submodule] as $item) {
+                    $this->addDOMClass(array($submodule, $item));
+                }
+            }
+        }
+
+
+        if ($this->adminTheme == 'AdminThemeDefault') {
+            // add empty class to html (default theme has no class)
+            if (strpos('<html class', $event->return) === false) {
+                $event->return = str_replace('<html', '<html class=""', $event->return);
+            }
+            // add class to html (only available on body)
+            $this->htmlClasses[] = 'AdminThemeDefault';
+        }
+
+        $event->return = str_replace('<html class="', '<html class="' . implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses)) . ' ', $event->return);
+//        $event->return = str_replace('<html class="', '<html class="' . implode(' ', $this->htmlClasses) . ' ', $event->return);
     }
+
+
+    public function addDOMClass($class) {
+
+        if (is_array($class)) {
+
+            if (
+                ($this->adminTheme == 'AdminThemeDefault' && $class[0] == 'RenoTweaks') ||
+                ($this->adminTheme == 'AdminThemeReno' && $class[0] == 'AdminTweaks')
+            ) {
+                return false;
+            }
+
+            if (is_array($class[1])) {
+                return $this->addDOMClass($class[0]);
+            }
+
+            if (in_array($class[1], self::$configData[$class[0]])) {
+                $class = $class[1];
+            } else {
+                return '';
+            }
+        }
+
+        $this->htmlClasses[] = $class;
+    }
+
+
+//    public function init() {
+//    }
 
 
     public function ready() {
@@ -200,12 +277,17 @@ HTML;
 
                 $parts = $event->return;
 
-                $enabledText = 'AdminOnSteroids ' . __('loaded', __FILE__);   // AdminOnSteroids is loaded
-                $disabledText = 'AdminOnSteroids ' . __('idle', __FILE__);   // AdminOnSteroids is idle
+                $enabledText = __('Disable', __FILE__) . ' AdminOnSteroids';   // Unload AdminOnSteroids
+                $disabledText = __('Enable', __FILE__) . ' AdminOnSteroids';   // Enable AdminOnSteroids
 
+                $linkStyle = 'style="opacity: 0.75; color: inherit !important; margin-left: 0; display: inline-block; padding: 4px 0; margin-right: 1px;"';
                 $mouseover = 'onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'"';
 
-                $parts['footer'] = $parts['footer'] . '<p style="opacity:1;"><a href="' . $this->config->urls->admin . 'module/edit?name=AdminOnSteroids&toggle=1" class="aos_toggle" style="opacity: 0.75; color: inherit !important; margin-left: 0;"><i class="fa fa-medkit"></i> <span ' . $mouseover . '>' . ($this->enabled ? $enabledText : $disabledText) . '</span></a></p>';
+                $modulePage = $this->config->urls->admin . 'module/edit?name=AdminOnSteroids';
+                $configLink = '<a href="' . $modulePage . '" ' . $linkStyle . ' title="' . __('Configure module', __FILE__) . '"><i class="fa fa-cog"></i></a>';
+
+
+                $parts['footer'] = $parts['footer'] . '<p style="opacity:1;"><a href="' . $modulePage . '&toggle=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p>';
                 $event->return = $parts;
             });
         }
@@ -214,6 +296,8 @@ HTML;
         if (!$this->enabled) {
             return;
         }
+
+        $this->htmlClasses = array();
 
         $this->adminTheme = $this->user->admin_theme;
 
@@ -229,7 +313,7 @@ HTML;
         }
 
         $enabledSubmodules = $configData['enabledSubmodules'];
-        $this->pageListThumbSettings = array();
+        $this->PageListThumbs_items = array();
 
         $editedPageId = $this->sanitizer->int($this->config->input->get->id);
 
@@ -242,14 +326,147 @@ HTML;
             $this->editedPage = null;
         }
 
-        $this->addHookAfter('Page::render', $this, 'addLoader');
-
-//        $this->addHookAfter('Page::render', $this, 'replaceCSS');
-//        $this->addHookAfter('Page::render', $this, 'addCSS');
+        $this->addHookAfter('Page::render', $this, 'addClasses');
 
         $root = $this->config->urls->siteModules . __CLASS__;
+        $rootPath = $this->config->paths->siteModules . __CLASS__;
         $styles = $this->config->styles;
         $scripts = $this->config->scripts;
+
+
+        //NavItems
+        $subModule = 'NavItems';
+
+        if (in_array($subModule, $enabledSubmodules)) {
+
+
+            $this->addHookAfter('Page::render', function ($event) {
+
+                $items = "";
+
+                $rootUrl = $this->pages->get(2)->url . 'page/?id=';
+
+                // process pagelist select items
+                if ($this->NavItems_pages) {
+
+                    foreach ($this->pages->getById($this->NavItems_pages) as $p) {
+
+                        $url = "";
+                        $editUrl = "";
+                        $activeClass = "";
+                        $inputId = $this->input->get->id;
+
+                        /**
+                         * 7: Thrash
+                         * 21: Modules
+                         * 304: Profile
+                         */
+                        if ($p->id == 304) {
+
+                            if ($this->user->hasPermission('profile-edit')) {
+                                $url = $this->pages->get($p->id)->url;
+                            } else {
+                                continue;
+                            }
+
+                        } else if ($p->id == 21) {
+
+                            if ($this->user->isSuperUser()) {
+                                $url = $this->config->urls->admin . 'module';
+                            }
+
+                        } else if ($p->id == 7) {
+
+                            if ($p->listable()) {
+                                $url = $this->config->urls->admin . 'page/?id=' . $p->id;
+                                $editUrl = false;
+                            } else {
+                                continue;
+                            }
+
+                        } else {
+
+                            if (!$p->listable()) {
+                                continue;
+                            }
+
+                            $url = $rootUrl . $p->id;
+                        }
+
+                        if ($url == "") {
+                            continue;
+
+                        } else {
+                            $pageId = $p->id;
+                            if (
+                                $pageId == $inputId ||
+                                $pageId == $this->page->id ||
+                                ($this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
+                            ) {
+                                $activeClass = ' current';
+                            }
+                            $listUrl = '<a href="' . $url . '" class="page-list' . $activeClass . '">' . $p->title . '</a>';
+                        }
+
+                        $editUrl = $editUrl === false ? '' : $p->editable() ? '<a href="' . $p->editUrl() . '" class="page-edit"><i class="fa fa-pencil"></i></a>' : '';
+
+                        $items .= '<li class="navItem">' . $listUrl . ' ' . $editUrl . '</li>';
+
+                    }
+                }
+
+                if ($this->NavItems_custom) {
+
+                    $settings = trim($this->NavItems_custom);
+                    $settings = explode("\n", $settings);
+                    $settings = array_filter($settings, 'trim');
+
+                    $rootUrl = rtrim($this->config->urls->admin, '/');
+                    $rootUrlHttp = $this->config->urls->httpAdmin;
+
+                    foreach ($settings as $pairs) {
+
+                        if (strpos($pairs, '//') === 0) {
+                            continue;
+                        }
+
+                        // replace rootUrlHttp to avoid having ':' before explode
+                        $pairs = str_replace($rootUrlHttp, '', $pairs);
+
+                        if (strpos($pairs, ':') === false) {
+                            continue;
+                        }
+
+                        $setting = explode(':', $pairs);
+
+                        $title = isset($setting[0]) ? trim($setting[0]) : null;
+                        $url = isset($setting[1]) ? trim($setting[1]) : null;
+
+                        if (is_null($title) || is_null($url)) continue;
+
+                        // if title starts with "!" then only SuperUsers should see
+                        if ($title[0] == '!') {
+                            if (!$this->user->isSuperUser()) continue;
+                            $title = ltrim($title, '!');
+                        }
+
+                        $url = ltrim($url, '/');
+
+                        $activeClass = (strpos($_SERVER['REQUEST_URI'], $url) !== false) ? ' current' : '';
+
+                        $linkUrl = '<a href="' . $rootUrl . '/' . $url . '" class="page-list' . $activeClass . '">' . $title . '</a>';
+                        $items .= '<li class="navItem">' . $linkUrl . '</li>';
+                    }
+
+                }
+
+                if ($items == "") return false;
+
+                $items = '<ul class="NavItems" style="display: none;">' . $items . '</ul>';
+
+                $event->return = str_replace('</body>', $items . '</body', $event->return);
+            });
+        }
 
 
         //AutosizeTextareas
@@ -266,13 +483,10 @@ HTML;
             if ($this->user->hasRole('superuser') && !is_null($this->editedPage)) {
 
                 // add edit field link only if the edited page is not a special page (eg. admin)
-                if ($this->editedPage->template && $this->editedPage->template->flags === 0) {
-
+                if ($this->process == 'ProcessPageView' && $this->editedPage->template && $this->editedPage->template->flags === 0) {
                     $this->addHookAfter('Page::render', $this, 'addTemplateEditLink');
-
                     $this->addHookAfter('Inputfield::renderValue', $this, 'addFieldEditLinks');
                     $this->addHookAfter('Inputfield::render', $this, 'addFieldEditLinks');
-
                 }
             }
         }
@@ -311,8 +525,8 @@ HTML;
         //RenoTweaks
         $subModule = 'RenoTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
-            if (in_array('stickyHeader', $configData[$subModule])) {
-                if (in_array('miniScrollbarSidebar', $configData[$subModule]) || in_array('miniScrollbarMain', $configData[$subModule])) {
+            if (in_array('headSticky', $configData[$subModule])) {
+                if (in_array('miniScrollSb', $configData[$subModule]) || in_array('miniScrollMain', $configData[$subModule])) {
                     $scripts->add($root . '/lib/perfect-scrollbar/js/perfect-scrollbar.min.js');
                 }
             }
@@ -423,9 +637,6 @@ HTML;
             }
         }
 
-        // note: $configSettings overwrite $configData (intentional)
-//        $this->config->js("AdminOnSteroids", json_encode(array_merge($configData, $configSettings)));
-
         // add translations
         $configData['loc'] = array(
             'save'            => __('Save', __FILE__),
@@ -434,7 +645,17 @@ HTML;
         );
 
         $this->config->js("AdminOnSteroids", json_encode($configData));
+
+        // add admin.js and admin.css from templates directory
+        if (file_exists($this->config->paths->templates . 'admin.js')) {
+            $scripts->add($this->config->urls->templates . 'admin.js');
+        }
+        if (file_exists($this->config->paths->templates . 'admin.css')) {
+            $styles->add($this->config->urls->templates . 'admin.css');
+        }
+
     }
+
 
     public function getFormattedOptionName($obj) {
         return !empty($obj->label) ? $obj->label . ' (' . $obj->name . ')' : $obj->name;
@@ -482,8 +703,6 @@ HTML;
 
             $event->return = str_replace('</span></h1>', $templateEditLink . '</span></h1>', $event->return);
         }
-
-
     }
 
 
@@ -525,10 +744,6 @@ HTML;
                 $event->return = str_replace('</label>', $editFieldTooltip . '</label>', $event->return);
             }
 
-//            $inputfield->appendMarkup = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
-
-//            bd($event->return . '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>');
-
             $event->return .= '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
         }
     }
@@ -560,11 +775,11 @@ HTML;
         $editLinkAttrs = '';
 
 
-        if (!empty($configData['IUC_enabled_templates']) && !in_array($editedPage->template->name, $configData['IUC_enabled_templates'])) {
+        if (!empty($configData['IUC_enabledTemplates']) && !in_array($editedPage->template->name, $configData['IUC_enabledTemplates'])) {
             return false;
         }
 
-        if (!empty($configData['IUC_enabled_fields']) && !in_array($inputfield->name, $configData['IUC_enabled_fields'])) {
+        if (!empty($configData['IUC_enabledFields']) && !in_array($inputfield->name, $configData['IUC_enabledFields'])) {
             return false;
         }
 
@@ -586,7 +801,7 @@ HTML;
             $editLinkAttrsArray['data-iuc-mode'][] = $mode;
 
             if (in_array('button', $configData['IUC_mode'])) {
-                $buttonPosition = isset($configData['IUC_button_position']) ? $configData['IUC_button_position'] : '';
+                $buttonPosition = isset($configData['IUC_buttonPosition']) ? $configData['IUC_buttonPosition'] : '';
                 $editLinkAttrsArray['class'][] = 'iuc iuc-button ' . $buttonPosition;
             } else {
                 $editLinkAttrsArray['class'][] = 'iuc iuc-hidden';
@@ -609,7 +824,7 @@ HTML;
             }
         }
 
-        if (isset($configData['IUC_force_http']) && $configData['IUC_force_http'] == 1) {
+        if (isset($configData['IUC_forceHttp']) && $configData['IUC_forceHttp'] == 1) {
             $editLinkAttrsArray['data-iuc-force-http'][] = 1;
         }
 
@@ -633,9 +848,10 @@ HTML;
         $field = null;
 
         // intentional =
-        if (!($settings = $this->getPageThumbSettings())) {
+        if (!($settings = $this->getPagePageListThumbs_options())) {
             return false;
         }
+
 
         // only one field name is passed (global)
         if (count($settings) == 1 && strpos($settings[0], ':') === false) {
@@ -650,6 +866,7 @@ HTML;
                 if (strpos($pairs, '//') === 0) {
                     continue;
                 }
+
 
                 $setting = explode(':', $pairs);
 
@@ -679,14 +896,13 @@ HTML;
 
         $field = ($page->$field instanceof Pageimages) ? $page->$field->first() : $page->$field;
 
-
         $classes = array();
 
-        $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('compactPageList', $this->RenoTweaks))) ? 32 : 48;
+        $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('pListCompact', $this->RenoTweaks))) ? 32 : 48;
 
 
-        if (isset($this->PageListThumbStyle) && !empty($this->PageListThumbStyle)) {
-            $classes[] = $this->PageListThumbStyle;
+        if (isset($this->PageListThumbs_style) && !empty($this->PageListThumbs_style)) {
+            $classes[] = $this->PageListThumbs_style;
         }
 
 
@@ -698,18 +914,18 @@ HTML;
             $thumbSrc = $field->height($thumbSize)->url;
         }
 
-        $thumbSettings = isset($this->ThumbSettings) ? $this->ThumbSettings : null;
+        $PageListThumbs_options = isset($this->PageListThumbs_options) ? $this->PageListThumbs_options : null;
 
 
         $img = '<img src="' . $thumbSrc . '" />';
 
-        if (!is_null($thumbSettings)) {
+        if (!is_null($PageListThumbs_options)) {
 
-            if (in_array('alignright', $thumbSettings)) {
+            if (in_array('alignright', $PageListThumbs_options)) {
                 $classes[] = 'alignright';
             }
 
-            if (in_array('addlink', $thumbSettings)) {
+            if (in_array('addlink', $PageListThumbs_options)) {
 
                 $classes[] = 'addlink';
 
@@ -728,24 +944,24 @@ HTML;
     }
 
 
-    public function getPageThumbSettings() {
+    public function getPagePageListThumbs_options() {
 
-        if ($this->pageListThumbSettings) {
-            return $this->pageListThumbSettings;
+        if ($this->PageListThumbs_items) {
+            return $this->PageListThumbs_items;
         }
 
-        $thumbSettings = isset($this->data['PageListThumbSettings']) ? $this->data['PageListThumbSettings'] : null;
+        $PageListThumbs_options = isset($this->data['PageListThumbs_items']) ? $this->data['PageListThumbs_items'] : null;
 
-        if (is_null($thumbSettings)) {
+        if (is_null($PageListThumbs_options)) {
             return false;
         }
 
         // build settings array
-        $settings = trim($thumbSettings);
+        $settings = trim($PageListThumbs_options);
         $settings = explode("\n", $settings);
         $settings = array_filter($settings, 'trim');
 
-        $this->pageListThumbSettings = $settings;
+        $this->PageListThumbs_items = $settings;
 
         return $settings;
     }
@@ -774,6 +990,7 @@ HTML;
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
+//        $f->wrapAttr('style', 'display: none;');
         $f->label = __('Submodules', __FILE__);
         $f->description = __('Enable or disable submodules here.', __FILE__);
 //        $f->showIf      = 'enabled=1';
@@ -786,19 +1003,20 @@ HTML;
         $f->addOption('DeselectRadios', __('**DeselectRadios**Enable clearing checked radio buttons', __FILE__));
         $f->addOption('FieldAndTemplateEditLinks', __('**FieldAndTemplateEditLinks**Add shortcut links to templates and fields', __FILE__));
         $f->addOption('FileFieldTweaks', __('**FileFieldTweaks**File/image inputfield enhancements', __FILE__));
-        $f->addOption('fixScrollbarJump', __('**FixScrollbarJump**Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch', __('**FocusInputOnLangTabSwitch**Focus input on switching language tabs', __FILE__));
         $f->addOption('Hotkeys', __('**Hotkeys**Hotkey tweaks', __FILE__));
-        $f->addOption('HoverSaveDropdown', __('**HoverSaveDropdown**Show save dropdown on hover instead on click', __FILE__));
+        $f->addOption('HoverDropdown', __('**HoverDropdown**Show save dropdown on hover instead on click', __FILE__));
         $f->addOption('InputfieldURLChecker', __('**InputfieldURLChecker**Add button or hotkey to FieldtypeURL to check URL', __FILE__));
         $f->addOption('LangTabHotkeySwitcher', __('**LangTabHotkeySwitcher**Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', __('**LongClickDuration**Custom long-click action duration', __FILE__));
         $f->addOption('ModuleTweaks', __('**ModuleTweaks**Module related tweaks', __FILE__));
+        $f->addOption('NavItems', __('**NavItems**Add pages to add to navigation', __FILE__));
         $f->addOption('NoAnims', __('**NoAnims**Disable all admin animations', __FILE__));
         $f->addOption('PageListThumbs', __('**PageListThumbs**Add pagelist thumbnails', __FILE__));
         $f->addOption('PageListUnselect', __('**PageListUnselect**Add unselect and restore buttons to PageListSelect fields', __FILE__));
-        $f->addOption('PagePreviewLink', __('**PagePreviewLink**Add preview link next to page title', __FILE__));
+        $f->addOption('PagePreviewBtn', __('**PagePreviewBtn**Add preview link next to page title', __FILE__));
         $f->addOption('RenoTweaks', __('**RenoTweaks**Reno admin theme tweaks', __FILE__));
+        $f->addOption('ScrollFix', __('**ScrollFix**Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('TabIndex', __('**TabIndex**Add sequential tabindex to fields', __FILE__));
         $f->addOption('Tooltips', __('**Tooltips**Hide field descriptions and notes to tooltips', __FILE__));
 
@@ -824,8 +1042,8 @@ HTML;
         $f->showIf = 'enabledSubmodules=AdminTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->addOption('stickyHeader', __('Sticky header', __FILE__));
-        $f->addOption('centeredLogin', __('Center login form', __FILE__));
+        $f->addOption('headSticky', __('Sticky header', __FILE__));
+        $f->addOption('centerLogin', __('Center login form', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -840,14 +1058,49 @@ HTML;
         $f->showIf = 'enabledSubmodules=AsmTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->addOption('collapseAsmSections', __('Collapse fieldset/tab items on double click', __FILE__));
-        $f->addOption('leftAsmDelete', __('Move delete button to the left', __FILE__));
+        $f->addOption('asmCollapse', __('Collapse fieldset/tab items on double click', __FILE__));
+        $f->addOption('asmLeftX', __('Move delete button to the left', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
         }
 
         $fset->add($f);
+
+        // NavItems ----------------------------------------------- //
+
+        $fsetCNI = wire('modules')->get("InputfieldFieldset");
+        $fsetCNI->attr('name', 'NavItems');
+        $fsetCNI->label = __('NavItems', __FILE__);
+        $fsetCNI->showIf = 'enabledSubmodules=NavItems';
+//        $fsetCNI->collapsed = Inputfield::collapsedNever;
+
+        $f = wire('modules')->get('InputfieldPageListSelectMultiple');
+        $f->name = 'NavItems_pages';
+        $f->label = __('Select pages', __FILE__);
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetCNI->add($f);
+
+
+        $f = wire('modules')->get("InputfieldTextarea");
+        $f->attr('name', 'NavItems_custom');
+        $f->label = __('Custom items', __FILE__);
+        $f->attr('placeholder', '// ! AdminOnSteroids: /module/edit?name=AdminOnSteroids');
+        $f->rows = 3;
+        $f->collapsed = Inputfield::collapsedNever;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetCNI->add($f);
+
+
+        $fset->add($fsetCNI);
 
         // DeselectRadios ----------------------------------------------- //
 
@@ -987,7 +1240,7 @@ HTML;
 
         // Mode - button
         $f = wire('modules')->get('InputfieldRadios');
-        $f->name = 'IUC_button_position';
+        $f->name = 'IUC_buttonPosition';
         $f->label = __('Button position', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
         $f->columnWidth = 50;
@@ -1024,7 +1277,7 @@ HTML;
         $fsetIUC->add($f);
 
         $f = wire('modules')->get('InputfieldCheckbox');
-        $f->name = 'IUC_force_http';
+        $f->name = 'IUC_forceHttp';
         $f->label = __('Force HTTP prefix', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
@@ -1041,7 +1294,7 @@ HTML;
 
         // Enabled templates
         $f = wire('modules')->get('InputfieldAsmSelect');
-        $f->name = 'IUC_enabled_templates';
+        $f->name = 'IUC_enabledTemplates';
         $f->label = __('Enabled templates', __FILE__);
         $f->attr('data-asm-placeholder', __('Add templates...', __FILE__));
         $f->collapsed = Inputfield::collapsedNever;
@@ -1067,7 +1320,7 @@ HTML;
         if (count($url_fields) > 0) {
 
             $f = wire('modules')->get('InputfieldAsmSelect');
-            $f->name = 'IUC_enabled_fields';
+            $f->name = 'IUC_enabledFields';
             $f->label = __('Enabled fields', __FILE__);
             $f->collapsed = Inputfield::collapsedNever;
             $f->columnWidth = 50;
@@ -1121,9 +1374,9 @@ HTML;
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
 
-        $f->addOption('compactModuleList', __('Compact module list', __FILE__));
+        $f->addOption('moduleCompact', __('Compact module list', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
-        $f->addOption('modalModuleEdit', __('Edit modules in modal dialog', __FILE__));
+        $f->addOption('moduleModal', __('Edit modules in modal dialog', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -1141,7 +1394,7 @@ HTML;
 
 
         $f = wire('modules')->get("InputfieldRadios");
-        $f->attr('name', 'PageListThumbStyle');
+        $f->attr('name', 'PageListThumbs_style');
         $f->label = __('Style', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
@@ -1160,21 +1413,23 @@ HTML;
 
 
         $f = wire('modules')->get("InputfieldTextarea");
-        $f->attr('name', 'PageListThumbSettings');
+        $f->attr('name', 'PageListThumbs_items');
         $f->label = __('Source', __FILE__);
         $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
         $f->rows = 3;
         $f->collapsed = Inputfield::collapsedNever;
 
-        if ($data['PageListThumbs'] && isset($data[$f->name])) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
+        } else {
+            $f->attr('value', $data['PageListThumbs'][$f->name]);
         }
 
         $fsetPageListThumbs->add($f);
 
 
         $f = wire('modules')->get("InputfieldCheckboxes");
-        $f->attr('name', 'ThumbSettings');
+        $f->attr('name', 'PageListThumbs_options');
         $f->label = __('Settings', __FILE__); // Thumb settings
         $f->collapsed = Inputfield::collapsedNever;
 
@@ -1191,12 +1446,12 @@ HTML;
 
         $fset->add($fsetPageListThumbs);
 
-        // PagePreviewLink ----------------------------------------------- //
+        // PagePreviewBtn ----------------------------------------------- //
 
         $f = wire('modules')->get("InputfieldRadios");
-        $f->attr('name', 'PagePreviewLink');
-        $f->label = __('PagePreviewLink', __FILE__);
-        $f->showIf = 'enabledSubmodules=PagePreviewLink';
+        $f->attr('name', 'PagePreviewBtn');
+        $f->label = __('PagePreviewButton', __FILE__);
+        $f->showIf = 'enabledSubmodules=PagePreviewBtn';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('pw-blank', __('Preview in new tab', __FILE__));
@@ -1218,23 +1473,23 @@ HTML;
         $f->showIf = 'enabledSubmodules=RenoTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->addOption('stickyHeader', __('Sticky header', __FILE__));
-        $f->addOption('stickyHeaderCompact', __('Compact header', __FILE__));
-        $f->addOption('stickyCKEditorToolbar', __('Sticky CKEditor toolbar', __FILE__));
-        $f->addOption('miniScrollbarSidebar', __('Use mini scrollbar for sidebar', __FILE__));
-        $f->addOption('miniScrollbarMain', __('Use mini scrollbar for main content', __FILE__));
-        $f->addOption('stickySidebar', __('Sticky sidebar', __FILE__));
-        $f->addOption('alwaysVisibleSidebarItems', __('Always show sidebar items (disable accordion)', __FILE__));
-        $f->addOption('singleClickSidebarHeaders', __('Single click navigation of sidebar headers', __FILE__));
-        $f->addOption('inlineSidebarItems', __('Inline sidebar items', __FILE__));
-        $f->addOption('hideSidebarQuickLinks', __('Hide sidebar quick links (flash icons)', __FILE__));
-        $f->addOption('autoHideSidebar', __('Autohide sidebar', __FILE__));
-        $f->addOption('oneLineSidebarItems', __('One-line sidebar submenus', __FILE__));
-        $f->addOption('compactPageList', __('Use narrow pagelist rows', __FILE__));
-        $f->addOption('alwaysShowSearch', __('Always show search field', __FILE__));
-        $f->addOption('headButtonNextToTitle', __('Place header button next to the main title', __FILE__));
-        $f->addOption('centeredLogin', __('Center login form', __FILE__));
-        $f->addOption('closeNoticeButtonToLeft', __('Move notice close buttons to the left', __FILE__));
+        $f->addOption('headSticky', __('Sticky header', __FILE__));
+        $f->addOption('headStickyCompact', __('Compact header', __FILE__));
+        $f->addOption('stickyCKEBar', __('Sticky CKEditor toolbar', __FILE__));
+        $f->addOption('miniScrollSb', __('Use mini scrollbar for sidebar', __FILE__));
+        $f->addOption('miniScrollMain', __('Use mini scrollbar for main content', __FILE__));
+        $f->addOption('sbSticky', __('Sticky sidebar', __FILE__));
+        $f->addOption('sbItemsVisible', __('Always show sidebar items (disable accordion)', __FILE__));
+        $f->addOption('sbSingleClickHeads', __('Single click navigation of sidebar headers', __FILE__));
+        $f->addOption('sbItemsInline', __('Inline sidebar items', __FILE__));
+        $f->addOption('sbQuickLinksHide', __('Hide sidebar quick links (flash icons)', __FILE__));
+        $f->addOption('sbAutoHide', __('Autohide sidebar', __FILE__));
+        $f->addOption('sbItemsRow', __('One-line sidebar submenus', __FILE__));
+        $f->addOption('pListCompact', __('Use narrow pagelist rows', __FILE__));
+        $f->addOption('openSearch', __('Always show search field', __FILE__));
+        $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
+        $f->addOption('centerLogin', __('Center login form', __FILE__));
+        $f->addOption('noticeLeftX', __('Move notice close buttons to the left', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -1253,9 +1508,9 @@ HTML;
         $f->notes = __('', __FILE__);
 
         $f->addOption('superuseronly', __('Only for SuperUsers', __FILE__));
-        $f->addOption('description', __('Enable for field descriptions', __FILE__));
-        $f->addOption('notes', __('Enable for field notes', __FILE__));
-        $f->addOption('overlayStyle', __('Use overlay style', __FILE__));
+        $f->addOption('tooltipDesc', __('Enable for field descriptions', __FILE__));
+        $f->addOption('tooltipNotes', __('Enable for field notes', __FILE__));
+        $f->addOption('tooltipOverlay', __('Use overlay style', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

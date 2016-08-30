@@ -55,7 +55,7 @@ body {
 }
 
 // AsmTweaks
-html.aos_leftAsmDelete {
+html.asmLeftX {
   body {
 
     .Inputfields .asmListItem {
@@ -76,7 +76,7 @@ html.aos_leftAsmDelete {
     //  }
     //}
   }
-  &.aos_collapseAsmSections {
+  &.asmCollapse {
     body {
       .Inputfields .asmFieldsetStart,
       .Inputfields .asmFieldsetStart ~ .asmListItem {
@@ -210,7 +210,8 @@ html.aos_leftAsmDelete {
   }
 }
 
-html.aos_tooltips {
+html.tooltipDesc,
+html.tooltipNotes {
 
   li[id^="wrap_Inputfield"], li.Inputfield {
     position: relative;
@@ -222,19 +223,21 @@ html.aos_tooltips {
       overflow: visible !important;
     }
   }
+}
 
-  &.aos_tooltipsDesc {
+html {
+  &.tooltipDesc {
     p.description {
       @extend .aos_tooltips_blueprint;
     }
-    &.aos_tooltipsOverlay {
+    &.tooltipOverlay {
       p.description {
         @extend .aos_tooltips_blueprint_overlay;
       }
     }
   }
 
-  &.aos_tooltipsNotes {
+  &.tooltipNotes {
     //li:not(.translated):not(.untranslated):not(.noTooltip) {
     form:not([action^="./?textdomain"]) {
       p.notes {
@@ -246,7 +249,7 @@ html.aos_tooltips {
         }
       }
     }
-    &.aos_tooltipsOverlay {
+    &.tooltipOverlay {
       p.notes {
         @extend .aos_tooltips_blueprint_overlay;
         transform: translateY(0) !important;
@@ -254,7 +257,7 @@ html.aos_tooltips {
           transform: translateY(17px) !important;
         }
       }
-      &.aos_tooltipsDesc {
+      &.tooltipDesc {
         p.notes:before {
           transform: translateY(39px) !important;
         }
@@ -263,7 +266,7 @@ html.aos_tooltips {
   }
 
   // move down notes only if there's description
-  &.aos_tooltipsNotes.aos_tooltipsDesc {
+  &.tooltipNotes.tooltipDesc {
     //li:not(.translated):not(.untranslated):not(.noTooltip) {
     form:not([action^="./?textdomain"]) {
       p.notes {
@@ -336,7 +339,7 @@ html.aos_tooltips {
 //  color: inherit !important;
 //}
 
-html.aos_collapseAsmSections {
+html.asmCollapse {
   .Inputfields .asmFieldsetStart ~ .asmListItem,
   .Inputfields .asmFieldsetEnd,
   .Inputfields .asmFieldsetStart {
@@ -382,18 +385,9 @@ html.aos_collapseAsmSections {
   }
 }
 
-@media only screen and (min-width: 960px) {
-  // fix for PrevNextTabs module
-  .AdminThemeDefault {
-    ul.WireTabs {
-      overflow: hidden !important;
-    }
-  }
-}
-
 // login page (both Default and Reno themes)
 @media only screen and (min-width: 960px) {
-  html.aos_centeredLogin:not(.modal) {
+  html.centerLogin:not(.modal) {
 
     body.id-23 {
 
@@ -525,6 +519,7 @@ form[action*="AdminOnSteroids"] {
   #Inputfield_tweaks {
 
     #Inputfield_InputfieldURLChecker,
+    #Inputfield_NavItems,
     #Inputfield_PageListThumbs {
       label {
         background: transparent;
@@ -623,13 +618,13 @@ form[action*="AdminOnSteroids"] {
   }
 
   // push these items to the right to mimic hiearchy
-  input#Inputfield_RenoTweaks_singleClickSidebarHeaders,
-    //input#Inputfield_RenoTweaks_inlineSidebarItems,
-  input#Inputfield_RenoTweaks_miniScrollbarSidebar,
-  input#Inputfield_RenoTweaks_miniScrollbarMain,
-  input#Inputfield_RenoTweaks_stickyHeaderCompact,
-  input#Inputfield_RenoTweaks_stickyCKEditorToolbar,
-  input#Inputfield_RenoTweaks_oneLineSidebarItems {
+  input#Inputfield_RenoTweaks_sbSingleClickHeads,
+    //input#Inputfield_RenoTweaks_sbItemsInline,
+  input#Inputfield_RenoTweaks_miniScrollSb,
+  input#Inputfield_RenoTweaks_miniScrollMain,
+  input#Inputfield_RenoTweaks_headStickyCompact,
+  input#Inputfield_RenoTweaks_stickyCKEBar,
+  input#Inputfield_RenoTweaks_sbItemsRow {
     margin-left: 21px;
   }
 }
@@ -688,12 +683,18 @@ form[action*="AdminOnSteroids"] {
   }
 }
 
+.aos_hasTooltip {
+  &.InputfieldStateCollapsed {
+    overflow: visible !important;
+  }
+}
+
 // both for Reno & Default themes
 h1 span,
 #breadcrumbs li.title,
-//#ProcessPageEdit .Inputfield label .title,
+  //#ProcessPageEdit .Inputfield label .title,
 #ProcessPageEdit .aos_hasTooltip .title,
- .InputfieldCheckbox label {
+.InputfieldCheckbox label {
   position: relative;
   display: inline-block;
   &:hover {
@@ -761,7 +762,7 @@ body.aos_saving {
 // FileFieldTweaks
 
 // FileFieldTweaks filterbox
-html.aos_filterbox {
+html.filterbox {
 
   .Inputfield.filterbox_loaded {
     > label {
@@ -865,7 +866,7 @@ html.aos_filterbox {
 }
 
 // ModuleTweaks
-html.aos_modalModuleEdit {
+html.moduleModal {
 
   .ui-dialog-buttonpane {
     border-top: 1px solid rgba(#000, 0.12);
@@ -895,7 +896,7 @@ html.aos_modalModuleEdit {
   }
 }
 
-html.aos_compactModuleList {
+html.moduleCompact {
   form#modules_form {
     .modules_filter {
       display: none;
@@ -951,12 +952,12 @@ html.aos_compactModuleList {
           }
           a {
             display: block;
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            padding-top: 7px;
+            //position: absolute;
+            //left: 0;
+            //top: 0;
+            //right: 0;
+            //bottom: 0;
+            //padding-top: 7px;
             span {
               position: static;
             }
@@ -995,12 +996,10 @@ html.aos_compactModuleList {
         span.not_installed > span.ConfigurableModule:after {
           display: none;
         }
-        td:hover {
+        td a:hover {
           span.ConfigurableModule {
             &:after {
-              //animation: spin 2.1s infinite;
               animation: spinIn 0.84s forwards;
-              //color: inherit;
             }
           }
         }
@@ -1010,10 +1009,10 @@ html.aos_compactModuleList {
       }
     }
   }
-  &.aos_noAnims {
+  &.noAnim {
     form#modules_form {
       table.AdminDataList {
-        td:hover {
+        td a:hover {
           span.ConfigurableModule {
             &:after {
               color: inherit !important;
@@ -1026,10 +1025,10 @@ html.aos_compactModuleList {
 }
 
 // tweak styles
-html.aos_PagePreviewLink {
+html.PagePreviewBtn {
 
   body.AdminThemeDefault {
-    #aos_PagePreviewLink {
+    #aos_PagePreviewBtn {
       i {
         font-size: 0.84em !important;
         color: inherit;
@@ -1037,7 +1036,7 @@ html.aos_PagePreviewLink {
     }
   }
 
-  #aos_PagePreviewLink {
+  #aos_PagePreviewBtn {
     margin-left: 0.5em;
     i {
       color: rgba(0, 0, 0, 0.33);
@@ -1079,9 +1078,9 @@ html.aos_PagePreviewLink {
   }
 }
 
-// fixScrollbarJump
+// ScrollFix
 @media only screen and (min-width: 960px) {
-  html.aos_fixScrollbarJump:not(.modal) {
+  html.ScrollFix:not(.modal) {
     width: 100vw;
     overflow-x: hidden;
     #headline,
@@ -1093,7 +1092,7 @@ html.aos_PagePreviewLink {
 }
 
 // PageListThumbs
-html.aos_PageListThumbs {
+html.PageListThumbs {
 
   @media only screen and (max-width: 960px) {
     .PageListItem {
@@ -1207,7 +1206,7 @@ html.aos_PageListThumbs {
         margin: 0 auto;
       }
     }
-    &.aos_compactPageList,
+    &.pListCompact,
     body.AdminThemeDefault {
       $thumbSize: 32px;
       .PageListItem {
@@ -1247,17 +1246,10 @@ html.aos_PageListThumbs {
   }
 }
 
-html.aos_noAnims {
+html.noAnim {
   *, *:after, *:before {
     transition-duration: 0s !important;
     animation: none !important;
-  }
-}
-
-.fixZIndex {
-  .InputfieldImageEditAll .gridImage,
-  .ui-slider-handle {
-    z-index: 1;
   }
 }
 
@@ -1273,12 +1265,18 @@ html.AdminThemeReno {
     }
   }
 
-  // stickyHeader
-  &.aos_stickyHeader:not(.modal) {
+  // headSticky
+  &.headSticky:not(.modal) {
 
     @media only screen and (min-width: 960px) {
 
-      @extend .fixZIndex;
+      // CKEditor html source dialog
+      .cke_dialog_background_cover {
+        z-index: 100000 + 3000 !important;
+        + .cke_reset_all > table {
+          z-index: 100000 + 3050 !important;
+        }
+      }
 
       // System Notifications module
       #NotificationGhosts {
@@ -1442,10 +1440,13 @@ html.AdminThemeReno {
         z-index: 100000 + 40;
       }
 
-      &.aos_alwaysShowSearch {
+      #search {
+        z-index: 100000 + 80;
+      }
+
+      &.openSearch {
         #search {
           position: fixed;
-          z-index: 100000 + 80;
         }
       }
     }
@@ -1468,9 +1469,9 @@ html.AdminThemeReno {
     }
   }
 
-  // stickyHeaderCompact
+  // headStickyCompact
 
-  &.aos_stickyHeaderCompact:not(.modal) {
+  &.headStickyCompact:not(.modal) {
 
     @media only screen and (min-width: 960px) {
 
@@ -1665,7 +1666,7 @@ html.AdminThemeReno {
 
       }
 
-      &.aos_alwaysShowSearch {
+      &.openSearch {
         #search {
           position: fixed;
           z-index: 100000 + 80;
@@ -1763,14 +1764,14 @@ html.AdminThemeReno {
       }
     }
 
-    &:not(.aos_headButtonNextToTitle) {
+    &:not(.headBtnToTitle) {
       #search {
         right: 120px !important;
       }
     }
   }
 
-  &.aos_compactPageList {
+  &.pListCompact {
     .content .PageList .PageListItem {
       padding-top: 0.4em;
       padding-bottom: 0.4em;
@@ -1778,8 +1779,8 @@ html.AdminThemeReno {
   }
 
   // AlwaysShowSearch
-  &.aos_alwaysShowSearch:not(.modal),
-  &.aos_stickyHeaderCompact {
+  &.openSearch:not(.modal),
+  &.headStickyCompact {
     @media only screen and (min-width: 960px) {
       #search {
         top: 0 !important;
@@ -1857,8 +1858,8 @@ html.AdminThemeReno {
     position: fixed !important;
   }
 
-  // autoHideSidebar
-  &.aos_autoHideSidebar:not(.modal) {
+  // sbAutoHide
+  &.sbAutoHide:not(.modal) {
     @media only screen and (min-width: 960px) {
 
       //padding-left: 1em;
@@ -1929,8 +1930,8 @@ html.AdminThemeReno {
     }
   }
 
-  // headButtonNextToTitle
-  &.aos_headButtonNextToTitle {
+  // headBtnToTitle
+  &.headBtnToTitle {
     @media only screen and (min-width: 960px) {
       // head_button next to title
       #headline {
@@ -1953,8 +1954,8 @@ html.AdminThemeReno {
     }
   }
 
-  // stickySidebar
-  &.aos_stickySidebar {
+  // sbSticky
+  &.sbSticky {
     @media only screen and (min-width: 960px) {
       #sidebar {
         position: fixed;
@@ -1967,8 +1968,8 @@ html.AdminThemeReno {
     }
   }
 
-  // alwaysVisibleSidebarItems
-  &.aos_alwaysVisibleSidebarItems {
+  // sbItemsVisible
+  &.sbItemsVisible {
     @media only screen and (min-width: 960px) {
       #sidebar {
         #main-nav {
@@ -2020,10 +2021,10 @@ html.AdminThemeReno {
                   padding-bottom: 0.33em;
                   //opacity: 0.84;
                   &.current {
-                    background: transparent;
-                    color: inherit !important;
-                    opacity: 1;
-                    font-weight: 600;
+                    //background: transparent;
+                    //color: inherit !important;
+                    //opacity: 1;
+                    //font-weight: 600;
                     span {
                       i {
                         display: none;
@@ -2054,14 +2055,20 @@ html.AdminThemeReno {
     }
   }
 
-  // inlineSidebarItems
-  //&.aos_inlineSidebarItems.aos_alwaysVisibleSidebarItems {
-  &.aos_inlineSidebarItems {
+  // sbItemsInline
+  //&.sbItemsInline.lwysvsblsdbrims {
+  &.sbItemsInline {
     @media only screen and (min-width: 960px) {
       #sidebar {
         #main-nav {
           > li {
             a {
+              &.current {
+                background: transparent;
+                color: inherit !important;
+                font-weight: 600;
+              }
+
               &.has-quicklinks {
                 span {
                   display: inline-block;
@@ -2109,8 +2116,8 @@ html.AdminThemeReno {
     }
   }
 
-  // hideSidebarQuickLinks
-  &.aos_hideSidebarQuickLinks {
+  // sbQuickLinksHide
+  &.sbQuickLinksHide {
     //@media only screen and (min-width: 960px) {
     #sidebar #main-nav > li a {
       span {
@@ -2123,8 +2130,8 @@ html.AdminThemeReno {
     //}
   }
 
-  // oneLineSidebarItems (only with autoHideSidebar)
-  &.aos_oneLineSidebarItems.aos_autoHideSidebar {
+  // sbItemsRow (only with sbAutoHide)
+  &.sbItemsRow.sbAutoHide {
     //@media only screen and (min-width: 960px) {
     #sidebar {
       z-index: 19;
@@ -2134,8 +2141,8 @@ html.AdminThemeReno {
     //}
   }
 
-  // closeNoticeButtonToLeft
-  &.aos_closeNoticeButtonToLeft {
+  // noticeLeftX
+  &.noticeLeftX {
     #notices li {
       padding-left: 50px;
       .notice-remove {
@@ -2146,66 +2153,77 @@ html.AdminThemeReno {
   }
 }
 
-//Default theme tweaks
-// note: the default theme adds theme name class only to body
-body.AdminThemeDefault {
+// AdminTweaks (default theme tweaks)
+// note: the default theme adds theme name class only to body, AOS adds to html
 
-  // stickyHeader
-  &.aos_stickyHeader:not(.modal) {
+html.AdminThemeDefault {
+
+  // fix for PrevNextTabs module
+  ul.WireTabs {
+    overflow: hidden !important;
+  }
+  // topnav flicker fix until better solution
+  #masthead #topnav {
+    margin-top: 8px;
+  }
+
+  // headSticky
+  &.headSticky:not(.modal) {
     @media only screen and (min-width: 960px) {
 
-      @extend .fixZIndex;
+      body {
 
-      .NotificationMenu {
-        z-index: 9;
-        margin-top: 3px;
-      }
-
-      padding-top: 100px;
-
-      #masthead {
-        position: fixed;
-        z-index: 30;
-        width: 100%;
-        top: 0;
-        left: 0;
-      }
-
-      #breadcrumbs {
-        position: fixed;
-        z-index: 30;
-        top: 47px;
-        left: 0;
-        width: 100%;
-        border: none;
-      }
-
-      #notices {
-        position: relative;
-        z-index: 19;
-        & ~ #content {
-          padding-top: 20px;
+        .NotificationMenu {
+          z-index: 9;
+          margin-top: 3px;
         }
-      }
 
-      &.hasWireTabs {
+        padding-top: 100px;
+
+        #masthead {
+          position: fixed;
+          z-index: 30;
+          width: 100%;
+          top: 0;
+          left: 0;
+        }
+
+        #breadcrumbs {
+          position: fixed;
+          z-index: 30;
+          top: 47px;
+          left: 0;
+          width: 100%;
+          border: none;
+        }
+
         #notices {
+          position: relative;
+          z-index: 19;
           & ~ #content {
+            padding-top: 20px;
+          }
+        }
+
+        &.hasWireTabs {
+          #notices {
+            & ~ #content {
+              padding-top: 52px;
+            }
+          }
+          #content {
             padding-top: 52px;
           }
         }
-        #content {
-          padding-top: 52px;
+
+        #head_button {
+          margin-bottom: -16px;
+          top: -7px;
         }
-      }
 
-      #head_button {
-        margin-bottom: -16px;
-        top: -7px;
-      }
-
-      #content {
-        padding-top: 20px;
+        #content {
+          padding-top: 20px;
+        }
       }
     }
   }
@@ -2235,7 +2253,88 @@ body.AdminThemeDefault {
   }
 }
 
-html.aos_hoverSaveDropdown {
+@media only screen and (min-width: 960px) {
+  li.navItem {
+    position: relative;
+    .page-list {
+      &:hover {
+        + .page-edit {
+          opacity: 0.3;
+        }
+      }
+    }
+    .page-edit {
+      opacity: 0;
+      position: absolute !important;
+      right: 0;
+      top: 0;
+
+      z-index: 5;
+      &:hover {
+        opacity: 1 !important;
+        background: transparent !important;
+      }
+    }
+  }
+
+  html.AdminThemeReno {
+    li ul {
+      li.navItem {
+        //.page-list {
+        //  margin-right: 32px;
+        //  &:hover {
+        //    text-decoration: underline;
+        //  }
+        //}
+        //&:hover {
+        //  background: rgba(0, 0, 0, 0.04);
+        //}
+        a:not(.current) {
+          font-weight: normal !important;
+        }
+
+        .page-edit {
+          padding: 5px 17px !important;
+        }
+      }
+    }
+    &:not(.sbItemsInline) {
+      ul li ul {
+        li.navItem {
+          a.current + .page-edit i {
+            color: #fff !important;
+          }
+        }
+      }
+    }
+    &.sbItemsInline {
+      ul li ul {
+        li.navItem {
+          .page-list {
+            //margin-right: 21px;
+            display: inline-block !important;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+          .page-edit {
+            display: inline-block !important;
+            position: relative !important;
+            opacity: 0.3;
+            top: 3px;
+            margin-left: -6px;
+            padding: 5px 5px !important;
+            i {
+              font-size: 92% !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+html.HoverDropdown {
   //@media only screen and (min-width: 960px) {
   .ui-button {
 
@@ -2255,6 +2354,7 @@ html.aos_hoverSaveDropdown {
     }
 
     &[id^="pw-dropdown-toggle-"] {
+      //&.dropdown-toggle {
       &, span {
         width: 0 !important;
         overflow: hidden;

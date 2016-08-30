@@ -1,3 +1,17 @@
+// add "scrolled" body class
+var addScrolledBodyClass = debounce(function () {
+    var el = document.querySelector('body');
+    posTop() > 20 ? el.classList.add('scrolled') : el.classList.remove('scrolled');
+}, 120);
+
+['scroll', 'resize', 'load'].forEach(function (e) {
+    window.addEventListener(e, addScrolledBodyClass);
+});
+
+function posTop() {
+    return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
+}
+
 function debounce(func, wait, immediate) {
     var timeout;
     return function () {
@@ -13,117 +27,20 @@ function debounce(func, wait, immediate) {
     };
 }
 
-// function getParameterByName(name, url) {
-//     if (!url) url = window.location.href;
-//     name = name.replace(/[\[\]]/g, "\\$&");
-//     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-//         results = regex.exec(url);
-//     if (!results) return null;
-//     if (!results[2]) return '';
-//     return decodeURIComponent(results[2].replace(/\+/g, " "));
-// }
-
 
 $(document).ready(function () {
 
-    var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null,
-        bodyClasses = [],
-        htmlClasses = [];
+
+    var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
 
     if (AOSsettings == null) {
         return false;
     }
 
-
-    // $('#sidebar > ul > li:eq(-1)').after('<a href="" id="aos_toggle">AOS</a>');
-    //
-    // $('#aos_toggle').on('click', function () {
-    //
-    //     var toggle = $(this);
-    //
-    //     // $('script[src$="AdminOnSteroids.js"]').attr('type', function (index, attr) {
-    //     //     return (!attr || attr == 'text/javascript' || attr == "") ? 'application/json' : 'text/javascript';
-    //     // });
-    //
-    //     $('link[href$="AdminOnSteroids.css"]').attr('media', function (index, attr) {
-    //         return attr == 'disabled' ? 'screen' : 'disabled';
-    //     });
-    //
-    //     return false;
-    // });
-
-
     // AOS: enable/disable module checkbox click
     $('form[action*="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
         $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
     });
-
-
-    //var aos_ThemeSheet = document.createElement('style');
-    ////aos_ThemeSheet.innerHTML = "div {border: 2px solid black; background-color: blue;}";
-    //document.body.appendChild(aos_ThemeSheet);
-    //
-    //var saturate = 100,
-    //    hue = 360,
-    //    increment = 10;
-    //
-    //$(document).on('keydown', function (e) {
-    //
-    //    e = e || window.event;
-    //
-    //    if (e.ctrlKey) {
-    //        if (e.keyCode == 38) {   // up
-    //
-    //            //hue = ((hue + increment) <= 360) ? hue + increment : 360;
-    //            saturate = (saturate >= 0 && (saturate + increment) <= 100) ? saturate + increment : 100;
-    //            console.log('saturate: ' + saturate);
-    //
-    //        } else if (e.keyCode == 40) {   // down
-    //
-    //            //hue = ((hue - increment) >= 0) ? hue - increment : 0;
-    //            //saturate = (saturate > increment) ? saturate - increment : 0;
-    //            saturate = (saturate > 50 + increment) ? saturate - increment : 50;
-    //            console.log('saturate: ' + saturate);
-    //
-    //        } else if (e.keyCode == 39) {   // right
-    //
-    //            hue = ((hue + increment) <= 360) ? hue + increment : 360;
-    //            //saturate = ((saturate + increment) <= 100) ? saturate + increment : 100;
-    //            console.log('hue: ' + hue);
-    //
-    //        } else if (e.keyCode == 37) {   // left
-    //
-    //            hue = ((hue - increment) >= 0) ? hue - increment : 0;
-    //            //saturate = ((saturate - increment) >= 0) ? saturate - increment : 0;
-    //            console.log('hue: ' + hue);
-    //
-    //        }
-    //
-    //        var mainFilter = "saturate(" + saturate + "%) hue-rotate(" + hue + "deg)",
-    //            secFilter = "saturate(" + ((saturate <= 0) ? 0 : 100 / saturate * 100) + "%) hue-rotate(" + (360 - hue) + "deg);";
-    //
-    //
-    //        aos_ThemeSheet.innerHTML = "" +
-    //            "body { -webkit-filter: " + mainFilter + " }" +
-    //            "img, .NotificationMenu, #NotificationBug .qty {-webkit-filter: " + secFilter + " }" +
-    //            "" +
-    //            "body { filter: " + mainFilter + " }" +
-    //            "img, .NotificationMenu, #NotificationBug .qty { filter: " + secFilter + " }";
-    //
-    //        return false;
-    //    }
-    //});
-
-
-    // $(document).on('click', '#ProcessPageEdit .Inputfield > label', function (e) {
-    //     if (e.ctrlKey) {
-    //         var editFieldLink = $(this).parent().find('.aos_EditFieldLink');
-    //         if (editFieldLink.length) {
-    //             editFieldLink[0].click();
-    //             return false;
-    //         }
-    //     }
-    // });
 
 // FieldAndTemplateEditLinks
     if (AOSsettings.enabledSubmodules.indexOf('FieldAndTemplateEditLinks') !== -1) {
@@ -137,16 +54,13 @@ $(document).ready(function () {
     }
 
 
-// HoverSaveDropdown
-// note: copies do not need to modify
-    if (AOSsettings.enabledSubmodules.indexOf('HoverSaveDropdown') !== -1) {
+// HoverDropdown
+    if (AOSsettings.enabledSubmodules.indexOf('HoverDropdown') !== -1) {
 
         $('.dropdown-toggle-click').removeClass('dropdown-toggle-click');
 
         // force align dropdown menus to right of parent button
         $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
-
-        htmlClasses.push('aos_hoverSaveDropdown');
     }
 
 // LongClickDuration
@@ -161,31 +75,9 @@ $(document).ready(function () {
 
 // Tooltips
     if (AOSsettings.enabledSubmodules.indexOf('Tooltips') !== -1) {
-
-        if (AOSsettings.Tooltips.indexOf('description') !== -1 || AOSsettings.Tooltips.indexOf('notes') !== -1) {
-            htmlClasses.push('aos_tooltips');
-        }
-
-        if (AOSsettings.Tooltips.indexOf('description') !== -1) {
-            htmlClasses.push('aos_tooltipsDesc');
-        }
-
-        if (AOSsettings.Tooltips.indexOf('notes') !== -1) {
-            htmlClasses.push('aos_tooltipsNotes');
-        }
-
-        if (AOSsettings.Tooltips.indexOf('overlayStyle') !== -1) {
-            htmlClasses.push('aos_tooltipsOverlay');
-        }
-
-        $(document).on('dblclick', '.aos_tooltipsDesc #content p.description, .aos_tooltipsNotes #content p.notes', function () {
+        $(document).on('dblclick', 'html.tooltipDesc #content p.description, html.tooltipNotes #content p.notes', function () {
             $(this).toggleClass('tooltip-active');
         });
-    }
-
-// fixScrollbarJump
-    if (AOSsettings.enabledSubmodules.indexOf('fixScrollbarJump') !== -1) {
-        htmlClasses.push('aos_fixScrollbarJump');
     }
 
 // PageListThumbs
@@ -205,7 +97,6 @@ $(document).ready(function () {
             }
         });
 
-        htmlClasses.push('aos_PageListThumbs');
     }
 
 
@@ -233,21 +124,10 @@ $(document).ready(function () {
         });
     }
 
-
-// FileFieldTweaks
-    if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
-
-        htmlClasses.push('aos_fileFieldTweaks');
-
-        if (AOSsettings.FileFieldTweaks.indexOf('filterbox') !== -1) {
-            htmlClasses.push('aos_filterbox');
-        }
-    }
-
 // ModuleTweaks
     if (AOSsettings.enabledSubmodules.indexOf('ModuleTweaks') !== -1) {
 
-        if (AOSsettings.ModuleTweaks.indexOf('modalModuleEdit') !== -1) {
+        if (AOSsettings.ModuleTweaks.indexOf('moduleModal') !== -1) {
 
             $('#modules_form td > a')
                 .addClass('pw-modal')
@@ -305,20 +185,6 @@ $(document).ready(function () {
                 }, 250);
             });
 
-            // $('#ModuleEditForm button#Inputfield_submit_save_module').on('click', function () {
-            //
-            //     var button = $(this);
-            //
-            //     // allow save on non-modal Modules page
-            //     if (!window.frameElement) return true;
-            //
-            //     // add class to parent frame to check for reload in callback
-            //     if ($('input#uninstall').is(':checked')) {
-            //         button.addClass('needsReload');
-            //         $('body', window.parent.document).addClass('needsReload');
-            //     }
-            // });
-
             // add ESC close
             $(document).on('keydown', function (e) {
 
@@ -329,12 +195,10 @@ $(document).ready(function () {
                     closeBtn.trigger('click');
                 }
             });
-
-            htmlClasses.push('aos_modalModuleEdit');
         }
 
 
-        if (AOSsettings.ModuleTweaks.indexOf('compactModuleList') !== -1) {
+        if (AOSsettings.ModuleTweaks.indexOf('moduleCompact') !== -1) {
 
             $("form#modules_form > .Inputfields > .Inputfield").each(function () {
 
@@ -347,26 +211,7 @@ $(document).ready(function () {
                     }
                 });
             });
-
-            htmlClasses.push('aos_compactModuleList');
         }
-    }
-
-
-// Default admin theme tweaks
-    if (AOSsettings.enabledSubmodules.indexOf('AdminTweaks') !== -1 && $('body').hasClass('AdminThemeDefault')) {
-
-        var adminTweaksSettings = AOSsettings.AdminTweaks;
-
-        if (adminTweaksSettings.indexOf('stickyHeader') !== -1) {
-            bodyClasses.push('aos_stickyHeader');
-        }
-
-        if (adminTweaksSettings.indexOf('centeredLogin') !== -1 && $('body').hasClass('id-23')) {
-            htmlClasses.push('aos_centeredLogin');
-        }
-
-        $('body').addClass(bodyClasses.join(" "));
     }
 
 
@@ -375,12 +220,6 @@ $(document).ready(function () {
     if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks;
-
-        // $('#sidebar').on('longclick', 'a.has-quicklinks', function (e) {
-        //     $(this).children('.quicklink-open').trigger('mouseenter');
-        //         return false;
-        // });
-
 
         function setupCheckbox(currentCheckbox) {
 
@@ -430,68 +269,12 @@ $(document).ready(function () {
 
 
         // enable single clicking on headers in sidebar
-        if (renoTweaksSettings.indexOf('singleClickSidebarHeaders') !== -1 && renoTweaksSettings.indexOf('alwaysVisibleSidebarItems') !== -1) {
+        if (renoTweaksSettings.indexOf('sbSingleClickHeads') !== -1 && renoTweaksSettings.indexOf('sbItemsVisible') !== -1) {
 
             $('#sidebar > #main-nav > li > a').on('click', function () {
                 window.location.href = $(this).attr('href');
                 return false;
             });
-        }
-
-        if (renoTweaksSettings.indexOf('centeredLogin') !== -1 && $('body').hasClass('id-23')) {
-            htmlClasses.push('aos_centeredLogin');
-        }
-
-        if (renoTweaksSettings.indexOf('alwaysShowSearch') !== -1) {
-            htmlClasses.push('aos_alwaysShowSearch');
-        }
-
-        if (renoTweaksSettings.indexOf('compactPageList') !== -1) {
-            htmlClasses.push('aos_compactPageList');
-        }
-
-        if (renoTweaksSettings.indexOf('stickyHeader') !== -1) {
-            htmlClasses.push('aos_stickyHeader');
-            if (renoTweaksSettings.indexOf('stickyHeaderCompact') !== -1) {
-                htmlClasses.push('aos_stickyHeaderCompact');
-            }
-        }
-
-        if (renoTweaksSettings.indexOf('stickySidebar') !== -1) {
-            htmlClasses.push('aos_stickySidebar');
-        }
-
-        if (renoTweaksSettings.indexOf('inlineSidebarItems') !== -1) {
-            htmlClasses.push('aos_inlineSidebarItems');
-        }
-
-        if (renoTweaksSettings.indexOf('autoHideSidebar') !== -1) {
-            htmlClasses.push('aos_autoHideSidebar');
-        }
-
-        if (renoTweaksSettings.indexOf('alwaysVisibleSidebarItems') !== -1) {
-            htmlClasses.push('aos_alwaysVisibleSidebarItems');
-        }
-
-        if (renoTweaksSettings.indexOf('hideSidebarQuickLinks') !== -1) {
-            htmlClasses.push('aos_hideSidebarQuickLinks');
-        }
-
-        if (renoTweaksSettings.indexOf('oneLineSidebarItems') !== -1) {
-            htmlClasses.push('aos_oneLineSidebarItems');
-        }
-
-        if (renoTweaksSettings.indexOf('headButtonNextToTitle') !== -1) {
-            htmlClasses.push('aos_headButtonNextToTitle');
-        }
-
-        // class added dynamically
-        //if (renoTweaksSettings.indexOf('stickyCKEditorToolbar') !== -1) {
-        //    htmlClasses.push('aos_stickyCKEditorToolbar');
-        //}
-
-        if (renoTweaksSettings.indexOf('closeNoticeButtonToLeft') !== -1) {
-            htmlClasses.push('aos_closeNoticeButtonToLeft');
         }
 
         // miniScrollbar
@@ -507,44 +290,64 @@ $(document).ready(function () {
                     wheelPropagation: true
                 };
 
-            if (sidebarNav && renoTweaksSettings.indexOf('miniScrollbarSidebar') !== -1) {
+            if (sidebarNav && renoTweaksSettings.indexOf('miniScrollSb') !== -1) {
                 Ps.initialize(sidebarNav, PsSettings);
             }
 
-            if (mainContent && renoTweaksSettings.indexOf('miniScrollbarMain') !== -1) {
+            if (mainContent && renoTweaksSettings.indexOf('miniScrollMain') !== -1) {
                 Ps.initialize(mainContent, PsSettings);
             }
         }
     }
 
+    // NavItems
+    if ($('.NavItems').length) {
 
-// DeselectRadios
-    if (AOSsettings.enabledSubmodules.indexOf('DeselectRadios') !== -1) {
-        htmlClasses.push('aos_deselectRadios');
+        var topNavElem,
+            topNavHasItems = true;
+
+        if ($('body').hasClass('AdminThemeReno')) {
+            topNavElem = $('#main-nav li:eq(0) > ul');
+            // non-superusers may not have items in main-nav
+            if (!topNavElem.length) {
+                topNavElem = $('#main-nav');
+                topNavHasItems = false;
+            }
+        } else {
+            topNavElem = $('#topnav li:eq(0) .dropdown-menu.topnav');
+        }
+
+        // remove active submenu highlight from Tree
+        if ($('.AdminThemeReno .navItem > a.current').length) {
+            $('#main-nav').find('a[data-icon="sitemap"]').find('i.fa-sitemap').remove();
+            $('#main-nav').find('a.current').removeClass('current');
+        }
+
+        if (topNavHasItems) {
+            $('.NavItems li').each(function () {
+                topNavElem.append($(this));
+            });
+        } else {
+            var firstNavItem = topNavElem.children('li').first();
+
+            firstNavItem.append('<ul>');
+
+
+            $('.NavItems li').each(function () {
+                firstNavItem.children('ul').append($(this));
+            });
+        }
+
+        $('.NavItems').remove();
     }
 
 // NoAnims
     if (AOSsettings.enabledSubmodules.indexOf('NoAnims') !== -1) {
         $.fx.off = true;
-        htmlClasses.push('aos_noAnims');
     }
 
-// AsmTweaks
-    if (AOSsettings.enabledSubmodules.indexOf('AsmTweaks') !== -1) {
-
-        if (AOSsettings.AsmTweaks.indexOf('collapseAsmSections') !== -1) {
-            htmlClasses.push('aos_collapseAsmSections');
-        }
-
-        if (AOSsettings.AsmTweaks.indexOf('leftAsmDelete') !== -1) {
-            htmlClasses.push('aos_leftAsmDelete');
-        }
-    }
-
-// PagePreviewLink
-    if (AOSsettings.enabledSubmodules.indexOf('PagePreviewLink') !== -1) {
-
-        htmlClasses.push('aos_PagePreviewLink');
+// PagePreviewBtn
+    if (AOSsettings.enabledSubmodules.indexOf('PagePreviewBtn') !== -1) {
 
         var pageTitleSelector = ($('body').hasClass('AdminThemeDefault') ? '#breadcrumbs li.title' : '#headline #title');
 
@@ -554,7 +357,7 @@ $(document).ready(function () {
                 pageViewUrl = $('a#_ProcessPageEditView').attr('href');
 
             if (pageTitle.children('.pageTitleLink').length == 0) {
-                pageTitle.wrapInner('<span>').append('<a href="' + pageViewUrl + '" id="aos_PagePreviewLink" class="' + AOSsettings.PagePreviewLink + '" target="_blank"><i class="fa fa-external-link"></i></a>');
+                pageTitle.wrapInner('<span>').append('<a href="' + pageViewUrl + '" id="aos_PagePreviewBtn" class="' + AOSsettings.PagePreviewBtn + '" target="_blank"><i class="fa fa-external-link"></i></a>');
             }
         }
     }
@@ -563,18 +366,12 @@ $(document).ready(function () {
     if (AOSsettings.enabledSubmodules.indexOf('PageListUnselect') !== -1) {
 
         $(document).on('pageSelected', function (e, obj) {
-            // console.log('pageSelected');
-            // console.log(obj.id);
-            // console.log(obj.url);
-            // console.log(obj.title);
-            // console.log(obj.a);
 
             var clearButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.clear'),
                 restoreButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.restore');
 
             if (obj.id !== 0) {
                 clearButton.removeClass('empty');
-                // restoreButton.removeClass('empty').removeClass('initial');
             } else {
                 clearButton.addClass('empty');
             }
@@ -618,14 +415,6 @@ $(document).ready(function () {
             return false;
         });
     }
-
-
-    $('html').addClass(htmlClasses.join(" "));
-
-
-    // var pageTitleSelector = ($('body').hasClass('AdminThemeDefault') ? '#breadcrumbs li.title' : '#headline #title');
-
-    // $(pageTitleSelector).append('<a href="' + '#' + '" id="aos_EditTemplate" class="' + AOSsettings.PagePreviewLink + '" target="_blank"><i class="fa fa-cog"></i> Edit template</a>');
 
 
 // FileFieldTweaks
@@ -711,8 +500,6 @@ $(document).ready(function () {
                         searchStrings.push(listItem.find('.InputfieldImageEdit__name').text());
                     }
 
-                    // console.log(listItem.find('.InputfieldFileName').text());
-
                     if (listItem.find('.InputfieldFileName').length) {
                         searchStrings.push(listItem.find('.InputfieldFileName').text());
                     }
@@ -734,13 +521,7 @@ $(document).ready(function () {
 
 
                 // add/update datalist
-
                 $.each(datalistOptions, function (index, item) {
-                    // var firstItem = item[0];
-
-                    // item.shift();
-
-                    // options += '<option value="' + firstItem + '">' + item.join(" • ") + '</option>';
                     options += '<option value="' + item[0] + '"></option>';
                 });
 
@@ -768,9 +549,6 @@ $(document).ready(function () {
             // add/update data-filter values
             // hover: firefox hack to make datalist available on first click
             $(document).on('hover click', '.InputfieldFileFieldFilter input', function (e) {
-                // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
-                // $(document).on('click focus', '.InputfieldFileFieldFilter input', function (e) {
-                // $(document).on('hover', '.InputfieldFileFieldFilter input', function (e) {
 
                 var target = e.target || e.srcElement,
                     field = $(target).closest('li.Inputfield');
@@ -814,7 +592,6 @@ $(document).ready(function () {
             });
 
             // filter items
-            // $(document).on('keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
             $(document).on('input keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
 
                 var target = e.target || e.srcElement,
@@ -833,9 +610,7 @@ $(document).ready(function () {
                 $(target).parent().addClass('hasValue');
 
                 // close edit field
-                //if (field.find('.InputfieldImageEdit--active').length) {
                 field.find('.InputfieldImageEdit__close').trigger('click');
-                //}
 
                 if (length > 0) {
 
@@ -883,19 +658,17 @@ $(document).ready(function () {
     }
 
 
-    if (renoTweaksSettings && renoTweaksSettings.indexOf('stickyCKEditorToolbar') !== -1) {
+    if (renoTweaksSettings && renoTweaksSettings.indexOf('stickyCKEBar') !== -1) {
 
         var editor_cke_height;
-        // isCKEfocused = false;
 
-        // if ($('.aos_stickyCKEditorToolbar .InputfieldCKEditor').length) {
         if ($('.InputfieldCKEditor').length) {
 
             var $firstCKEditor = $('.InputfieldCKEditor').eq(0);
 
-            var checkstickyCKEditorToolbar = debounce(function () {
+            var checkstickyCKEBar = debounce(function () {
 
-                if (!$('html').hasClass('aos_stickyCKEditorToolbar')) {
+                if (!$('html').hasClass('stckyckdtrtlbr')) {
                     return false;
                 }
 
@@ -912,25 +685,21 @@ $(document).ready(function () {
 
                 var topOffset = $firstCKEditor.offset().top - posTop();
                 var bottomOffset = $firstCKEditor.offset().top + $firstCKEditor.height() - posTop();
-                // var editor_cke_height = cke_toolbar.outerHeight();
 
                 if (topOffset < 70 && bottomOffset > 200) {
                     cke_toolbar.addClass('cke_top_fixed');
                     cke_contents.css('padding-top', editor_cke_height + "px");
-                    $('html').addClass('aos_stickyCKEditorToolbar');
+                    $('html').addClass('stckyckdtrtlbr');
                 } else {
-                    // if (!isCKEfocused || bottomOffset < 70) {
-                    // if (!isCKEfocused) {
                     cke_toolbar.removeClass('cke_top_fixed');
-                    $('html').removeClass('aos_stickyCKEditorToolbar');
+                    $('html').removeClass('stckyckdtrtlbr');
                     cke_contents.css('padding-top', "0px");
-                    // }
                 }
 
             }, 0);
 
-            $(window).on('scroll addstickyCKEditorToolbar', function () {
-                checkstickyCKEditorToolbar();
+            $(window).on('scroll addstickyCKEBar', function () {
+                checkstickyCKEBar();
             });
 
             CKEDITOR.on('instanceReady', function (evt) {
@@ -939,59 +708,23 @@ $(document).ready(function () {
 
                 editor_cke_height = $firstCKEditor.find('.cke_top').outerHeight();
 
-                // editor.on('focus', function (e) {
-                //     if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
-                //         $('html').addClass('aos_stickyCKEditorToolbar');
-                //         checkstickyCKEditorToolbar();
-                //     }
-                // });
-
                 editor.on('selectionChange', function (e) {
-                    //if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
                     // allow multlang editor toolbar support
                     if ('wrap_' + e.editor.name.indexOf($firstCKEditor.attr('id')) !== -1) {
-                        $('html').addClass('aos_stickyCKEditorToolbar');
-                        checkstickyCKEditorToolbar();
-                        // isCKEfocused = true;
+                        $('html').addClass('stckyckdtrtlbr');
+                        checkstickyCKEBar();
                     }
                 });
-
-                // editor.on('change', function (e) {
-                //     if ('wrap_' + e.editor.name == $firstCKEditor.attr('id')) {
-                //         $('html').addClass('aos_stickyCKEditorToolbar');
-                //         checkstickyCKEditorToolbar();
-                //     }
-                // });
 
                 editor.on('blur', function (e) {
                     if ('wrap_' + e.editor.name.indexOf($firstCKEditor.attr('id')) !== -1) {
                         // isCKEfocused = false;
                         $firstCKEditor.find('.cke_top').removeClass('cke_top_fixed');
                         $firstCKEditor.find('.cke_contents').css('padding-top', "0px");
-                        $('html').removeClass('aos_stickyCKEditorToolbar');
+                        $('html').removeClass('stckyckdtrtlbr');
                     }
                 });
             });
         }
     }
-
-})
-;
-
-
-// add "scrolled" body class
-
-var addScrolledBodyClass = debounce(function () {
-    var el = document.querySelector('body');
-    posTop() > 20 ? el.classList.add('scrolled') : el.classList.remove('scrolled');
-}, 120);
-
-['scroll', 'resize', 'load'].forEach(function (e) {
-    // window.addEventListener(e, addScrolledBodyClass, false);
-    window.addEventListener(e, addScrolledBodyClass);
 });
-
-
-function posTop() {
-    return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
-}

@@ -1,6 +1,19 @@
 #Changelog
 
 
+### 0.5.4 (2016-08-30)
+
+- module settings are exported to settings.php on uninstall and restored on install
+- load admin.js and admin.css from /site/templates/ directory if exist
+- new tweak "NavItems" (experimental): add pages to main nav or sidebar (depending on theme)
+- HTML classes added by AOS are added by PHP instead JavaScript: faster and eliminates initial page jump so the loader is no longer needed
+- loader removed
+- added "cog" icon to footer to jump to AOS settings
+- fix: keep sidebar menu colors for non-inline mode (Reno theme)
+- module CSS classnames were abbreviated
+
+
+
 ### 0.5.3 (2016-08-22)
 
 - fixed FieldEditLink not showing up with InputfieldCheckbox where label was empty (reported by ceberlin)
@@ -15,7 +28,7 @@
 
 ### 0.5.1 (2016-08-20)
 
-- fix for flickering hoverSaveDropdown issue
+- fix for flickering HoverDropdown issue
 - fix for main menu submenu gap in Default theme (reported by bernhard)
 - fix for gap in Default theme under page tabs when Prev/Next Tabs module is installed (reported by ceberlin)
 - other CSS fixes/improvements
@@ -24,23 +37,23 @@
 
 ### 0.5.0 (2016-08-19)
 
-- added "centeredLogin" to (default) AdminTweaks
+- added "centerLogin" to (default) AdminTweaks
 
 
 
 ### 0.4.9 (2016-08-19)
 
-- added "centeredLogin" to RenoTweaks: align login page items to center
-- modalModuleEdit: align action buttons to center in the modal
-- modalModuleEdit: fix ctrl+s overlay added to parent document instead of modal's body
-- animated compactModuleList settings icon (cog)
+- added "centerLogin" to RenoTweaks: align login page items to center
+- moduleModal: align action buttons to center in the modal
+- moduleModal: fix ctrl+s overlay added to parent document instead of modal's body
+- animated moduleCompact settings icon (cog)
 
 
 
 ### 0.4.8 (2016-08-18)
 
 - support for ctrl+s in modals
-- added "Submit + Reload" button for modalModuleEdit
+- added "Submit + Reload" button for moduleModal
 - added translatable strings for Save, Save + Exit, Save + Reload
 - fix for malfunctional field edit links (reported by szabesz)
 
@@ -48,8 +61,8 @@
 
 ### 0.4.7 (2016-08-17)
 
-- added "Settings" for PagelistThumbs with options right-aligned thumbs and edit page on thumb click
-- PagelistThumbs uses the first image if supplied field is a multi-image field
+- added "Settings" for PageListThumbs with options right-aligned thumbs and edit page on thumb click
+- PageListThumbs uses the first image if supplied field is a multi-image field
 - fix InputfieldURLChecker malfunction with ajax-loaded fields
 - PageListUnselect improvements
 
@@ -79,15 +92,15 @@
 
 ### 0.4.3 (2016-08-11)
 
-- modalModuleEdit: added ESC close and secondary Submit button for submit+exit
+- moduleModal: added ESC close and secondary Submit button for submit+exit
 - RenoTweaks: optional inline mode for sidebar items
 
 
 
 ### 0.4.2 (2016-08-10)
 
-- modalModuleEdit option to ModalTweaks: edit modules in a modal dialog
-- compactModuleList module names are "full-cell" sized for better clickability
+- moduleModal option to ModalTweaks: edit modules in a modal dialog
+- moduleCompact module names are "full-cell" sized for better clickability
 - breadcrumbs ctrl+click fix for Default admin theme
 
 
@@ -97,8 +110,8 @@
 - workaround to use panel mode for repeaters and other fixes for InputfieldURLChecker
 - added "Enable module" toggle
 - layout improvements for sticky and compact headers (RenoTweak)
-- miniScrollbar now works with stickyHeader (previously only with compactHeader)
-- more general solution for HoverSaveDropdown
+- miniScrollbar now works with headSticky (previously only with compactHeader)
+- more general solution for HoverDropdown
 
 
 
@@ -121,7 +134,7 @@
 ### 0.3.8 (2016-08-08)
 
 - added 'FieldEditLinks' tweak: allows editing fields by ctrl-clicking on field labels in Page editor (or by clicking on field name that slides in)
-- added support for System Notifications module for stickyHeader (requested by szabesz)
+- added support for System Notifications module for headSticky (requested by szabesz)
 - added 'Only for SuperUsers' setting for Tooltips
 - fix sidebar quicklinks menu (flash menu) visibility (reported by Mike Rockett)
 - set module requirements to PW version 2.8 (suggested by Mike Rockett)
@@ -185,8 +198,8 @@
 
 ### 0.2.9 (2016-07-07)
 
-- New tweak compactModuleList: remove table headers and category titles from the module list page
-- New section created for module-related tweaks (currently contains compactModuleList and collapsedModuleInfos)
+- New tweak moduleCompact: remove table headers and category titles from the module list page
+- New section created for module-related tweaks (currently contains moduleCompact and collapsedModuleInfos)
 
 
 
@@ -243,7 +256,7 @@
 ### 0.2.1 (2016-06-20)
 
 - sticky admin tabs when compact sticky header is enabled
-- stickyCKEditorToolbar fix for multilanguage fields
+- stickyCKEBar fix for multilanguage fields
 - module submitted to modules directory
 - CSS fixes
 
@@ -258,7 +271,7 @@
 
 ### 0.1.9 (2016-06-11)
 
-- added first asmSelect tweak: collapseAsmSections
+- added first asmSelect tweak: asmCollapse
 
 
 
@@ -303,7 +316,7 @@
 ### 0.1.2 (2016-06-03)
 
 - new submodule: Add filter box and sort buttons to file fields (FileFieldToolbar). Currently only "filterbox" is available.
-- new submodule: add preview link next to page title (PagePreviewLink). Target can be set to new tab/modal/panel.
+- new submodule: add preview link next to page title (PagePreviewBtn). Target can be set to new tab/modal/panel.
 - new RenoTweak: sticky CKEditor toolbar (available only if sticky header is on)
 - module configuration page updates
 
@@ -312,8 +325,8 @@
 ### 0.1.0 (2016-05-30)
 
 - new RenoTweak: AlwaysShowSearch
-- new RenoTweak: stickyHeaderCompact
-- HoverSaveDropdown supports "Save module", "Publish" and "Save unpublished" buttons
+- new RenoTweak: headStickyCompact
+- HoverDropdown supports "Save module", "Publish" and "Save unpublished" buttons
 - module configuration page tweaks
 
 
@@ -327,13 +340,13 @@
 
 ### 0.0.8 (2016-05-28)
 
-- new tweak: HoverSaveDropdown
+- new tweak: HoverDropdown
 
 
 
 ### 0.0.7 (2016-05-28)
 
-- new Reno tweak: singleClickSidebarHeaders
+- new Reno tweak: sbSingleClickHeads
 - few CSS tweaks on the module's own admin page
 - load module CSS on ready() to make module CSS tweaks available right after install
 
@@ -341,14 +354,14 @@
 
 ### 0.0.6 (2016-05-27)
 
-- new tweaks: LoadCollapsedModuleInfos and fixScrollbarJump (Reno)
+- new tweaks: LoadCollapsedModuleInfos and ScrollFix (Reno)
 - revised default tweaks
 
 
 
 ### 0.0.5 (2016-05-27)
 
-- added Reno tweaks hideSidebarQuickLinks and oneLineSidebarItems
+- added Reno tweaks sbQuickLinksHide and sbItemsRow
 - various bugfixes
 
 

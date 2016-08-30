@@ -11,9 +11,23 @@ Various admin tweaks to enhance ProcessWire admin. See more at [https://processw
 1. Enable or disable submodules and tweak their settings.
 
 
-To uninstall follow the uninstall instructions on the link above.
+## Uninstall
+
+Follow the uninstall instructions on the link above.
+
+The module uses a file "settings.php" in the module's directory which is populated with module config data on uninstall and on next install imports it.
+This way you can reinstall the module later and continue where you've left off.
+
+Additionally you can copy this file to other ProcessWire installations to use the same settings.
+Make sure to copy the file before installing the module.
+
+The file needs to be writable to use this feature.
 
 
+## Adding custom CSS and JavaScript to the admin
+ 
+The module automatically loads `admin.css` and `admin.js` from directory `/site/templates/` if they exist.
+Create these files if you would like add custom styling or JavaScript to the admin.
 
 
 ## Enable module
@@ -54,6 +68,37 @@ Adds auto-grow functionality to fit textarea to its content. The submodule has n
 
 
 
+###NavItems
+
+*Add pages to add to navigation*
+
+Enables adding pages and appending them in the sidebar (Reno theme) or the top navigaton (Default theme).
+Items will be appended to the "Pages" section.
+
+Clicking on a custom nav item will load a page list containing its children.
+There's an "Edit" icon to the right of the items that opens the page for editing.
+This is available only if the user has proper rights and for items selected from the tree.
+
+####Additional items
+
+If you need to add items that are unavailable from the pages tree you can add them here.
+Use the syntax "Title: url" where "url" needs to be relative to the admin.
+
+Example:
+```
+Translator: setup/language-translator/edit/?language_id=1066&textdomain=site--templates--_strings-php
+// commented out item
+// "!" indicates visible only for SuperUsers
+! AdminOnSteroids: module/edit?name=AdminOnSteroids
+```
+
+If the title starts with "!" then it will be visible only for SuperUsers.
+
+Note that this feature is primarily for adding non-admin pages to the navigation.
+Some of the pages under the "Admin" page may not work correctly.
+
+
+
 ###DeselectRadios
 
 *Enable clearing checked radio buttons*
@@ -86,7 +131,7 @@ This feature is available only for SuperUsers.
 
 
 
-###FixScrollbarJump
+###ScrollFix
 
 *Prevent page jump when scrollbar appears*
 
@@ -118,7 +163,7 @@ Settings can be configured separately for CKEditor fields.
 
 
 
-###HoverSaveDropdown
+###HoverDropdown
 
 *Show save dropdown on hover instead on click*
 
@@ -217,7 +262,7 @@ Many thanks for Bernhard for the idea and help!
 
 
 
-###PagePreviewLink
+###PagePreviewBtn
 
 *Add preview link next to page title*
 
@@ -245,7 +290,7 @@ A few usability mods targetting the Reno admin theme.
 - **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items
 - **Use narrow pagelist rows**: reduce the space between the main pagelist rows to save space
-- **One-line sidebar submenus (only with autoHideSidebar)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
+- **One-line sidebar submenus (only with sbAutoHide)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Center login form**: align login page items to center
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
 
