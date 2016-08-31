@@ -27,7 +27,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 55,
+            'version'   => 56,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -224,7 +224,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         );
 
         foreach (self::$configData['enabledSubmodules'] as $submodule) {
-//            $htmlClasses[] = preg_replace('/[aeiou]/', '', strtolower($submodule));
             $this->addDOMClass($submodule);
 
             if (isset(self::$configData[ $submodule ]) && is_array(self::$configData[ $submodule ])) {
@@ -234,18 +233,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             }
         }
 
+        $html = $event->return;
+
+        // add empty class to html (default theme has no html class but check always)
+        if (!preg_match("/<html(.+)class=(.+)>/i", $html)) {
+            $html = str_replace('<html', '<html class=""', $html);
+        }
 
         if ($this->adminTheme == 'AdminThemeDefault') {
-            // add empty class to html (default theme has no class)
-            if (strpos('<html class', $event->return) === false) {
-                $event->return = str_replace('<html', '<html class=""', $event->return);
-            }
-            // add class to html (only available on body)
             $this->htmlClasses[] = 'AdminThemeDefault';
         }
 
-        $event->return = str_replace('<html class="', '<html class="' . implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses)) . ' ', $event->return);
-//        $event->return = str_replace('<html class="', '<html class="' . implode(' ', $this->htmlClasses) . ' ', $event->return);
+        $htmlClasses = implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses));
+
+        $event->return = preg_replace("/<html(.+)class=('|\")(.*?)('|\")/i", "<html$1class=$2$3 " . $htmlClasses. "$4", $html);
     }
 
 
@@ -363,13 +364,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $this->addHookAfter('Page::render', function ($event) {
 
                 $items = "";
-
+                $navItems = $this->NavItems_pages;
                 $rootUrl = $this->pages->get(2)->url . 'page/?id=';
 
                 // process pagelist select items
-                if ($this->NavItems_pages) {
+                if ($navItems) {
 
-                    foreach ($this->pages->getById($this->NavItems_pages) as $p) {
+                    foreach ($this->pages->getById($navItems) as $p) {
 
                         $url         = "";
                         $editUrl     = "";
@@ -418,10 +419,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
                         } else {
                             $pageId = $p->id;
+
+                            /**
+                             *  add active class only if:
+                             *
+                             * navItem id == GET id
+                             * navItem id == current page id
+                             * navItem id !== GET id and edited page is child page of the page
+                             */
+
                             if (
                                 $pageId == $inputId ||
                                 $pageId == $this->page->id ||
-                                ($this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
+//                                ($pageId == $inputId && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
+                                (!in_array($inputId, $navItems) && $pageId !== 1 && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
                             ) {
                                 $activeClass = ' current';
                             }

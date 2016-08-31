@@ -68,6 +68,12 @@ html.asmLeftX {
         right: auto;
       }
     }
+
+    .InputfieldPageListSelectMultiple ol li .itemRemove {
+      float: left;
+      margin-right: 12px;
+    }
+
     //.Inputfields .asmFieldsetStart,
     //.Inputfields .asmFieldsetStart ~ .asmListItem {
     //  padding-left: 48px;
@@ -565,13 +571,13 @@ form[action*="AdminOnSteroids"] {
         }
       }
     }
-    @media only screen and (min-width: 1920px) {
-      > .InputfieldContent > .Inputfields {
-        column-gap: 16px;
-        column-count: 2;
-        column-fill: balance; // Firefox only
-      }
-    }
+    //@media only screen and (min-width: 1920px) {
+    //  > .InputfieldContent > .Inputfields {
+    //    column-gap: 16px;
+    //    column-count: 2;
+    //    column-fill: balance; // Firefox only
+    //  }
+    //}
   }
 
   label {

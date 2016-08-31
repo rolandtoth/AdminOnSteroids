@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.5.6 (2016-08-31)
+
+- add InputfieldPageListSelectMultipleSortable asmSelect items to AsmTweaks "move close button to left"
+- better highlight of active items in NavItems_pages
+- use regex html to add html classes (should fix no html class issue with default theme)
+
+
+
 ### 0.5.5 (2016-08-31)
 
 - module settings restore is optional (disabled by default)
