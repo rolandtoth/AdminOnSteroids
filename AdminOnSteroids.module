@@ -20,8 +20,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     public $adminTheme;
     protected $editedPage;
     protected $PageListThumbs_items;
-    protected $settingsFile = __DIR__ . '/settings.php';
+    protected $settingsFile;
     protected $htmlClasses;
+
+    public function __construct() {
+        $this->settingsFile = __DIR__ . "/settings.php";
+    }
 
     public static function getModuleInfo() {
         return array(
