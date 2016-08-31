@@ -21,6 +21,8 @@ This way you can reinstall the module later and continue where you've left off.
 Additionally you can copy this file to other ProcessWire installations to use the same settings.
 Make sure to copy the file before installing the module.
 
+To enable this feature, check the option "Restore settings on next install".
+
 The file needs to be writable to use this feature.
 
 
@@ -314,3 +316,12 @@ Hide field descriptions and notes to an icon and show them on hover in a tooltip
 - **Enable for field descriptions**: allow moving field description to an icon
 - **Enable for field notes**: allow moving field notes to an icon
 - **Use overlay style**: when checked, the tooltip will cover the entire area of the field. This eliminates the z-index issues of the traditional tooltip style (other page elements may partly cover the tooltip).
+
+
+
+##Restore settings on next install
+
+If checked, on module uninstall module configuration will be saved to settings.php in the module's directory.
+See more in the "Install" section in the beginning of this readme.
+
+Note: the module has to be saved first if you change this feature to take effect.

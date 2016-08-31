@@ -143,7 +143,6 @@ html.asmLeftX {
           transform-origin: 50% 50%;
         }
         &:hover,
-          //&:active,
         &.tooltip-active {
           * {
             visibility: visible;
@@ -156,7 +155,7 @@ html.asmLeftX {
           cursor: pointer;
           font-size: 14px;
           letter-spacing: 0;
-          z-index: 100000 + 1;
+          z-index: 100000 + 10000;
           &, *:not(a) {
             // set everything white but links
             color: #f8f8f8;
@@ -176,10 +175,10 @@ html.asmLeftX {
             border: $size solid transparent;
             border-top-color: #1C2836;
           }
-          &.tooltip-active {
-            // enable selection
-            pointer-events: all;
-          }
+        }
+        &.tooltip-active {
+          //  // enable selection
+          pointer-events: all;
         }
       }
 
@@ -683,11 +682,13 @@ form[action*="AdminOnSteroids"] {
   }
 }
 
-.aos_hasTooltip {
-  &.InputfieldStateCollapsed {
-    overflow: visible !important;
-  }
+//.aos_hasTooltip {
+.InputfieldStateCollapsed,
+.InputfieldStateWasCollapsed {
+  overflow: visible !important;
 }
+
+//}
 
 // both for Reno & Default themes
 h1 span,

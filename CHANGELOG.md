@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.5.5 (2016-08-31)
+
+- module settings restore is optional (disabled by default)
+- JS workaround for field edit links for ajax-loaded fields
+- syntax error fix (thanks to TomasKostadinov)
+
+
+
 ### 0.5.4 (2016-08-30)
 
 - module settings are exported to settings.php on uninstall and restored on install

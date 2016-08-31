@@ -51,6 +51,22 @@ $(document).ready(function () {
                 return false;
             }
         });
+        // workaround: add edit links to ajax-loaded fields
+        $('.Inputfield').on('reloaded', function () {
+            var field = $(this),
+                label = field.find('label');
+
+            if (!label.length) return false;
+
+            if (label.find('span').length == 0) {
+                var fieldName = label.parent().find('.InputfieldContent .aos_EditFieldLink').attr('data-field-name');
+
+                if (!fieldName) return false;
+
+                label.contents().eq(0).wrap('<span class="title">');
+                field.find('span.title').append('<em class="aos_EditField">' + fieldName + ' <i class="fa fa-pencil"></i></em>');
+            }
+        });
     }
 
 
@@ -281,7 +297,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+            // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
