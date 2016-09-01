@@ -1,7 +1,15 @@
 #Changelog
 
 
+### 0.5.7 (2016-09-01)
+
+- fix missing AdminThemeDefault html class
+- added asterisk suffix to NavItems_pages visible to SuperUsers only
+
+
+
 ### 0.5.6 (2016-08-31)
+
 
 - add InputfieldPageListSelectMultipleSortable asmSelect items to AsmTweaks "move close button to left"
 - better highlight of active items in NavItems_pages

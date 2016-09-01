@@ -27,7 +27,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 56,
+            'version'   => 57,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -320,7 +320,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $this->htmlClasses = array();
 
-        $this->adminTheme = $this->user->admin_theme;
+        // if there's only the default admin theme, $user->admin_theme is not available
+        $this->adminTheme = $this->user->admin_theme ? $this->user->admin_theme : $this->config->defaultAdminTheme;
 
         self::$configData = $this->modules->getModuleConfigData($this);
 
@@ -350,7 +351,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $this->addHookAfter('Page::render', $this, 'addClasses');
 
         $root     = $this->config->urls->siteModules . __CLASS__;
-        $rootPath = $this->config->paths->siteModules . __CLASS__;
         $styles   = $this->config->styles;
         $scripts  = $this->config->scripts;
 
@@ -482,7 +482,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                             if (!$this->user->isSuperUser()) {
                                 continue;
                             }
-                            $title = ltrim($title, '!');
+                            // trim and add * to indicate it's admin only
+                            $title = ltrim($title, '!') . "*";
                         }
 
                         $url = ltrim($url, '/');

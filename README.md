@@ -95,6 +95,7 @@ Translator: setup/language-translator/edit/?language_id=1066&textdomain=site--te
 ```
 
 If the title starts with "!" then it will be visible only for SuperUsers.
+These items will have an asterisk (*) suffix to indicate visibility.
 
 Note that this feature is primarily for adding non-admin pages to the navigation.
 Some of the pages under the "Admin" page may not work correctly.
