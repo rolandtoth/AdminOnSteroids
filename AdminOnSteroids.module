@@ -916,46 +916,32 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $page = $event->arguments('page');
         $field = null;
 
-        // intentional =
-        if (!($settings = $this->getPagePageListThumbs_options())) {
-            return false;
-        }
+        // intentional "="
+        if (!($settings = $this->getPagePageListThumbs_options())) return false;
+        if (!is_array($settings)) return false;
 
+        foreach ($settings as $pairs) {
 
-        // only one field name is passed (global)
-        if (count($settings) == 1 && strpos($settings[0], ':') === false) {
+            if (strpos($pairs, '//') === 0) continue;
 
-            $field = $settings[0];
+            $setting = explode(':', $pairs);
 
-        } else {
+            $f = isset($setting[0]) ? trim($setting[0]) : null;
+            $selector = isset($setting[1]) ? trim($setting[1]) : null;
 
-            // multiple lines of settings passed
-            foreach ($settings as $pairs) {
+            if (is_null($f) || !$page->$f || (!$page->$f instanceof Pageimage && !$page->$f instanceof Pageimages) || count($page->$f) == 0) {
+                continue;
+            }
 
-                if (strpos($pairs, '//') === 0) {
-                    continue;
-                }
+            if (is_null($selector)) {
+                // break if there's no selector (any page will match)
+                $field = $f;
+                break;
 
-
-                $setting = explode(':', $pairs);
-
-                $f = isset($setting[0]) ? trim($setting[0]) : null;
-                $selector = isset($setting[1]) ? trim($setting[1]) : null;
-
-                if (is_null($f) || !$page->$f || (!$page->$f instanceof Pageimage && !$page->$f instanceof Pageimages) || count($page->$f) == 0) {
-                    continue;
-                }
-
-                if (is_null($selector)) {
-                    // break if there's no selector (any page will match)
-                    $field = $f;
-                    break;
-
-                } elseif ($page->is($selector)) {
-                    // break if page matches
-                    $field = $f;
-                    break;
-                }
+            } elseif ($page->is($selector)) {
+                // break if page matches
+                $field = $f;
+                break;
             }
         }
 
@@ -969,11 +955,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('pListCompact', $this->RenoTweaks))) ? 32 : 48;
 
-
         if (isset($this->PageListThumbs_style) && !empty($this->PageListThumbs_style)) {
             $classes[] = $this->PageListThumbs_style;
         }
-
 
         if (in_array('square', $classes)) {
 //                $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => false))->url;
