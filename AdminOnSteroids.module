@@ -27,7 +27,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 57,
+            'version'   => 58,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -50,6 +50,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     static public function getDefaultData() {
         return array(
             'enabledSubmodules'            => array(
+                'AdminLangSwitcher',
                 'AutosizeTextareas',
                 'AsmTweaks',
                 'DeselectRadios',
@@ -186,7 +187,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // save current config to settings.php
 //        if ($this->restore == 1) {
-            @file_put_contents($this->settingsFile, json_encode($this->modules->getModuleConfigData($this)));
+        @file_put_contents($this->settingsFile, json_encode($this->modules->getModuleConfigData($this)));
 //        }
     }
 
@@ -220,7 +221,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'ScrollFix',
             'tooltipDesc',
             'tooltipNotes',
-            'tooltipOverlay',
+            'tooltipOverlay'
         );
 
         foreach (self::$configData['enabledSubmodules'] as $submodule) {
@@ -246,7 +247,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $htmlClasses = implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses));
 
-        $event->return = preg_replace("/<html(.+)class=('|\")(.*?)('|\")/i", "<html$1class=$2$3 " . $htmlClasses. "$4", $html);
+        $event->return = preg_replace("/<html(.+)class=('|\")(.*?)('|\")/i", "<html$1class=$2$3 " . $htmlClasses . "$4", $html);
     }
 
 
@@ -276,11 +277,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
-//    public function init() {
-//    }
+    public function init() {
 
-
-    public function ready() {
 
         if ($this->user->isSuperUser()) {
 
@@ -307,9 +305,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 $modulePage = $this->config->urls->admin . 'module/edit?name=AdminOnSteroids';
                 $configLink = '<a href="' . $modulePage . '" ' . $linkStyle . ' title="' . __('Configure module', __FILE__) . '"><i class="fa fa-cog"></i></a>';
 
-
                 $parts['footer'] = $parts['footer'] . '<p style="opacity:1;"><a href="' . $modulePage . '&toggle=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p>';
-                $event->return   = $parts;
+
+                $event->return = $parts;
             });
         }
 
@@ -318,23 +316,48 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             return;
         }
 
-        $this->htmlClasses = array();
-
-        // if there's only the default admin theme, $user->admin_theme is not available
-        $this->adminTheme = $this->user->admin_theme ? $this->user->admin_theme : $this->config->defaultAdminTheme;
-
         self::$configData = $this->modules->getModuleConfigData($this);
 
-        $configData = self::$configData;
+        if (!isset(self::$configData['enabledSubmodules'])) {
+            return;
+        }
 
-        $defaultData = self::getDefaultData();
+//        $enabledSubmodules = self::$configData['enabledSubmodules'];
 
+        // AdminLangSwitcher
+//        $subModule = 'AdminLangSwitcher';
+
+        // add to init() to change early
+//        if (in_array($subModule, $enabledSubmodules)) {
+        if (isset($_COOKIE["aos_lang_id"])) {
+            $lang_id              = $_COOKIE["aos_lang_id"];
+            $this->user->language = $lang_id;
+        }
+//        }
+    }
+
+
+    public function ready() {
+
+        if (!$this->enabled) {
+            return;
+        }
+
+        $configData        = self::$configData;
+        $defaultData       = self::getDefaultData();
+        $enabledSubmodules = $configData['enabledSubmodules'];
 
         if (!isset($configData['enabledSubmodules'])) {
             return;
         }
 
-        $enabledSubmodules          = $configData['enabledSubmodules'];
+
+        $this->htmlClasses = array();
+
+        // if there's only the default admin theme, $user->admin_theme is not available
+        $this->adminTheme = $this->user->admin_theme ? $this->user->admin_theme : $this->config->defaultAdminTheme;
+
+
         $this->PageListThumbs_items = array();
 
         $editedPageId = $this->sanitizer->int($this->config->input->get->id);
@@ -350,9 +373,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $this->addHookAfter('Page::render', $this, 'addClasses');
 
-        $root     = $this->config->urls->siteModules . __CLASS__;
-        $styles   = $this->config->styles;
-        $scripts  = $this->config->scripts;
+        $root    = $this->config->urls->siteModules . __CLASS__;
+        $styles  = $this->config->styles;
+        $scripts = $this->config->scripts;
+
+
+        // AdminLangSwitcher
+        $subModule = 'AdminLangSwitcher';
+        if (in_array($subModule, $enabledSubmodules)) {
+            $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAdminLangSwitcher');
+        }
 
 
         //NavItems
@@ -363,9 +393,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
             $this->addHookAfter('Page::render', function ($event) {
 
-                $items = "";
+                $items    = "";
                 $navItems = $this->NavItems_pages;
-                $rootUrl = $this->pages->get(2)->url . 'page/?id=';
+                $rootUrl  = $this->pages->get(2)->url . 'page/?id=';
 
                 // process pagelist select items
                 if ($navItems) {
@@ -431,7 +461,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                             if (
                                 $pageId == $inputId ||
                                 $pageId == $this->page->id ||
-//                                ($pageId == $inputId && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
+                                //                                ($pageId == $inputId && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
                                 (!in_array($inputId, $navItems) && $pageId !== 1 && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
                             ) {
                                 $activeClass = ' current';
@@ -1005,6 +1035,27 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return $settings;
     }
 
+    public function addAdminLangSwitcher(HookEvent $event) {
+
+        if ($this->languages && $this->languages->count() > 1) {
+
+            $parts = $event->return;
+
+            $lang_items = '';
+            $userLangId = $this->user->language->id;
+
+            // todo check permission lang-edit?
+            foreach ($this->languages as $lang) {
+                $activeClass = $lang->id == $userLangId ? ' class="active"' : '';
+                $lang_items .= '<li' . $activeClass . '><a href="' . $_SERVER['REQUEST_URI'] . '" data-lang-id="' . $lang->id . '"><span class="lang-title">' . $lang->title . '</span> <span class="lang-name">' . $lang->name . '</span></a></li>';
+            }
+
+            $parts['masthead'] .= '<li class="aos_adminLangSwitcher" style="display: none;"><a href="#">' . $this->user->language->title . '</a><ul>' . $lang_items . '</ul></li>';
+
+            $event->return = $parts;
+        }
+    }
+
 
     public function getModuleConfigInputfields(array $data) {
 
@@ -1036,6 +1087,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->collapsed = Inputfield::collapsedNever;
 //        $f->table = true;
 
+        $f->addOption('AdminLangSwitcher', __('**AdminLangSwitcher**Add language switcher to the admin', __FILE__));
         $f->addOption('AdminTweaks', __('**AdminTweaks**Default admin theme tweaks', __FILE__));
         $f->addOption('AsmTweaks', __('**AsmTweaks**asmSelect tweaks', __FILE__));
         $f->addOption('AutosizeTextareas', __('**AutosizeTextareas**Autosize textareas according to content', __FILE__));
@@ -1071,7 +1123,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 //        $fset->showIf    = 'enabled=1';
         $fset->label     = __('Options for individual submodules', __FILE__);
         $fset->collapsed = Inputfield::collapsedNever;
-
 
         // AdminTweaks ----------------------------------------------- //
 
@@ -1551,13 +1602,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $wrapper->add($fset);
 
-        $f            = wire('modules')->get('InputfieldCheckbox');
-        $f->name      = 'restore';
-        $f->label     = __('Restore settings on next install', __FILE__);
-        $f->description     = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__);
-        $f->notes     = __('Make sure to save the module first when changing this value.', __FILE__);
-        $f->collapsed = Inputfield::collapsedNever;
-        $f->value     = $data[ $f->name ];
+        $f              = wire('modules')->get('InputfieldCheckbox');
+        $f->name        = 'restore';
+        $f->label       = __('Restore settings on next install', __FILE__);
+        $f->description = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__);
+        $f->notes       = __('Make sure to save the module first when changing this value.', __FILE__);
+        $f->collapsed   = Inputfield::collapsedNever;
+        $f->value       = $data[ $f->name ];
 
         $f->checked = ($f->value == 1) ? 'checked' : '';
 

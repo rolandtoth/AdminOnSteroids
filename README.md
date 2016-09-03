@@ -43,6 +43,18 @@ Clicking on this link will also enable/disable the module (and reloads the curre
 ## Submodules
 
 
+###AdminLangSwitcher
+
+*Add language switcher to the admin*
+
+This tweak will add a dropdown to the main navigation that allows changing the admin language.
+Page names, the admin interface will be loaded in the selected language, and the page edit screen will also load the language in that language.
+
+The language switcher uses a cookie so the language will be remembered even though the user's profile is actually not saved. 
+
+Note that in the Default theme it's added to the end of the top menu items while in Reno it's the first.
+
+
 ###AdminTweaks
 
 *Apply default admin theme tweaks*

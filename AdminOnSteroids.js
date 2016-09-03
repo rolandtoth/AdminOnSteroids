@@ -42,7 +42,27 @@ $(document).ready(function () {
         $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
     });
 
-// FieldAndTemplateEditLinks
+
+    if ($('.aos_adminLangSwitcher').length) {
+
+        var langSwitcher = $('.aos_adminLangSwitcher');
+
+        if ($('body').hasClass('AdminThemeReno')) {
+            langSwitcher.prependTo('#topnav');
+        } else {
+            langSwitcher.appendTo('#topnav');
+        }
+
+        langSwitcher.removeAttr('style');
+
+        langSwitcher.on('click', 'a', function () {
+            var lang_id = $(this).attr('data-lang-id');
+            document.cookie = 'aos_lang_id=' + lang_id  + ';expires=0;path=/';
+        });
+    }
+
+
+    // FieldAndTemplateEditLinks
     if (AOSsettings.enabledSubmodules.indexOf('FieldAndTemplateEditLinks') !== -1) {
         $(document).on('click', '#ProcessPageEdit .Inputfield .aos_EditField', function () {
             var editFieldLink = $(this).parents('.Inputfield').eq(0).find('.aos_EditFieldLink');
@@ -297,7 +317,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,

@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.5.8 (2016-09-03)
+
+- added AdminLangSwitcher tweak
+- fix z-index issue with DateTimePicker
+
+
+
+
 ### 0.5.7 (2016-09-01)
 
 - fix missing AdminThemeDefault html class
