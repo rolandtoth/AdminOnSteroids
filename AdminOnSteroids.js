@@ -37,6 +37,30 @@ $(document).ready(function () {
         return false;
     }
 
+    // add "title" to h1
+    if ($('h1#title').length) {
+
+        if ($('h1#title > span').length) {
+            pageTitle = $('h1#title > span')[0].innerText;
+        } else {
+            pageTitle = $('h1#title').text();
+        }
+
+        if (pageTitle) {
+            $('h1#title').attr('title', pageTitle);
+        }
+    }
+
+    // move role asmSelect to submodules section
+    //$('#Inputfield_enabledSubmodules_AdminLangSwitcher + span').after($('#wrap_Inputfield_AdminLangSwitcherRoles'));
+    $('#wrap_Inputfield_enabledSubmodules .InputfieldCheckboxesStacked li span').each(function () {
+        var obj = $(this),
+            current = obj.prev().attr('id').replace('enabledSubmodules_', '');
+
+        obj.after($('#wrap_' + current + 'Roles'));
+    });
+
+
     // AOS: enable/disable module checkbox click
     $('form[action*="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
         $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
@@ -51,13 +75,15 @@ $(document).ready(function () {
             langSwitcher.prependTo('#topnav');
         } else {
             langSwitcher.appendTo('#topnav');
+            // put inside 'a' to have top menu highlighted on hover
+            $('.aos_adminLangSwitcher > a').append($('.aos_adminLangSwitcher > a + ul'));
         }
 
         langSwitcher.removeAttr('style');
 
         langSwitcher.on('click', 'a', function () {
             var lang_id = $(this).attr('data-lang-id');
-            document.cookie = 'aos_lang_id=' + lang_id  + ';expires=0;path=/';
+            document.cookie = 'aos_lang_id=' + lang_id + ';expires=0;path=/';
         });
     }
 
@@ -377,10 +403,11 @@ $(document).ready(function () {
         $('.NavItems').remove();
     }
 
-// NoAnims
-    if (AOSsettings.enabledSubmodules.indexOf('NoAnims') !== -1) {
+// noAnim
+    if (AOSsettings.enabledSubmodules.indexOf('noAnim') !== -1) {
         $.fx.off = true;
     }
+
 
 // PagePreviewBtn
     if (AOSsettings.enabledSubmodules.indexOf('PagePreviewBtn') !== -1) {
@@ -393,7 +420,10 @@ $(document).ready(function () {
                 pageViewUrl = $('a#_ProcessPageEditView').attr('href');
 
             if (pageTitle.children('.pageTitleLink').length == 0) {
-                pageTitle.wrapInner('<span>').append('<a href="' + pageViewUrl + '" id="aos_PagePreviewBtn" class="' + AOSsettings.PagePreviewBtn + '" target="_blank"><i class="fa fa-external-link"></i></a>');
+                if (!pageTitle.children('span').length) {
+                    pageTitle.wrapInner('<span>');
+                }
+                pageTitle.append('<a href="' + pageViewUrl + '" id="aos_PagePreviewBtn" class="' + AOSsettings.PagePreviewBtn + '" target="_blank"><i class="fa fa-external-link"></i></a>');
             }
         }
     }
@@ -763,4 +793,24 @@ $(document).ready(function () {
             });
         }
     }
+
+    /**
+     * Add placeholder to asmSelect
+     * Selector: http://stackoverflow.com/questions/10641258/jquery-select-data-attributes-that-arent-empty#answer-23944081
+     */
+    $(function () {
+        $('select[data-asm-placeholder!=""][data-asm-placeholder]').each(function () {
+
+            var placeholder = $(this).data('asmPlaceholder');
+
+            if (placeholder) {
+                $(this).parent().find('.asmSelect option:first').attr({
+                    'selected': true,
+                    'disabled': true
+                }).text(placeholder);
+            }
+        });
+    });
 });
+
+

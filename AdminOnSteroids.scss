@@ -95,10 +95,23 @@ html.asmLeftX {
   }
 }
 
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 // Tooltips
 @media only screen and (min-width: 960px) {
 
   #content {
+
+    .WireTabs {
+      // disable active tab having bottom border
+      z-index: 2;
+    }
+
     //li:not(.translated):not(.untranslated):not(.noTooltip) { // disable in Language Translator
     form:not([action^="./?textdomain"]) { // disable in Language Translator
 
@@ -407,6 +420,8 @@ html.asmCollapse {
       #title {
         padding: 0 !important;
         float: none !important;
+        line-height: 1.25;
+        margin: -0.25em auto 0 !important;
       }
 
       #main {
@@ -483,6 +498,19 @@ html.asmCollapse {
         margin-top: 0;
       }
     }
+    &:before {
+      // hover fix z-index
+      body.AdminThemeDefault & {
+        content: "";
+        height: 16px;
+        display: block;
+        position: absolute;
+        top: 32px;
+        left: 0;
+        right: 0;
+        background: transparent;
+      }
+    }
   }
   &:hover {
     cursor: pointer;
@@ -520,9 +548,11 @@ html.asmCollapse {
         padding: 0.5em 1em;
         display: flex;
         justify-content: space-between;
+        font-weight: normal;
         //width: 100%;
         .lang-title {
           display: inline-block;
+          font-weight: normal;
         }
         .lang-name {
           display: inline-block;
@@ -544,7 +574,9 @@ html.asmCollapse {
       &.active {
         a {
           opacity: 1;
-          font-weight: 600;
+          .lang-title {
+            font-weight: bold;
+          }
         }
       }
     }
@@ -565,20 +597,153 @@ html.asmCollapse {
   filter: saturate(0);
 }
 
+#Inputfield_tweaks {
+  > label {
+    font-size: 21px;
+    padding-bottom: 0.5em;
+    font-weight: normal;
+  }
+}
+
+#wrap_Inputfield_enabledSubmodules {
+
+  > label {
+    font-size: 21px;
+    padding-bottom: 0.5em;
+    font-weight: normal;
+  }
+
+  .InputfieldAsmSelect {
+    margin: 8px 8px 8px 20px !important;
+    > * {
+      border: none;
+      padding: 0;
+    }
+  }
+
+  input[type="checkbox"] {
+    vertical-align: top;
+    position: absolute;
+    top: 14px;
+    left: 12px;
+  }
+
+  .InputfieldCheckboxesStacked {
+    overflow: visible;
+
+    > li {
+      @include clearfix;
+      display: block;
+      //margin: 0 0 -1px -1px !important;
+      margin: 0;
+      padding: 2px 0 !important;
+      //&:hover {
+      //label span:before {
+      //background: rgba(#E2E9EF, 0.2);
+      //}
+      //}
+      > label {
+        position: relative;
+        display: block;
+        padding: 10px 20px 12px 30px;
+        z-index: 1;
+        > span {
+          z-index: 1;
+          &:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            pointer-events: none;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background: rgba(darken(#97AAB4, 0), 0.2);
+            outline: 1px solid rgba(#000, 0.025);
+            //box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+            outline-offset: -1px;
+          }
+        }
+      }
+    }
+    input:checked {
+      + span {
+        &:before {
+          background: transparent !important;
+          outline: 1px solid #ddd;
+          box-shadow: 1px 1px 4px -3px rgba(0, 0, 0, 0.6);
+        }
+      }
+    }
+    //input:not(:checked) {
+    //  + span {
+    //    color: rgba(255, 255, 255, 0.99);
+    //  }
+    //}
+  }
+
+  li.InputfieldAsmSelect {
+    position: static;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  .asmSelect {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+
+    @-moz-document url-prefix() {
+      top: 4px !important;
+    }
+
+    width: auto !important;
+    background: transparent;
+    font-size: 66%;
+    text-align: right;
+    text-align-last: right;
+    z-index: 30;
+    opacity: 0.66;
+    padding: 2px 4px 2px 0;
+    option {
+      font-size: 14px;
+      background: transparent;
+      text-align: left;
+      &[disabled="disabled"]:first-child {
+        display: none;
+      }
+    }
+    border: 4px solid transparent !important;
+    border-right-width: 0 !important;
+
+    &:focus,
+    &:hover {
+      background: #fff;
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+  .asmListItem:first-child {
+    margin-top: 6px !important;
+  }
+  .asmList {
+    margin-top: 0 !important;
+  }
+}
+
 form[action*="AdminOnSteroids"] {
 
   #wrap_Inputfield_enabledSubmodules {
     > .InputfieldContent {
       label {
-        //font-style: italic;
         font-size: 94%;
         line-height: 1.45;
-        margin-bottom: 6px;
         strong {
           margin-top: 1px;
           font-style: normal;
           display: block;
           font-weight: bold;
+          margin-bottom: 4px;
         }
       }
       ul {
@@ -587,16 +752,15 @@ form[action*="AdminOnSteroids"] {
         }
         @media only screen and (min-width: 960px) {
           column-count: 2;
-          column-gap: 16px;
+          column-gap: 4px;
         }
-        @media only screen and (min-width: 1280px) {
+        @media only screen and (min-width: 1320px) {
           column-count: 3;
         }
-        @media only screen and (min-width: 1680px) {
-          column-count: 4;
-        }
-        @media only screen and (min-width: 2100px) {
-          column-count: 5;
+        html.AdminThemeReno {
+          @media only screen and (min-width: 1640px) {
+            column-count: 4;
+          }
         }
       }
     }
@@ -605,16 +769,8 @@ form[action*="AdminOnSteroids"] {
   .Inputfields .InputfieldRadiosColumns {
     > li {
       width: auto !important;
-      //margin-right: 8px;
     }
 
-  }
-
-  input[type=checkbox],
-  input[type=radio] {
-    &:not(:checked) {
-      opacity: 0.64;
-    }
   }
 
   #Inputfield_tweaks {
@@ -659,7 +815,6 @@ form[action*="AdminOnSteroids"] {
             padding-left: 360px;
             position: relative;
             background: transparent;
-            //width: calc(100% - 360px);
             width: 100%;
             top: 1px;
             border-left: none;
@@ -667,13 +822,6 @@ form[action*="AdminOnSteroids"] {
         }
       }
     }
-    //@media only screen and (min-width: 1920px) {
-    //  > .InputfieldContent > .Inputfields {
-    //    column-gap: 16px;
-    //    column-count: 2;
-    //    column-fill: balance; // Firefox only
-    //  }
-    //}
   }
 
   label {
@@ -706,10 +854,10 @@ form[action*="AdminOnSteroids"] {
       cursor: pointer;
     }
     + span {
-      opacity: 0.7;
+      //opacity: 0.7;
       white-space: normal;
       display: inline-block;
-      padding-right: 20px;
+      //padding-right: 20px;
     }
     &:checked {
       + span {
@@ -1055,14 +1203,10 @@ html.moduleCompact {
           }
           a {
             display: block;
-            //position: absolute;
-            //left: 0;
-            //top: 0;
-            //right: 0;
-            //bottom: 0;
-            //padding-top: 7px;
             span {
               position: static;
+              display: block;
+              margin-right: 45px;
             }
           }
         }
@@ -1128,30 +1272,32 @@ html.moduleCompact {
 }
 
 // tweak styles
-html.PagePreviewBtn {
+//html.PagePreviewBtn {
 
-  body.AdminThemeDefault {
-    #aos_PagePreviewBtn {
-      i {
-        font-size: 0.84em !important;
-        color: inherit;
-      }
-    }
-  }
-
+body.AdminThemeDefault {
   #aos_PagePreviewBtn {
-    margin-left: 0.5em;
     i {
-      color: rgba(0, 0, 0, 0.33);
-      font-size: 0.7em !important;
-    }
-    &:hover {
-      i {
-        color: inherit !important;
-      }
+      font-size: 0.84em !important;
+      color: inherit;
     }
   }
 }
+
+#aos_PagePreviewBtn {
+  margin-left: 0.5em;
+  position: absolute;
+  i {
+    color: rgba(0, 0, 0, 0.33);
+    font-size: 0.7em !important;
+  }
+  &:hover {
+    i {
+      color: inherit !important;
+    }
+  }
+}
+
+//}
 
 // Reno theme search tweaks on lower resolutions
 //@media only screen and (max-width: 960px) {
@@ -1380,6 +1526,10 @@ html.AdminThemeReno {
           z-index: 100000 + 3050 !important;
         }
       }
+      // fix cke dialog covered by other lang's cke overlay after langtab switch
+      .cke_dialog {
+        z-index: 100000 + 3100 !important;
+      }
 
       // System Notifications module
       #NotificationGhosts {
@@ -1510,11 +1660,23 @@ html.AdminThemeReno {
         top: 52px !important;
       }
 
-      //body.scrolled {
       #headline {
         box-shadow: $defaultBoxShadow;
       }
-      //}
+
+      #title {
+        max-width: calc(100% - 180px);
+        line-height: 1.25em !important;
+        margin-top: -0.25em !important;
+        > span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
+          //max-width: calc(100% - 40px);
+          vertical-align: bottom;
+        }
+      }
 
       .cke_top_fixed.cke_top {
         //animation: fadeIn ease-in 0.1s;
@@ -1662,6 +1824,7 @@ html.AdminThemeReno {
         top: 0 !important;
       }
       #headline {
+        box-shadow: $defaultBoxShadow;
         top: 33px;
         position: fixed;
         width: 100%;
@@ -1676,9 +1839,6 @@ html.AdminThemeReno {
         border-top: 100px solid transparent;
         &:not(.closed) #headline {
           padding-left: 232px;
-        }
-        #content {
-          //border-top: 100px solid transparent;
         }
       }
       #wrap {
@@ -1721,11 +1881,10 @@ html.AdminThemeReno {
           }
         }
       }
-      //body.scrolled {
-      #headline {
-        box-shadow: $defaultBoxShadow;
+
+      h1#title {
+        max-width: calc(100% - 300px);
       }
-      //}
 
       #ProcessPageSearchAutocomplete {
         position: fixed;
@@ -2042,6 +2201,7 @@ html.AdminThemeReno {
           float: none;
           display: inline-block;
           margin-bottom: -1em;
+          //margin-bottom: 0;
 
           button {
             //background: transparent !important;
@@ -2051,7 +2211,8 @@ html.AdminThemeReno {
         }
         #title {
           float: left;
-          padding-right: 2em;
+          padding-right: 0;
+          margin-right: 2em;
         }
       }
     }
@@ -2085,26 +2246,10 @@ html.AdminThemeReno {
               }
             }
             a {
-              padding: 0.5em 0.5em 0.5em 1.3em;
+              padding: 0.275em 0.5em 0.275em 1.3em;
               &.parent:hover {
                 background-color: inherit !important;
               }
-              //&.has-quicklinks {
-              //  span {
-              //    display: inline-block;
-              //    padding-right: 18px;
-              //  }
-              //}
-              //i.quicklink-open {
-              //  visibility: visible;
-              //  opacity: 0.33;
-              //  padding: 5px 10px;
-              //  color: inherit !important;
-              //  &:hover {
-              //    opacity: 1;
-              //    color: inherit !important;
-              //  }
-              //}
               &:after {
                 display: none;
               }
@@ -2120,9 +2265,10 @@ html.AdminThemeReno {
               //padding: 8px 12px 2px 12px !important;
               > li {
                 a {
-                  padding-top: 0.27em;
-                  padding-bottom: 0.27em;
-                  font-size: 0.94em;
+                  padding-top: 0.275em;
+                  padding-bottom: 0.275em;
+                  //font-size: 0.94em;
+                  margin-bottom: 0;
                   &.current {
                     //background: transparent;
                     //color: inherit !important;
@@ -2285,15 +2431,20 @@ html.AdminThemeDefault {
 
         #masthead {
           position: fixed;
-          //z-index: 30;
-          z-index: 100000 + 200;
+          z-index: 30;
+          //z-index: 100000 + 1000;
           width: 100%;
           top: 0;
           left: 0;
+          // adminlangswitcher fix
+          &:hover {
+            z-index: 31;
+          }
         }
 
         #breadcrumbs {
           position: fixed;
+          //z-index: 100000 + 1000;
           z-index: 30;
           top: 47px;
           left: 0;
@@ -2477,4 +2628,9 @@ html.HoverDropdown {
 
 #ui-datepicker-div {
   z-index: 100000 + 20000 !important;
+}
+
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
 }

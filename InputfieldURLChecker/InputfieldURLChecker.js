@@ -14,7 +14,6 @@ $(document).ready(function () {
 
     var IUC = {
         selector: 'a.iuc',
-        asmSelectPlaceholder: 'data-asm-placeholder',
         linkHiddenClass: 'iuc-hide',
         lockedClass: 'iuc-locked-link',
         pwPanelSelector: 'iframe.pw-panel-content',
@@ -149,23 +148,25 @@ $(document).ready(function () {
         obj.trigger('fieldchange');
     }
 
-    /**
-     * Add placeholder to asmSelect
-     * Selector: http://stackoverflow.com/questions/10641258/jquery-select-data-attributes-that-arent-empty#answer-23944081
-     */
-    $(function () {
-        $('select[' + IUC.asmSelectPlaceholder + '!=""][' + IUC.asmSelectPlaceholder + ']').each(function () {
-
-            var placeholder = $(this).data('asmPlaceholder');
-
-            if (placeholder) {
-                $(this).parent().find('.asmSelect option:first').attr({
-                    'selected': true,
-                    'disabled': true
-                }).text(placeholder);
-            }
-        });
-    });
+    //var als_timer;
+    //
+    //// AdminLangSwitcher z-index fix (Default theme)
+    //$("body.AdminThemeDefault #masthead, body.AdminThemeDefault .aos_adminLangSwitcher").mouseover(
+    //    function () {
+    //        if(window.als_timer) {
+    //            clearTimeout(als_timer);
+    //        }
+    //        $('#masthead').css('z-index', 33);
+    //    }
+    //);
+    //$("body.AdminThemeDefault .aos_adminLangSwitcher").mouseleave(
+    //    function () {
+    //        //console.log('here');
+    //        als_timer = setTimeout(function () {
+    //            $('#masthead').css('z-index', '');
+    //        }, 1000);
+    //    }
+    //);
 });
 
 

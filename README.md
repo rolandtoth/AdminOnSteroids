@@ -42,6 +42,18 @@ Clicking on this link will also enable/disable the module (and reloads the curre
 
 ## Submodules
 
+This section provides an overview of the available submodules. Each can be enabled or disabled by toggling the checkbox below them.
+
+**Restrict submodules by role**
+
+Each submodule has a dropdown "Roles" where you can restrict them by roles. You can find it in the top-right corner in the Submodules section, next to each item's title.
+By default each submodule is available for all roles. Adding a role will restrict the submodule to users having that role.
+
+Notes:
+
+- restrictions are not applied to SuperUsers
+- some submodule is available as SuperUser-only and the roles dropdown is not available for them
+
 
 ###AdminLangSwitcher
 
@@ -126,20 +138,18 @@ By default required fields can't be deselected but it can be enabled tweaking th
 
 ###FieldAndTemplateEditLinks
 
-*Add shortcut links to templates and fields*
+*Add shortcut links to templates and fields (SuperUser only)*
 
 When enabled, hovering on a field's label in the page edit screen will show the field's name in a toolip.
 Clicking on this tooltip will open the field edit page in a new window, modal or panel (depending on module settings).
 
 For a shortcut link for the template edit page hover on the title of the page.
 
-This feature is available only for SuperUsers.
-
 
 
 ###FileFieldTweaks
 
-*File/image inputfield enhancements*
+*File and image field enhancements*
 
 - **Filter box**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
 - **Add asset download link**: adds download links (icons) to image or file assets. In case of images, the icon is located to the right of the Edit buttons after you click on an image. The original image will be available for download. For file fields the icon is appended to the fields' label. Note: the download link uses the "download" HTML5 attribute which is not available n IE - in this case the link will open in a new tab/window.
@@ -217,7 +227,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 ###ModuleTweaks
 
-*Module related tweaks*
+*Module related tweaks (SuperUser only)*
 
 - **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
@@ -225,7 +235,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 
 
-###NoAnims
+###noAnim
 
 *Disable all admin animations*
 
@@ -325,7 +335,6 @@ Enables jumping to next input in the admin with TAB key (or backwards with shift
 
 Hide field descriptions and notes to an icon and show them on hover in a tooltip. To freeze the tooltip, double click on the icons.
 
-- **Only for SuperUsers**: enable Tooltips only or SuperUsers
 - **Enable for field descriptions**: allow moving field description to an icon
 - **Enable for field notes**: allow moving field notes to an icon
 - **Use overlay style**: when checked, the tooltip will cover the entire area of the field. This eliminates the z-index issues of the traditional tooltip style (other page elements may partly cover the tooltip).

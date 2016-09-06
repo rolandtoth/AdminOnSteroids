@@ -1,11 +1,20 @@
 #Changelog
 
 
+### 0.5.9 (2016-09-06)
+
+- add 'restrict by roles' feature to all submodules
+- removed 'SuperUser only' from DeselectRadios and Tooltips
+- truncate long titles in fixed header to avoid cut (Reno theme only)
+- fix overlapping icons in compact module list (reported by adrian)
+- fix z-index issue with CKEditor after switching language tabs
+
+
+
 ### 0.5.8 (2016-09-03)
 
 - added AdminLangSwitcher tweak
 - fix z-index issue with DateTimePicker
-
 
 
 
@@ -272,7 +281,7 @@
 
 ### 0.2.3 (2016-06-25)
 
-- new submodule NoAnims: disable all admin animations
+- new submodule noAnim: disable all admin animations
 - possible fix for module repository update showing "Requires 0.0.0 >= 0" (reported by matjazp)
 - CSS fixes
 

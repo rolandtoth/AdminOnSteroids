@@ -22,12 +22,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     protected $PageListThumbs_items;
     protected $settingsFile;
     protected $htmlClasses;
+    protected $allRoles;
+    protected $enabledSubmodules;
 
     public static function getModuleInfo() {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 58,
+            'version'   => 59,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -54,7 +56,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'AutosizeTextareas',
                 'AsmTweaks',
                 'DeselectRadios',
-//                'NoAnims',
+                'noAnim',
                 'FileFieldTweaks',
                 'FieldAndTemplateEditLinks',
                 'FocusInputOnLangTabSwitch',
@@ -70,7 +72,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'PageListUnselect',
                 'PagePreviewBtn',
                 'ModuleTweaks',
-//                'Tooltips',
+                'Tooltips',
                 'TabIndex',
                 'ScrollFix'
             ),
@@ -103,7 +105,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'NavItems_pages'               => array(),
             'NavItems_custom'              => array(),
             'Tooltips'                     => array(
-                'superuseronly',
+//                'superuseronly',
                 'tooltipDesc',
                 'tooltipNotes'
 //                'tooltipOverlay'
@@ -211,7 +213,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'openSearch',
             'pListCompact',
             'PageListThumbs',
-            'PagePreviewBtn',
+//            'PagePreviewBtn',
             'sbAutoHide',
             'sbItemsInline',
             'sbItemsRow',
@@ -224,7 +226,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'tooltipOverlay'
         );
 
-        foreach (self::$configData['enabledSubmodules'] as $submodule) {
+        foreach ($this->enabledSubmodules as $submodule) {
             $this->addDOMClass($submodule);
 
             if (isset(self::$configData[$submodule]) && is_array(self::$configData[$submodule])) {
@@ -247,7 +249,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $htmlClasses = implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses));
 
-        $event->return = preg_replace("/<html(.+)class=('|\")(.*?)('|\")/i", "<html$1class=$2$3 " . $htmlClasses . "$4", $html);
+        $event->return = preg_replace("/<html(.+)class=('|\")(.*?)('|\")/i", "<html$1class=$2aos $3 " . $htmlClasses . "$4", $html);
     }
 
 
@@ -279,11 +281,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function init() {
 
+        self::$configData = $this->modules->getModuleConfigData($this);
+        $configData = self::$configData;
 
         if ($this->user->isSuperUser()) {
 
             if ($this->input->toggle == 1) {
-                $configData = $this->modules->getModuleConfigData($this);
                 $configData['enabled'] = ($this->enabled == 1) ? 0 : 1;
                 $this->modules->saveModuleConfigData($this, $configData);
 
@@ -296,7 +299,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
                 $parts = $event->return;
 
-                $enabledText = __('Disable', __FILE__) . ' AdminOnSteroids';   // Unload AdminOnSteroids
+                $enabledText = __('Disable', __FILE__) . ' AdminOnSteroids';   // Disable AdminOnSteroids
                 $disabledText = __('Enable', __FILE__) . ' AdminOnSteroids';   // Enable AdminOnSteroids
 
                 $linkStyle = 'style="opacity: 0.75; color: inherit !important; margin-left: 0; display: inline-block; padding: 4px 0; margin-right: 1px;"';
@@ -312,17 +315,42 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
 
-        if (!$this->enabled) {
-            return;
-        }
+        if (!$this->enabled) return;
 
-        self::$configData = $this->modules->getModuleConfigData($this);
-
-        if (!isset(self::$configData['enabledSubmodules'])) {
-            return;
-        }
+        // disable to load admin.js, admin.css and module assets
+//        if (!isset($configData['enabledSubmodules']) || empty($configData['enabledSubmodules'])) return;
 
         $enabledSubmodules = self::$configData['enabledSubmodules'];
+
+        // remove submodules where user's role is not allowed
+
+        // remove 'guest' role
+//        $userRoles = $this->user->roles->explode('name');
+        $userRoles = $this->user->roles->name(',');
+        $userRoles = str_replace(array('guest', ',,'), array('', ','), $userRoles);
+        $userRoles = trim($userRoles, ',');
+        $userRoles = explode(',', $userRoles);
+
+        if (!$this->user->isSuperUser()) {
+
+            foreach ($enabledSubmodules as $submodule) {
+
+                $submoduleRoleField = $submodule . 'Roles';
+
+                // continue if no roles have been set in module config (empty means allow all)
+                if (empty($this->$submoduleRoleField)) continue;
+
+//            remove from array (by value) if there isn't a matching role
+                if (count(array_intersect($this->$submoduleRoleField, $userRoles)) == 0) {
+                    if (($key = array_search($submodule, $enabledSubmodules)) !== false) {
+                        unset($enabledSubmodules[$key]);
+                    }
+                }
+            }
+        }
+
+        $this->enabledSubmodules = $enabledSubmodules;
+
 
         // AdminLangSwitcher
         $subModule = 'AdminLangSwitcher';
@@ -339,24 +367,29 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function ready() {
 
-        if (!$this->enabled) {
-            return;
+        if (!$this->enabled) return;
+
+        // disable to load admin.js, admin.css and module assets
+//        if (!isset($configData['enabledSubmodules']) || empty($configData['enabledSubmodules'])) return;
+
+        $this->allRoles = array();
+
+        foreach ($this->roles as $role) {
+            if ($role->name == 'guest') continue;
+            $this->allRoles[$role->name] = $role->name;
         }
 
         $configData = self::$configData;
         $defaultData = self::getDefaultData();
-        $enabledSubmodules = $configData['enabledSubmodules'];
 
-        if (!isset($configData['enabledSubmodules'])) {
-            return;
-        }
+        $enabledSubmodules = $this->enabledSubmodules;
 
+//        echo '<pre>'; var_dump(count($enabledSubmodules)); echo '</pre>';
 
         $this->htmlClasses = array();
 
         // if there's only the default admin theme, $user->admin_theme is not available
         $this->adminTheme = $this->user->admin_theme ? $this->user->admin_theme : $this->config->defaultAdminTheme;
-
 
         $this->PageListThumbs_items = array();
 
@@ -384,12 +417,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAdminLangSwitcher');
         }
 
-
         //NavItems
         $subModule = 'NavItems';
 
         if (in_array($subModule, $enabledSubmodules)) {
-
 
             $this->addHookAfter('Page::render', function ($event) {
 
@@ -408,7 +439,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                         $inputId = $this->input->get->id;
 
                         /**
-                         * 7: Thrash
+                         * 7: Trash
                          * 21: Modules
                          * 304: Profile
                          */
@@ -563,9 +594,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         //DeselectRadios
         $subModule = 'DeselectRadios';
         if (in_array($subModule, $enabledSubmodules)) {
-            if (!in_array('adminOnly', $configData['DeselectRadios']) || $this->wire('user')->isSuperUser()) {
+//            if (!in_array('adminOnly', $configData['DeselectRadios']) || $this->wire('user')->isSuperUser()) {
                 $scripts->add($root . '/' . $subModule . '/' . $subModule . '.js');
-            }
+//            }
         }
 
 
@@ -578,9 +609,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
             $this->addHookAfter('InputfieldURL::renderValue', $this, 'addIUCLink');
             $this->addHookAfter('InputfieldURL::render', $this, 'addIUCLink');
-
-//            $this->addHookAfter('InputfieldTable::render', $this, 'addIUCLink');
-//            $this->addHookAfter('InputfieldTable::renderValue', $this, 'addIUCLink');
         }
 
 
@@ -599,7 +627,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 }
             }
         }
-
 
         //FocusInputOnLangTabSwitch
         $subModule = 'FocusInputOnLangTabSwitch';
@@ -667,8 +694,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             if (($key = array_search('Tooltips', $enabledSubmodules)) !== false) {
                 $configData['enabledSubmodules'][$key] = 'Tooltips_disabled';
                 unset($configData['Tooltips']);
-                // note: unset didn't work (because there will be a hole in keys?)
-//                unset($configData['enabledSubmodules'][$key]);
             }
         }
 
@@ -699,7 +724,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'FileFieldTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
             if (in_array('downloadAssetButton', $configData[$subModule])) {
-//                $this->addHookAfter('ProcessPageEditImageSelect::executeVariations', $this, 'addDownloadAssetLink');
                 $this->addHookAfter('InputfieldImage::renderButtons', $this, 'addDownloadAssetLink');
                 $this->addHookAfter('InputfieldFile::renderItem', $this, 'addDownloadAssetLink');
             }
@@ -711,6 +735,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'save_and_exit'   => __('Save + Exit', __FILE__),
             'save_and_reload' => __('Save + Reload', __FILE__)
         );
+
+        // add modified enabledSubmodules to JS config (modified by roles)
+        // note: array_values is used to have values-only array in JS
+        $configData['enabledSubmodules'] = array_values($enabledSubmodules);
 
         $this->config->js("AdminOnSteroids", json_encode($configData));
 
@@ -1028,7 +1056,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $lang_items = '';
             $userLangId = $this->user->language->id;
 
-            // todo check permission lang-edit?
             foreach ($this->languages as $lang) {
                 $activeClass = $lang->id == $userLangId ? ' class="active"' : '';
                 $lang_items .= '<li' . $activeClass . '><a href="' . $_SERVER['REQUEST_URI'] . '" data-lang-id="' . $lang->id . '"><span class="lang-title">' . $lang->title . '</span> <span class="lang-name">' . $lang->name . '</span></a></li>';
@@ -1040,6 +1067,28 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
     }
 
+
+    public function addRoleFields($submoduleName, $data, $parent) {
+
+        $f = wire('modules')->get("InputfieldAsmSelect");
+        $f->attr('name', $submoduleName . 'Roles');
+        $f->label = __($submoduleName . ' roles', __FILE__);
+        $f->skipLabel = Inputfield::skipLabelHeader;
+        $f->attr('data-asm-placeholder', __('ROLES', __FILE__));
+//        $f->attr('data-asm-placeholder', __('⚙', __FILE__));
+//        $f->attr('data-asm-placeholder', __('Allowed roles...', __FILE__));
+//        $f->attr('data-asm-placeholder', __('', __FILE__));
+        $f->showIf = 'enabledSubmodules=' . $submoduleName;
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOptions($this->allRoles);
+
+        if (isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $parent->add($f);
+    }
 
     public function getModuleConfigInputfields(array $data) {
 
@@ -1071,29 +1120,29 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->collapsed = Inputfield::collapsedNever;
 //        $f->table = true;
 
-        $f->addOption('AdminLangSwitcher', __('**AdminLangSwitcher**Add language switcher to the admin', __FILE__));
-        $f->addOption('AdminTweaks', __('**AdminTweaks**Default admin theme tweaks', __FILE__));
-        $f->addOption('AsmTweaks', __('**AsmTweaks**asmSelect tweaks', __FILE__));
-        $f->addOption('AutosizeTextareas', __('**AutosizeTextareas**Autosize textareas according to content', __FILE__));
-        $f->addOption('DeselectRadios', __('**DeselectRadios**Enable clearing checked radio buttons', __FILE__));
-        $f->addOption('FieldAndTemplateEditLinks', __('**FieldAndTemplateEditLinks**Add shortcut links to templates and fields', __FILE__));
-        $f->addOption('FileFieldTweaks', __('**FileFieldTweaks**File/image inputfield enhancements', __FILE__));
-        $f->addOption('FocusInputOnLangTabSwitch', __('**FocusInputOnLangTabSwitch**Focus input on switching language tabs', __FILE__));
-        $f->addOption('Hotkeys', __('**Hotkeys**Hotkey tweaks', __FILE__));
-        $f->addOption('HoverDropdown', __('**HoverDropdown**Show save dropdown on hover instead on click', __FILE__));
-        $f->addOption('InputfieldURLChecker', __('**InputfieldURLChecker**Add button or hotkey to FieldtypeURL to check URL', __FILE__));
-        $f->addOption('LangTabHotkeySwitcher', __('**LangTabHotkeySwitcher**Switch language tabs on ctrl+arrow keys', __FILE__));
-        $f->addOption('LongClickDuration', __('**LongClickDuration**Custom long-click action duration', __FILE__));
-        $f->addOption('ModuleTweaks', __('**ModuleTweaks**Module related tweaks', __FILE__));
-        $f->addOption('NavItems', __('**NavItems**Add pages to add to navigation', __FILE__));
-        $f->addOption('NoAnims', __('**NoAnims**Disable all admin animations', __FILE__));
-        $f->addOption('PageListThumbs', __('**PageListThumbs**Add pagelist thumbnails', __FILE__));
-        $f->addOption('PageListUnselect', __('**PageListUnselect**Add unselect and restore buttons to PageListSelect fields', __FILE__));
-        $f->addOption('PagePreviewBtn', __('**PagePreviewBtn**Add preview link next to page title', __FILE__));
-        $f->addOption('RenoTweaks', __('**RenoTweaks**Reno admin theme tweaks', __FILE__));
-        $f->addOption('ScrollFix', __('**ScrollFix**Prevent page jump when scrollbar appears', __FILE__));
-        $f->addOption('TabIndex', __('**TabIndex**Add sequential tabindex to fields', __FILE__));
-        $f->addOption('Tooltips', __('**Tooltips**Hide field descriptions and notes to tooltips', __FILE__));
+        $f->addOption('AdminLangSwitcher', '**AdminLangSwitcher**' . __('Add language switcher to the admin', __FILE__));
+        $f->addOption('AdminTweaks', '**AdminTweaks**' . __('Default admin theme tweaks', __FILE__));
+        $f->addOption('AsmTweaks', '**AsmTweaks**' . __('asmSelect tweaks', __FILE__));
+        $f->addOption('AutosizeTextareas', '**AutosizeTextareas**' . __('Autosize textareas according to content', __FILE__));
+        $f->addOption('DeselectRadios', '**DeselectRadios**' . __('Enable clearing checked radio buttons', __FILE__));
+        $f->addOption('FieldAndTemplateEditLinks', '**FieldAndTemplateEditLinks**' . __('Add shortcut links to templates and fields (SuperUser only)', __FILE__));
+        $f->addOption('FileFieldTweaks', '**FileFieldTweaks**' . __('File and image field enhancements', __FILE__));
+        $f->addOption('FocusInputOnLangTabSwitch', '**FocusInputOnLangTabSwitch**' . __('Focus input on switching language tabs', __FILE__));
+        $f->addOption('Hotkeys', '**Hotkeys**' . __('Hotkey tweaks', __FILE__));
+        $f->addOption('HoverDropdown', '**HoverDropdown**' . __('Show save dropdown on hover instead on click', __FILE__));
+        $f->addOption('InputfieldURLChecker', '**InputfieldURLChecker**' . __('Add button or hotkey to FieldtypeURL to check URL', __FILE__));
+        $f->addOption('LangTabHotkeySwitcher', '**LangTabHotkeySwitcher**' . __('Switch language tabs on ctrl+arrow keys', __FILE__));
+        $f->addOption('LongClickDuration', '**LongClickDuration**' . __('Custom long-click action duration', __FILE__));
+        $f->addOption('ModuleTweaks', '**ModuleTweaks**' . __('Module related tweaks (SuperUser only)', __FILE__));
+        $f->addOption('NavItems', '**NavItems**' . __('Add pages to add to navigation', __FILE__));
+        $f->addOption('noAnim', '**noAnim**' . __('Disable all admin animations', __FILE__));
+        $f->addOption('PageListThumbs', '**PageListThumbs**' . __('Add pagelist thumbnails', __FILE__));
+        $f->addOption('PageListUnselect', '**PageListUnselect**' . __('Add unselect and restore buttons to PageListSelect fields', __FILE__));
+        $f->addOption('PagePreviewBtn', '**PagePreviewBtn**' . __('Add preview link next to page title', __FILE__));
+        $f->addOption('RenoTweaks', '**RenoTweaks**' . __('Reno admin theme tweaks', __FILE__));
+        $f->addOption('ScrollFix', '**ScrollFix**' . __('Prevent page jump when scrollbar appears', __FILE__));
+        $f->addOption('TabIndex', '**TabIndex**' . __('Add sequential tabindex to fields', __FILE__));
+        $f->addOption('Tooltips', '**Tooltips**' . __('Hide field descriptions and notes to tooltips', __FILE__));
 
         $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
@@ -1105,8 +1154,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fset = wire('modules')->get("InputfieldFieldset");
         $fset->attr('name', 'tweaks');
 //        $fset->showIf    = 'enabled=1';
-        $fset->label = __('Options for individual submodules', __FILE__);
+        $fset->label = __('Submodule options', __FILE__);
         $fset->collapsed = Inputfield::collapsedNever;
+
+        // AdminLangSwitcher ----------------------------------------------- //
+//        $this->addRoleFields('AdminLangSwitcher', $data, $wrapper);
+
+//        foreach ($this->enabledSubmodules as $submodule => $unused) {
+        foreach ($defaultData['enabledSubmodules'] as $submodule) {
+            if(in_array($submodule, array('FieldAndTemplateEditLinks', 'ModuleTweaks'))) continue;
+            $this->addRoleFields($submodule, $data, $wrapper);
+        }
+
 
         // AdminTweaks ----------------------------------------------- //
 
@@ -1124,6 +1183,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         $fset->add($f);
+
 
         // AsmTweaks ----------------------------------------------- //
 
@@ -1150,8 +1210,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->notes = __('', __FILE__);
         $f->showIf = 'enabledSubmodules=DeselectRadios';
 
-        $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
-        $f->addOption('allowRequired', __('Allow also for required fields (not recommended)', __FILE__));
+//        $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
+        $f->addOption('allowRequired', __('Enable for required fields (not recommended)', __FILE__));
 
         $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
@@ -1573,7 +1633,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
 
-        $f->addOption('superuseronly', __('Only for SuperUsers', __FILE__));
+//        $f->addOption('superuseronly', __('Only for SuperUsers', __FILE__));
         $f->addOption('tooltipDesc', __('Enable for field descriptions', __FILE__));
         $f->addOption('tooltipNotes', __('Enable for field notes', __FILE__));
         $f->addOption('tooltipOverlay', __('Use overlay style', __FILE__));
