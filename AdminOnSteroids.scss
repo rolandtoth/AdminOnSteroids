@@ -607,6 +607,12 @@ html.asmCollapse {
 
 #wrap_Inputfield_enabledSubmodules {
 
+  > label,
+  > .InputfieldContent {
+    border: none;
+    background: #E2E9EF;
+  }
+
   > label {
     font-size: 21px;
     padding-bottom: 0.5em;
@@ -634,14 +640,8 @@ html.asmCollapse {
     > li {
       @include clearfix;
       display: block;
-      //margin: 0 0 -1px -1px !important;
       margin: 0;
       padding: 2px 0 !important;
-      //&:hover {
-      //label span:before {
-      //background: rgba(#E2E9EF, 0.2);
-      //}
-      //}
       > label {
         position: relative;
         display: block;
@@ -658,7 +658,7 @@ html.asmCollapse {
             top: 0;
             bottom: 0;
             right: 0;
-            background: rgba(darken(#97AAB4, 0), 0.2);
+            background: #97AAB4;
             outline: 1px solid rgba(#000, 0.025);
             //box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
             outline-offset: -1px;
@@ -669,17 +669,17 @@ html.asmCollapse {
     input:checked {
       + span {
         &:before {
-          background: transparent !important;
+          background: #fff !important;
           outline: 1px solid #ddd;
           box-shadow: 1px 1px 4px -3px rgba(0, 0, 0, 0.6);
         }
       }
     }
-    //input:not(:checked) {
-    //  + span {
-    //    color: rgba(255, 255, 255, 0.99);
-    //  }
-    //}
+    input:not(:checked) {
+      + span {
+        color: rgba(255, 255, 255, 0.96);
+      }
+    }
   }
 
   li.InputfieldAsmSelect {
