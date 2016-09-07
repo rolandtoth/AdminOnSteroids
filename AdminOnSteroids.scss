@@ -659,7 +659,7 @@ html.asmCollapse {
             bottom: 0;
             right: 0;
             background: #97AAB4;
-            outline: 1px solid rgba(#000, 0.025);
+            outline: 1px solid rgba(#000, 0.02);
             //box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
             outline-offset: -1px;
           }
@@ -757,7 +757,7 @@ form[action*="AdminOnSteroids"] {
         @media only screen and (min-width: 1320px) {
           column-count: 3;
         }
-        html.AdminThemeReno {
+        html.AdminThemeReno & {
           @media only screen and (min-width: 1640px) {
             column-count: 4;
           }
