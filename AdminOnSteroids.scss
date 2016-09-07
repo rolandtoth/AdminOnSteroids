@@ -658,7 +658,7 @@ html.asmCollapse {
             top: 0;
             bottom: 0;
             right: 0;
-            background: #97AAB4;
+            background: rgba(#97AAB4, 0.75);
             outline: 1px solid rgba(#000, 0.02);
             //box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
             outline-offset: -1px;
@@ -677,7 +677,7 @@ html.asmCollapse {
     }
     input:not(:checked) {
       + span {
-        color: rgba(255, 255, 255, 0.96);
+        color: rgba(255, 255, 255, 0.99);
       }
     }
   }
@@ -2407,77 +2407,84 @@ html.AdminThemeReno {
 
 html.AdminThemeDefault {
 
-  // fix for PrevNextTabs module
-  ul.WireTabs {
-    overflow: hidden !important;
-  }
-  // topnav flicker fix until better solution
-  #masthead #topnav {
-    margin-top: 8px;
-  }
+  body:not(.modal) {
 
-  // headSticky
-  &.headSticky:not(.modal) {
-    @media only screen and (min-width: 960px) {
+    .ui-dialog {
+      z-index: 100000 + 100;
+    }
 
-      body {
+    // fix for PrevNextTabs module
+    ul.WireTabs {
+      overflow: hidden !important;
+    }
+    // topnav flicker fix until better solution
+    #masthead #topnav {
+      margin-top: 8px;
+    }
 
-        .NotificationMenu {
-          z-index: 9;
-          margin-top: 3px;
-        }
+    // headSticky
+    &.headSticky:not(.modal) {
+      @media only screen and (min-width: 960px) {
 
-        padding-top: 100px;
+        body {
 
-        #masthead {
-          position: fixed;
-          z-index: 30;
-          //z-index: 100000 + 1000;
-          width: 100%;
-          top: 0;
-          left: 0;
-          // adminlangswitcher fix
-          &:hover {
-            z-index: 31;
+          .NotificationMenu {
+            z-index: 9;
+            margin-top: 3px;
           }
-        }
 
-        #breadcrumbs {
-          position: fixed;
-          //z-index: 100000 + 1000;
-          z-index: 30;
-          top: 47px;
-          left: 0;
-          width: 100%;
-          border: none;
-        }
+          padding-top: 100px;
 
-        #notices {
-          position: relative;
-          z-index: 19;
-          & ~ #content {
-            padding-top: 20px;
+          #masthead {
+            position: fixed;
+            z-index: 30;
+            //z-index: 100000 + 1000;
+            width: 100%;
+            top: 0;
+            left: 0;
+            // adminlangswitcher fix
+            &:hover {
+              z-index: 31;
+            }
           }
-        }
 
-        &.hasWireTabs {
+          #breadcrumbs {
+            position: fixed;
+            //z-index: 100000 + 1000;
+            z-index: 30;
+            top: 47px;
+            left: 0;
+            width: 100%;
+            border: none;
+          }
+
           #notices {
+            position: relative;
+            z-index: 19;
             & ~ #content {
+              padding-top: 20px;
+            }
+          }
+
+          &.hasWireTabs {
+            #notices {
+              & ~ #content {
+                padding-top: 52px;
+              }
+            }
+            #content {
               padding-top: 52px;
             }
           }
-          #content {
-            padding-top: 52px;
+
+          #head_button {
+            margin-bottom: -16px;
+            top: -7px;
           }
-        }
 
-        #head_button {
-          margin-bottom: -16px;
-          top: -7px;
-        }
-
-        #content {
-          padding-top: 20px;
+          #content {
+            padding-top: 20px;
+          }
         }
       }
     }
@@ -2634,3 +2641,4 @@ select:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
+
