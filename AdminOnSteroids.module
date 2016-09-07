@@ -508,7 +508,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
                         $editUrl = $editUrl === false ? '' : $p->editable() ? '<a href="' . $p->editUrl() . '" class="page-edit"><i class="fa fa-pencil"></i></a>' : '';
 
-                        $items .= '<li class="navItem">' . $listUrl . ' ' . $editUrl . '</li>';
+                        $firstClass = empty($items) ? ' first' : '';
+
+                        $items .= '<li class="navItem' . $firstClass . '">' . $listUrl . ' ' . $editUrl . '</li>';
 
                     }
                 }

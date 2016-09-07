@@ -689,14 +689,14 @@ html.asmCollapse {
       }
     }
     //input:not(:checked) {
-      //+ span {
-        //color: #fff;
-        //color: rgba(#000, 0.5);
-        //strong {
-        //  font-weight: normal !important;
-        //}
-        //text-shadow: 1px 1px 0 rgba(#fff, 0.066);
-      //}
+    //+ span {
+    //color: #fff;
+    //color: rgba(#000, 0.5);
+    //strong {
+    //  font-weight: normal !important;
+    //}
+    //text-shadow: 1px 1px 0 rgba(#fff, 0.066);
+    //}
     //}
   }
 
@@ -2429,87 +2429,94 @@ html.AdminThemeReno {
 
 // AdminTweaks (default theme tweaks)
 // note: the default theme adds theme name class (and .modal class) to body, AOS adds to html
+@media only screen and (min-width: 960px) {
 
-html.AdminThemeDefault {
+  html.AdminThemeDefault {
 
-  body:not(.modal) {
+    body:not(.modal) {
 
-    .ui-dialog {
-      z-index: 100000 + 100;
-    }
+      .ui-dialog {
+        z-index: 100000 + 100;
+      }
 
-    // fix for PrevNextTabs module
-    ul.WireTabs {
-      overflow: hidden !important;
-    }
-    // topnav flicker fix until better solution
-    #masthead #topnav {
-      margin-top: 8px;
+      // topnav flicker fix until better solution
+      #masthead #topnav {
+        margin-top: 8px;
+      }
+
+      // fix for PrevNextTabs module
+      #content {
+
+        ul.WireTabs {
+          overflow: hidden !important;
+          // override default -2.6em (allows active tab having no border & works with PrevNextTabs fix)
+          margin-bottom: -2.7em;
+        }
+      }
+
     }
 
     // headSticky
-    &.headSticky:not(.modal) {
-      @media only screen and (min-width: 960px) {
+    &.headSticky {
 
-        body {
+      body:not(.modal) {
 
-          .NotificationMenu {
-            z-index: 9;
-            margin-top: 3px;
+        .NotificationMenu {
+          z-index: 9;
+          margin-top: 3px;
+        }
+
+        padding-top: 100px;
+
+        #masthead {
+          position: fixed;
+          z-index: 30;
+          //z-index: 100000 + 1000;
+          width: 100%;
+          top: 0;
+          left: 0;
+          // adminlangswitcher fix
+          &:hover {
+            z-index: 31;
           }
+        }
 
-          padding-top: 100px;
+        #breadcrumbs {
+          position: fixed;
+          //z-index: 100000 + 1000;
+          z-index: 30;
+          top: 47px;
+          left: 0;
+          width: 100%;
+          border: none;
+        }
 
-          #masthead {
-            position: fixed;
-            z-index: 30;
-            //z-index: 100000 + 1000;
-            width: 100%;
-            top: 0;
-            left: 0;
-            // adminlangswitcher fix
-            &:hover {
-              z-index: 31;
-            }
+        #notices {
+          position: relative;
+          z-index: 19;
+          & ~ #content {
+            padding-top: 20px;
           }
+        }
 
-          #breadcrumbs {
-            position: fixed;
-            //z-index: 100000 + 1000;
-            z-index: 30;
-            top: 47px;
-            left: 0;
-            width: 100%;
-            border: none;
-          }
-
+        &.hasWireTabs {
           #notices {
-            position: relative;
-            z-index: 19;
             & ~ #content {
-              padding-top: 20px;
-            }
-          }
-
-          &.hasWireTabs {
-            #notices {
-              & ~ #content {
-                padding-top: 52px;
-              }
-            }
-            #content {
               padding-top: 52px;
             }
           }
-
-          #head_button {
-            margin-bottom: -16px;
-            top: -7px;
-          }
-
           #content {
-            padding-top: 20px;
+            padding-top: 52px;
           }
+        }
+
+        #head_button {
+          margin-bottom: -16px;
+          top: -7px;
+        }
+
+        #content {
+          padding-top: 20px;
         }
       }
     }
@@ -2543,6 +2550,12 @@ html.AdminThemeDefault {
 @media only screen and (min-width: 960px) {
   li.navItem {
     position: relative;
+    html.AdminThemeReno:not(.sbItemsInline) & {
+      &.first {
+        border-top: 1px solid rgba(#51739D, 0.2);
+      }
+    }
+    //  background: rgba(#51739D, 0.05);
     .page-list {
       &:hover {
         + .page-edit {

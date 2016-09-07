@@ -94,7 +94,7 @@ $(document).ready(function () {
 
         langSwitcher.removeAttr('style');
 
-        langSwitcher.on('click', 'a', function () {
+        langSwitcher.on('click', 'a[data-lang-id]', function () {
             var lang_id = $(this).attr('data-lang-id');
             document.cookie = 'aos_lang_id=' + lang_id + ';expires=0;path=/';
         });
