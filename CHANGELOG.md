@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.6.0 (2016-09-07)
+
+- fix modal class issue (reported by bernhard)
+- several improvements/bugfix for enabling/disabling AOS
+
+
+
 ### 0.5.9 (2016-09-06)
 
 - add 'restrict by roles' feature to all submodules

@@ -96,7 +96,7 @@ Adds auto-grow functionality to fit textarea to its content. The submodule has n
 
 ###NavItems
 
-*Add pages to add to navigation*
+*Add pages to navigation*
 
 Enables adding pages and appending them in the sidebar (Reno theme) or the top navigaton (Default theme).
 Items will be appended to the "Pages" section.

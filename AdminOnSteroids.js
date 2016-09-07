@@ -28,6 +28,25 @@ function debounce(func, wait, immediate) {
 }
 
 
+function checkAOSstate(el) {
+    $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore').toggleClass('aos_disabled', !el.is(':checked'));
+}
+
+$(window).load(function() {
+
+    if ($('form[action*="AdminOnSteroids"] #Inputfield_enabled').length) {
+
+        var el = $('form[action*="AdminOnSteroids"] #Inputfield_enabled');
+
+        el.on('change', function() {
+            checkAOSstate(el);
+        });
+
+        checkAOSstate(el);
+    }
+});
+
+
 $(document).ready(function () {
 
 
@@ -58,12 +77,6 @@ $(document).ready(function () {
             current = obj.prev().attr('id').replace('enabledSubmodules_', '');
 
         obj.after($('#wrap_' + current + 'Roles'));
-    });
-
-
-    // AOS: enable/disable module checkbox click
-    $('form[action*="AdminOnSteroids"] #Inputfield_enabled').on('change', function () {
-        $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks').toggleClass('aos_disabled', $(this).attr('checked'))
     });
 
 
@@ -158,7 +171,6 @@ $(document).ready(function () {
                 return false;
             }
         });
-
     }
 
 

@@ -307,7 +307,7 @@ html {
   transition-duration: 0.1s !important;
   i {
     //font-size: 12px !important;
-    padding: 4px 5px !important;
+    padding: 3px 5px !important;
     display: inline-block;
   }
   &, &:hover {
@@ -609,8 +609,8 @@ html.asmCollapse {
 
   > label,
   > .InputfieldContent {
-    border: none;
-    background: #E2E9EF;
+    //border: none;
+    background: #F0F3F7;
   }
 
   > label {
@@ -641,11 +641,11 @@ html.asmCollapse {
       @include clearfix;
       display: block;
       margin: 0;
-      padding: 2px 0 !important;
+      padding: 3px 0 !important;
       > label {
         position: relative;
         display: block;
-        padding: 10px 20px 12px 30px;
+        padding: 10px 20px 10px 30px;
         z-index: 1;
         > span {
           z-index: 1;
@@ -658,10 +658,23 @@ html.asmCollapse {
             top: 0;
             bottom: 0;
             right: 0;
-            background: rgba(#97AAB4, 0.75);
-            outline: 1px solid rgba(#000, 0.02);
-            //box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+            transition: all $defaultTransition;
+            //background: rgba(#97AAB4, 0.2);
+            outline: 1px dotted rgba(#97AAB4, 0.84);
             outline-offset: -1px;
+          }
+        }
+        &:hover {
+          input:not(:checked) {
+            + span {
+              &:before {
+                //background: rgba(#97AAB4, 0.2);
+                background: rgba(#97AAB4, 0.2);
+                //outline-color: transparent;
+                outline: 1px solid rgba(#97AAB4, 0.4);
+                //background: darken(#D2DCE6, 2%);
+              }
+            }
           }
         }
       }
@@ -670,16 +683,21 @@ html.asmCollapse {
       + span {
         &:before {
           background: #fff !important;
-          outline: 1px solid #ddd;
-          box-shadow: 1px 1px 4px -3px rgba(0, 0, 0, 0.6);
+          outline: 1px solid rgba(#97AAB4, 0.5);
+          //box-shadow: 0 1px 3px -2px rgba(0, 0, 0, 0.75);
         }
       }
     }
-    input:not(:checked) {
-      + span {
-        color: rgba(255, 255, 255, 0.99);
-      }
-    }
+    //input:not(:checked) {
+      //+ span {
+        //color: #fff;
+        //color: rgba(#000, 0.5);
+        //strong {
+        //  font-weight: normal !important;
+        //}
+        //text-shadow: 1px 1px 0 rgba(#fff, 0.066);
+      //}
+    //}
   }
 
   li.InputfieldAsmSelect {
@@ -723,11 +741,18 @@ html.asmCollapse {
       opacity: 1;
     }
   }
-  .asmListItem:first-child {
-    margin-top: 6px !important;
+  .asmListItem {
+    margin-bottom: 1px !important;
+    &:first-child {
+      margin-top: 4px !important;
+    }
+    //&:last-child {
+    //  margin-bottom: 2px !important;
+    //}
   }
   .asmList {
     margin-top: 0 !important;
+    margin-right: 10px;
   }
 }
 
@@ -739,11 +764,11 @@ form[action*="AdminOnSteroids"] {
         font-size: 94%;
         line-height: 1.45;
         strong {
-          margin-top: 1px;
+          //margin-top: 1px;
           font-style: normal;
           display: block;
           font-weight: bold;
-          margin-bottom: 4px;
+          //margin-bottom: 4px;
         }
       }
       ul {
@@ -752,7 +777,7 @@ form[action*="AdminOnSteroids"] {
         }
         @media only screen and (min-width: 960px) {
           column-count: 2;
-          column-gap: 4px;
+          column-gap: 6px;
         }
         @media only screen and (min-width: 1320px) {
           column-count: 3;
@@ -2403,7 +2428,7 @@ html.AdminThemeReno {
 }
 
 // AdminTweaks (default theme tweaks)
-// note: the default theme adds theme name class only to body, AOS adds to html
+// note: the default theme adds theme name class (and .modal class) to body, AOS adds to html
 
 html.AdminThemeDefault {
 
