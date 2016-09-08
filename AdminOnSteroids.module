@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 60,
+            'version'   => 61,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -55,6 +55,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'AdminLangSwitcher',
                 'AutosizeTextareas',
                 'AsmTweaks',
+                'CKEaddons',
                 'DeselectRadios',
                 'noAnim',
                 'FileFieldTweaks',
@@ -79,6 +80,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'enabled'                      => 1,
             'restore'                      => '',
             'NavItems'                     => 1,
+            'CKEaddons_plugins'            => array(
+                'autogrow',
+                'justify',
+                'keystrokes'
+            ),
+            'CKEaddons_skin'               => 'lightwire',
+            'CKEaddons_enabledFields'   => '',
             'DeselectRadios'               => array(
                 'adminOnly'
             ),
@@ -213,7 +221,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'openSearch',
             'pListCompact',
             'PageListThumbs',
-//            'PagePreviewBtn',
             'sbAutoHide',
             'sbItemsInline',
             'sbItemsRow',
@@ -742,6 +749,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // add modified enabledSubmodules to JS config (modified by roles)
         // note: array_values is used to have values-only array in JS
         $configData['enabledSubmodules'] = array_values($enabledSubmodules);
+        $configData['aosUrl']            = $this->config->urls->AdminOnSteroids;
 
         $this->config->js("AdminOnSteroids", json_encode($configData));
 
@@ -1056,7 +1064,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function addAdminLangSwitcher(HookEvent $event) {
 
-        if ($this->languages && $this->languages->count() > 1) {
+        if ($this->languages && $this->pages->find('template=language')->count() > 1) {
 
             $parts = $event->return;
 
@@ -1082,9 +1090,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->label     = __($submoduleName . ' roles', __FILE__);
         $f->skipLabel = Inputfield::skipLabelHeader;
         $f->attr('data-asm-placeholder', __('ROLES', __FILE__));
-//        $f->attr('data-asm-placeholder', __('⚙', __FILE__));
-//        $f->attr('data-asm-placeholder', __('Allowed roles...', __FILE__));
-//        $f->attr('data-asm-placeholder', __('', __FILE__));
         $f->showIf    = 'enabledSubmodules=' . $submoduleName;
         $f->collapsed = Inputfield::collapsedNever;
 
@@ -1136,6 +1141,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('AdminTweaks', '**AdminTweaks**' . __('Default admin theme tweaks', __FILE__));
         $f->addOption('AsmTweaks', '**AsmTweaks**' . __('asmSelect tweaks', __FILE__));
         $f->addOption('AutosizeTextareas', '**AutosizeTextareas**' . __('Autosize textareas according to content', __FILE__));
+        $f->addOption('CKEaddons', '**CKEaddons**' . __('Autoload CKEditor plugins and skins', __FILE__));
         $f->addOption('DeselectRadios', '**DeselectRadios**' . __('Enable clearing checked radio buttons', __FILE__));
         $f->addOption('FieldAndTemplateEditLinks', '**FieldAndTemplateEditLinks**' . __('Add shortcut links to templates and fields (SuperUser only)', __FILE__));
         $f->addOption('FileFieldTweaks', '**FileFieldTweaks**' . __('File and image field enhancements', __FILE__));
@@ -1216,6 +1222,74 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fset->add($f);
 
+
+        // CKEaddons ----------------------------------------------- //
+
+        $fsetCKE = wire('modules')->get("InputfieldFieldset");
+        $fsetCKE->attr('name', 'CKEaddons');
+        $fsetCKE->label     = __('CKEaddons', __FILE__);
+        $fsetCKE->showIf    = 'enabledSubmodules=CKEaddons';
+        $fsetCKE->collapsed = Inputfield::collapsedNever;
+
+        // Plugins
+        $f              = wire('modules')->get('InputfieldCheckboxes');
+        $f->name        = 'CKEaddons_plugins';
+        $f->label       = __('Plugins', __FILE__);
+        $f->columnWidth = 50;
+        $f->collapsed   = Inputfield::collapsedNever;
+
+        $f->addOption('autogrow', 'Auto Grow');
+        $f->addOption('div', 'Div');
+        $f->addOption('justify', 'Justify');
+        $f->addOption('keystrokes', 'Keystrokes');
+        $f->addOption('magicline', 'Magic Line');
+
+        if (isset($data[ $f->name ]) && $data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
+        }
+
+        $fsetCKE->add($f);
+
+        // Skin
+        $f        = wire('modules')->get('InputfieldRadios');
+        $f->name  = 'CKEaddons_skin';
+        $f->label = __('Skin', __FILE__);
+        $f->columnWidth = 50;
+        $f->collapsed   = Inputfield::collapsedNever;
+
+        $f->addOption('default', 'default');
+        $f->addOption('lightwire', 'LightWire');
+
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
+        }
+
+        $fsetCKE->add($f);
+
+
+        // Enabled fields
+        $cke_fields = wire('fields')->find('inputfieldClass=InputfieldCKEditor');
+
+        $f        = wire('modules')->get('InputfieldAsmSelect');
+        $f->name  = 'CKEaddons_enabledFields';
+        $f->label = __('Enabled fields', __FILE__);
+        $f->description = __('Note: selected fields will restrict plugins only and not the skin.', __FILE__);
+        $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
+        $f->collapsed   = Inputfield::collapsedNever;
+        $f->columnWidth = 50;
+
+        foreach ($cke_fields as $cke_field) {
+            $f->addOption($cke_field->name, self::getFormattedOptionName($cke_field));
+        }
+
+        if ($data[ $f->name ]) {
+            $f->attr('value', $data[ $f->name ]);
+        }
+
+        $fsetCKE->add($f);
+
+        $fset->add($fsetCKE);
+
         // DeselectRadios ----------------------------------------------- //
 
         $f = wire('modules')->get("InputfieldCheckboxes");
@@ -1225,7 +1299,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->notes       = __('', __FILE__);
         $f->showIf      = 'enabledSubmodules=DeselectRadios';
 
-//        $f->addOption('adminOnly', __('Only for SuperUsers', __FILE__));
         $f->addOption('allowRequired', __('Enable for required fields (not recommended)', __FILE__));
 
         $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $defaultData[ $f->name ]);
@@ -1494,13 +1567,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetCNI = wire('modules')->get("InputfieldFieldset");
         $fsetCNI->attr('name', 'NavItems');
-        $fsetCNI->label  = __('NavItems', __FILE__);
-        $fsetCNI->showIf = 'enabledSubmodules=NavItems';
-//        $fsetCNI->collapsed = Inputfield::collapsedNever;
+        $fsetCNI->label     = __('NavItems', __FILE__);
+        $fsetCNI->showIf    = 'enabledSubmodules=NavItems';
+        $fsetCNI->collapsed = Inputfield::collapsedNever;
 
-        $f        = wire('modules')->get('InputfieldPageListSelectMultiple');
-        $f->name  = 'NavItems_pages';
-        $f->label = __('Select pages', __FILE__);
+        $f            = wire('modules')->get('InputfieldPageListSelectMultiple');
+        $f->name      = 'NavItems_pages';
+        $f->label     = __('Select pages', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
 
         if ($data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);

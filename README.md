@@ -92,37 +92,39 @@ A few usability mods targetting the default admin theme.
 
 Adds auto-grow functionality to fit textarea to its content. The submodule has no settings to configure.
 
+Note: CKEditor fields are not supported - use the CKEaddons submodule (v0.6.1+) and enable the [Auto Grow](http://ckeditor.com/addon/autogrow) plugin to autosize CKEditors.
 
 
-###NavItems
 
-*Add pages to navigation*
+###CKEaddons
 
-Enables adding pages and appending them in the sidebar (Reno theme) or the top navigaton (Default theme).
-Items will be appended to the "Pages" section.
+*Autoload CKEditor plugins and skins*
 
-Clicking on a custom nav item will load a page list containing its children.
-There's an "Edit" icon to the right of the items that opens the page for editing.
-This is available only if the user has proper rights and for items selected from the tree.
+**Plugins**
 
-####Additional items
+You can select from these plugins to add to CKEditor enabled fields:
 
-If you need to add items that are unavailable from the pages tree you can add them here.
-Use the syntax "Title: url" where "url" needs to be relative to the admin.
+- [Auto Grow](http://ckeditor.com/addon/autogrow)
+- [Div](http://ckeditor.com/addon/div) (adds a toolbar button)
+- [Justify](http://ckeditor.com/addon/justify) (adds text-align toolbar buttons)
+- [Keystrokes](https://processwire.com/talk/topic/12768-anyone-successfully-added-ckeditor-shortcut-keys/?do=findComment&comment=116190) - thanks **Robin S**!
+- [Magic Line](http://ckeditor.com/addon/magicline)
 
-Example:
-```
-Translator: setup/language-translator/edit/?language_id=1066&textdomain=site--templates--_strings-php
-// commented out item
-// "!" indicates visible only for SuperUsers
-! AdminOnSteroids: module/edit?name=AdminOnSteroids
-```
+If a plugin adds toolbar items then they will be added to the beginning of the toolbar.
 
-If the title starts with "!" then it will be visible only for SuperUsers.
-These items will have an asterisk (*) suffix to indicate visibility.
+**Skin**
 
-Note that this feature is primarily for adding non-admin pages to the navigation.
-Some of the pages under the "Admin" page may not work correctly.
+Here you can choose from the default and [LightWire](http://modules.processwire.com/modules/editor-skin-lightwire/) skins. The LightWire skin is made by **nico**.
+Note that the setting "Enabled fields" has no effect on the skin.
+
+**Enabled fields**
+
+By default all CKEditor fields will load the plugins you enable.
+Here you can restrict the submodule to selected fields only.
+
+
+Note: you can't use `CKEDITOR.editorConfig` for additional settings so you should use this submodule only if you have no custom needs. 
+The submodule will have a textarea in the future to set settings.
 
 
 
@@ -153,14 +155,6 @@ For a shortcut link for the template edit page hover on the title of the page.
 
 - **Filter box**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
 - **Add asset download link**: adds download links (icons) to image or file assets. In case of images, the icon is located to the right of the Edit buttons after you click on an image. The original image will be available for download. For file fields the icon is appended to the fields' label. Note: the download link uses the "download" HTML5 attribute which is not available n IE - in this case the link will open in a new tab/window.
-
-
-
-###ScrollFix
-
-*Prevent page jump when scrollbar appears*
-
-Disable page jump and elements repositioning when the height of the page changes and the scrollbar appears or disappears.
 
 
 
@@ -232,6 +226,38 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
 - **Edit modules in modal dialog**: clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
+
+
+
+###NavItems
+
+*Add pages to navigation*
+
+Enables adding pages and appending them in the sidebar (Reno theme) or the top navigaton (Default theme).
+Items will be appended to the "Pages" section.
+
+Clicking on a custom nav item will load a page list containing its children.
+There's an "Edit" icon to the right of the items that opens the page for editing.
+This is available only if the user has proper rights and for items selected from the tree.
+
+####Additional items
+
+If you need to add items that are unavailable from the pages tree you can add them here.
+Use the syntax "Title: url" where "url" needs to be relative to the admin.
+
+Example:
+```
+Translator: setup/language-translator/edit/?language_id=1066&textdomain=site--templates--_strings-php
+// commented out item
+// "!" indicates visible only for SuperUsers
+! AdminOnSteroids: module/edit?name=AdminOnSteroids
+```
+
+If the title starts with "!" then it will be visible only for SuperUsers.
+These items will have an asterisk (*) suffix to indicate visibility.
+
+Note that this feature is primarily for adding non-admin pages to the navigation.
+Some of the pages under the "Admin" page may not work correctly.
 
 
 
@@ -318,6 +344,14 @@ A few usability mods targetting the Reno admin theme.
 - **One-line sidebar submenus (only with sbAutoHide)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Center login form**: align login page items to center
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
+
+
+
+###ScrollFix
+
+*Prevent page jump when scrollbar appears*
+
+Disable page jump and elements repositioning when the height of the page changes and the scrollbar appears or disappears.
 
 
 

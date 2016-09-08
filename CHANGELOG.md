@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.6.1 (2016-09-08)
+
+- new submodule: CKEaddons
+
+
+
 ### 0.6.0 (2016-09-07)
 
 - fix modal class issue (reported by bernhard)

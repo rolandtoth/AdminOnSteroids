@@ -660,7 +660,8 @@ html.asmCollapse {
             right: 0;
             transition: all $defaultTransition;
             //background: rgba(#97AAB4, 0.2);
-            outline: 1px dotted rgba(#97AAB4, 0.84);
+            outline: 1px solid rgba(#97AAB4, 0.16);
+            background: rgba(#97AAB4, 0.2);
             outline-offset: -1px;
           }
         }
@@ -669,9 +670,9 @@ html.asmCollapse {
             + span {
               &:before {
                 //background: rgba(#97AAB4, 0.2);
-                background: rgba(#97AAB4, 0.2);
+                background: rgba(#97AAB4, 0.27);
                 //outline-color: transparent;
-                outline: 1px solid rgba(#97AAB4, 0.4);
+                //outline: 1px solid rgba(#97AAB4, 0.4);
                 //background: darken(#D2DCE6, 2%);
               }
             }
@@ -791,6 +792,16 @@ form[action*="AdminOnSteroids"] {
     }
   }
 
+  @media only screen and (min-width: 1900px) {
+    html.AdminThemeReno & {
+      #Inputfield_tweaks > .InputfieldContent > .Inputfields {
+            column-gap: 6px;
+            column-count: 2;
+            column-fill: balance; // Firefox only
+          }
+    }
+  }
+
   .Inputfields .InputfieldRadiosColumns {
     > li {
       width: auto !important;
@@ -801,15 +812,17 @@ form[action*="AdminOnSteroids"] {
   #Inputfield_tweaks {
 
     #Inputfield_InputfieldURLChecker,
+    #Inputfield_CKEaddons,
     #Inputfield_NavItems,
     #Inputfield_PageListThumbs {
       label {
         background: transparent;
       }
       .Inputfields {
+        margin-left: -1em;
         label, .InputfieldContent {
           padding-top: 0;
-          padding-left: 0;
+          //padding-left: 0;
           border: none;
         }
       }
@@ -855,7 +868,8 @@ form[action*="AdminOnSteroids"] {
     }
   }
 
-  #wrap_Inputfield_RenoTweaks {
+  //#wrap_Inputfield_RenoTweaks {
+  .InputfieldCheckboxesStacked {
     li.disabled {
       opacity: 0.7;
       label {
@@ -891,17 +905,20 @@ form[action*="AdminOnSteroids"] {
     }
   }
 
-  // push these items to the right to mimic hiearchy
+  // push these items to the right to mimic hiearchy (indent)
   input#Inputfield_RenoTweaks_sbSingleClickHeads,
     //input#Inputfield_RenoTweaks_sbItemsInline,
   input#Inputfield_RenoTweaks_miniScrollSb,
   input#Inputfield_RenoTweaks_miniScrollMain,
   input#Inputfield_RenoTweaks_headStickyCompact,
   input#Inputfield_RenoTweaks_stickyCKEBar,
+  input#Inputfield_CKEaddons_plugins_div_toolbar,
+  input#Inputfield_CKEaddons_plugins_justify_toolbar,
   input#Inputfield_RenoTweaks_sbItemsRow {
     margin-left: 21px;
   }
 }
+
 
 // FieldAndTemplateEditLinks
 
@@ -2453,7 +2470,6 @@ html.AdminThemeReno {
           margin-bottom: -2.7em;
         }
       }
-
     }
 
     // headSticky

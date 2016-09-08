@@ -1,3 +1,84 @@
+var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
+
+var aosUrl = AOSsettings.aosUrl;
+
+if (ProcessWire.config.InputfieldCKEditor) {
+
+    var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
+        enabledCKEplugins = AOSsettings.CKEaddons_plugins,
+        CKEskin = AOSsettings.CKEaddons_skin,
+        CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
+        pluginCount = enabledCKEplugins.length;
+
+    if (pluginCount > 0) {
+        for (var i = 0; i < pluginCount; i++) {
+            var pluginName = enabledCKEplugins[i];
+            CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
+        }
+    }
+
+    $(document).ready(function () {
+
+        if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1) {
+
+            if (window.CKEDITOR) {
+
+                var CKEeditors = ProcessWire.config.InputfieldCKEditor.editors,
+                    toolbarJustify = ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
+                    toolbarDiv = ["CreateDiv"];
+
+                for (var index in CKEeditors) {
+
+                    if (CKEeditors.hasOwnProperty(index)) {
+
+                        var CKEname = [CKEeditors[index]],
+                            CKEfield = ProcessWire.config[CKEname];
+
+                        // do not process multiple times
+                        if (CKEfield.aos) continue;
+
+                        // process enabled fields
+                        if (CKEenabledFields.length) {
+                            if (CKEenabledFields.indexOf(CKEname[0].replace('InputfieldCKEditor_', '')) === -1) continue;
+                        }
+
+                        if (enabledCKEplugins.length > 0) {
+                            CKEfield.extraPlugins = enabledCKEplugins.join(',') + ',' + CKEfield.extraPlugins;
+                        }
+
+                        // add toolbar items
+                        if (enabledCKEplugins.indexOf('justify') !== -1) {
+                            CKEfield.toolbar.unshift(toolbarJustify);
+                        }
+                        if (enabledCKEplugins.indexOf('div') !== -1) {
+                            CKEfield.toolbar.unshift(toolbarDiv);
+                        }
+
+                        CKEfield.aos = true;
+                    }
+                }
+            }
+        }
+    });
+
+    $(window).load(function () {
+        // these values may be overwritten by user config.js
+        CKEDITOR.editorConfig = function (config) {
+
+            config.autoGrow_onStartup = true;
+            config.autoGrow_bottomSpace = 20;
+            // config.autoGrow_minHeight = 100;
+            // config.autoGrow_maxHeight = window.innerHeight;
+
+            // LightWire skin
+            if (CKEskin && CKEskin !== 'default') {
+                config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
+            }
+        };
+    });
+}
+
+
 // add "scrolled" body class
 var addScrolledBodyClass = debounce(function () {
     var el = document.querySelector('body');
@@ -32,13 +113,13 @@ function checkAOSstate(el) {
     $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore').toggleClass('aos_disabled', !el.is(':checked'));
 }
 
-$(window).load(function() {
+$(window).load(function () {
 
     if ($('form[action*="AdminOnSteroids"] #Inputfield_enabled').length) {
 
         var el = $('form[action*="AdminOnSteroids"] #Inputfield_enabled');
 
-        el.on('change', function() {
+        el.on('change', function () {
             checkAOSstate(el);
         });
 
@@ -48,9 +129,6 @@ $(window).load(function() {
 
 
 $(document).ready(function () {
-
-
-    var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
 
     if (AOSsettings == null) {
         return false;
@@ -289,39 +367,52 @@ $(document).ready(function () {
     }
 
 
+    function getParentCheckbox(cb) {
+
+        if (window.getComputedStyle(cb.get(0), null).getPropertyValue('margin-left') !== '0px') {
+            cb = getParentCheckbox(cb.parent().parent('li').prev('li').find('input'));
+        }
+
+        return cb;
+    }
+
+
+    function setupCheckbox(currentCheckbox) {
+
+        var nextCheckbox = currentCheckbox.parent().parent('li').next('li').find('input');
+
+        if (nextCheckbox.length) {
+
+            if (window.getComputedStyle(nextCheckbox.get(0), null).getPropertyValue('margin-left') !== '0px') {
+
+                var parentCheckbox = getParentCheckbox(currentCheckbox);
+
+                var isChecked = parentCheckbox.is(':checked');
+                nextCheckbox.parent().parent('li').toggleClass('disabled', !isChecked);
+                // note: setting to disabled won't save the value
+            }
+
+            setupCheckbox(nextCheckbox);
+        }
+    }
+
+    // setupCheckbox($('#wrap_Inputfield_CKE_plugins .InputfieldCheckboxesStacked li:eq(0) input[type="checkbox"]'));
+    //
+    // $('#wrap_Inputfield_CKE_plugins .InputfieldCheckboxesStacked input[type="checkbox"]').on('change', function () {
+    //     setupCheckbox($(this));
+    // });
+    //
+    // // do not allow checking checkboxes if it's parent is set to disabled
+    // $('#wrap_Inputfield_CKE_plugins .InputfieldCheckboxesStacked').on('click', 'li.disabled input[type="checkbox"]', function (e) {
+    //     e.preventDefault();
+    //     return false;
+    // });
+
 // RenoTWeaks
 
     if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
         var renoTweaksSettings = AOSsettings.RenoTweaks;
-
-        function setupCheckbox(currentCheckbox) {
-
-            var nextCheckbox = currentCheckbox.parent().parent('li').next('li').find('input');
-
-            if (nextCheckbox.length) {
-
-                if (window.getComputedStyle(nextCheckbox.get(0), null).getPropertyValue('margin-left') !== '0px') {
-
-                    var parentCheckbox = getParentCheckbox(currentCheckbox);
-
-                    var isChecked = parentCheckbox.is(':checked');
-                    nextCheckbox.parent().parent('li').toggleClass('disabled', !isChecked);
-                    // note: setting to disabled won't save the value
-                }
-
-                setupCheckbox(nextCheckbox);
-            }
-        }
-
-        function getParentCheckbox(cb) {
-
-            if (window.getComputedStyle(cb.get(0), null).getPropertyValue('margin-left') !== '0px') {
-                cb = getParentCheckbox(cb.parent().parent('li').prev('li').find('input'));
-            }
-
-            return cb;
-        }
 
         // js tweaks to form configuration page
         if ($('form[action*="AdminOnSteroids"]').length) {
@@ -355,7 +446,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+            // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -499,7 +590,7 @@ $(document).ready(function () {
     if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
 
         var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
-            $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='🔎' /><i class='fa fa-close'></i></span>"),
+            $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='đź”Ž' /><i class='fa fa-close'></i></span>"),
             filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
             getItemSelector = function (field) {
                 return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
@@ -744,9 +835,9 @@ $(document).ready(function () {
 
             var $firstCKEditor = $('.InputfieldCKEditor').eq(0);
 
-            var checkstickyCKEBar = debounce(function () {
+            var checkStickyCKEBar = debounce(function () {
 
-                if (!$('html').hasClass('stckyckdtrtlbr')) {
+                if (!$('html').hasClass('stickyCKEBar')) {
                     return false;
                 }
 
@@ -767,17 +858,17 @@ $(document).ready(function () {
                 if (topOffset < 70 && bottomOffset > 200) {
                     cke_toolbar.addClass('cke_top_fixed');
                     cke_contents.css('padding-top', editor_cke_height + "px");
-                    $('html').addClass('stckyckdtrtlbr');
+                    $('html').addClass('stickyCKEBar');
                 } else {
                     cke_toolbar.removeClass('cke_top_fixed');
-                    $('html').removeClass('stckyckdtrtlbr');
+                    $('html').removeClass('stickyCKEBar');
                     cke_contents.css('padding-top', "0px");
                 }
 
             }, 0);
 
-            $(window).on('scroll addstickyCKEBar', function () {
-                checkstickyCKEBar();
+            $(window).on('scroll addStickyCKEBar', function () {
+                checkStickyCKEBar();
             });
 
             CKEDITOR.on('instanceReady', function (evt) {
@@ -789,8 +880,8 @@ $(document).ready(function () {
                 editor.on('selectionChange', function (e) {
                     // allow multlang editor toolbar support
                     if ('wrap_' + e.editor.name.indexOf($firstCKEditor.attr('id')) !== -1) {
-                        $('html').addClass('stckyckdtrtlbr');
-                        checkstickyCKEBar();
+                        $('html').addClass('stickyCKEBar');
+                        checkStickyCKEBar();
                     }
                 });
 
@@ -799,7 +890,7 @@ $(document).ready(function () {
                         // isCKEfocused = false;
                         $firstCKEditor.find('.cke_top').removeClass('cke_top_fixed');
                         $firstCKEditor.find('.cke_contents').css('padding-top', "0px");
-                        $('html').removeClass('stckyckdtrtlbr');
+                        $('html').removeClass('stickyCKEBar');
                     }
                 });
             });
@@ -824,5 +915,3 @@ $(document).ready(function () {
         });
     });
 });
-
-
