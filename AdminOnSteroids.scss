@@ -652,7 +652,7 @@ html.asmCollapse {
           &:before {
             content: "";
             position: absolute;
-            z-index: -1;
+            //z-index: -1;
             pointer-events: none;
             left: 0;
             top: 0;
@@ -660,8 +660,9 @@ html.asmCollapse {
             right: 0;
             transition: all $defaultTransition;
             //background: rgba(#97AAB4, 0.2);
-            outline: 1px solid rgba(#97AAB4, 0.16);
-            background: rgba(#97AAB4, 0.2);
+            outline: 1px solid rgba(#97AAB4, 0.2);
+            //background: rgba(#97AAB4, 0.2);
+            background: rgba(darken(#F0F3F7, 9%), 0.33);
             outline-offset: -1px;
           }
         }
@@ -670,7 +671,7 @@ html.asmCollapse {
             + span {
               &:before {
                 //background: rgba(#97AAB4, 0.2);
-                background: rgba(#97AAB4, 0.27);
+                background: rgba(#97AAB4, 0.2);
                 //outline-color: transparent;
                 //outline: 1px solid rgba(#97AAB4, 0.4);
                 //background: darken(#D2DCE6, 2%);
@@ -683,6 +684,7 @@ html.asmCollapse {
     input:checked {
       + span {
         &:before {
+          z-index: -1;
           background: #fff !important;
           outline: 1px solid rgba(#97AAB4, 0.5);
           //box-shadow: 0 1px 3px -2px rgba(0, 0, 0, 0.75);
