@@ -797,10 +797,10 @@ form[action*="AdminOnSteroids"] {
   @media only screen and (min-width: 1900px) {
     html.AdminThemeReno & {
       #Inputfield_tweaks > .InputfieldContent > .Inputfields {
-            column-gap: 6px;
-            column-count: 2;
-            column-fill: balance; // Firefox only
-          }
+        column-gap: 6px;
+        column-count: 2;
+        column-fill: balance; // Firefox only
+      }
     }
   }
 
@@ -920,7 +920,6 @@ form[action*="AdminOnSteroids"] {
     margin-left: 21px;
   }
 }
-
 
 // FieldAndTemplateEditLinks
 
@@ -1719,6 +1718,7 @@ html.AdminThemeReno {
           max-width: 100%;
           //max-width: calc(100% - 40px);
           vertical-align: bottom;
+
         }
       }
 
@@ -1775,6 +1775,13 @@ html.AdminThemeReno {
       #headline {
         transition: padding-left $defaultTransition;
       }
+    }
+  }
+
+  // allow overflow on page title span hover to make TemplateEditLink tooltip show up
+  body[class*="ProcessPageEdit"] #title span {
+    &:hover {
+      overflow: visible;
     }
   }
 
