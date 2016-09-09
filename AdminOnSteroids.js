@@ -121,6 +121,7 @@ $(document).ready(function () {
             pageTitle = $('h1#title > span')[0].innerText;
         } else {
             pageTitle = $('h1#title').text();
+            $('h1#title').wrapInner('<span>');
         }
 
         if (pageTitle) {
