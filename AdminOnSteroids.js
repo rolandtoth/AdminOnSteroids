@@ -17,64 +17,44 @@ if (ProcessWire.config.InputfieldCKEditor) {
         }
     }
 
+
     $(document).ready(function () {
 
-        if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1) {
+        if (window.CKEDITOR && AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1) {
 
-            if (window.CKEDITOR) {
+            var CKEeditors = ProcessWire.config.InputfieldCKEditor.editors,
+                toolbarJustify = ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
+                toolbarDiv = ["CreateDiv"];
 
-                var CKEeditors = ProcessWire.config.InputfieldCKEditor.editors,
-                    toolbarJustify = ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
-                    toolbarDiv = ["CreateDiv"];
+            for (var index in CKEeditors) {
 
-                for (var index in CKEeditors) {
+                if (!CKEeditors.hasOwnProperty(index)) continue;
 
-                    if (CKEeditors.hasOwnProperty(index)) {
+                var CKEname = [CKEeditors[index]],
+                    CKEfield = ProcessWire.config[CKEname];
 
-                        var CKEname = [CKEeditors[index]],
-                            CKEfield = ProcessWire.config[CKEname];
+                // do not process multiple times
+                if (CKEfield.aos) continue;
 
-                        // do not process multiple times
-                        if (CKEfield.aos) continue;
+                // set each CKE editor's custom config file because PW can load only from InputfieldCKEditor/config.js
+                CKEfield.customConfig = aosUrl + 'CKE/config.js';
 
-                        // process enabled fields
-                        if (CKEenabledFields.length) {
-                            if (CKEenabledFields.indexOf(CKEname[0].replace('InputfieldCKEditor_', '')) === -1) continue;
-                        }
-
-                        if (enabledCKEplugins.length > 0) {
-                            CKEfield.extraPlugins = enabledCKEplugins.join(',') + ',' + CKEfield.extraPlugins;
-                        }
-
-                        // add toolbar items
-                        if (enabledCKEplugins.indexOf('justify') !== -1) {
-                            CKEfield.toolbar.unshift(toolbarJustify);
-                        }
-                        if (enabledCKEplugins.indexOf('div') !== -1) {
-                            CKEfield.toolbar.unshift(toolbarDiv);
-                        }
-
-                        CKEfield.aos = true;
-                    }
+                // process enabled fields
+                if (CKEenabledFields.length) {
+                    if (CKEenabledFields.indexOf(CKEname[0].replace('InputfieldCKEditor_', '')) === -1) continue;
                 }
+
+                if (enabledCKEplugins.length > 0) {
+                    CKEfield.extraPlugins = enabledCKEplugins.join(',') + ',' + CKEfield.extraPlugins;
+                }
+
+                // add toolbar items
+                if (enabledCKEplugins.indexOf('justify') !== -1) CKEfield.toolbar.unshift(toolbarJustify);
+                if (enabledCKEplugins.indexOf('div') !== -1) CKEfield.toolbar.unshift(toolbarDiv);
+
+                CKEfield.aos = true;
             }
         }
-    });
-
-    $(window).load(function () {
-        // these values may be overwritten by user config.js
-        CKEDITOR.editorConfig = function (config) {
-
-            config.autoGrow_onStartup = true;
-            config.autoGrow_bottomSpace = 20;
-            // config.autoGrow_minHeight = 100;
-            // config.autoGrow_maxHeight = window.innerHeight;
-
-            // LightWire skin
-            if (CKEskin && CKEskin !== 'default') {
-                config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
-            }
-        };
     });
 }
 
@@ -446,7 +426,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
