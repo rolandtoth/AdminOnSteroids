@@ -1,6 +1,19 @@
 #Changelog
 
 
+### 0.6.2 (2016-09-10)
+
+- support for inline CKE fields (CKEaddons)
+- fix LightWire skin missing context menu icons (CKEaddons)
+- added 'Find' and 'Maximize' plugins for CKEaddons
+- added 'Set wider main content' for (default) AdminTweaks
+- submodule options 2 columns layout for default theme above 1479px screen width
+- fix missing pagelist icon set in template (PageListThumbs)
+- several fixes for truncated long page titles
+- timestamp for main module CSS and JavaScript file to prevent caching issues
+
+
+
 ### 0.6.1 (2016-09-08)
 
 - new submodule: CKEaddons

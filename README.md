@@ -67,6 +67,7 @@ The language switcher uses a cookie so the language will be remembered even thou
 Note that in the Default theme it's added to the end of the top menu items while in Reno it's the first.
 
 
+
 ###AdminTweaks
 
 *Apply default admin theme tweaks*
@@ -74,7 +75,9 @@ Note that in the Default theme it's added to the end of the top menu items while
 A few usability mods targetting the default admin theme.
 
 - **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
+- **Set wider main content**: sets the max-width of the main content from 1200px to 1480px
 - **Center login form**: align login page items to center
+
 
 
 ###AsmTweaks
@@ -106,9 +109,11 @@ You can select from these plugins to add to CKEditor enabled fields:
 
 - [Auto Grow](http://ckeditor.com/addon/autogrow)
 - [Div](http://ckeditor.com/addon/div) (adds a toolbar button)
+- [Find](http://ckeditor.com/addon/find) (adds toolbar buttons)
 - [Justify](http://ckeditor.com/addon/justify) (adds text-align toolbar buttons)
 - [Keystrokes](https://processwire.com/talk/topic/12768-anyone-successfully-added-ckeditor-shortcut-keys/?do=findComment&comment=116190) - thanks **Robin S**!
 - [Magic Line](http://ckeditor.com/addon/magicline)
+- [Maximize](http://ckeditor.com/addon/maximize) (unavailable in inline CKEditors)
 
 If a plugin adds toolbar items then they will be added to the beginning of the toolbar.
 
@@ -124,7 +129,7 @@ Here you can restrict the submodule to selected fields only.
 
 
 Note: you can't use `CKEDITOR.editorConfig` for additional settings so you should use this submodule only if you have no custom needs. 
-The submodule will have a textarea in the future to set settings.
+The submodule will have a dedicated field in the future to set settings.
 
 
 

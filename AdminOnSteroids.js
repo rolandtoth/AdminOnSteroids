@@ -17,14 +17,27 @@ if (ProcessWire.config.InputfieldCKEditor) {
         }
     }
 
+    // these need to be global because they are used b dynamic name
+    var toolbar_justify = ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
+        toolbar_div = ["CreateDiv"],
+        toolbar_find = ["Find", "Replace"],
+        toolbar_maximize = ["Maximize"];
 
     $(document).ready(function () {
 
+        //ProcessWire.config.InputfieldCKEditor_body.extraPlugins = enabledCKEplugins.join(',');
+        //ProcessWire.config.InputfieldCKEditor_body.customConfig = aosUrl + 'CKE/config.js';
+
+        function addCKEtoolbars(instance) {
+            $(['justify', 'div', 'find', 'maximize']).each(function (index, toolbarName) {
+                var toolbarVar = window['toolbar_' + toolbarName];
+                if (enabledCKEplugins.indexOf(toolbarName) !== -1) instance.toolbar.unshift(toolbarVar);
+            });
+        }
+
         if (window.CKEDITOR && AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1) {
 
-            var CKEeditors = ProcessWire.config.InputfieldCKEditor.editors,
-                toolbarJustify = ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
-                toolbarDiv = ["CreateDiv"];
+            var CKEeditors = ProcessWire.config.InputfieldCKEditor.editors;
 
             for (var index in CKEeditors) {
 
@@ -48,11 +61,29 @@ if (ProcessWire.config.InputfieldCKEditor) {
                     CKEfield.extraPlugins = enabledCKEplugins.join(',') + ',' + CKEfield.extraPlugins;
                 }
 
+                // todo move to function (plus inline mode)
                 // add toolbar items
-                if (enabledCKEplugins.indexOf('justify') !== -1) CKEfield.toolbar.unshift(toolbarJustify);
-                if (enabledCKEplugins.indexOf('div') !== -1) CKEfield.toolbar.unshift(toolbarDiv);
+                addCKEtoolbars(CKEfield);
 
                 CKEfield.aos = true;
+            }
+
+            // also add inline editors
+            if ($('.InputfieldCKEditorInline').length) {
+                $('.InputfieldCKEditorInline').each(function () {
+
+                    var name = $(this).attr('data-configname'),
+                        CKEfield = ProcessWire.config[name];
+
+                    if (CKEfield.aos) return true;
+
+                    CKEfield.extraPlugins = enabledCKEplugins.join(',');
+                    CKEfield.customConfig = aosUrl + 'CKE/config.js';
+
+                    addCKEtoolbars(CKEfield);
+
+                    CKEfield.aos = true;
+                })
             }
         }
     });
@@ -427,7 +458,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+            // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -510,6 +541,15 @@ $(document).ready(function () {
                 pageTitle.append('<a href="' + pageViewUrl + '" id="aos_PagePreviewBtn" class="' + AOSsettings.PagePreviewBtn + '" target="_blank"><i class="fa fa-external-link"></i></a>');
             }
         }
+
+        // do not display edit template tooltip on hover
+        $("#aos_PagePreviewBtn").hover(
+            function () {
+                $(this).prev('.aos_EditTemplate').css('display', 'none');
+            }, function () {
+                $(this).prev('.aos_EditTemplate').removeAttr('style');
+            }
+        );
     }
 
     //PageListUnselect
@@ -571,7 +611,7 @@ $(document).ready(function () {
     if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
 
         var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
-            $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='đź”Ž' /><i class='fa fa-close'></i></span>"),
+            $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='🔎' /><i class='fa fa-close'></i></span>"),
             filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
             getItemSelector = function (field) {
                 return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'

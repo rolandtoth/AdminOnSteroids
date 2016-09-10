@@ -794,8 +794,17 @@ form[action*="AdminOnSteroids"] {
     }
   }
 
-  @media only screen and (min-width: 1900px) {
-    html.AdminThemeReno & {
+  html.AdminThemeReno & {
+    @media only screen and (min-width: 1900px) {
+      #Inputfield_tweaks > .InputfieldContent > .Inputfields {
+        column-gap: 6px;
+        column-count: 2;
+        column-fill: balance; // Firefox only
+      }
+    }
+  }
+  html.AdminThemeDefault & {
+    @media only screen and (min-width: 1479px) {
       #Inputfield_tweaks > .InputfieldContent > .Inputfields {
         column-gap: 6px;
         column-count: 2;
@@ -852,7 +861,7 @@ form[action*="AdminOnSteroids"] {
             font-size: 94%;
           }
           > .InputfieldContent {
-            padding-left: 360px;
+            padding-left: 320px;
             position: relative;
             background: transparent;
             width: 100%;
@@ -942,7 +951,7 @@ form[action*="AdminOnSteroids"] {
   white-space: nowrap;
   &:hover {
     transition-delay: 0s !important;
-    background: lighten($bgcolor, 7%);
+    background: lighten($bgcolor, 7%) !important;
     text-decoration: none;
     &:before {
       border-top-color: lighten($bgcolor, 7%);
@@ -981,19 +990,13 @@ form[action*="AdminOnSteroids"] {
   overflow: visible !important;
 }
 
-//}
-
 // both for Reno & Default themes
-h1 span,
-#breadcrumbs li.title,
-  //#ProcessPageEdit .Inputfield label .title,
 #ProcessPageEdit .aos_hasTooltip .title,
 .InputfieldCheckbox label {
   position: relative;
   display: inline-block;
   &:hover {
-    .aos_EditField,
-    .aos_EditTemplate {
+    .aos_EditField {
       display: inline-block;
       visibility: visible;
       transform: scale(1);
@@ -1001,16 +1004,30 @@ h1 span,
       transition: 0.07s all 0.5s;
     }
   }
-  .aos_EditTemplate {
-    font-style: normal;
-    @include aos_tooltip($margin: 0 0 12px);
-  }
-
   .aos_EditField {
     font-style: normal;
     @include aos_tooltip($margin: 0 0 8px -5px);
     &:hover {
       cursor: pointer;
+    }
+  }
+}
+
+.aos_EditTemplate {
+  font-style: normal;
+  @include aos_tooltip($margin: 0 0 12px);
+}
+
+h1,
+#breadcrumbs li.title span {
+  position: relative;
+  &:hover {
+    .aos_EditTemplate {
+      display: inline-block;
+      visibility: visible;
+      transform: scale(1);
+      opacity: 1;
+      transition: 0.07s all 0.5s;
     }
   }
 }
@@ -1426,7 +1443,8 @@ html.PageListThumbs {
           position: relative;
         }
         // create a pseudo to make items align vertically (:before on next item)
-        + *:before {
+        // exclude the page icon (.fa)
+        + *:not(.fa):before {
           content: "";
           height: $thumbSize - 10px;
           display: inline-block;
@@ -1779,11 +1797,11 @@ html.AdminThemeReno {
   }
 
   // allow overflow on page title span hover to make TemplateEditLink tooltip show up
-  body[class*="ProcessPageEdit"] #title span {
-    &:hover {
-      overflow: visible;
-    }
-  }
+  //body[class*="ProcessPageEdit"] #title span {
+  //  &:hover {
+  //    overflow: visible;
+  //  }
+  //}
 
   // headStickyCompact
 
@@ -2543,6 +2561,11 @@ html.AdminThemeReno {
         #content {
           padding-top: 20px;
         }
+      }
+    }
+    &.wide {
+      .container {
+        max-width: 1480px;
       }
     }
   }

@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 61,
+            'version'   => 62,
             'summary'   => __('Various admin tweaks'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -160,6 +160,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'AdminTweaks'                  => array(
                 'headSticky',
+                'wide',
                 'centerLogin'
             )
         );
@@ -230,7 +231,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'ScrollFix',
             'tooltipDesc',
             'tooltipNotes',
-            'tooltipOverlay'
+            'tooltipOverlay',
+            'wide'
         );
 
         foreach ($this->enabledSubmodules as $submodule) {
@@ -388,13 +390,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $root    = $this->config->urls->siteModules . __CLASS__;
         $styles  = $this->config->styles;
         $scripts = $this->config->scripts;
+        $moduleInfo = $this->getModuleInfo();
+        $timestamp = $moduleInfo['version'] . '_' . date('YmdH');
 
-        $styles->prepend($root . '/' . __CLASS__ . '.css');
-        $scripts->add($root . '/' . __CLASS__ . '.js');
+        $styles->prepend($root . '/' . __CLASS__ . '.css?ts=' . $timestamp);
+        $scripts->add($root . '/' . __CLASS__ . '.js?ts=' . $timestamp);
 
-        if (!$this->enabled) {
-            return false;
-        }
+        if (!$this->enabled) return false;
 
         $configData  = self::$configData;
         $defaultData = self::getDefaultData();
@@ -806,7 +808,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $event->return = str_replace('<h1 id="title">', '<h1 id="title"><span>', $event->return);
             $event->return = str_replace('</h1>', '</span></h1>', $event->return);
 
-            $event->return = str_replace('</span></h1>', $templateEditLink . '</span></h1>', $event->return);
+            $event->return = str_replace('</span></h1>', '</span>' . $templateEditLink . '</h1>', $event->return);
         }
     }
 
@@ -1121,10 +1123,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $wrapper->add($f);
 
-//        if (!$this->enabled) {
-//            return $wrapper;
-//        }
-
 
         // Submodules ----------------------------------------------- //
 
@@ -1197,6 +1195,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('headSticky', __('Sticky header', __FILE__));
+        $f->addOption('wide', __('Set wider main content', __FILE__));
         $f->addOption('centerLogin', __('Center login form', __FILE__));
 
         if ($data[ $f->name ]) {
@@ -1240,9 +1239,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('autogrow', 'Auto Grow');
         $f->addOption('div', 'Div');
+        $f->addOption('find', 'Find');
         $f->addOption('justify', 'Justify');
         $f->addOption('keystrokes', 'Keystrokes');
         $f->addOption('magicline', 'Magic Line');
+        $f->addOption('maximize', 'Maximize');
 
         if (isset($data[ $f->name ]) && $data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);
@@ -1364,7 +1365,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label       = __('FocusInputOnLangTabSwitch CKEditor', __FILE__);
+        $f->label       = __('FocusInputOnLangTabSwitch CKE', __FILE__);
         $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
         $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
