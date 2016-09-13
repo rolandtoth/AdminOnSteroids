@@ -171,6 +171,28 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return __CLASS__;
     }
 
+    protected function _installColumnBreakField() {
+
+        // install AdminColumns field
+        // use skipLabel and collapsed to avoid visiblity if AOS is uninstalled (no need to remove from templates)
+        if ($this->fields->get('aos_column_break')) {
+            return;
+        }
+
+        $field              = new Field();
+        $field->type        = $this->modules->get("FieldtypeText");
+        $field->name        = 'aos_column_break';
+        $field->label       = '';
+        $field->skipLabel   = true;
+        $field->collapsed   = Inputfield::collapsedYesLocked;
+        $field->tags        = '-aos';
+        $field->columnWidth = 67;
+        $field->save();
+
+        $this->message(__('Added "aos_column_break" field for AdminColumns submodule.', __FILE__));
+    }
+
+
     public function ___install() {
 
         // apply default module settings on install or use settings.php
@@ -194,26 +216,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $this->wire('modules')->saveModuleConfigData($this, $settings);
 
-        // install AdminColumns field
-        // use skipLabel and collapsed to avoid visiblity if AOS is uninstalled (no need to remove from templates)
-        if (!$this->fields->get('aos_column_break')) {
+        $this->_installColumnBreakField();
 
-            $field              = new Field();
-            $field->type        = $this->modules->get("FieldtypeText");
-            $field->name        = 'aos_column_break';
-            $field->label       = '';
-            $field->skipLabel   = true;
-            $field->collapsed   = Inputfield::collapsedYesLocked;
-            $field->tags        = '-aos';
-            $field->columnWidth = 67;
-            $field->save();
-        }
-
-        $this->message(__('Added "aos_column_break" field for AdminColumns submodule.', __FILE__));
     }
 
-    public function ___uninstall() {
 
+    public function ___uninstall() {
         // save current config to settings.php
         @file_put_contents($this->settingsFile, json_encode($this->modules->getModuleConfigData($this)));
     }
@@ -447,6 +455,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // AdminColumns
         $subModule = 'AdminColumns';
         if (in_array($subModule, $enabledSubmodules)) {
+
+            // make sure field is available
+            $this->_installColumnBreakField();
+
             $this->addHookAfter('ProcessPageEdit::buildFormContent', $this, 'setupAdminColumns');
         }
 
