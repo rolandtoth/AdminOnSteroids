@@ -1,92 +1,66 @@
 var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
 
-var aosUrl = AOSsettings.aosUrl;
+if (AOSsettings) {
 
-if (ProcessWire.config.InputfieldCKEditor) {
+    var aosUrl = AOSsettings.aosUrl;
 
-    var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
-        enabledCKEplugins = AOSsettings.CKEaddons_plugins,
-        CKEskin = AOSsettings.CKEaddons_skin,
-        CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
-        pluginCount = enabledCKEplugins.length;
+    if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && ProcessWire.config.InputfieldCKEditor) {
 
-    if (pluginCount > 0) {
-        for (var i = 0; i < pluginCount; i++) {
-            var pluginName = enabledCKEplugins[i];
-            CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
+        var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
+            enabledCKEplugins = AOSsettings.CKEaddons_plugins,
+            CKEskin = AOSsettings.CKEaddons_skin,
+            CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
+            CKEpluginCount = enabledCKEplugins.length,
+            CKEtoolbars = {
+                justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
+                div: ["CreateDiv"],
+                find: ["Find", "Replace"],
+                maximize: ["Maximize"]
+            };
+
+        // set each plugin path to AOS dir
+        if (CKEpluginCount > 0) {
+            for (var i = 0; i < CKEpluginCount; i++) {
+                var pluginName = enabledCKEplugins[i];
+                CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
+            }
         }
-    }
-
-    // these need to be global because they are used b dynamic name
-    var toolbar_justify = ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
-        toolbar_div = ["CreateDiv"],
-        toolbar_find = ["Find", "Replace"],
-        toolbar_maximize = ["Maximize"];
-
-    $(document).ready(function () {
-
-        //ProcessWire.config.InputfieldCKEditor_body.extraPlugins = enabledCKEplugins.join(',');
-        //ProcessWire.config.InputfieldCKEditor_body.customConfig = aosUrl + 'CKE/config.js';
 
         function addCKEtoolbars(instance) {
-            $(['justify', 'div', 'find', 'maximize']).each(function (index, toolbarName) {
-                var toolbarVar = window['toolbar_' + toolbarName];
-                if (enabledCKEplugins.indexOf(toolbarName) !== -1) instance.toolbar.unshift(toolbarVar);
-            });
+            for (var toolbarName in CKEtoolbars) {
+                if (CKEtoolbars.hasOwnProperty(toolbarName) && enabledCKEplugins.indexOf(toolbarName) !== -1) {
+                    instance.toolbar.unshift(CKEtoolbars[toolbarName]);
+                }
+            }
         }
 
-        if (window.CKEDITOR && AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1) {
+        $(document).ready(function () {
 
-            var CKEeditors = ProcessWire.config.InputfieldCKEditor.editors;
+            $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
 
-            for (var index in CKEeditors) {
-
-                if (!CKEeditors.hasOwnProperty(index)) continue;
-
-                var CKEname = [CKEeditors[index]],
+                var CKEname = $(this).attr('data-configname'),
                     CKEfield = ProcessWire.config[CKEname];
 
-                // do not process multiple times
-                if (CKEfield.aos) continue;
+                // only add once
+                if (CKEfield.aos) return true;
 
-                // set each CKE editor's custom config file because PW can load only from InputfieldCKEditor/config.js
+                // config needs to be loaded anyways (eg. because of skin)
                 CKEfield.customConfig = aosUrl + 'CKE/config.js';
 
                 // process enabled fields
                 if (CKEenabledFields.length) {
-                    if (CKEenabledFields.indexOf(CKEname[0].replace('InputfieldCKEditor_', '')) === -1) continue;
+                    if (CKEenabledFields.indexOf(CKEname.replace('InputfieldCKEditor_', '')) === -1) {
+                        return true;
+                    }
                 }
 
-                if (enabledCKEplugins.length > 0) {
-                    CKEfield.extraPlugins = enabledCKEplugins.join(',') + ',' + CKEfield.extraPlugins;
-                }
-
-                // todo move to function (plus inline mode)
-                // add toolbar items
+                CKEfield.extraPlugins = enabledCKEplugins.join(',') + ',' + CKEfield.extraPlugins;
                 addCKEtoolbars(CKEfield);
 
                 CKEfield.aos = true;
-            }
-
-            // also add inline editors
-            if ($('.InputfieldCKEditorInline').length) {
-                $('.InputfieldCKEditorInline').each(function () {
-
-                    var name = $(this).attr('data-configname'),
-                        CKEfield = ProcessWire.config[name];
-
-                    if (CKEfield.aos) return true;
-
-                    CKEfield.extraPlugins = enabledCKEplugins.join(',');
-                    CKEfield.customConfig = aosUrl + 'CKE/config.js';
-
-                    addCKEtoolbars(CKEfield);
-
-                    CKEfield.aos = true;
-                })
-            }
-        }
-    });
+            })
+        });
+    }
 }
 
 
@@ -144,6 +118,14 @@ $(document).ready(function () {
     if (AOSsettings == null) {
         return false;
     }
+
+
+// allow scrolling on sidebar and main content on mouse hover
+// $('#main-nav, #main').attr('tabindex', 0);
+
+// $('#main-nav, #main').on('mouseover', function() {
+// 	debounce($(this).focus(), 5000);
+// });
 
     // add "title" to h1
     if ($('h1#title').length) {
@@ -458,7 +440,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -935,4 +917,20 @@ $(document).ready(function () {
             }
         });
     });
+
+
 });
+
+// $(window).load(function() {
+//     if ($('li.Inputfield_aos_column_break').length) {
+//
+//         var aosColBreak = $('#wrap_Inputfield_aos_column_break'),
+//             aosColBreakIndex = aosColBreak.index(),
+//             colWidth = aosColBreak.attr('data-original-width') ? aosColBreak.attr('data-original-width') : 66;
+//
+//             $('#ProcessPageEditContent > .Inputfields > li:lt(' + aosColBreakIndex + ')').wrapAll('<li class="InputfieldFieldsetOpen aos-left" style="width: ' + colWidth + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
+//         $('#ProcessPageEditContent > .Inputfields > .aos-left ~ li').wrapAll('<li class="InputfieldFieldsetOpen aos-right" style="width: ' + (100 - colWidth) + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
+//
+//         $('#wrap_Inputfield_aos_column_break').remove();
+//     }
+// });

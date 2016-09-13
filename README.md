@@ -55,6 +55,22 @@ Notes:
 - some submodule is available as SuperUser-only and the roles dropdown is not available for them
 
 
+
+###AdminColumns
+
+*Add "aos_column_break" field to create left/right admin columns*
+
+The module installs a field named "aos_column_break" that you can add your templates to have a 2-column layout.
+The field's position in the template field list determines the columns: fields before it will go to the left column, fields after to the right. Just drag the aos_column_break field to a position where you need the break.
+
+**Column widths**
+
+By default the left column is 67% wide and the right is 33%. If you need custom column widths, edit the field's "Column Width" setting under the "Input tab". For example, setting a 55% width will result in a 55/45 left/right percentages. You can override the default width globally or per template as usual. Setting a 100% width (that is, using the default) will result in the module's default 67/33 values.
+
+Note: the "aos_column_break" field will not be removed on module uninstall. However, the field won't show up in the page edit page (only on the template field list). You can of course remove it manually if you wish.
+
+
+
 ###AdminLangSwitcher
 
 *Add language switcher to the admin*
