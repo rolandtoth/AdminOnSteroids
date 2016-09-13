@@ -830,6 +830,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetRight->attr('id', 'aos_col_right');
         $fsetRight->wrapAttr('style', 'width: ' . $colWidths[1] . '%');
 
+        $this->modules->get('FieldtypeFieldsetClose');
         if (class_exists('\ProcessWire\InputfieldFieldsetClose')) {
             $fsetLeftEnd  = new \ProcessWire\InputfieldFieldsetClose;
             $fsetRightEnd = new \ProcessWire\InputfieldFieldsetClose;
