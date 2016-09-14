@@ -29,8 +29,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 63,
-            'summary'   => __('Various admin tweaks'),
+            'version'   => 64,
+            'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
             'href'      => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
@@ -179,14 +179,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             return;
         }
 
-        $field              = new Field();
-        $field->type        = $this->modules->get("FieldtypeText");
-        $field->name        = 'aos_column_break';
-        $field->label       = '';
-        $field->skipLabel   = true;
-        $field->collapsed   = Inputfield::collapsedYesLocked;
-        $field->tags        = '-aos';
-        $field->columnWidth = 67;
+        $field            = new Field();
+        $field->type      = $this->modules->get("FieldtypeText");
+        $field->name      = 'aos_column_break';
+        $field->label     = '';
+        $field->skipLabel = true;
+        $field->collapsed = Inputfield::collapsedYesLocked;
+        $field->tags      = '-aos';
+//        $field->columnWidth = 67;
         $field->save();
 
         $this->message(__('Added "aos_column_break" field for AdminColumns submodule.', __FILE__));
@@ -316,6 +316,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         self::$configData = $this->modules->getModuleConfigData($this);
         $configData       = self::$configData;
+        $editedPageId     = $this->sanitizer->int($this->config->input->get->id);
+
+        if (!empty($editedPageId) && is_numeric($editedPageId) && $this->pages->get($editedPageId)) {
+            $this->editedPage = $this->pages->get($editedPageId);
+        } else {
+            $this->editedPage = null;
+        }
 
         if ($this->user->isSuperUser()) {
 
@@ -417,17 +424,23 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $timestamp  = $moduleInfo['version'] . '_' . date('YmdH');
 
         $styles->prepend($root . '/' . __CLASS__ . '.css?ts=' . $timestamp);
-        $scripts->add($root . '/' . __CLASS__ . '.js?ts=' . $timestamp);
 
         if (!$this->enabled) {
             return false;
+        }
+
+        // login page doesn't some stuff
+        if ($this->page->id != 23) {
+            $scripts->add($root . '/' . __CLASS__ . '.js?ts=' . $timestamp);
+
+            // always load modal js
+            $this->modules->get('JqueryUI')->use('modal');
         }
 
         $configData  = self::$configData;
         $defaultData = self::getDefaultData();
 
         $enabledSubmodules = $this->enabledSubmodules;
-
 
 //        echo '<pre>'; var_dump(count($enabledSubmodules)); echo '</pre>';
 
@@ -437,17 +450,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $this->adminTheme = $this->user->admin_theme ? $this->user->admin_theme : $this->config->defaultAdminTheme;
 
         $this->PageListThumbs_items = array();
-
-        $editedPageId = $this->sanitizer->int($this->config->input->get->id);
-
-        // always load modal js
-        $this->modules->get('JqueryUI')->use('modal');
-
-        if (!empty($editedPageId) && is_numeric($editedPageId) && $this->pages->get($editedPageId)) {
-            $this->editedPage = $this->pages->get($editedPageId);
-        } else {
-            $this->editedPage = null;
-        }
 
         $this->addHookAfter('Page::render', $this, 'addClasses');
 
@@ -789,7 +791,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $configData['enabledSubmodules'] = array_values($enabledSubmodules);
         $configData['aosUrl']            = $this->config->urls->AdminOnSteroids;
 
-        $this->config->js("AdminOnSteroids", json_encode($configData));
+        // do not add JS config to page on login page
+        if ($this->page->id != 23) {
+            $this->config->js("AdminOnSteroids", json_encode($configData));
+        }
 
         // add admin.js and admin.css from templates directory
         if (file_exists($this->config->paths->templates . 'admin.js')) {
@@ -806,6 +811,44 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return !empty($obj->label) ? $obj->label . ' (' . $obj->name . ')' : $obj->name;
     }
 
+    public function setupAdminColumnsTabs($fields, $form) {
+
+        $dataColumnBreaks = array();
+
+        foreach ($fields as $f) {
+
+            // add data-attributes fo JS
+            $notes = $f->notes;
+
+            if (empty($notes)) {
+                // try default notes (PW bug with overrides?)
+                $notes = $this->fields->get($f->name)->notes;
+            }
+
+            if (!empty($notes)) {
+                $notes = trim($notes);
+
+                if (strpos($notes, 'colbreak_') !== 0) {
+                    return;
+                }
+
+                $notes = str_replace('colbreak_', '', $notes);
+
+                if (strpos($notes, ':') !== false) {
+                    $notes = array_map('trim', explode(':', $notes));
+                } else {
+                    $notes = array($notes, 67);
+                }
+                $dataColumnBreaks[$f->name] = $notes;
+            }
+        }
+
+        if (!empty($dataColumnBreaks)) {
+            $form->wrapAttr('data-column-break', json_encode($dataColumnBreaks));
+        }
+
+    }
+
 
     public function setupAdminColumns(HookEvent $event) {
 
@@ -813,9 +856,38 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fields        = $form->children();
         $colBreakField = $fields->get('aos_column_break');
         $colWidths     = array(67, 33);
+        $tabOpenFields = $fields->find('hasFieldtype=FieldtypeFieldsetTabOpen');
+
+        if ($tabOpenFields->count()) {
+            $this->setupAdminColumnsTabs($tabOpenFields, $form);
+        }
 
         if (!$colBreakField) {
-            return;
+            return false;
+        }
+
+        // stop if colBreakField is inside a tab
+        $tabSeen = false;
+
+        foreach ($fields as $field) {
+
+            if ($field->hasFieldtype == 'FieldtypeFieldsetTabOpen') {
+                $tabSeen = true;
+            }
+
+            if ($field->name == $colBreakField->name) {
+
+                if ($tabSeen) {
+                    // there was a TabOpen field first, remove colBreakField and stop
+                    $form->remove($colBreakField);
+
+                    return false;
+
+                } else {
+                    // colBreakField is not inside a tab
+                    break;
+                }
+            }
         }
 
         if ($colBreakField->columnWidth) {
@@ -823,11 +895,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         $fsetLeft = $this->modules->get("InputfieldFieldset");
-        $fsetLeft->attr('id', 'aos_col_left');
+        $fsetLeft->attr('class', $fsetLeft->attr('class') . ' aos_col_left');
         $fsetLeft->wrapAttr('style', 'width: ' . $colWidths[0] . '%');
 
         $fsetRight = $this->modules->get("InputfieldFieldset");
-        $fsetRight->attr('id', 'aos_col_right');
+        $fsetRight->attr('class', $fsetRight->attr('class') . ' aos_col_right');
         $fsetRight->wrapAttr('style', 'width: ' . $colWidths[1] . '%');
 
         $this->modules->get('FieldtypeFieldsetClose');
@@ -847,8 +919,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         foreach ($fields as $f) {
 
-            // break on first Tab field
-            if ($f instanceof \ProcessWire\InputfieldFieldsetTabOpen) {
+            // stop on first Tab field
+            if ($f->hasFieldtype == 'FieldtypeFieldsetTabOpen') {
                 break;
             }
 
@@ -869,8 +941,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $form->add($fsetRight);
         $form->add($fsetRightEnd);
-
-//            $event->return = $form;
     }
 
 
@@ -1360,7 +1430,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
 
         // Enabled fields
-        $cke_fields = wire('fields')->find('inputfieldClass=InputfieldCKEditor');
+        $cke_fields = $this->fields->find('inputfieldClass=InputfieldCKEditor');
 
         $f              = wire('modules')->get('InputfieldAsmSelect');
         $f->name        = 'CKEaddons_enabledFields';

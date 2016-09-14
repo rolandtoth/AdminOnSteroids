@@ -120,12 +120,45 @@ $(document).ready(function () {
     }
 
 
-// allow scrolling on sidebar and main content on mouse hover
-// $('#main-nav, #main').attr('tabindex', 0);
+    // check for AdminColumns in tabs
+    if ($('#ProcessPageEdit li[data-column-break]').length) {
 
-// $('#main-nav, #main').on('mouseover', function() {
-// 	debounce($(this).focus(), 5000);
-// });
+        $(document).on('wiretabclick', function (e, elem) {
+
+            var tabName = elem.attr('id').replace('Inputfield_', ''),
+                tabSelector = '#Inputfield_' + tabName,
+                tabColumnBreaks = $('#ProcessPageEdit li[data-column-break]').attr('data-column-break');
+
+            if ($(tabSelector).hasClass('aos-columns-ready')) return false;
+
+            if (tabColumnBreaks) {
+                tabColumnBreaks = JSON.parse(tabColumnBreaks);
+            }
+
+            if (tabColumnBreaks[tabName]) {
+
+                if (!tabColumnBreaks[tabName][0]) return false;
+
+                var breakField = $('#wrap_Inputfield_' + tabColumnBreaks[tabName][0]),
+                    colWidth = tabColumnBreaks[tabName][1] ? tabColumnBreaks[tabName][1] : 67;
+
+                // console.log(tabColumnBreaks);
+                // console.log(colWidth);
+                // console.log(breakField.length);
+
+                if (!breakField.length) return false;
+
+                var aosColBreakIndex = breakField.index() + 1;
+
+                $(tabSelector + ' > .Inputfields > li:lt(' + aosColBreakIndex + ')').wrapAll('<li class="InputfieldFieldsetOpen aos_col_left" style="width: ' + colWidth + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
+                $(tabSelector + ' > .Inputfields > .aos_col_left ~ li').wrapAll('<li class="InputfieldFieldsetOpen aos_col_right" style="width: ' + (100 - colWidth) + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
+
+                $(tabSelector).addClass('aos-columns-ready');
+
+            }
+        });
+    }
+
 
     // add "title" to h1
     if ($('h1#title').length) {
@@ -190,6 +223,7 @@ $(document).ready(function () {
             if (!label.length) return false;
 
             if (label.find('span').length == 0) {
+                field.addClass('aos_hasTooltip');
                 var fieldName = label.parent().find('.InputfieldContent .aos_EditFieldLink').attr('data-field-name');
 
                 if (!fieldName) return false;

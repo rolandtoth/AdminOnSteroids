@@ -8,7 +8,7 @@
 
 $colorDelete: #B93E42;
 $defaultTransition: 0.12s;
-$defaultBoxShadow: 0 4px 8px -5px rgba(#465b69, 0.25);
+$defaultBoxShadow: 0 2px 5px -3px rgba(#465b69, 0.5);
 
 @keyframes fadeOut {
   0% {
@@ -1682,10 +1682,6 @@ html.AdminThemeReno {
         padding: 1.33em 0 1.33em 1.33em;
         //transition: padding-top 0.12s, padding-bottom 0.12s !important;
       }
-      //#head_button {
-      //  position: relative;
-      //  z-index: 100000 + 100;
-      //}
       #main {
         &:not(.closed) {
           #headline {
@@ -1805,22 +1801,10 @@ html.AdminThemeReno {
     }
   }
 
-  // allow overflow on page title span hover to make TemplateEditLink tooltip show up
-  //body[class*="ProcessPageEdit"] #title span {
-  //  &:hover {
-  //    overflow: visible;
-  //  }
-  //}
-
   // headStickyCompact
-
-  &.headStickyCompact:not(.modal) {
+  &.headSticky.headStickyCompact:not(.modal) {
 
     @media only screen and (min-width: 960px) {
-
-      //body {
-      //  overflow: hidden !important;
-      //}
 
       // System Notifications module
       #NotificationGhosts {
@@ -2229,11 +2213,6 @@ html.AdminThemeReno {
           padding-left: 2.5em;
         }
       }
-      //
-      //#breadcrumbs {
-      //  padding-left: 3.5em;
-      //  transform: translateX(-2em);
-      //}
 
       #sidebar.closed, #sidebar.hide,
       #branding.closed {
@@ -2753,49 +2732,26 @@ select:-moz-focusring {
   text-shadow: 0 0 0 #000;
 }
 
-//#ProcessPageEditContent > .Inputfields {
-//  //columns: 2 600px;
-//  > li {
-//    //break-inside: avoid;
-//    float: left;
-//    width: 68%;
-//    &:nth-child(5) ~ li {
-//      width: 30%;
-//    }
-//  }
-//}
-
-//#ProcessPageEditContent #wrap_Inputfield_aos_column_break {
-//  height: 0 !important;
-//  overflow: hidden !important;
-//}
-//
-//.aos-left,
-//.aos-right {
-//  //width: 67%;
-//  float: left;
-//  margin-top: 0 !important;
-//}
-//
-//.aos-right {
-//  //width: 33%;
-//  margin-left: -1px !important;
-//}
-
-#aos_col_left,
-#aos_col_right {
+.aos_col_left,
+.aos_col_right {
   width: 67%;
   float: left;
-  clear: none;
+  clear: none !important;
   margin-top: 0 !important;
 }
 
-#aos_col_right {
+.aos_col_right {
   width: 33%;
   margin-left: -1px !important;
 }
 
+// hide aos_column_break field
 #ProcessPageEditContent #wrap_Inputfield_aos_column_break {
   height: 0 !important;
   overflow: hidden !important;
+}
+
+// inlne ckeditor toolbar fix
+.InputfieldCKEditorInline {
+  position: relative;
 }

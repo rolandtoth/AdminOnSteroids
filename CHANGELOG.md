@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.6.4 (2016-09-14)
+
+- possibility to set admin columns inside tabs using FieldsetTabOpen's Note field
+- AdminColumns: skip column generation if aos_column_break is put inside a tab
+- do not add module JS and JS config to login page
+
+
+
 ### 0.6.3 (2016-09-13)
 
 - new submodule: AdminColumns
