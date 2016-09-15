@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 0.6.5 (2016-09-15)
+
+- new RenoTweak "hoverTopSubmenus": show topnav submenus on hover instead click
+- use slider for LongClickDuration instead plain text input
+- do not load submodule JS/CSS files on login page
+
+
+
 ### 0.6.4 (2016-09-14)
 
 - possibility to set admin columns inside tabs using FieldsetTabOpen's Note field

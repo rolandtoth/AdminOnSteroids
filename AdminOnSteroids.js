@@ -114,9 +114,57 @@ $(window).load(function () {
 
 
 $(document).ready(function () {
-
+    
     if (AOSsettings == null) {
         return false;
+    }
+
+    // AOS LongClick slider (module options page)
+    var $longClickElem = $("#Inputfield_LongClickDuration");
+
+    if ($longClickElem.length) {
+
+        var longClickMin = 600,
+            longClickMax = 3000,
+            longClickUnit = ' ms',
+            longClickStep = 100,
+            sliderTooltip = function (ui) {
+                var curValue = ui.value || $longClickElem.val().replace(longClickUnit, ''); // current value (when sliding) or initial value (at start)
+                var tooltip = '<div class="sliderTooltip"><div class="sliderTooltip-inner ui-button"><span>' + curValue + '</span>' + longClickUnit + '</div><div class="sliderTooltip-arrow"></div></div>';
+
+                $('.ui-slider-handle').html(tooltip); //attach tooltip to the slider handle
+            };
+
+        var $longClickSlider = $("<div id='longClickSlider'></div>");
+        var columnWidthVal = parseInt($longClickElem.val());
+        $longClickElem.val(columnWidthVal + longClickUnit);
+        $longClickElem.after($longClickSlider);
+        $longClickSlider.slider({
+            range: 'min',
+            step: longClickStep,
+            min: longClickMin,
+            max: longClickMax,
+            value: parseInt($longClickElem.val()),
+            slide: function (e, ui) {
+                var val = ui.value + longClickUnit;
+                $longClickElem.val(val);
+
+                sliderTooltip(ui);
+            },
+            create: function (e, ui) {
+                sliderTooltip(ui);
+            }
+        });
+
+        // update the slider if the columnWidth field is changed manually
+        $longClickElem.change(function () {
+            var val = parseInt($(this).val());
+            if (val > longClickMax) val = longClickMax;
+            if (val < longClickMin) val = longClickMin;
+            if (val % longClickStep != 0) val = Math.round(val / 100) * 100;
+            $(this).val(val + longClickUnit);
+            $longClickSlider.slider('option', 'value', val);
+        });
     }
 
 
