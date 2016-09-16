@@ -11,23 +11,41 @@ if (AOSsettings) {
             CKEskin = AOSsettings.CKEaddons_skin,
             CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
             CKEpluginCount = enabledCKEplugins.length,
+            // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
+            oEmbedPluginDependencies = 'widget,lineutils',
             CKEtoolbars = {
                 justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
                 div: ["CreateDiv"],
                 find: ["Find", "Replace"],
-                maximize: ["Maximize"]
+                maximize: ["Maximize"],
+                oembed: ["oembed"],
+                showblocks: ["ShowBlocks"]
             };
 
         // set each plugin path to AOS dir
         if (CKEpluginCount > 0) {
             for (var i = 0; i < CKEpluginCount; i++) {
+
                 var pluginName = enabledCKEplugins[i];
+
+                // Note: html purifier needs to be disabled for oEmbed to work
+                if (pluginName == 'oembed') {
+                    var dependencies = oEmbedPluginDependencies.split(',');
+                    for (var k in dependencies) {
+                        CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                    }
+                }
+
                 CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
             }
         }
 
         function addCKEtoolbars(instance) {
-            for (var toolbarName in CKEtoolbars) {
+
+            var plugins = instance.extraPlugins.split(',');
+
+            for (i = 0; i < plugins.length; i++) {
+                var toolbarName = plugins[i];
                 if (CKEtoolbars.hasOwnProperty(toolbarName) && enabledCKEplugins.indexOf(toolbarName) !== -1) {
                     instance.toolbar.unshift(CKEtoolbars[toolbarName]);
                 }
@@ -35,6 +53,18 @@ if (AOSsettings) {
         }
 
         $(document).ready(function () {
+
+            // LightWire skin (global)
+            if (aosUrl && CKEskin && CKEskin !== 'default') {
+                CKEDITOR.config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
+            }
+
+            // set some plugin defaults
+            CKEDITOR.config.autoGrow_onStartup = true;
+            CKEDITOR.config.autoGrow_bottomSpace = 20;
+            CKEDITOR.config.codemirror = {
+                theme: 'material',
+            };
 
             $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
 
@@ -44,8 +74,16 @@ if (AOSsettings) {
                 // only add once
                 if (CKEfield.aos) return true;
 
-                // config needs to be loaded anyways (eg. because of skin)
-                CKEfield.customConfig = aosUrl + 'CKE/config.js';
+                // load custom config if exists
+                if (AOSsettings.useCustomCKEconfig) {
+                    CKEfield.customConfig = aosUrl + '../../templates/cke.js';
+                }
+
+                // load custom css file (only if there's no field custom css set)
+                // by default contents.css is loaded from /wire/... directory
+                if (CKEfield.contentsCss.indexOf('/wire/') !== -1 && AOSsettings.useCustomCKEstyle) {
+                    CKEfield.contentsCss = aosUrl + '../../templates/cke.css';
+                }
 
                 // process enabled fields
                 if (CKEenabledFields.length) {
@@ -54,7 +92,9 @@ if (AOSsettings) {
                     }
                 }
 
-                CKEfield.extraPlugins = enabledCKEplugins.join(',') + ',' + CKEfield.extraPlugins;
+                var extraPlugins = enabledCKEplugins.reverse().join(',');
+
+                CKEfield.extraPlugins += ',' + extraPlugins;
                 addCKEtoolbars(CKEfield);
 
                 CKEfield.aos = true;
@@ -114,7 +154,7 @@ $(window).load(function () {
 
 
 $(document).ready(function () {
-    
+
     if (AOSsettings == null) {
         return false;
     }
@@ -128,16 +168,17 @@ $(document).ready(function () {
             longClickMax = 3000,
             longClickUnit = ' ms',
             longClickStep = 100,
-            sliderTooltip = function (ui) {
-                var curValue = ui.value || $longClickElem.val().replace(longClickUnit, ''); // current value (when sliding) or initial value (at start)
-                var tooltip = '<div class="sliderTooltip"><div class="sliderTooltip-inner ui-button"><span>' + curValue + '</span>' + longClickUnit + '</div><div class="sliderTooltip-arrow"></div></div>';
+            $longClickSlider = $("<div id='longClickSlider'></div>"),
+            columnWidthVal = parseInt($longClickElem.val());
 
-                $('.ui-slider-handle').html(tooltip); //attach tooltip to the slider handle
-            };
+        function sliderTooltip(ui) {
+            var curValue = (ui && ui.value) || $longClickElem.val(); // current value (when sliding) or initial value (at start)
+            var tooltip = '<div class="sliderTooltip"><div class="sliderTooltip-inner ui-button"><span>' + curValue + '</span>' + longClickUnit + '</div><div class="sliderTooltip-arrow"></div></div>';
 
-        var $longClickSlider = $("<div id='longClickSlider'></div>");
-        var columnWidthVal = parseInt($longClickElem.val());
-        $longClickElem.val(columnWidthVal + longClickUnit);
+            $('.ui-slider-handle').html(tooltip); //attach tooltip to the slider handle
+        }
+
+        $longClickElem.val(columnWidthVal);
         $longClickElem.after($longClickSlider);
         $longClickSlider.slider({
             range: 'min',
@@ -146,9 +187,8 @@ $(document).ready(function () {
             max: longClickMax,
             value: parseInt($longClickElem.val()),
             slide: function (e, ui) {
-                var val = ui.value + longClickUnit;
+                var val = ui.value;
                 $longClickElem.val(val);
-
                 sliderTooltip(ui);
             },
             create: function (e, ui) {
@@ -162,9 +202,18 @@ $(document).ready(function () {
             if (val > longClickMax) val = longClickMax;
             if (val < longClickMin) val = longClickMin;
             if (val % longClickStep != 0) val = Math.round(val / 100) * 100;
-            $(this).val(val + longClickUnit);
+            $(this).val(val);
             $longClickSlider.slider('option', 'value', val);
+            sliderTooltip();
         });
+    }
+
+    // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle
+    if ($('html.AdminThemeReno.headStickyCompact:not(.headBtnToTitle):not(.modal)').length) {
+        var saveBtnWidth = $('#Inputfield_submit_save_module_copy').outerWidth();
+        if (saveBtnWidth && saveBtnWidth != 0) {
+            $('#search').attr('style', 'right: ' + (saveBtnWidth + 120 + 24) + 'px !important');
+        }
     }
 
 
@@ -190,10 +239,6 @@ $(document).ready(function () {
                 var breakField = $('#wrap_Inputfield_' + tabColumnBreaks[tabName][0]),
                     colWidth = tabColumnBreaks[tabName][1] ? tabColumnBreaks[tabName][1] : 67;
 
-                // console.log(tabColumnBreaks);
-                // console.log(colWidth);
-                // console.log(breakField.length);
-
                 if (!breakField.length) return false;
 
                 var aosColBreakIndex = breakField.index() + 1;
@@ -202,7 +247,6 @@ $(document).ready(function () {
                 $(tabSelector + ' > .Inputfields > .aos_col_left ~ li').wrapAll('<li class="InputfieldFieldsetOpen aos_col_right" style="width: ' + (100 - colWidth) + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
 
                 $(tabSelector).addClass('aos-columns-ready');
-
             }
         });
     }

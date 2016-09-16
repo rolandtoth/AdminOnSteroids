@@ -55,6 +55,66 @@ Notes:
 - some submodule is available as SuperUser-only and the roles dropdown is not available for them
 
 
+**Disable submodule or tweak from code**
+
+Besides the option to restrict submodules by roles it is possible to use the `AdminOnSteroids::modifyConfigData` hook to disable a submodule or a tweak inside a submodule.
+
+This is more flexible because you can use custom conditions, eg. remove the sticky header only if the user's name is 'BigBoss' or the page you edit has the 'news' template.
+
+The hook has two arguments that you can use:
+
+- the module's entire config data
+- the edited Page (or false if it's not applicable)
+
+There are two helper methods you can use:
+
+- `AdminOnSteroids::disableSubmodule` to disable a submodule. Parameters: submodule name, config array
+- `AdminOnSteroids::disableTweak` to disable a tweak. Parameters: submodule name, tweak name, config array
+
+Example:
+
+```
+wire()->addHookAfter('AdminOnSteroids::modifyConfigData', function (HookEvent $event) {
+
+    $data       = $event->arguments[0];
+    $editedPage = $event->arguments[1];
+
+    // disable submodule/tweak by template name
+    if ($editedPage && $editedPage->template->name == 'news') {
+
+        // disable submodule
+        $data = \AdminOnSteroids::disableSubmodule('NavItems', $data);
+        $data = \AdminOnSteroids::disableSubmodule('PageListThumbs', $data);
+
+        // remove tweak from submodule
+        $data = \AdminOnSteroids::disableTweak('Tooltips', 'tooltipOverlay', $data);
+        $data = \AdminOnSteroids::disableTweak('FileFieldTweaks', 'filterbox', $data);
+    }
+
+    // disable submodule/tweak by role name
+    if ($this->user->hasRole('editor')) {
+
+        // disable submodule
+        $data = \AdminOnSteroids::disableSubmodule('Tooltips', $data);
+
+        // remove tweak from submodule
+        $data = \AdminOnSteroids::disableTweak('RenoTweaks', 'headSticky', $data);
+        $data = \AdminOnSteroids::disableTweak('RenoTweaks', 'sbSticky', $data);
+    }
+
+    $event->return = $data;
+});
+```
+
+The best place to add the hook is "init.php" but it may work elsewhere too.
+
+You can enable a submodule simply by adding the submodule's name to the enabledSubmodules array (inside the hook):
+
+```
+$configData['enabledSubmodules'][] = 'RenoTweaks';
+```
+
+
 
 ###AdminColumns
 
@@ -147,28 +207,41 @@ Note: CKEditor fields are not supported - use the CKEaddons submodule (v0.6.1+) 
 You can select from these plugins to add to CKEditor enabled fields:
 
 - [Auto Grow](http://ckeditor.com/addon/autogrow)
+- [CodeMirror](http://ckeditor.com/addon/codemirror) (available when viewing editor Source)
 - [Div](http://ckeditor.com/addon/div) (adds a toolbar button)
 - [Find](http://ckeditor.com/addon/find) (adds toolbar buttons)
 - [Justify](http://ckeditor.com/addon/justify) (adds text-align toolbar buttons)
 - [Keystrokes](https://processwire.com/talk/topic/12768-anyone-successfully-added-ckeditor-shortcut-keys/?do=findComment&comment=116190) - thanks **Robin S**!
 - [Magic Line](http://ckeditor.com/addon/magicline)
-- [Maximize](http://ckeditor.com/addon/maximize) (unavailable in inline CKEditors)
+- [Maximize](http://ckeditor.com/addon/maximize) (unavailable in inline mode)
+- [Media (oEmbed)](http://ckeditor.com/addon/oembed) (adds a toolbar button)
+- [show Blocks](http://ckeditor.com/addon/showblocks) (adds a toolbar button)
 
 If a plugin adds toolbar items then they will be added to the beginning of the toolbar.
+The order of the asmField items determine the order of the toolbar buttons.
+
+The oEmbed plugin requires the "HTML purifier" to be turned off for the CKEditor field to work, otherwise iframes will be removed on saving the page.
 
 **Skin**
 
 Here you can choose from the default and [LightWire](http://modules.processwire.com/modules/editor-skin-lightwire/) skins. The LightWire skin is made by **nico**.
 Note that the setting "Enabled fields" has no effect on the skin.
 
+
 **Enabled fields**
 
 By default all CKEditor fields will load the plugins you enable.
 Here you can restrict the submodule to selected fields only.
 
+**Custom config and style**
 
-Note: you can't use `CKEDITOR.editorConfig` for additional settings so you should use this submodule only if you have no custom needs. 
-The submodule will have a dedicated field in the future to set settings.
+If exists, the module will load "/site/templates/cke.js" file where you can set custom configuration.
+You can use the "CKE/sample-cke.js" file from the module's directory to start with.
+Options entered to the field's "Custom Config Options" will be preserved (and they have priority).
+
+Similarly "/site/templates/cke.css" will be used if this file exists, and if there's nothing set in the field's "Custom Editor CSS File" setting (Input tab).
+
+*Tip: you can use "@import" in cke.css to load another CSS file.*
 
 
 

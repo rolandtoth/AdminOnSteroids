@@ -660,10 +660,10 @@ html.asmCollapse {
             right: 0;
             transition: all $defaultTransition;
             //background: rgba(#97AAB4, 0.2);
-            outline: 1px solid rgba(#97AAB4, 0.1);
-            //outline: 1px solid transparent;
+            //outline: 1px solid rgba(#97AAB4, 0.1);
+            outline: 1px solid transparent;
             //background: rgba(#97AAB4, 0.2);
-            background: rgba(darken(#F0F3F7, 20%), 0.25);
+            background: rgba(#F0F3F7, 0.25);
             outline-offset: -1px;
           }
         }
@@ -672,8 +672,8 @@ html.asmCollapse {
             + span {
               &:before {
                 //background: rgba(#97AAB4, 0.2);
-                background: rgba(#97AAB4, 0.1);
-                box-shadow: inset 0 0 2px 1px rgba(#fff, 0.7);
+                background: rgba(#97AAB4, 0.12);
+                //box-shadow: inset 0 0 2px 1px rgba(#fff, 0.7);
                 outline-color: rgba(#97AAB4, 0.33);
                 //outline: 1px solid rgba(#97AAB4, 0.4);
                 //background: darken(#D2DCE6, 2%);
@@ -1401,7 +1401,7 @@ body.AdminThemeDefault {
     #headline,
     #breadcrumbs,
     #masthead {
-      width: 100vw !important;
+      //width: 100vw !important;
     }
   }
 }
@@ -2114,7 +2114,7 @@ html.AdminThemeReno {
 
     &:not(.headBtnToTitle) {
       #search {
-        right: 120px !important;
+        right: 127px !important;
       }
     }
   }
@@ -2833,4 +2833,35 @@ select:-moz-focusring {
   }
 }
 
+//.CodeMirror {
+//  line-height: inherit !important;
+//  font-family: inherit;
+//}
 
+.CodeMirror-lines {
+  font-size: 13px;
+}
+
+.CodeMirror-line {
+  span {
+    white-space: normal !important;
+  }
+}
+
+.cke_top .cke_button_icon.cke_button__oembed_icon {
+  //background-image: url('/site/modules/AdminOnSteroids/CKE/plugins/oembed/icons/oembed.png') !important;
+  background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
+}
+
+//#wrap_Inputfield_CKEaddons_plugins {
+//  .asmListItemLabel {
+//    text-align: justify;
+//    max-width: 98%;
+//    height: 27px;
+//    &:after {
+//      content: "";
+//      display: inline-block;
+//      width: 100%;
+//    }
+//  }
+//}

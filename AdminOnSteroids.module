@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 65,
+            'version'   => 66,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -180,13 +180,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             return;
         }
 
-        $field = new Field();
-        $field->type = $this->modules->get("FieldtypeText");
-        $field->name = 'aos_column_break';
-        $field->label = '';
+        $field            = new Field();
+        $field->type      = $this->modules->get("FieldtypeText");
+        $field->name      = 'aos_column_break';
+        $field->label     = '';
         $field->skipLabel = true;
         $field->collapsed = Inputfield::collapsedYesLocked;
-        $field->tags = '-aos';
+        $field->tags      = '-aos';
 //        $field->columnWidth = 67;
         $field->save();
 
@@ -314,10 +314,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
+    public function ___modifyConfigData($data) {
+        return $data;
+    }
+
+
     public function init() {
 
-        self::$configData = $this->modules->getModuleConfigData($this);
-        $configData = self::$configData;
+
         $editedPageId = $this->sanitizer->int($this->config->input->get->id);
 
         if (!empty($editedPageId) && is_numeric($editedPageId) && $this->pages->get($editedPageId)) {
@@ -325,6 +329,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         } else {
             $this->editedPage = null;
         }
+
+        $configData = $this->modifyConfigData(
+            $this->modules->getModuleConfigData($this),
+            $this->editedPage ? $this->editedPage : false
+        );
+
+        self::$configData = $configData;
+
 
         if ($this->user->isSuperUser()) {
 
@@ -341,7 +353,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
                 $parts = $event->return;
 
-                $enabledText = __('Disable', __FILE__) . ' AdminOnSteroids';   // Disable AdminOnSteroids
+                $enabledText  = __('Disable', __FILE__) . ' AdminOnSteroids';   // Disable AdminOnSteroids
                 $disabledText = __('Enable', __FILE__) . ' AdminOnSteroids';   // Enable AdminOnSteroids
 
                 $linkStyle = 'style="opacity: 0.75; color: inherit !important; margin-left: 0; display: inline-block; padding: 4px 0; margin-right: 1px;"';
@@ -364,7 +376,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             }
             $this->allRoles[$role->name] = $role->name;
         }
-
 
         if (!$this->enabled) {
             return;
@@ -410,7 +421,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // add to init() to change early
         if (in_array($subModule, $enabledSubmodules)) {
             if (isset($_COOKIE["aos_lang_id"])) {
-                $lang_id = $_COOKIE["aos_lang_id"];
+                $lang_id              = $_COOKIE["aos_lang_id"];
                 $this->user->language = $lang_id;
             }
         }
@@ -419,11 +430,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function ready() {
 
-        $root = $this->config->urls->siteModules . __CLASS__;
-        $styles = $this->config->styles;
-        $scripts = $this->config->scripts;
-        $moduleInfo = $this->getModuleInfo();
-        $timestamp = $moduleInfo['version'] . '_' . date('YmdH');
+        $root          = $this->config->urls->siteModules . __CLASS__;
+        $styles        = $this->config->styles;
+        $scripts       = $this->config->scripts;
+        $templatesPath = $this->config->paths->templates;
+        $moduleInfo    = $this->getModuleInfo();
+        $timestamp     = $moduleInfo['version'] . '_' . date('YmdH');
 
         $styles->prepend($root . '/' . __CLASS__ . '.css?ts=' . $timestamp);
 
@@ -439,7 +451,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $this->modules->get('JqueryUI')->use('modal');
         }
 
-        $configData = self::$configData;
+        $configData  = self::$configData;
         $defaultData = self::getDefaultData();
 
         $enabledSubmodules = $this->enabledSubmodules;
@@ -447,8 +459,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 //        echo '<pre>'; var_dump(count($enabledSubmodules)); echo '</pre>';
 
         $this->htmlClasses = array();
-        $jsFiles = array();
-        $cssFiles = array();
+        $jsFiles           = array();
+        $cssFiles          = array();
 
         // if there's only the default admin theme, $user->admin_theme is not available
         $this->adminTheme = $this->user->admin_theme ? $this->user->admin_theme : $this->config->defaultAdminTheme;
@@ -461,10 +473,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // AdminColumns
         $subModule = 'AdminColumns';
         if (in_array($subModule, $enabledSubmodules)) {
-
             // make sure field is available
             $this->_installColumnBreakField();
-
             $this->addHookAfter('ProcessPageEdit::buildFormContent', $this, 'setupAdminColumns');
         }
 
@@ -478,154 +488,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'NavItems';
 
         if (in_array($subModule, $enabledSubmodules)) {
-
-            $this->addHookAfter('Page::render', function ($event) {
-
-                $items = "";
-                $navItems = $this->NavItems_pages;
-                $rootUrl = $this->pages->get(2)->url . 'page/?id=';
-
-                // process pagelist select items
-                if ($navItems) {
-
-                    foreach ($this->pages->getById($navItems) as $p) {
-
-                        $url = "";
-                        $editUrl = "";
-                        $activeClass = "";
-                        $inputId = $this->input->get->id;
-
-                        /**
-                         * 7: Trash
-                         * 21: Modules
-                         * 304: Profile
-                         */
-                        if ($p->id == 304) {
-
-                            if ($this->user->hasPermission('profile-edit')) {
-                                $url = $this->pages->get($p->id)->url;
-                            } else {
-                                continue;
-                            }
-
-                        } else if ($p->id == 21) {
-
-                            if ($this->user->isSuperUser()) {
-                                $url = $this->config->urls->admin . 'module';
-                            }
-
-                        } else if ($p->id == 7) {
-
-                            if ($p->listable()) {
-                                $url = $this->config->urls->admin . 'page/?id=' . $p->id;
-                                $editUrl = false;
-                            } else {
-                                continue;
-                            }
-
-                        } else {
-
-                            if (!$p->listable()) {
-                                continue;
-                            }
-
-                            $url = $rootUrl . $p->id;
-                        }
-
-                        if ($url == "") {
-                            continue;
-
-                        } else {
-                            $pageId = $p->id;
-
-                            /**
-                             *  add active class only if:
-                             *
-                             * navItem id == GET id
-                             * navItem id == current page id
-                             * navItem id !== GET id and edited page is child page of the page
-                             */
-
-                            if (
-                                $pageId == $inputId ||
-                                $pageId == $this->page->id ||
-                                //                                ($pageId == $inputId && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
-                                (!in_array($inputId, $navItems) && $pageId !== 1 && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
-                            ) {
-                                $activeClass = ' current';
-                            }
-                            $listUrl = '<a href="' . $url . '" class="page-list' . $activeClass . '">' . $p->title . '</a>';
-                        }
-
-                        $editUrl = $editUrl === false ? '' : $p->editable() ? '<a href="' . $p->editUrl() . '" class="page-edit"><i class="fa fa-pencil"></i></a>' : '';
-
-                        $firstClass = empty($items) ? ' first' : '';
-
-                        $items .= '<li class="navItem' . $firstClass . '">' . $listUrl . ' ' . $editUrl . '</li>';
-
-                    }
-                }
-
-                if ($this->NavItems_custom) {
-
-                    $settings = trim($this->NavItems_custom);
-                    $settings = explode("\n", $settings);
-                    $settings = array_filter($settings, 'trim');
-
-                    $rootUrl = rtrim($this->config->urls->admin, '/');
-                    $rootUrlHttp = $this->config->urls->httpAdmin;
-
-                    foreach ($settings as $pairs) {
-
-                        if (strpos($pairs, '//') === 0) {
-                            continue;
-                        }
-
-                        // replace rootUrlHttp to avoid having ':' before explode
-                        $pairs = str_replace($rootUrlHttp, '', $pairs);
-
-                        if (strpos($pairs, ':') === false) {
-                            continue;
-                        }
-
-                        $setting = explode(':', $pairs);
-
-                        $title = isset($setting[0]) ? trim($setting[0]) : null;
-                        $url = isset($setting[1]) ? trim($setting[1]) : null;
-
-                        if (is_null($title) || is_null($url)) {
-                            continue;
-                        }
-
-                        // if title starts with "!" then only SuperUsers should see
-                        if ($title[0] == '!') {
-                            if (!$this->user->isSuperUser()) {
-                                continue;
-                            }
-                            // trim and add * to indicate it's admin only
-                            $title = ltrim($title, '!') . "*";
-                        }
-
-                        $url = ltrim($url, '/');
-
-                        $activeClass = (strpos($_SERVER['REQUEST_URI'], $url) !== false) ? ' current' : '';
-
-                        $linkUrl = '<a href="' . $rootUrl . '/' . $url . '" class="page-list' . $activeClass . '">' . $title . '</a>';
-                        $items .= '<li class="navItem">' . $linkUrl . '</li>';
-                    }
-
-                }
-
-                if ($items == "") {
-                    return false;
-                }
-
-                $items = '<ul class="NavItems" style="display: none;">' . $items . '</ul>';
-
-                $event->return = str_replace('</body>', $items . '</body', $event->return);
-            });
+            $this->addHookAfter('Page::render', $this, 'addNavItems');
         }
-
 
         //AutosizeTextareas
         $subModule = 'AutosizeTextareas';
@@ -649,7 +513,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             }
         }
 
-
         //DeselectRadios
         $subModule = 'DeselectRadios';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -661,7 +524,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'InputfieldURLChecker';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
+            $jsFiles[]  = $root . '/' . $subModule . '/' . $subModule . '.js';
             $cssFiles[] = $root . '/' . $subModule . '/' . $subModule . '.css';
 
             $this->addHookAfter('InputfieldURL::renderValue', $this, 'addIUCLink');
@@ -701,7 +564,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 $page = $this->pages->get('has_parent!=2, id=' . $this->input->get->id);
 
                 if ($page->id) {
-                    $homepage = $this->wire->pages->get(1);
+                    $homepage       = $this->wire->pages->get(1);
                     $breadcrumbUrls = array();
 
                     foreach ($this->wire->pages->get(1)->and($page->parentsUntil(1)) as $p) {
@@ -729,7 +592,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'LongClickDuration';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $LongClickDuration = (int)$configData['LongClickDuration'];
+            $LongClickDuration = (int) $configData['LongClickDuration'];
 
             //do not allow lower value than default 600
             $LongClickDuration = ($LongClickDuration < $defaultData['LongClickDuration']) ? $defaultData['LongClickDuration'] : $LongClickDuration;
@@ -741,13 +604,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         // remove Tooltips if it's superuser only and user is not superuser
-        if (isset($configData['Tooltips']) && (in_array('superuseronly', $configData['Tooltips']) && !$this->user->isSuperUser())) {
-            // delete from array by value
-            if (($key = array_search('Tooltips', $enabledSubmodules)) !== false) {
-                $configData['enabledSubmodules'][$key] = 'Tooltips_disabled';
-                unset($configData['Tooltips']);
-            }
-        }
+//        if (isset($configData['Tooltips']) && (in_array('superuseronly', $configData['Tooltips']) && !$this->user->isSuperUser())) {
+//            // delete from array by value
+//            if (($key = array_search('Tooltips', $enabledSubmodules)) !== false) {
+//                $configData['enabledSubmodules'][$key] = 'Tooltips_disabled';
+//                unset($configData['Tooltips']);
+//            }
+//        }
 
         $subModule = 'ModuleTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -791,10 +654,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // add modified enabledSubmodules to JS config (modified by roles)
         // note: array_values is used to have values-only array in JS
         $configData['enabledSubmodules'] = array_values($enabledSubmodules);
-        $configData['aosUrl'] = $this->config->urls->AdminOnSteroids;
+        $configData['aosUrl']            = $this->config->urls->AdminOnSteroids;
 
-        if ($this->page->id != 23) {
         // do not add JS to page on login page
+        if ($this->page->id != 23) {
+
+            // custom CKEaddons config js and css
+            if (file_exists($templatesPath . 'cke.js')) {
+                $configData['useCustomCKEconfig'] = 1;
+            }
+            if (file_exists($templatesPath . 'cke.css')) {
+                $configData['useCustomCKEstyle'] = 1;
+            }
+
+            // add css and js files
             foreach ($jsFiles as $jsFile) {
                 $scripts->add($jsFile);
             }
@@ -802,19 +675,214 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 $styles->add($cssFile);
             }
 
+            // write module js config to page
             $this->config->js("AdminOnSteroids", json_encode($configData));
         }
 
         // add admin.js and admin.css from templates directory
-        if (file_exists($this->config->paths->templates . 'admin.js')) {
+        if (file_exists($templatesPath . 'admin.js')) {
             $scripts->add($this->config->urls->templates . 'admin.js');
         }
-        if (file_exists($this->config->paths->templates . 'admin.css')) {
+        if (file_exists($templatesPath . 'admin.css')) {
             $styles->add($this->config->urls->templates . 'admin.css');
         }
-
     }
 
+
+    /**
+     * Method to disable submodule (in Hooks).
+     *
+     * @param $submoduleName string
+     * @param $configData array
+     *
+     * @return array
+     */
+    public static function disableSubmodule($submoduleName, $configData) {
+
+        $enabledSubmodules = $configData['enabledSubmodules'];
+        $key               = array_search($submoduleName, $enabledSubmodules);
+
+
+        if ($key !== false) {
+            unset($enabledSubmodules[$key]);
+            $configData['enabledSubmodules'] = array_values($enabledSubmodules);
+        }
+
+        return $configData;
+    }
+
+
+    /**
+     * Method to remove tweak from submodule (in Hooks).
+     *
+     * @param $tweakName string
+     * @param $submoduleName string
+     * @param $configData array
+     *
+     * @return array
+     */
+    public static function disableTweak($submoduleName, $tweakName, $configData) {
+
+        if (isset($configData[$submoduleName])) {
+            $submodule = $configData[$submoduleName];
+
+            $key = array_search($tweakName, $submodule);
+
+            if ($key !== false) {
+                unset($submodule[$key]);
+                $configData[$submoduleName] = array_values($submodule);
+            }
+        }
+
+        return $configData;
+    }
+
+
+    public function addNavItems(HookEvent $event) {
+        $items           = "";
+        $NavItems_pages  = isset(self::$configData['NavItems_pages']) ? self::$configData['NavItems_pages'] : false;
+        $NavItems_custom = isset(self::$configData['NavItems_custom']) ? self::$configData['NavItems_custom'] : false;
+        $rootUrl         = $this->pages->get(2)->url . 'page/?id=';
+
+        // process pagelist select items
+        if ($NavItems_pages) {
+
+            foreach ($this->pages->getById($NavItems_pages) as $p) {
+
+                $url         = "";
+                $editUrl     = "";
+                $activeClass = "";
+                $inputId     = $this->input->get->id;
+
+                /**
+                 * 7: Trash
+                 * 21: Modules
+                 * 304: Profile
+                 */
+                if ($p->id == 304) {
+
+                    if ($this->user->hasPermission('profile-edit')) {
+                        $url = $this->pages->get($p->id)->url;
+                    } else {
+                        continue;
+                    }
+
+                } else if ($p->id == 21) {
+
+                    if ($this->user->isSuperUser()) {
+                        $url = $this->config->urls->admin . 'module';
+                    }
+
+                } else if ($p->id == 7) {
+
+                    if ($p->listable()) {
+                        $url     = $this->config->urls->admin . 'page/?id=' . $p->id;
+                        $editUrl = false;
+                    } else {
+                        continue;
+                    }
+
+                } else {
+
+                    if (!$p->listable()) {
+                        continue;
+                    }
+
+                    $url = $rootUrl . $p->id;
+                }
+
+                if ($url == "") {
+                    continue;
+
+                } else {
+                    $pageId = $p->id;
+
+                    /**
+                     *  add active class only if:
+                     *
+                     * navItem id == GET id
+                     * navItem id == current page id
+                     * navItem id !== GET id and edited page is child page of the page
+                     */
+
+                    if (
+                        $pageId == $inputId ||
+                        $pageId == $this->page->id ||
+                        //                                ($pageId == $inputId && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
+                        (!in_array($inputId, $NavItems_pages) && $pageId !== 1 && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
+                    ) {
+                        $activeClass = ' current';
+                    }
+                    $listUrl = '<a href="' . $url . '" class="page-list' . $activeClass . '">' . $p->title . '</a>';
+                }
+
+                $editUrl = $editUrl === false ? '' : $p->editable() ? '<a href="' . $p->editUrl() . '" class="page-edit"><i class="fa fa-pencil"></i></a>' : '';
+
+                $firstClass = empty($items) ? ' first' : '';
+
+                $items .= '<li class="navItem' . $firstClass . '">' . $listUrl . ' ' . $editUrl . '</li>';
+
+            }
+        }
+
+        if ($NavItems_custom) {
+
+            $settings = trim($NavItems_custom);
+            $settings = explode("\n", $settings);
+            $settings = array_filter($settings, 'trim');
+
+            $rootUrl     = rtrim($this->config->urls->admin, '/');
+            $rootUrlHttp = $this->config->urls->httpAdmin;
+
+            foreach ($settings as $pairs) {
+
+                if (strpos($pairs, '//') === 0) {
+                    continue;
+                }
+
+                // replace rootUrlHttp to avoid having ':' before explode
+                $pairs = str_replace($rootUrlHttp, '', $pairs);
+
+                if (strpos($pairs, ':') === false) {
+                    continue;
+                }
+
+                $setting = explode(':', $pairs);
+
+                $title = isset($setting[0]) ? trim($setting[0]) : null;
+                $url   = isset($setting[1]) ? trim($setting[1]) : null;
+
+                if (is_null($title) || is_null($url)) {
+                    continue;
+                }
+
+                // if title starts with "!" then only SuperUsers should see
+                if ($title[0] == '!') {
+                    if (!$this->user->isSuperUser()) {
+                        continue;
+                    }
+                    // trim and add * to indicate it's admin only
+                    $title = ltrim($title, '!') . "*";
+                }
+
+                $url = ltrim($url, '/');
+
+                $activeClass = (strpos($_SERVER['REQUEST_URI'], $url) !== false) ? ' current' : '';
+
+                $linkUrl = '<a href="' . $rootUrl . '/' . $url . '" class="page-list' . $activeClass . '">' . $title . '</a>';
+                $items .= '<li class="navItem">' . $linkUrl . '</li>';
+            }
+
+        }
+
+        if ($items == "") {
+            return false;
+        }
+
+        $items = '<ul class="NavItems" style="display: none;">' . $items . '</ul>';
+
+        $event->return = str_replace('</body>', $items . '</body', $event->return);
+    }
 
     public function getFormattedOptionName($obj) {
         return !empty($obj->label) ? $obj->label . ' (' . $obj->name . ')' : $obj->name;
@@ -861,10 +929,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function setupAdminColumns(HookEvent $event) {
 
-        $form = $event->return;
-        $fields = $form->children();
+        $form          = $event->return;
+        $fields        = $form->children();
         $colBreakField = $fields->get('aos_column_break');
-        $colWidths = array(67, 33);
+        $colWidths     = array(67, 33);
         $tabOpenFields = $fields->find('hasFieldtype=FieldtypeFieldsetTabOpen');
 
         if ($tabOpenFields->count()) {
@@ -913,17 +981,17 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $this->modules->get('FieldtypeFieldsetClose');
         if (class_exists('\ProcessWire\InputfieldFieldsetClose')) {
-            $fsetLeftEnd = new \ProcessWire\InputfieldFieldsetClose;
+            $fsetLeftEnd  = new \ProcessWire\InputfieldFieldsetClose;
             $fsetRightEnd = new \ProcessWire\InputfieldFieldsetClose;
         } else {
-            $fsetLeftEnd = new InputfieldFieldsetClose;
+            $fsetLeftEnd  = new InputfieldFieldsetClose;
             $fsetRightEnd = new InputfieldFieldsetClose;
         }
 
-        $fsetLeftEnd->name = 'aos_col_left' . FieldtypeFieldsetOpen::fieldsetCloseIdentifier;
+        $fsetLeftEnd->name  = 'aos_col_left' . FieldtypeFieldsetOpen::fieldsetCloseIdentifier;
         $fsetRightEnd->name = 'aos_col_right' . FieldtypeFieldsetOpen::fieldsetCloseIdentifier;
 
-        $fset = $fsetLeft;
+        $fset       = $fsetLeft;
         $rightItems = false;
 
         foreach ($fields as $f) {
@@ -936,7 +1004,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             // if colBreakField reached, remove it and start adding fields to the right column
             if (!$rightItems && $f == $colBreakField) {
                 $form->remove($colBreakField);
-                $fset = $fsetRight;
+                $fset       = $fsetRight;
                 $rightItems = true;
                 continue;
             }
@@ -956,7 +1024,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     public function addDownloadAssetLink(HookEvent $event) {
 
         $markup = $event->return;
-        $url = $event->arguments[0]->url;
+        $url    = $event->arguments[0]->url;
 
         $downloadLink = '<a href="' . $url . '" target="_blank" class="aos_downloadAsset" download title="' . __('Download', __FILE__) . '"><i class="fa fa-download"></i></a>';
 
@@ -979,7 +1047,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
-        $templateEditUrl = '' . $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
+        $templateEditUrl  = '' . $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
         $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . ' <i class="fa fa-pencil"></i></a>';
 
 
@@ -1019,7 +1087,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
             // needed to allow HTML in label
             $inputfield->entityEncodeLabel = false;
-            $inputfield->label = '<span class="title">' . $editFieldTooltip . $inputfield->label . '</span>';
+            $inputfield->label             = '<span class="title">' . $editFieldTooltip . $inputfield->label . '</span>';
 
             // use hidden link to be able to use modal/panel
             // note: link is not added to the label tag because it won't be clickable
@@ -1057,12 +1125,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function addIUCLink(HookEvent $event) {
 
-        $inputfield = $event->object;
-        $url = $inputfield->value ? $inputfield->value : '';
-        $configData = self::$configData;
-        $editedPage = $this->editedPage;
+        $inputfield         = $event->object;
+        $url                = $inputfield->value ? $inputfield->value : '';
+        $configData         = self::$configData;
+        $editedPage         = $this->editedPage;
         $editLinkAttrsArray = array();
-        $editLinkAttrs = '';
+        $editLinkAttrs      = '';
 
 
         if (!empty($configData['IUC_enabledTemplates']) && !in_array($editedPage->template->name, $configData['IUC_enabledTemplates'])) {
@@ -1076,8 +1144,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // process locked fields
         if (in_array($inputfield->collapsed, array(7, 8))) {
-            $target = isset($configData['IUC_target']) ? $configData['IUC_target'] : '';
-            $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+            $target        = isset($configData['IUC_target']) ? $configData['IUC_target'] : '';
+            $target        = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
             $event->return = '<a href="' . $event->return . '" target="_blank" class="iuc iuc-locked-link ' . $target . '">' . $event->return . '</a>';
 
             return true;
@@ -1091,7 +1159,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $editLinkAttrsArray['data-iuc-mode'][] = $mode;
 
             if (in_array('button', $configData['IUC_mode'])) {
-                $buttonPosition = isset($configData['IUC_buttonPosition']) ? $configData['IUC_buttonPosition'] : '';
+                $buttonPosition                = isset($configData['IUC_buttonPosition']) ? $configData['IUC_buttonPosition'] : '';
                 $editLinkAttrsArray['class'][] = 'iuc iuc-button ' . $buttonPosition;
             } else {
                 $editLinkAttrsArray['class'][] = 'iuc iuc-hidden';
@@ -1134,7 +1202,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function addPageListThumb(HookEvent $event) {
 
-        $page = $event->arguments('page');
+        $page  = $event->arguments('page');
         $field = null;
 
         // intentional "="
@@ -1153,7 +1221,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
             $setting = explode(':', $pairs);
 
-            $f = isset($setting[0]) ? trim($setting[0]) : null;
+            $f        = isset($setting[0]) ? trim($setting[0]) : null;
             $selector = isset($setting[1]) ? trim($setting[1]) : null;
 
             if (is_null($f) || !$page->$f || (!$page->$f instanceof Pageimage && !$page->$f instanceof Pageimages) || count($page->$f) == 0) {
@@ -1270,10 +1338,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldAsmSelect");
         $f->attr('name', $submoduleName . 'Roles');
-        $f->label = __($submoduleName . ' roles', __FILE__);
+        $f->label     = __($submoduleName . ' roles', __FILE__);
         $f->skipLabel = Inputfield::skipLabelHeader;
         $f->attr('data-asm-placeholder', __('ROLES', __FILE__));
-        $f->showIf = 'enabledSubmodules=' . $submoduleName;
+        $f->showIf    = 'enabledSubmodules=' . $submoduleName;
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOptions($this->allRoles);
@@ -1288,15 +1356,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     public function getModuleConfigInputfields(array $data) {
 
         $defaultData = self::getDefaultData();
-        $data = array_merge(self::getDefaultData(), $data);
+        $data        = array_merge(self::getDefaultData(), $data);
 
         $wrapper = new InputfieldWrapper();
 
         // AdminTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get('InputfieldCheckbox');
-        $f->name = 'enabled';
-        $f->label = __('Enable module', __FILE__);
+        $f            = wire('modules')->get('InputfieldCheckbox');
+        $f->name      = 'enabled';
+        $f->label     = __('Enable module', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
         $f->attr('value', $data[$f->name]);
 
@@ -1310,7 +1378,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
 //        $f->wrapAttr('style', 'display: none;');
-        $f->label = __('Submodules', __FILE__);
+        $f->label       = __('Submodules', __FILE__);
         $f->description = __('Enable or disable submodules here.', __FILE__);
 //        $f->showIf      = 'enabled=1';
         $f->collapsed = Inputfield::collapsedNever;
@@ -1352,7 +1420,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fset = wire('modules')->get("InputfieldFieldset");
         $fset->attr('name', 'tweaks');
 //        $fset->showIf    = 'enabled=1';
-        $fset->label = __('Submodule options', __FILE__);
+        $fset->label     = __('Submodule options', __FILE__);
         $fset->collapsed = Inputfield::collapsedNever;
 
 
@@ -1360,8 +1428,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AdminTweaks');
-        $f->label = __('AdminTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=AdminTweaks';
+        $f->label     = __('AdminTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=AdminTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('headSticky', __('Sticky header', __FILE__));
@@ -1379,7 +1447,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'AsmTweaks');
-        $f->showIf = 'enabledSubmodules=AsmTweaks';
+        $f->showIf    = 'enabledSubmodules=AsmTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('asmCollapse', __('Collapse fieldset/tab items on double click', __FILE__));
@@ -1396,24 +1464,31 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetCKE = wire('modules')->get("InputfieldFieldset");
         $fsetCKE->attr('name', 'CKEaddons');
-        $fsetCKE->label = __('CKEaddons', __FILE__);
-        $fsetCKE->showIf = 'enabledSubmodules=CKEaddons';
+        $fsetCKE->label     = __('CKEaddons', __FILE__);
+        $fsetCKE->showIf    = 'enabledSubmodules=CKEaddons';
         $fsetCKE->collapsed = Inputfield::collapsedNever;
 
         // Plugins
-        $f = wire('modules')->get('InputfieldCheckboxes');
-        $f->name = 'CKEaddons_plugins';
-        $f->label = __('Plugins', __FILE__);
-        $f->columnWidth = 50;
+        $f              = wire('modules')->get('InputfieldAsmSelect');
+        $f->name        = 'CKEaddons_plugins';
+        $f->label       = __('Plugins', __FILE__);
+        $f->columnWidth = 60;
+        $f->description = __('Plugins marked with asterisk add toolbar items.', __FILE__);
+
         $f->collapsed = Inputfield::collapsedNever;
 
+        $addsToolbarButtonText = '*';
+
         $f->addOption('autogrow', 'Auto Grow');
-        $f->addOption('div', 'Div');
-        $f->addOption('find', 'Find');
-        $f->addOption('justify', 'Justify');
+        $f->addOption('codemirror', 'CodeMirror');
+        $f->addOption('div', 'Div' . $addsToolbarButtonText);
+        $f->addOption('find', 'Find' . $addsToolbarButtonText);
+        $f->addOption('justify', 'Justify' . $addsToolbarButtonText);
         $f->addOption('keystrokes', 'Keystrokes');
         $f->addOption('magicline', 'Magic Line');
-        $f->addOption('maximize', 'Maximize');
+        $f->addOption('maximize', 'Maximize' . $addsToolbarButtonText);
+        $f->addOption('oembed', 'Media (oEmbed)' . $addsToolbarButtonText);
+        $f->addOption('showblocks', 'Show Blocks' . $addsToolbarButtonText);
 
         if (isset($data[$f->name]) && $data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -1422,11 +1497,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetCKE->add($f);
 
         // Skin
-        $f = wire('modules')->get('InputfieldRadios');
-        $f->name = 'CKEaddons_skin';
-        $f->label = __('Skin', __FILE__);
-        $f->columnWidth = 50;
-        $f->collapsed = Inputfield::collapsedNever;
+        $f              = wire('modules')->get('InputfieldRadios');
+        $f->name        = 'CKEaddons_skin';
+        $f->label       = __('Skin', __FILE__);
+        $f->columnWidth = 40;
+        $f->collapsed   = Inputfield::collapsedNever;
 
         $f->addOption('default', 'default');
         $f->addOption('lightwire', 'LightWire');
@@ -1441,12 +1516,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // Enabled fields
         $cke_fields = $this->fields->find('inputfieldClass=InputfieldCKEditor');
 
-        $f = wire('modules')->get('InputfieldAsmSelect');
-        $f->name = 'CKEaddons_enabledFields';
-        $f->label = __('Enabled fields', __FILE__);
+        $f              = wire('modules')->get('InputfieldAsmSelect');
+        $f->name        = 'CKEaddons_enabledFields';
+        $f->label       = __('Enabled fields', __FILE__);
         $f->description = __('Note: selected fields will restrict plugins only and not the skin.', __FILE__);
         $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->columnWidth = 50;
 
         foreach ($cke_fields as $cke_field) {
@@ -1465,10 +1540,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'DeselectRadios');
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=DeselectRadios';
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=DeselectRadios';
 
         $f->addOption('allowRequired', __('Enable for required fields (not recommended)', __FILE__));
 
@@ -1480,8 +1555,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FieldAndTemplateEditLinks');
-        $f->showIf = 'enabledSubmodules=FieldAndTemplateEditLinks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->showIf        = 'enabledSubmodules=FieldAndTemplateEditLinks';
+        $f->collapsed     = Inputfield::collapsedNever;
         $f->optionColumns = 3;
 
         $f->addOption('pw-blank', __('Open in new tab', __FILE__));
@@ -1498,10 +1573,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'FileFieldTweaks');
-        $f->showIf = 'enabledSubmodules=FileFieldTweaks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->showIf      = 'enabledSubmodules=FileFieldTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('filterbox', __('Filter box', __FILE__));
         $f->addOption('downloadAssetButton', __('Add asset download link', __FILE__));
@@ -1516,10 +1591,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitch');
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('focus', __('Focus', __FILE__));
         $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
@@ -1535,11 +1610,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-        $f->label = __('FocusInputOnLangTabSwitch CKE', __FILE__);
-        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('FocusInputOnLangTabSwitch CKE', __FILE__);
+        $f->showIf      = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('focus', __('Focus', __FILE__));
         $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
@@ -1557,7 +1632,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Hotkeys');
-        $f->showIf = 'enabledSubmodules=Hotkeys';
+        $f->showIf    = 'enabledSubmodules=Hotkeys';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('save', __('Save on ctrl+s', __FILE__));
@@ -1573,16 +1648,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetIUC = wire('modules')->get("InputfieldFieldset");
         $fsetIUC->attr('name', 'InputfieldURLChecker');
-        $fsetIUC->label = __('InputfieldURLChecker', __FILE__);
-        $fsetIUC->showIf = 'enabledSubmodules=InputfieldURLChecker';
+        $fsetIUC->label     = __('InputfieldURLChecker', __FILE__);
+        $fsetIUC->showIf    = 'enabledSubmodules=InputfieldURLChecker';
         $fsetIUC->collapsed = Inputfield::collapsedNever;
 
         // Mode
-        $f = wire('modules')->get('InputfieldCheckboxes');
-        $f->name = 'IUC_mode';
-        $f->label = __('Mode', __FILE__);
+        $f              = wire('modules')->get('InputfieldCheckboxes');
+        $f->name        = 'IUC_mode';
+        $f->label       = __('Mode', __FILE__);
         $f->columnWidth = 50;
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->addOption('button', __('Button', 'IUC'));
         $f->addOption('ctrl-shift-click', __('Ctrl + Shift + Click', 'IUC'));
         $f->addOption('ctrl-shift-enter', __('Ctrl + Shift + Enter', 'IUC'));
@@ -1594,14 +1669,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetIUC->add($f);
 
         // Mode - button
-        $f = wire('modules')->get('InputfieldRadios');
-        $f->name = 'IUC_buttonPosition';
-        $f->label = __('Button position', __FILE__);
-        $f->collapsed = Inputfield::collapsedNever;
+        $f              = wire('modules')->get('InputfieldRadios');
+        $f->name        = 'IUC_buttonPosition';
+        $f->label       = __('Button position', __FILE__);
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->columnWidth = 50;
         $f->addOption('button-left', __('Left side of the field', 'IUC'));
         $f->addOption('button-right', __('Right side of the field', 'IUC'));
-        $f->showIf = 'IUC_mode=button';
+        $f->showIf     = 'IUC_mode=button';
         $f->requiredIf = 'IUC_mode=button';
 
         if ($data[$f->name]) {
@@ -1611,8 +1686,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetIUC->add($f);
 
         // Target
-        $f = wire('modules')->get('InputfieldRadios');
-        $f->name = 'IUC_target';
+        $f        = wire('modules')->get('InputfieldRadios');
+        $f->name  = 'IUC_target';
         $f->label = __('Open URL in...', __FILE__);
 //        $f->notes     = __('Iframe mode fails if the target website does not allow iframe embed.', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
@@ -1629,9 +1704,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetIUC->add($f);
 
-        $f = wire('modules')->get('InputfieldCheckbox');
-        $f->name = 'IUC_forceHttp';
-        $f->label = __('Force HTTP prefix', __FILE__);
+        $f            = wire('modules')->get('InputfieldCheckbox');
+        $f->name      = 'IUC_forceHttp';
+        $f->label     = __('Force HTTP prefix', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
         if ($data[$f->name]) {
@@ -1644,11 +1719,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetIUC->add($f);
 
         // Enabled templates
-        $f = wire('modules')->get('InputfieldAsmSelect');
-        $f->name = 'IUC_enabledTemplates';
+        $f        = wire('modules')->get('InputfieldAsmSelect');
+        $f->name  = 'IUC_enabledTemplates';
         $f->label = __('Enabled templates', __FILE__);
         $f->attr('data-asm-placeholder', __('Add templates...', __FILE__));
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->columnWidth = 50;
 
         foreach (wire('templates') as $t) {
@@ -1669,10 +1744,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         if (count($url_fields) > 0) {
 
-            $f = wire('modules')->get('InputfieldAsmSelect');
-            $f->name = 'IUC_enabledFields';
-            $f->label = __('Enabled fields', __FILE__);
-            $f->collapsed = Inputfield::collapsedNever;
+            $f              = wire('modules')->get('InputfieldAsmSelect');
+            $f->name        = 'IUC_enabledFields';
+            $f->label       = __('Enabled fields', __FILE__);
+            $f->collapsed   = Inputfield::collapsedNever;
             $f->columnWidth = 50;
 
             foreach ($url_fields as $url_field) {
@@ -1689,8 +1764,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         } else {
 
             // add info that no URL type fields are available
-            $f = wire('modules')->get('InputfieldMarkup');
-            $f->name = 'no_url_fields';
+            $f        = wire('modules')->get('InputfieldMarkup');
+            $f->name  = 'no_url_fields';
             $f->label = __('Enabled fields', __FILE__);
             // doesn't work
             // $f->collapsed = Inputfield::collapsedNever;
@@ -1706,16 +1781,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f = wire('modules')->get("InputfieldText");
         $f->attr('name', 'LongClickDuration');
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
-        $f->showIf = 'enabledSubmodules=LongClickDuration';
-//        $f->attr('style', 'width: 100px;');
+        $f->notes       = __('', __FILE__);
+        $f->showIf      = 'enabledSubmodules=LongClickDuration';
         $f->attr('style', 'width: 100px; display: none !important;');
-//        $f->attr('disabled', 'disabled');
-//        $f->attr('readonly', 'readonly');
-//        $f->attr('style', 'background: transparent; border: none; z-index: -1;');
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->attr('value', (isset($data[$f->name]) && (int)$data[$f->name] >= $defaultData[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
+        $f->attr('value', (isset($data[$f->name]) && (int) $data[$f->name] >= $defaultData[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
         $fset->add($f);
 
@@ -1723,10 +1794,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'ModuleTweaks');
-        $f->showIf = 'enabledSubmodules=ModuleTweaks';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->showIf      = 'enabledSubmodules=ModuleTweaks';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
         $f->addOption('moduleCompact', __('Compact module list', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
@@ -1742,13 +1813,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetCNI = wire('modules')->get("InputfieldFieldset");
         $fsetCNI->attr('name', 'NavItems');
-        $fsetCNI->label = __('NavItems', __FILE__);
-        $fsetCNI->showIf = 'enabledSubmodules=NavItems';
+        $fsetCNI->label     = __('NavItems', __FILE__);
+        $fsetCNI->showIf    = 'enabledSubmodules=NavItems';
         $fsetCNI->collapsed = Inputfield::collapsedNever;
 
-        $f = wire('modules')->get('InputfieldPageListSelectMultiple');
-        $f->name = 'NavItems_pages';
-        $f->label = __('Select pages', __FILE__);
+        $f            = wire('modules')->get('InputfieldPageListSelectMultiple');
+        $f->name      = 'NavItems_pages';
+        $f->label     = __('Select pages', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
         if ($data[$f->name]) {
@@ -1762,7 +1833,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->attr('name', 'NavItems_custom');
         $f->label = __('Custom items', __FILE__);
         $f->attr('placeholder', '// ! AdminOnSteroids: /module/edit?name=AdminOnSteroids');
-        $f->rows = 3;
+        $f->rows      = 3;
         $f->collapsed = Inputfield::collapsedNever;
 
         if ($data[$f->name]) {
@@ -1778,14 +1849,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
         $fsetPageListThumbs->attr('name', 'PageListThumbs');
-        $fsetPageListThumbs->label = __('PageListThumbs', __FILE__);
-        $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
+        $fsetPageListThumbs->label     = __('PageListThumbs', __FILE__);
+        $fsetPageListThumbs->showIf    = 'enabledSubmodules=PageListThumbs';
         $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
 
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PageListThumbs_style');
-        $f->label = __('Style', __FILE__);
+        $f->label     = __('Style', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('circle', __('circle', __FILE__));
@@ -1806,7 +1877,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->attr('name', 'PageListThumbs_items');
         $f->label = __('Source', __FILE__);
         $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
-        $f->rows = 3;
+        $f->rows      = 3;
         $f->collapsed = Inputfield::collapsedNever;
 
         if (isset($data[$f->name])) {
@@ -1820,7 +1891,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'PageListThumbs_options');
-        $f->label = __('Settings', __FILE__); // Thumb settings
+        $f->label     = __('Settings', __FILE__); // Thumb settings
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('alignright', __('Align thumbs to right', __FILE__));
@@ -1840,8 +1911,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldRadios");
         $f->attr('name', 'PagePreviewBtn');
-        $f->label = __('PagePreviewButton', __FILE__);
-        $f->showIf = 'enabledSubmodules=PagePreviewBtn';
+        $f->label     = __('PagePreviewButton', __FILE__);
+        $f->showIf    = 'enabledSubmodules=PagePreviewBtn';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('pw-blank', __('Preview in new tab', __FILE__));
@@ -1859,8 +1930,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'RenoTweaks');
-        $f->label = __('RenoTweaks', __FILE__);
-        $f->showIf = 'enabledSubmodules=RenoTweaks';
+        $f->label     = __('RenoTweaks', __FILE__);
+        $f->showIf    = 'enabledSubmodules=RenoTweaks';
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('headSticky', __('Sticky header', __FILE__));
@@ -1892,11 +1963,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'Tooltips');
-        $f->label = __('Tooltips', __FILE__);
-        $f->showIf = 'enabledSubmodules=Tooltips';
-        $f->collapsed = Inputfield::collapsedNever;
+        $f->label       = __('Tooltips', __FILE__);
+        $f->showIf      = 'enabledSubmodules=Tooltips';
+        $f->collapsed   = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
-        $f->notes = __('', __FILE__);
+        $f->notes       = __('', __FILE__);
 
 //        $f->addOption('superuseronly', __('Only for SuperUsers', __FILE__));
         $f->addOption('tooltipDesc', __('Enable for field descriptions', __FILE__));
@@ -1911,13 +1982,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $wrapper->add($fset);
 
-        $f = wire('modules')->get('InputfieldCheckbox');
-        $f->name = 'restore';
-        $f->label = __('Restore settings on next install', __FILE__);
+        $f              = wire('modules')->get('InputfieldCheckbox');
+        $f->name        = 'restore';
+        $f->label       = __('Restore settings on next install', __FILE__);
         $f->description = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__);
-        $f->notes = __('Make sure to save the module first when changing this value.', __FILE__);
-        $f->collapsed = Inputfield::collapsedNever;
-        $f->value = $data[$f->name];
+        $f->notes       = __('Make sure to save the module first when changing this value.', __FILE__);
+        $f->collapsed   = Inputfield::collapsedNever;
+        $f->value       = $data[$f->name];
 
         $f->checked = ($f->value == 1) ? 'checked' : '';
 

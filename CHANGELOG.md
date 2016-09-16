@@ -1,6 +1,21 @@
 #Changelog
 
 
+### 0.6.6 (2016-09-16)
+
+- added hook AdminOnSteroids::modifyConfigData to enable or disable submodules or tweaks
+- added helper method AdminOnSteroids::disableSubmodule to disable a submodule
+- new helper method AdminOnSteroids::disableTweak to disable a tweak
+- new CKEaddon plugins: oEmbed, showBlocks, CodeMirror
+- CKEaddons: use "/site/templates/cke.js" file for custom config (if exists)
+- CKEaddons: use "/site/templates/cke.css" file for custom styles (if exists)
+- use asmSelect for selecting CKEaddons plugins in module config (enables ordering)
+- CKEaddons plugins that add buttons are marked with an asterisk
+- JS fix for compact header save button and search field overlap (RenoTweaks)
+- various LightWire skin CSS fixes (CKEaddons)
+
+
+
 ### 0.6.5 (2016-09-15)
 
 - new RenoTweak "hoverTopSubmenus": show topnav submenus on hover instead click
