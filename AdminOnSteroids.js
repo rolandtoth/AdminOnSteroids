@@ -75,14 +75,14 @@ if (AOSsettings) {
                 if (CKEfield.aos) return true;
 
                 // load custom config if exists
-                if (AOSsettings.useCustomCKEconfig) {
-                    CKEfield.customConfig = aosUrl + '../../templates/cke.js';
+                if (AOSsettings.customCKEScript) {
+                    CKEfield.customConfig = AOSsettings.customCKEScript;
                 }
 
                 // load custom css file (only if there's no field custom css set)
                 // by default contents.css is loaded from /wire/... directory
-                if (CKEfield.contentsCss.indexOf('/wire/') !== -1 && AOSsettings.useCustomCKEstyle) {
-                    CKEfield.contentsCss = aosUrl + '../../templates/cke.css';
+                if (CKEfield.contentsCss.indexOf('/wire/') !== -1 && AOSsettings.customCKEStyle) {
+                    CKEfield.contentsCss = AOSsettings.customCKEStyle;
                 }
 
                 // process enabled fields
@@ -136,6 +136,23 @@ function debounce(func, wait, immediate) {
 
 function checkAOSstate(el) {
     $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore').toggleClass('aos_disabled', !el.is(':checked'));
+}
+
+// function to add image titles to image select dialog (opened by CKEditor image button)
+function addImageSelectLabels(imageUL) {
+    if (imageUL.children('li').length) {
+
+        imageUL.addClass('aos-image-titles').children('li').each(function (index, el) {
+            var link = $(el).find('a'),
+                url = link.attr('href'),
+                imgName;
+
+            imgTitle = link.find('img').attr('alt') || AOSsettings.loc['untitled'];
+            imgName = url.split('&')[0].split(',')[1];
+
+            link.append('<span class="imageSelectLabel">' + imgTitle + '<small>' + imgName + '</small></span>');
+        });
+    }
 }
 
 $(window).load(function () {
@@ -208,7 +225,7 @@ $(document).ready(function () {
         });
     }
 
-    // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle
+    // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle)
     if ($('html.AdminThemeReno.headStickyCompact:not(.headBtnToTitle):not(.modal)').length) {
         var saveBtnWidth = $('#Inputfield_submit_save_module_copy').outerWidth();
         if (saveBtnWidth && saveBtnWidth != 0) {
@@ -300,6 +317,8 @@ $(document).ready(function () {
 
     // FieldAndTemplateEditLinks
     if (AOSsettings.enabledSubmodules.indexOf('FieldAndTemplateEditLinks') !== -1) {
+        // wrap AdminThemeDefault li.title inner in a span
+        $('ul.nav li.title').wrapInner('<span>');
         $(document).on('click', '#ProcessPageEdit .Inputfield .aos_EditField', function () {
             var editFieldLink = $(this).parents('.Inputfield').eq(0).find('.aos_EditFieldLink');
             if (editFieldLink.length) {
@@ -716,6 +735,7 @@ $(document).ready(function () {
 
 
 // FileFieldTweaks
+
     if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
 
         var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
@@ -1043,7 +1063,6 @@ $(document).ready(function () {
             }
         });
     });
-
 
 });
 

@@ -27,9 +27,9 @@ The file needs to be writable to use this feature.
 
 
 ## Adding custom CSS and JavaScript to the admin
- 
-The module automatically loads `admin.css` and `admin.js` from directory `/site/templates/` if they exist.
-Create these files if you would like add custom styling or JavaScript to the admin.
+
+At the bottom of the module's settings page there' a section "Asset paths" where you can set a path for a custom admin CSS and admin JavaScript.
+The module will automatically load these files if they exist so you can add custom style or script to the admin.
 
 
 ## Enable module
@@ -175,6 +175,7 @@ A few usability mods targetting the default admin theme.
 
 - **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
 - **Set wider main content**: sets the max-width of the main content from 1200px to 1480px
+- **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline. 
 - **Center login form**: align login page items to center
 
 
@@ -235,13 +236,18 @@ Here you can restrict the submodule to selected fields only.
 
 **Custom config and style**
 
-If exists, the module will load "/site/templates/cke.js" file where you can set custom configuration.
+
+You can set custom path to CSS and JavaScript files in the "Asset paths" section in the module (at bottom of the page).
+Paths should be relative to the site root, eg.
+
+`
+site/templates/scripts/cke.js
+`
+
 You can use the "CKE/sample-cke.js" file from the module's directory to start with.
 Options entered to the field's "Custom Config Options" will be preserved (and they have priority).
 
-Similarly "/site/templates/cke.css" will be used if this file exists, and if there's nothing set in the field's "Custom Editor CSS File" setting (Input tab).
-
-*Tip: you can use "@import" in cke.css to load another CSS file.*
+Similarly you can enter a custom path to a CSS file and that will be used if the file exists, and if there's nothing set in the field's "Custom Editor CSS File" setting (Input tab).
 
 
 
@@ -272,6 +278,7 @@ For a shortcut link for the template edit page hover on the title of the page.
 
 - **Filter box**: add a text input next to field label to filter images (or files). If there's no match typing is not allowed. You can clear the input clicking on the "X" button on the right or using the Escape key. The filter box is visible only if there are at least 2 items to filter (changed dynamically on uploading items).
 - **Add asset download link**: adds download links (icons) to image or file assets. In case of images, the icon is located to the right of the Edit buttons after you click on an image. The original image will be available for download. For file fields the icon is appended to the fields' label. Note: the download link uses the "download" HTML5 attribute which is not available n IE - in this case the link will open in a new tab/window.
+- **Show image titles in image select dialog**: by default when inserting an image to a CKEditor field the image select dialog shows images without titles. Check this to add titles to the images. If there's no title (which you can enter to the "description" field for images) the text "Untitled" will be shown. Under the title the name and extension of the image is shown.
 
 
 
@@ -454,6 +461,7 @@ A few usability mods targetting the Reno admin theme.
 - **Always show sidebar items (disable accordion)**: make sidebar submenus more compact and do not hide them
 - **Inline sidebar items instead of stacking**: check this if you would like sidebar items to appear next to each other and not in full row. This results in a much lower sidebar if you have many items in it.
 - **Single click sidebar headers**: by default the sidebar header links need double-click to open the corresponding menu page because single click is used by the accordion. This tweak will remove this limitation. It's available only if "Always show sidebar items" tweak is on.
+- **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline.
 - **Always show search field**: make the search field always available
 - **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items
@@ -461,15 +469,6 @@ A few usability mods targetting the Reno admin theme.
 - **One-line sidebar submenus (only with sbAutoHide)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Center login form**: align login page items to center
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
-
-
-
-###ScrollFix
-
-*Prevent page jump when scrollbar appears*
-
-Disable page jump and elements repositioning when the height of the page changes and the scrollbar appears or disappears.
-
 
 
 ###TabIndex

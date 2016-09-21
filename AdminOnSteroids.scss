@@ -598,6 +598,7 @@ html.asmCollapse {
 }
 
 #Inputfield_tweaks {
+  //margin: 1em 0;
   > label {
     font-size: 21px;
     padding-bottom: 0.5em;
@@ -606,7 +607,6 @@ html.asmCollapse {
 }
 
 #wrap_Inputfield_enabledSubmodules {
-
   > label,
   > .InputfieldContent {
     //border: none;
@@ -631,7 +631,7 @@ html.asmCollapse {
     vertical-align: top;
     position: absolute;
     top: 14px;
-    left: 12px;
+    left: 11px;
   }
 
   .InputfieldCheckboxesStacked {
@@ -689,20 +689,9 @@ html.asmCollapse {
           z-index: -1;
           background: #fff !important;
           outline: 1px solid rgba(#97AAB4, 0.5);
-          //box-shadow: 0 1px 3px -2px rgba(0, 0, 0, 0.75);
         }
       }
     }
-    //input:not(:checked) {
-    //+ span {
-    //color: #fff;
-    //color: rgba(#000, 0.5);
-    //strong {
-    //  font-weight: normal !important;
-    //}
-    //text-shadow: 1px 1px 0 rgba(#fff, 0.066);
-    //}
-    //}
   }
 
   li.InputfieldAsmSelect {
@@ -762,6 +751,16 @@ html.asmCollapse {
 }
 
 form[action*="AdminOnSteroids"] {
+
+  > .Inputfields > li {
+    margin-bottom: 0.7em;
+  }
+  //.Inputfield_enabled {
+  //  margin-top: 1em;
+  //}
+  //.Inputfield_AssetsPaths {
+  //  margin-bottom: 1em;
+  //}
 
   #wrap_Inputfield_enabledSubmodules {
     > .InputfieldContent {
@@ -833,6 +832,7 @@ form[action*="AdminOnSteroids"] {
       }
       .Inputfields {
         margin-left: -1em;
+        margin-right: -0.33em;
         label, .InputfieldContent {
           padding-top: 0;
           //padding-left: 0;
@@ -881,7 +881,6 @@ form[action*="AdminOnSteroids"] {
     }
   }
 
-  //#wrap_Inputfield_RenoTweaks {
   .InputfieldCheckboxesStacked {
     li.disabled {
       opacity: 0.7;
@@ -1393,19 +1392,6 @@ body.AdminThemeDefault {
   }
 }
 
-// ScrollFix
-@media only screen and (min-width: 960px) {
-  html.ScrollFix:not(.modal) {
-    width: 100vw;
-    overflow-x: hidden;
-    #headline,
-    #breadcrumbs,
-    #masthead {
-      //width: 100vw !important;
-    }
-  }
-}
-
 // PageListThumbs
 html.PageListThumbs {
 
@@ -1568,6 +1554,51 @@ html.noAnim {
     animation: none !important;
   }
 }
+
+html.highlightRows {
+  .PageListItem:hover,
+  .AdminDataTable.AdminDataList tr:hover td {
+    background: rgba(#EAF0F2, 0.48);
+  }
+  .PageListItemOpen {
+    border-bottom-color: rgba(#2F4248, 0.15) !important;
+    a.PageListPage {
+      font-weight:bold;
+      background-color: transparent !important;
+    }}
+  .content .PageList .PageListID1 {
+    background: transparent;
+  }
+}
+
+// imageselect title in image select dialog (modal)
+.modal #select_images.aos-image-titles {
+  li {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 0.33em;
+    a {
+      display: block;
+    }
+    img {
+      float: none !important;
+      margin: 0 0 0.42em;
+    }
+  }
+  .imageSelectLabel {
+    display: inline-block;
+    margin-right: 1em;
+    max-width: 200px;
+    line-height: 1.4;
+    small {
+      display: block;
+      margin-top: 0.25em;
+      font-size: 0.88em;
+      color: rgba(#2F4248, 0.7);
+    }
+  }
+}
+
 
 /*RenoTweaks Reno theme tweaks*/
 html.AdminThemeReno {
@@ -2121,8 +2152,8 @@ html.AdminThemeReno {
 
   &.pListCompact {
     .content .PageList .PageListItem {
-      padding-top: 0.4em;
-      padding-bottom: 0.4em;
+      padding-top: 0.43em;
+      padding-bottom: 0.37em;
     }
   }
 
@@ -2573,8 +2604,10 @@ html.AdminThemeReno {
       }
     }
     &.wide {
-      .container {
-        max-width: 1480px;
+      body:not(.modal) {
+        .container {
+          max-width: 1480px;
+        }
       }
     }
   }
@@ -2838,6 +2871,8 @@ select:-moz-focusring {
 //  font-family: inherit;
 //}
 
+// CKE improvements
+
 .CodeMirror-lines {
   font-size: 13px;
 }
@@ -2851,6 +2886,10 @@ select:-moz-focusring {
 .cke_top .cke_button_icon.cke_button__oembed_icon {
   //background-image: url('/site/modules/AdminOnSteroids/CKE/plugins/oembed/icons/oembed.png') !important;
   background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
+}
+
+.cke_combo_text {
+  white-space: nowrap;
 }
 
 //#wrap_Inputfield_CKEaddons_plugins {

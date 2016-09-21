@@ -1,6 +1,17 @@
 #Changelog
 
 
+### 0.6.7 (2016-09-21)
+
+- new option to FileFieldTweaks: show image titles in image select dialog
+- custom paths for admin.css, admin.js and CKEaddons assets
+- AdminTweaks: remove max-width constraint from modals
+- AdminTweaks & RenoTweaks: added tweak "Highlight pagelist rows on hover"
+- fix for templateEditLink not showing up (default theme)
+- removed ScrollFix submodule
+
+
+
 ### 0.6.6 (2016-09-16)
 
 - added hook AdminOnSteroids::modifyConfigData to enable or disable submodules or tweaks

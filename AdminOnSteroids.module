@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 66,
+            'version'   => 67,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -75,11 +75,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'PagePreviewBtn',
                 'ModuleTweaks',
                 'Tooltips',
-                'TabIndex',
-                'ScrollFix'
+                'TabIndex'
             ),
             'enabled'                      => 1,
-            'restore'                      => '',
+            'AdminStyle'                   => '',
+            'AdminScript'                  => '',
+            'CKEStyle'                     => '',
+            'CKEScript'                    => '',
             'NavItems'                     => 1,
             'CKEaddons_plugins'            => array(
                 'autogrow',
@@ -97,7 +99,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'FileFieldTweaks'              => array(
                 'filterbox',
-                'downloadAssetButton'
+                'downloadAssetButton',
+                'imgSelectTitle'
             ),
             'FocusInputOnLangTabSwitch'    => array(
                 'focus'
@@ -114,7 +117,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'NavItems_pages'               => array(),
             'NavItems_custom'              => array(),
             'Tooltips'                     => array(
-//                'superuseronly',
                 'tooltipDesc',
                 'tooltipNotes'
 //                'tooltipOverlay'
@@ -156,6 +158,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'headBtnToTitle',
                 'openSearch',
                 'pListCompact',
+                'highlightRows',
                 'noticeLeftX',
                 'hoverTopSubmenus',
                 'centerLogin'
@@ -163,6 +166,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'AdminTweaks'                  => array(
                 'headSticky',
                 'wide',
+                'highlightRows',
                 'centerLogin'
             )
         );
@@ -248,13 +252,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'openSearch',
             'pListCompact',
             'PageListThumbs',
+            'highlightRows',
             'sbAutoHide',
             'sbItemsInline',
             'sbItemsRow',
             'sbItemsVisible',
             'sbQuickLinksHide',
             'sbSticky',
-            'ScrollFix',
             'tooltipDesc',
             'tooltipNotes',
             'tooltipOverlay',
@@ -513,6 +517,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             }
         }
 
+
         //DeselectRadios
         $subModule = 'DeselectRadios';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -642,13 +647,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 $this->addHookAfter('InputfieldImage::renderButtons', $this, 'addDownloadAssetLink');
                 $this->addHookAfter('InputfieldFile::renderItem', $this, 'addDownloadAssetLink');
             }
+            if (in_array('imgSelectTitle', $configData[$subModule])) {
+                $this->addHookAfter('ProcessPageEditImageSelect::execute', function ($event) {
+                    $event->return .= "<script>if($('ul#select_images').length && window.addImageSelectLabels) addImageSelectLabels($('ul#select_images'));</script>";
+                });
+            }
         }
 
         // add translations
         $configData['loc'] = array(
             'save'            => __('Save', __FILE__),
             'save_and_exit'   => __('Save + Exit', __FILE__),
-            'save_and_reload' => __('Save + Reload', __FILE__)
+            'save_and_reload' => __('Save + Reload', __FILE__),
+            'untitled' => __('Untitled', __FILE__)
         );
 
         // add modified enabledSubmodules to JS config (modified by roles)
@@ -656,15 +667,22 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $configData['enabledSubmodules'] = array_values($enabledSubmodules);
         $configData['aosUrl']            = $this->config->urls->AdminOnSteroids;
 
+        $rootPath = rtrim($this->config->paths->root, '/');
+        $rootUrl  = rtrim($this->config->urls->root, '/');
+
         // do not add JS to page on login page
         if ($this->page->id != 23) {
 
             // custom CKEaddons config js and css
-            if (file_exists($templatesPath . 'cke.js')) {
-                $configData['useCustomCKEconfig'] = 1;
+
+            $ckeCSS = !empty($configData['CKEStyle']) ? $rootUrl . '/' . ltrim($configData['CKEStyle'], '/') : $this->config->urls->templates . 'cke.css';
+            $ckeJS  = !empty($configData['CKEScript']) ? $rootUrl . '/' . ltrim($configData['CKEScript'], '/') : $this->config->urls->templates . 'cke.js';
+
+            if (file_exists($rootPath . $ckeCSS)) {
+                $configData['customCKEStyle'] = $ckeCSS;
             }
-            if (file_exists($templatesPath . 'cke.css')) {
-                $configData['useCustomCKEstyle'] = 1;
+            if (file_exists($rootPath . $ckeJS)) {
+                $configData['customCKEScript'] = $ckeJS;
             }
 
             // add css and js files
@@ -679,12 +697,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $this->config->js("AdminOnSteroids", json_encode($configData));
         }
 
-        // add admin.js and admin.css from templates directory
-        if (file_exists($templatesPath . 'admin.js')) {
-            $scripts->add($this->config->urls->templates . 'admin.js');
+        // add admin.js and admin.css
+        // use values set in module settings or try templates/admin.css & js
+        $adminCSS = !empty($configData['AdminStyle']) ? $rootUrl . '/' . ltrim($configData['AdminStyle'], '/') : $this->config->urls->templates . 'admin.css';
+        $adminJS  = !empty($configData['AdminScript']) ? $rootUrl . '/' . ltrim($configData['AdminScript'], '/') : $this->config->urls->templates . 'admin.js';
+
+        if (file_exists($rootPath . $adminCSS)) {
+            $styles->add($adminCSS);
         }
-        if (file_exists($templatesPath . 'admin.css')) {
-            $styles->add($this->config->urls->templates . 'admin.css');
+        if (file_exists($rootPath . $adminJS)) {
+            $scripts->add($adminJS);
         }
     }
 
@@ -1384,7 +1406,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->collapsed = Inputfield::collapsedNever;
 //        $f->table = true;
 
-        $f->addOption('AdminColumns', '**AdminColumns**' . __('Add "aos_column_break" field to create left/right admin columns', __FILE__));
+        $f->addOption('AdminColumns', '**AdminColumns**' . __('Add `aos_column_break` field to create admin columns', __FILE__));
         $f->addOption('AdminLangSwitcher', '**AdminLangSwitcher**' . __('Add language switcher to the admin', __FILE__));
         $f->addOption('AdminTweaks', '**AdminTweaks**' . __('Default admin theme tweaks', __FILE__));
         $f->addOption('AsmTweaks', '**AsmTweaks**' . __('asmSelect tweaks', __FILE__));
@@ -1396,19 +1418,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('FocusInputOnLangTabSwitch', '**FocusInputOnLangTabSwitch**' . __('Focus input on switching language tabs', __FILE__));
         $f->addOption('Hotkeys', '**Hotkeys**' . __('Hotkey tweaks', __FILE__));
         $f->addOption('HoverDropdown', '**HoverDropdown**' . __('Show save dropdown on hover instead on click', __FILE__));
-        $f->addOption('InputfieldURLChecker', '**InputfieldURLChecker**' . __('Add button or hotkey to FieldtypeURL to check URL', __FILE__));
+        $f->addOption('InputfieldURLChecker', '**InputfieldURLChecker**' . __('Add button or hotkey to check URL', __FILE__));
         $f->addOption('LangTabHotkeySwitcher', '**LangTabHotkeySwitcher**' . __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', '**LongClickDuration**' . __('Custom long-click action duration', __FILE__));
         $f->addOption('ModuleTweaks', '**ModuleTweaks**' . __('Module related tweaks (SuperUser only)', __FILE__));
         $f->addOption('NavItems', '**NavItems**' . __('Add pages to navigation', __FILE__));
         $f->addOption('noAnim', '**noAnim**' . __('Disable all admin animations', __FILE__));
         $f->addOption('PageListThumbs', '**PageListThumbs**' . __('Add pagelist thumbnails', __FILE__));
-        $f->addOption('PageListUnselect', '**PageListUnselect**' . __('Add unselect and restore buttons to PageListSelect fields', __FILE__));
+        $f->addOption('PageListUnselect', '**PageListUnselect**' . __('Add unselect/restore buttons to PageListSelect', __FILE__));
         $f->addOption('PagePreviewBtn', '**PagePreviewBtn**' . __('Add preview link next to page title', __FILE__));
         $f->addOption('RenoTweaks', '**RenoTweaks**' . __('Reno admin theme tweaks', __FILE__));
-        $f->addOption('ScrollFix', '**ScrollFix**' . __('Prevent page jump when scrollbar appears', __FILE__));
         $f->addOption('TabIndex', '**TabIndex**' . __('Add sequential tabindex to fields', __FILE__));
-        $f->addOption('Tooltips', '**Tooltips**' . __('Hide field descriptions and notes to tooltips', __FILE__));
+        $f->addOption('Tooltips', '**Tooltips**' . __('Move field descriptions and notes to tooltips', __FILE__));
 
         $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
@@ -1434,6 +1455,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('headSticky', __('Sticky header', __FILE__));
         $f->addOption('wide', __('Set wider main content', __FILE__));
+        $f->addOption('highlightRows', __('Highlight pagelist rows on hover', __FILE__));
         $f->addOption('centerLogin', __('Center login form', __FILE__));
 
         if ($data[$f->name]) {
@@ -1464,9 +1486,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetCKE = wire('modules')->get("InputfieldFieldset");
         $fsetCKE->attr('name', 'CKEaddons');
-        $fsetCKE->label     = __('CKEaddons', __FILE__);
-        $fsetCKE->showIf    = 'enabledSubmodules=CKEaddons';
-        $fsetCKE->collapsed = Inputfield::collapsedNever;
+        $fsetCKE->label  = __('CKEaddons', __FILE__);
+        $fsetCKE->showIf = 'enabledSubmodules=CKEaddons';
+//        $fsetCKE->collapsed = Inputfield::collapsedNever;
 
         // Plugins
         $f              = wire('modules')->get('InputfieldAsmSelect');
@@ -1580,6 +1602,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('filterbox', __('Filter box', __FILE__));
         $f->addOption('downloadAssetButton', __('Add asset download link', __FILE__));
+        $f->addOption('imgSelectTitle', __('Add image titles to image select dialog', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -1648,9 +1671,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetIUC = wire('modules')->get("InputfieldFieldset");
         $fsetIUC->attr('name', 'InputfieldURLChecker');
-        $fsetIUC->label     = __('InputfieldURLChecker', __FILE__);
-        $fsetIUC->showIf    = 'enabledSubmodules=InputfieldURLChecker';
-        $fsetIUC->collapsed = Inputfield::collapsedNever;
+        $fsetIUC->label  = __('InputfieldURLChecker', __FILE__);
+        $fsetIUC->showIf = 'enabledSubmodules=InputfieldURLChecker';
+//        $fsetIUC->collapsed = Inputfield::collapsedNever;
 
         // Mode
         $f              = wire('modules')->get('InputfieldCheckboxes');
@@ -1813,9 +1836,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetCNI = wire('modules')->get("InputfieldFieldset");
         $fsetCNI->attr('name', 'NavItems');
-        $fsetCNI->label     = __('NavItems', __FILE__);
-        $fsetCNI->showIf    = 'enabledSubmodules=NavItems';
-        $fsetCNI->collapsed = Inputfield::collapsedNever;
+        $fsetCNI->label  = __('NavItems', __FILE__);
+        $fsetCNI->showIf = 'enabledSubmodules=NavItems';
+//        $fsetCNI->collapsed = Inputfield::collapsedNever;
 
         $f            = wire('modules')->get('InputfieldPageListSelectMultiple');
         $f->name      = 'NavItems_pages';
@@ -1849,9 +1872,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
         $fsetPageListThumbs->attr('name', 'PageListThumbs');
-        $fsetPageListThumbs->label     = __('PageListThumbs', __FILE__);
-        $fsetPageListThumbs->showIf    = 'enabledSubmodules=PageListThumbs';
-        $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
+        $fsetPageListThumbs->label  = __('PageListThumbs', __FILE__);
+        $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
+//        $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
 
 
         $f = wire('modules')->get("InputfieldRadios");
@@ -1947,6 +1970,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('sbAutoHide', __('Autohide sidebar', __FILE__));
         $f->addOption('sbItemsRow', __('One-line sidebar submenus', __FILE__));
         $f->addOption('pListCompact', __('Use narrow pagelist rows', __FILE__));
+        $f->addOption('highlightRows', __('Highlight pagelist rows on hover', __FILE__));
         $f->addOption('openSearch', __('Always show search field', __FILE__));
         $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
         $f->addOption('hoverTopSubmenus', __('Show topnav submenus on hover instead click', __FILE__));
@@ -1982,13 +2006,75 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $wrapper->add($fset);
 
-        $f              = wire('modules')->get('InputfieldCheckbox');
-        $f->name        = 'restore';
-        $f->label       = __('Restore settings on next install', __FILE__);
-        $f->description = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__);
-        $f->notes       = __('Make sure to save the module first when changing this value.', __FILE__);
-        $f->collapsed   = Inputfield::collapsedNever;
-        $f->value       = $data[$f->name];
+
+        // Assets paths
+
+        $fsetPaths = wire('modules')->get("InputfieldFieldset");
+        $fsetPaths->attr('name', 'AssetPaths');
+        $fsetPaths->label = __('Asset Paths', __FILE__);
+
+        $f              = wire('modules')->get('InputfieldText');
+        $f->name        = 'AdminStyle';
+        $f->label       = __('Admin CSS', __FILE__);
+        $f->description = __('Path to a CSS file to be loaded in the admin (relative to site root)', __FILE__);
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetPaths->add($f);
+
+        $f              = wire('modules')->get('InputfieldText');
+        $f->name        = 'AdminScript';
+        $f->label       = __('Admin JavaScript', __FILE__);
+        $f->description = __('Path to a JavaScript file to be loaded in the admin (relative to site root)', __FILE__);
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetPaths->add($f);
+
+        $f              = wire('modules')->get('InputfieldText');
+        $f->name        = 'CKEStyle';
+        $f->label       = __('CKEaddons custom CSS', __FILE__);
+        $f->description = __('Path to a CSS file to be loaded for CKEditors (relative to site root)', __FILE__);
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+        $fsetPaths->add($f);
+
+        $f              = wire('modules')->get('InputfieldText');
+        $f->name        = 'CKEScript';
+        $f->label       = __('CKEaddons custom configuration JavaScript', __FILE__);
+        $f->description = __('Path to a JavaScript file to be loaded for CKEditors (relative to site root)', __FILE__);
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+        $fsetPaths->add($f);
+
+        $wrapper->add($fsetPaths);
+
+
+        // Restore settings checkbox
+
+        $f        = wire('modules')->get('InputfieldCheckbox');
+        $f->name  = 'restore';
+        $f->label = __('Restore settings on next install', __FILE__);
+//        $f->description = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__);
+        $f->notes     = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__) . ' ' . __('Make sure to save the module first when changing this value.', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->value     = $data[$f->name];
 
         $f->checked = ($f->value == 1) ? 'checked' : '';
 
