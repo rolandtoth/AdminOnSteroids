@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.6.8 (2016-09-23)
+
+- added template edit links to the main pagelist items
+- CKE plugins dialog CSS improvements
+ 
+ 
+
 ### 0.6.7 (2016-09-21)
 
 - new option to FileFieldTweaks: show image titles in image select dialog

@@ -170,6 +170,14 @@ $(window).load(function () {
 });
 
 
+function getClassArgument(classes, prefix) {
+    for (var i = classes.length; i-- > 0;)
+        if (classes[i].substring(0, prefix.length) == prefix)
+            return classes[i].substring(prefix.length);
+    return null;
+}
+
+
 $(document).ready(function () {
 
     if (AOSsettings == null) {
@@ -326,6 +334,45 @@ $(document).ready(function () {
                 return false;
             }
         });
+
+        // link inside link workaround
+        // create a clone of the parent link on mousedown, remove click event, then restore
+        $(document).on('hover', '.PageListItem:not([data-template-edit-loaded])', function (e) {
+
+
+            var el = $(this),
+                templateName = getClassArgument(el.attr('class').split(' '), 'PageListTemplate_');
+
+            $.getJSON('http://mosolygo.paqartdesign.com/admin/module/edit?name=AdminOnSteroids&getTemplateEditLink=' + templateName, function (templateEditLink) {
+                if (!el.find('.aos_EditTemplate').length) {
+                    el.attr('data-template-edit-loaded', true);
+                    el.find('span[class^="label_"]').append($(templateEditLink));
+                }
+            });
+        });
+
+
+        $(document).on('mousedown', '.aos_EditTemplate', function (e) {
+
+            var el = $(this),
+                parentLink = el.parents('a').first(),
+                parentLinkClone = parentLink.clone(true);
+
+            parentLink.unbind('click');
+
+            $('.pw-panel-container').remove();
+
+
+            if (pwPanels && el.hasClass('pw-panel')) {
+                pwPanels.init();
+            }
+
+            setTimeout(function () {
+                parentLink.replaceWith(parentLinkClone);
+            }, 200);
+        });
+
+
         // workaround: add edit links to ajax-loaded fields
         $('.Inputfield').on('reloaded', function () {
             var field = $(this),

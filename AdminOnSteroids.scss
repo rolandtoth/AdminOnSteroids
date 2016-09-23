@@ -10,48 +10,102 @@ $colorDelete: #B93E42;
 $defaultTransition: 0.12s;
 $defaultBoxShadow: 0 2px 5px -3px rgba(#465b69, 0.5);
 
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-    transform: scale(1);
+// general style overrides
+html.aos {
+  // try to avoid pwPanel jump to top
+  body {
+    overflow: auto !important;
   }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
-@keyframes spinIn {
-  0% {
-    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+  // allow template edit links to appear
+  .PageList {
+    overflow: visible !important;
   }
-  //50% {
-  //}
-  100% {
-    color: inherit;
-    transform: rotate(360.01deg) scale(0.61) translate3d(0, 0, 1px);
-  }
-}
 
-@keyframes spinOut {
-  100% {
-    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+  .InputfieldStateCollapsed,
+  .InputfieldStateWasCollapsed {
+    overflow: visible !important;
   }
-  //50% {
-  //}
-  0% {
-    color: inherit;
-    transform: rotate(180.01deg) scale(0.61) translate3d(0, 0, 1px);
-  }
-}
 
-// try to avoid pwPanel jump to top
-body {
-  overflow: auto !important;
+  h1,
+  .PageListItem:not(.PageListSortItem) .PageListPage span[class^="label_"],
+  #breadcrumbs li.title span {
+    position: relative;
+    &:hover {
+      .aos_EditTemplate {
+        display: inline-block;
+        visibility: visible;
+        transform: scale(1);
+        opacity: 1;
+        transition: 0.07s all 1s;
+      }
+    }
+  }
+
+  // allows tooltips to be fully visible
+  .PageListItem a.PageListPage:hover {
+    opacity: 1 !important;
+  }
+
+  .PageListRoot.PageListSorting {
+
+    .PageListSortPlaceholder {
+      width: 100% !important;
+      //height: 1px;
+      height: 100%;
+      //display: block;
+      //background: #2C3E50;
+      position: relative;
+      border-bottom: 1px solid #2C3E50;
+      top: -1px;
+      margin-bottom: -1px;
+    }
+    .PageListItem.PageListSortItem {
+      background: transparent !important;
+      //border-bottom-color: transparent !important;
+      position: relative;
+      top: -1px;
+    }
+    .sortableHover {
+      background-color: rgba(#2C3E50, 0.05) !important;
+      position: relative;
+      &:before {
+        content: "\f055";
+        font-family: FontAwesome, sans-serif;
+        position: absolute;
+        left: -15px;
+        font-size: 12px;
+        top: 50%;
+        margin-top: -9px;
+        color: #2C3E50;
+      }
+      &.PageListItemOpen {
+        &:before {
+          content: "\f056";
+        }
+      }
+    }
+  }
+
+  h1 {
+    max-width: calc(100% - 120px);
+  }
+
+  // placeholder element to make hover easier
+  #ProcessPageEdit .Inputfield label .title {
+    &:before {
+      content: "";
+      width: 150%;
+      height: 133%;
+      display: inline-block;
+      position: absolute;
+      left: 0;
+      z-index: 0;
+      bottom: -10%;
+      background: transparent !important;
+      min-width: 80px;
+    }
+  }
 }
 
 // AsmTweaks
@@ -940,11 +994,12 @@ form[action*="AdminOnSteroids"] {
   position: absolute;
   left: 0;
   bottom: 100%;
+  font-weight: normal !important;
   background: $bgcolor;
   color: #fff;
   margin: $margin;
   font-size: 12px;
-  padding: 5px 10px 4px;
+  padding: 5px 10px 4px !important;
   line-height: 1.5;
   z-index: 100000 + 10000;
   backface-visibility: hidden;
@@ -985,12 +1040,6 @@ form[action*="AdminOnSteroids"] {
   }
 }
 
-//.aos_hasTooltip {
-.InputfieldStateCollapsed,
-.InputfieldStateWasCollapsed {
-  overflow: visible !important;
-}
-
 // both for Reno & Default themes
 #ProcessPageEdit .aos_hasTooltip .title,
 .InputfieldCheckbox label {
@@ -1002,7 +1051,7 @@ form[action*="AdminOnSteroids"] {
       visibility: visible;
       transform: scale(1);
       opacity: 1;
-      transition: 0.07s all 0.5s;
+      transition: 0.07s all 1s;
     }
   }
   .aos_EditField {
@@ -1017,40 +1066,6 @@ form[action*="AdminOnSteroids"] {
 .aos_EditTemplate {
   font-style: normal;
   @include aos_tooltip($margin: 0 0 12px);
-}
-
-h1,
-#breadcrumbs li.title span {
-  position: relative;
-  &:hover {
-    .aos_EditTemplate {
-      display: inline-block;
-      visibility: visible;
-      transform: scale(1);
-      opacity: 1;
-      transition: 0.07s all 0.5s;
-    }
-  }
-}
-
-h1 {
-  max-width: calc(100% - 120px);
-}
-
-// placeholder element to make hover easier
-#ProcessPageEdit .Inputfield label .title {
-  &:before {
-    content: "";
-    width: 150%;
-    height: 133%;
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    z-index: 0;
-    bottom: -10%;
-    background: transparent !important;
-    min-width: 80px;
-  }
 }
 
 // Hotkeys
@@ -1560,12 +1575,13 @@ html.highlightRows {
   .AdminDataTable.AdminDataList tr:hover td {
     background: rgba(#EAF0F2, 0.48);
   }
-  .PageListItemOpen {
+  .PageListItemOpen:not(.PageListSortItem) {
     border-bottom-color: rgba(#2F4248, 0.15) !important;
     a.PageListPage {
-      font-weight:bold;
+      font-weight: bold;
       background-color: transparent !important;
-    }}
+    }
+  }
   .content .PageList .PageListID1 {
     background: transparent;
   }
@@ -1599,9 +1615,17 @@ html.highlightRows {
   }
 }
 
+.PageListPlaceholder.ui-sortable .PageListItem {
+  padding: 0 !important;
+}
 
 /*RenoTweaks Reno theme tweaks*/
 html.AdminThemeReno {
+
+  // fix light blue ui dialog header
+  .ui-dialog-titlebar {
+    background: #2A3C51 !important;
+  }
 
   // disable all animations
   body:not(.pw-ready) {
@@ -2892,15 +2916,50 @@ select:-moz-focusring {
   white-space: nowrap;
 }
 
-//#wrap_Inputfield_CKEaddons_plugins {
-//  .asmListItemLabel {
-//    text-align: justify;
-//    max-width: 98%;
-//    height: 27px;
-//    &:after {
-//      content: "";
-//      display: inline-block;
-//      width: 100%;
-//    }
-//  }
-//}
+.cke_dialog_body {
+  .cke_dialog_contents * {
+    box-sizing: border-box !important;
+  }
+  label {
+    display: inline-block !important;
+  }
+}
+
+@keyframes spinIn {
+  0% {
+    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+  //50% {
+  //}
+  100% {
+    color: inherit;
+    transform: rotate(360.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+}
+
+@keyframes spinOut {
+  100% {
+    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+  //50% {
+  //}
+  0% {
+    color: inherit;
+    transform: rotate(180.01deg) scale(0.61) translate3d(0, 0, 1px);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

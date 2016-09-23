@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 67,
+            'version'   => 68,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -78,6 +78,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'TabIndex'
             ),
             'enabled'                      => 1,
+            'restore'                      => '',
             'AdminStyle'                   => '',
             'AdminScript'                  => '',
             'CKEStyle'                     => '',
@@ -325,6 +326,29 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function init() {
 
+        // return json template edit link by template name (for pagelists)
+        if ($this->input->get->getTemplateEditLink) {
+            header('Content-Type: application/json');
+
+            $templateName = $this->input->get->getTemplateEditLink;
+
+            if ($this->templates->get('name=' . $templateName)) {
+
+                $template = $this->templates->get('name=' . $templateName);
+
+                $target = isset($this->FieldAndTemplateEditLinks) ? $this->FieldAndTemplateEditLinks : '';
+
+                $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+
+                $templateEditUrl  = $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
+                $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . ' <i class="fa fa-pencil"></i></a>';
+
+                echo json_encode($templateEditLink);
+            }
+//            $this->halt();
+            exit;
+        }
+
 
         $editedPageId = $this->sanitizer->int($this->config->input->get->id);
 
@@ -511,6 +535,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 // add edit field link only if the edited page is not a special page (eg. admin)
                 if ($this->process == 'ProcessPageView' && $this->editedPage->template && $this->editedPage->template->flags === 0) {
                     $this->addHookAfter('Page::render', $this, 'addTemplateEditLink');
+
+//                    $this->addHookAfter('ProcessPageListRenderJSON::getPageLabel', $this, 'addTemplateLinkPageList');
+
                     $this->addHookAfter('Inputfield::render', $this, 'addFieldEditLinks');
                     $this->addHookAfter('Inputfield::renderValue', $this, 'addFieldEditLinks');
                 }
@@ -659,7 +686,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'save'            => __('Save', __FILE__),
             'save_and_exit'   => __('Save + Exit', __FILE__),
             'save_and_reload' => __('Save + Reload', __FILE__),
-            'untitled' => __('Untitled', __FILE__)
+            'untitled'        => __('Untitled', __FILE__)
         );
 
         // add modified enabledSubmodules to JS config (modified by roles)
@@ -1069,7 +1096,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
-        $templateEditUrl  = '' . $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
+        $templateEditUrl  = $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
         $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . ' <i class="fa fa-pencil"></i></a>';
 
 
@@ -1222,6 +1249,26 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
+    // add template name to title
+    public function addTemplateLinkPageList(HookEvent $event) {
+
+        $page = $event->arguments('page');
+
+        bd($page->title);
+
+        $template = $page->template;
+
+        $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
+
+        $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+
+        $templateEditUrl  = $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
+        $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . ' <i class="fa fa-pencil"></i></a>';
+
+        $event->return = str_replace('</span>', $templateEditLink . '</span>', $event->return);
+    }
+
+
     public function addPageListThumb(HookEvent $event) {
 
         $page  = $event->arguments('page');
@@ -1306,6 +1353,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         if (!empty($classes)) {
             $classes = implode(' ', $classes);
         }
+
 
         $event->return = '<figure class="' . $classes . '">' . $img . '</figure>' . $event->return;
 
