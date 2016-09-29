@@ -2,7 +2,8 @@ var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWi
 
 if (AOSsettings) {
 
-    var aosUrl = AOSsettings.aosUrl;
+    var aosUrl = AOSsettings.aosUrl,
+        aosModuleUrl = AOSsettings.aosModuleUrl;
 
     if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && ProcessWire.config.InputfieldCKEditor) {
 
@@ -11,7 +12,7 @@ if (AOSsettings) {
             CKEskin = AOSsettings.CKEaddons_skin,
             CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
             CKEpluginCount = enabledCKEplugins.length,
-            // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
+        // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
             oEmbedPluginDependencies = 'widget,lineutils',
             CKEtoolbars = {
                 justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
@@ -335,15 +336,15 @@ $(document).ready(function () {
             }
         });
 
+
         // link inside link workaround
         // create a clone of the parent link on mousedown, remove click event, then restore
         $(document).on('hover', '.PageListItem:not([data-template-edit-loaded])', function (e) {
 
-
             var el = $(this),
                 templateName = getClassArgument(el.attr('class').split(' '), 'PageListTemplate_');
 
-            $.getJSON('http://mosolygo.paqartdesign.com/admin/module/edit?name=AdminOnSteroids&getTemplateEditLink=' + templateName, function (templateEditLink) {
+            $.getJSON(aosModuleUrl + '&getTemplateEditLink=' + templateName, function (templateEditLink) {
                 if (!el.find('.aos_EditTemplate').length) {
                     el.attr('data-template-edit-loaded', true);
                     el.find('span[class^="label_"]').append($(templateEditLink));
@@ -632,7 +633,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+            // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -682,7 +683,6 @@ $(document).ready(function () {
             var firstNavItem = topNavElem.children('li').first();
 
             firstNavItem.append('<ul>');
-
 
             $('.NavItems li').each(function () {
                 firstNavItem.children('ul').append($(this));

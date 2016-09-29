@@ -18,7 +18,9 @@ html.aos {
   }
 
   // allow template edit links to appear
-  .PageList {
+  //.PageList:not(.PageListSortingList) {
+  .PageListItem > .PageList,
+  .PageList:hover {
     overflow: visible !important;
   }
 
@@ -47,44 +49,70 @@ html.aos {
     opacity: 1 !important;
   }
 
+  .PageListPlaceholder.ui-sortable .PageListItem {
+    padding: 0 !important;
+  }
+
   .PageListRoot.PageListSorting {
 
     .PageListSortPlaceholder {
       width: 100% !important;
       //height: 1px;
-      height: 100%;
+      height: 20px;
+      border: none;
       //display: block;
       //background: #2C3E50;
       position: relative;
-      border-bottom: 1px solid #2C3E50;
-      top: -1px;
-      margin-bottom: -1px;
+      //border-bottom: 1px solid #2C3E50;
+      //top: -1px;
+      //margin-bottom: -1px;
+      //&:before {
+      //  content: "\f061";
+      //  font-family: FontAwesome, sans-serif;
+      //  position: absolute;
+      //  left: -16px;
+      //  font-size: 9px;
+      //  top: 0;
+      //  margin-top: -11px;
+      //  color: rgba(#2C3E50, 0.99);
+      //}
     }
     .PageListItem.PageListSortItem {
       background: transparent !important;
-      //border-bottom-color: transparent !important;
       position: relative;
       top: -1px;
+      &.ui-sortable-helper {
+        border-bottom-color: transparent !important;
+      }
     }
     .sortableHover {
       background-color: rgba(#2C3E50, 0.05) !important;
       position: relative;
-      &:before {
-        content: "\f055";
-        font-family: FontAwesome, sans-serif;
-        position: absolute;
-        left: -15px;
-        font-size: 12px;
-        top: 50%;
-        margin-top: -9px;
-        color: #2C3E50;
-      }
-      &.PageListItemOpen {
+      //&.loading {
         &:before {
-          content: "\f056";
+          content: "\f055";
+          font-family: FontAwesome, sans-serif;
+          position: absolute;
+          left: -18px;
+          font-size: 11px;
+          top: 50%;
+          margin-top: -10px;
+          color: rgba(#2C3E50, 0.84);
+          display: inline-block;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          animation: fadeOut 1s ease-in-out alternate !important;
         }
-      }
+        &.PageListItemOpen {
+          &:before {
+            content: "\f056";
+          }
+        }
+      //}
     }
+    //.PageListItemOpen.sortableHover + .PageListSortPlaceholder {
+    //  display: none;
+    //}
   }
 
   h1 {
@@ -1085,7 +1113,7 @@ body.aos_saving {
     color: rgba(0, 0, 0, 0.16);
     background: transparent;
     //animation: fadeOut 0.4s steps(12, end) forwards;
-    animation: fadeOut 1.25s ease-in-out alternate infinite;;
+    animation: fadeOut 1.25s ease-in-out alternate infinite;
     transform-origin: 50% 0;
   }
 }
@@ -1613,10 +1641,6 @@ html.highlightRows {
       color: rgba(#2F4248, 0.7);
     }
   }
-}
-
-.PageListPlaceholder.ui-sortable .PageListItem {
-  padding: 0 !important;
 }
 
 /*RenoTweaks Reno theme tweaks*/
@@ -2175,9 +2199,9 @@ html.AdminThemeReno {
   }
 
   &.pListCompact {
-    .content .PageList .PageListItem {
-      padding-top: 0.43em;
-      padding-bottom: 0.37em;
+    .content .PageList .PageListItem:not(.PageListPlaceholderItem) {
+      padding-top: 0.4em;
+      padding-bottom: 0.4em;
     }
   }
 

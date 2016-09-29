@@ -1,6 +1,16 @@
 #Changelog
 
 
+### 0.7.0 (2016-09-29)
+
+- fix: do not show template edit links on pagelist when user is non-superuser (reported by gmclelland)
+
+
+### 0.6.9 (2016-09-25)
+
+- fix for hard-coded admin path for pagelist templateEditLinks (reported by gmclelland)
+
+
 ### 0.6.8 (2016-09-23)
 
 - added template edit links to the main pagelist items
