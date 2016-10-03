@@ -196,9 +196,6 @@ html.aos {
     }
   }
 
-
-
-
   // CKE improvements
 
   //.CodeMirror {
@@ -217,7 +214,6 @@ html.aos {
   }
 
   .cke_top .cke_button_icon.cke_button__oembed_icon {
-    //background-image: url('/site/modules/AdminOnSteroids/CKE/plugins/oembed/icons/oembed.png') !important;
     background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
   }
 
@@ -239,8 +235,17 @@ html.aos {
   z-index: 100000 + 900 !important;
 }
 
+// CKEditor html source dialog
+.cke_dialog_background_cover {
+  z-index: 100000 + 3000 !important;
+  + .cke_reset_all > table {
+    z-index: 100000 + 3050 !important;
+  }
+}
+
+// fix cke dialog covered by other lang's cke overlay after langtab switch
 .cke_dialog {
-  z-index: 100000 + 1200 !important;
+  z-index: 100000 + 3100 !important;
 }
 
 .cke_panel {
@@ -1804,18 +1809,6 @@ html.AdminThemeReno {
   &.headSticky:not(.modal) {
 
     @media only screen and (min-width: 960px) {
-
-      // CKEditor html source dialog
-      .cke_dialog_background_cover {
-        z-index: 100000 + 3000 !important;
-        + .cke_reset_all > table {
-          z-index: 100000 + 3050 !important;
-        }
-      }
-      // fix cke dialog covered by other lang's cke overlay after langtab switch
-      .cke_dialog {
-        z-index: 100000 + 3100 !important;
-      }
 
       // System Notifications module
       #NotificationGhosts {
