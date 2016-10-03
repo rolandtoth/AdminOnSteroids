@@ -8,7 +8,7 @@
 
 $colorDelete: #B93E42;
 $defaultTransition: 0.12s;
-$defaultBoxShadow: 0 2px 5px -3px rgba(#465b69, 0.5);
+$defaultBoxShadow: 0 3px 4px -3px rgba(#465b69, 0.5);
 
 // general style overrides
 html.aos {
@@ -57,25 +57,9 @@ html.aos {
 
     .PageListSortPlaceholder {
       width: 100% !important;
-      //height: 1px;
       height: 20px;
       border: none;
-      //display: block;
-      //background: #2C3E50;
       position: relative;
-      //border-bottom: 1px solid #2C3E50;
-      //top: -1px;
-      //margin-bottom: -1px;
-      //&:before {
-      //  content: "\f061";
-      //  font-family: FontAwesome, sans-serif;
-      //  position: absolute;
-      //  left: -16px;
-      //  font-size: 9px;
-      //  top: 0;
-      //  margin-top: -11px;
-      //  color: rgba(#2C3E50, 0.99);
-      //}
     }
     .PageListItem.PageListSortItem {
       background: transparent !important;
@@ -108,11 +92,7 @@ html.aos {
             content: "\f056";
           }
         }
-      //}
     }
-    //.PageListItemOpen.sortableHover + .PageListSortPlaceholder {
-    //  display: none;
-    //}
   }
 
   h1 {
@@ -134,12 +114,150 @@ html.aos {
       min-width: 80px;
     }
   }
+
+  #ui-datepicker-div {
+    z-index: 100000 + 20000 !important;
+  }
+
+  select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+  }
+
+  .aos_col_left,
+  .aos_col_right {
+    width: 67%;
+    float: left;
+    clear: none !important;
+    margin-top: 0 !important;
+  }
+
+  .aos_col_right {
+    width: 33%;
+    margin-left: -1px !important;
+  }
+
+  // hide aos_column_break field
+  #ProcessPageEditContent #wrap_Inputfield_aos_column_break {
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  // inline ckeditor toolbar fix
+  .InputfieldCKEditorInline {
+    position: relative;
+  }
+
+  #longClickSlider {
+    max-width: 360px;
+    margin: 8px 0 6px 3px;
+  }
+
+  .sliderTooltip {
+    position: absolute;
+    z-index: 1020;
+    display: block;
+    //padding: 5px;
+    font-size: 12px;
+    visibility: visible;
+    margin-top: -2px;
+    //bottom: 120%;
+    top: -5px;
+    //left: -27px;
+    left: 0;
+    //margin-left: 8px;
+    white-space: nowrap;
+    border: 2px solid #fff;
+    //transform: translateX(-50%);
+    //.sliderTooltip-arrow {
+    //  bottom: 0;
+    //  left: 50%;
+    //  margin-left: -5px;
+    //  border-top: 5px solid #000;
+    //  border-right: 5px solid transparent;
+    //  border-left: 5px solid transparent;
+    //  position: absolute;
+    //  width: 0;
+    //  height: 0;
+    //}
+    .sliderTooltip-inner {
+      max-width: 240px;
+      padding: 5px 7px !important;
+      border: none !important;
+      margin: 0 !important;
+      color: #fff;
+      text-align: center;
+      font-weight: normal !important;
+      text-decoration: none;
+      span {
+        font-weight: bold !important;
+        font-size: 15px;
+      }
+    }
+  }
+
+
+
+
+  // CKE improvements
+
+  //.CodeMirror {
+  //  line-height: inherit !important;
+  //  font-family: inherit;
+  //}
+
+  .CodeMirror-lines {
+    font-size: 13px;
+  }
+
+  .CodeMirror-line {
+    span {
+      white-space: normal !important;
+    }
+  }
+
+  .cke_top .cke_button_icon.cke_button__oembed_icon {
+    //background-image: url('/site/modules/AdminOnSteroids/CKE/plugins/oembed/icons/oembed.png') !important;
+    background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
+  }
+
+  .cke_combo_text {
+    white-space: nowrap;
+  }
+
+  .cke_dialog_body {
+    //.cke_dialog_contents * {
+    //  box-sizing: border-box !important;
+    //}
+    label {
+      display: inline-block !important;
+    }
+  }
+}
+
+.cke_maximized {
+  z-index: 100000 + 900 !important;
+}
+
+.cke_dialog {
+  z-index: 100000 + 1200 !important;
+}
+
+.cke_panel {
+  z-index: 100000 + 1300 !important;
+}
+
+.ui-widget-overlay.ui-front {
+  z-index: 100000 + 980 !important;
+}
+
+.ui-dialog {
+  z-index: 100000 + 1000 !important;
 }
 
 // AsmTweaks
 html.asmLeftX {
   body {
-
     .Inputfields .asmListItem {
       padding-left: 24px;
       span.asmListItemStatus {
@@ -2806,146 +2924,6 @@ html.HoverDropdown {
         }
       }
     }
-  }
-}
-
-.cke_maximized {
-  z-index: 100000 + 900 !important;
-}
-
-.cke_dialog {
-  z-index: 100000 + 1200 !important;
-}
-
-.cke_panel {
-  z-index: 100000 + 1300 !important;
-}
-
-.ui-widget-overlay.ui-front {
-  z-index: 100000 + 980 !important;
-}
-
-.ui-dialog {
-  z-index: 100000 + 1000 !important;
-}
-
-#ui-datepicker-div {
-  z-index: 100000 + 20000 !important;
-}
-
-select:-moz-focusring {
-  color: transparent;
-  text-shadow: 0 0 0 #000;
-}
-
-.aos_col_left,
-.aos_col_right {
-  width: 67%;
-  float: left;
-  clear: none !important;
-  margin-top: 0 !important;
-}
-
-.aos_col_right {
-  width: 33%;
-  margin-left: -1px !important;
-}
-
-// hide aos_column_break field
-#ProcessPageEditContent #wrap_Inputfield_aos_column_break {
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
-// inlne ckeditor toolbar fix
-.InputfieldCKEditorInline {
-  position: relative;
-}
-
-#longClickSlider {
-  max-width: 360px;
-  margin: 8px 0 6px 3px;
-}
-
-.sliderTooltip {
-  position: absolute;
-  z-index: 1020;
-  display: block;
-  //padding: 5px;
-  font-size: 12px;
-  visibility: visible;
-  margin-top: -2px;
-  //bottom: 120%;
-  top: -5px;
-  //left: -27px;
-  left: 0;
-  //margin-left: 8px;
-  white-space: nowrap;
-  border: 2px solid #fff;
-  //transform: translateX(-50%);
-  //.sliderTooltip-arrow {
-  //  bottom: 0;
-  //  left: 50%;
-  //  margin-left: -5px;
-  //  border-top: 5px solid #000;
-  //  border-right: 5px solid transparent;
-  //  border-left: 5px solid transparent;
-  //  position: absolute;
-  //  width: 0;
-  //  height: 0;
-  //}
-  .sliderTooltip-inner {
-    max-width: 240px;
-    padding: 5px 7px !important;
-    border: none !important;
-    margin: 0 !important;
-    color: #fff;
-    text-align: center;
-    font-weight: normal !important;
-    text-decoration: none;
-    //background-color: #000;
-    //-webkit-border-radius: 4px;
-    //-moz-border-radius: 4px;
-    //border-radius: 4px;
-    span {
-      font-weight: bold !important;
-      font-size: 15px;
-    }
-  }
-}
-
-//.CodeMirror {
-//  line-height: inherit !important;
-//  font-family: inherit;
-//}
-
-// CKE improvements
-
-.CodeMirror-lines {
-  font-size: 13px;
-}
-
-.CodeMirror-line {
-  span {
-    white-space: normal !important;
-  }
-}
-
-.cke_top .cke_button_icon.cke_button__oembed_icon {
-  //background-image: url('/site/modules/AdminOnSteroids/CKE/plugins/oembed/icons/oembed.png') !important;
-  background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
-}
-
-.cke_combo_text {
-  white-space: nowrap;
-}
-
-.cke_dialog_body {
-  .cke_dialog_contents * {
-    box-sizing: border-box !important;
-  }
-  label {
-    display: inline-block !important;
   }
 }
 

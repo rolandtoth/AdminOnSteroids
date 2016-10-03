@@ -12,7 +12,7 @@ if (AOSsettings) {
             CKEskin = AOSsettings.CKEaddons_skin,
             CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
             CKEpluginCount = enabledCKEplugins.length,
-        // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
+            // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
             oEmbedPluginDependencies = 'widget,lineutils',
             CKEtoolbars = {
                 justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
@@ -339,39 +339,90 @@ $(document).ready(function () {
 
         // link inside link workaround
         // create a clone of the parent link on mousedown, remove click event, then restore
-        $(document).on('hover', '.PageListItem:not([data-template-edit-loaded])', function (e) {
-
-            var el = $(this),
-                templateName = getClassArgument(el.attr('class').split(' '), 'PageListTemplate_');
-
-            $.getJSON(aosModuleUrl + '&getTemplateEditLink=' + templateName, function (templateEditLink) {
-                if (!el.find('.aos_EditTemplate').length) {
-                    el.attr('data-template-edit-loaded', true);
-                    el.find('span[class^="label_"]').append($(templateEditLink));
-                }
-            });
-        });
-
-
-        $(document).on('mousedown', '.aos_EditTemplate', function (e) {
-
-            var el = $(this),
-                parentLink = el.parents('a').first(),
-                parentLinkClone = parentLink.clone(true);
-
-            parentLink.unbind('click');
-
-            $('.pw-panel-container').remove();
+        // $(document).on('hover', '.PageListItem:not([data-template-edit-loaded])', function (e) {
+        //
+        //     var el = $(this),
+        //         templateName = getClassArgument(el.attr('class').split(' '), 'PageListTemplate_');
+        //
+        //     $.getJSON(aosModuleUrl + '&getTemplateEditLink=' + templateName, function (templateEditLink) {
+        //         if (!el.find('.aos_EditTemplate').length) {
+        //             el.attr('data-template-edit-loaded', true);
+        //             el.find('span[class^="label_"]').append($(templateEditLink));
+        //         }
+        //     });
+        // });
 
 
-            if (pwPanels && el.hasClass('pw-panel')) {
-                pwPanels.init();
-            }
+        // $(document).on('mousedown', '.aos_EditTemplate', function (e) {
+        //
+        //     var el = $(this),
+        //         parentLink = el.parents('a').first(),
+        //         parentLinkClone = parentLink.clone(true);
+        //
+        //     parentLink.unbind('click');
+        //
+        //     $('.pw-panel-container').remove();
+        //
+        //
+        //     if (pwPanels && el.hasClass('pw-panel')) {
+        //         pwPanels.init();
+        //     }
+        //
+        //     setTimeout(function () {
+        //         parentLink.replaceWith(parentLinkClone);
+        //     }, 200);
+        // });
 
-            setTimeout(function () {
-                parentLink.replaceWith(parentLinkClone);
-            }, 200);
-        });
+        // $(document).on('hover', '.PageListActionEditTemplate.pw-panel', function () {
+        //     if (pwPanels && !$('body').hasClass('pwPanelsStarted')) {
+        //         $('body').addClass('pwPanelsStarted');
+        //         pwPanels.init();
+        //     }
+        //     $(this).removeClass('pw-panel').children('a').addClass('pw-panel pw-panel-reload');
+        // });
+
+        // $(document).on('hover', '.PageListActionEditTemplate.pw-modal', function () {
+        //     $(this).removeClass('pw-modal').children('a').addClass('pw-modal');
+        // });
+
+        // $(document).on('hover', '.pw-panel', function () {
+        //     if (pwPanels && !$('body').hasClass('pwPanelsStarted')) {
+        //         $('body').addClass('pwPanelsStarted');
+        //         pwPanels.init();
+        //     }
+        //     return false;
+        // });
+
+        // $(document).on('click', '#pw-panel-shade', function () {
+        //     // console.log('removing');
+        //     // $('#pw-panel-shade').remove();
+        //     // $('.pw-panel-container').each(function() {
+        //     // $('.pw-panel-container').each(function() {
+        //     //     $(this).remove();
+        //     // })
+        // });
+
+        // $(document).on('click', 'ul.actions > li ~ .PageListActionEdit a', function () {
+        ////
+        //     var el = $(this);
+        ////
+        //     if (el.attr('href').indexOf('&target=blank') !== -1) {
+        //         el.attr('href', el.attr('href').slice(0, -13));
+        //         el.attr('target', '_blank');
+        //     }
+
+            // else if(el.parent().hasClass('pw-panel')) {
+            //     $('.pw-panel-container').remove();
+            //     pwPanels.init();
+            // }
+
+            // $('.pw-panel-container').remove();
+            //
+            // if (pwPanels && el.hasClass('pw-panel')) {
+            //     pwPanels.init();
+            // }
+             //return false;
+         //});
 
 
         // workaround: add edit links to ajax-loaded fields
@@ -633,7 +684,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,

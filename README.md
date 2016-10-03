@@ -268,8 +268,12 @@ By default required fields can't be deselected but it can be enabled tweaking th
 When enabled, hovering on a field's label in the page edit screen will show the field's name in a toolip.
 Clicking on this tooltip will open the field edit page in a new window, modal or panel (depending on module settings).
 
-Hovering on a page title or on the main pagelist items the tooltip appears with a template edit link.
 When using the default theme, the template edit link appears on hovering the last breadcrumb element.
+
+**Template edit links in the main pagelist**
+
+A new pagelist action is added to the items as the last item, named as "#" plus the template name.
+Note that this template edit link doesn't respect the target you've set in the module settings, clicking on them always load the template edit page in the same page (you can use the middle mouse button to open in a new tab). Long-click can be used to open it in a modal window.
 
 
 

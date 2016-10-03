@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.7.1 (2016-10-03)
+
+- pagelist template edit links: moved to a pagelist action instead of a tooltip
+- few CKEditor CSS fixes
+
+
 ### 0.7.0 (2016-09-29)
 
 - fix: do not show template edit links on pagelist when user is non-superuser (reported by gmclelland)
