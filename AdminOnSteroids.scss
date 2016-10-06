@@ -55,16 +55,30 @@ html.aos {
 
   .PageListRoot.PageListSorting {
 
+    #PageListMoveFrom {
+      // allow moving out sort item from its container (though disables nice animation)
+      overflow: visible !important;
+    }
+    .PageListItem {
+      display: block;
+    }
+
     .PageListSortPlaceholder {
       width: 100% !important;
-      height: 20px;
+      display: block;
+      height: 15px;
+      max-height: 15px;
       border: none;
       position: relative;
+      transition: all 0.25s;
+      &.narrow {
+        max-height: 0;
+      }
     }
     .PageListItem.PageListSortItem {
       background: transparent !important;
       position: relative;
-      top: -1px;
+      z-index: 100000 + 5000 !important;
       &.ui-sortable-helper {
         border-bottom-color: transparent !important;
       }
@@ -72,28 +86,42 @@ html.aos {
     .sortableHover {
       background-color: rgba(#2C3E50, 0.05) !important;
       position: relative;
+      left: 0 !important;
       //&.loading {
+      &:before {
+        content: "\f055";
+        font-family: FontAwesome, sans-serif;
+        position: absolute;
+        left: -18px;
+        font-size: 11px;
+        top: 50%;
+        margin-top: -10px;
+        color: rgba(#2C3E50, 0.84);
+        display: inline-block;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        animation: fadeOut 0.8s ease-in-out alternate infinite !important;
+      }
+      &.PageListItemOpen {
         &:before {
-          content: "\f055";
-          font-family: FontAwesome, sans-serif;
-          position: absolute;
-          left: -18px;
-          font-size: 11px;
-          top: 50%;
-          margin-top: -10px;
-          color: rgba(#2C3E50, 0.84);
-          display: inline-block;
-          transform: translate3d(0, 0, 0);
-          backface-visibility: hidden;
-          animation: fadeOut 1s ease-in-out alternate !important;
+          content: "\f056";
         }
-        &.PageListItemOpen {
-          &:before {
-            content: "\f056";
-          }
-        }
+      }
+    }
+    // workaround to show icons to left with overflow: hidden
+    .PageList {
+      .PageListItem:not(.PageListSortItem) {
+        left: 2em;
+      }
+      .PageList {
+        padding-left: 2em;
+        left: -2em;
+        margin-left: 2em;
+        position: relative;
+      }
     }
   }
+
 
   h1 {
     max-width: calc(100% - 120px);
@@ -2946,15 +2974,15 @@ html.HoverDropdown {
 
 @keyframes fadeOut {
   0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
+    opacity: 0;
     transform: scale(0.8);
   }
-  100% {
+  50% {
     opacity: 1;
     transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
   }
 }

@@ -1,6 +1,16 @@
 #Changelog
 
 
+### 0.7.3 (2016-10-06)
+
+- fix for ajax-loaded PageListSelect fields not showing up correctly (reported by gmclelland)
+
+
+### 0.7.2 (2016-10-03)
+
+- fix for CKEditor overlay covering CKEditor dialogs in certain cases (reported by Macrura)
+
+
 ### 0.7.1 (2016-10-03)
 
 - pagelist template edit links: moved to a pagelist action instead of a tooltip

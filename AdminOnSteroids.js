@@ -426,7 +426,7 @@ $(document).ready(function () {
 
 
         // workaround: add edit links to ajax-loaded fields
-        $('.Inputfield').on('reloaded', function () {
+        $('.Inputfield:not(.InputfieldPageListSelect)').on('reloaded', function () {
             var field = $(this),
                 label = field.find('label');
 
