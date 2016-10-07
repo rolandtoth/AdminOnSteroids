@@ -110,7 +110,7 @@ if (AOSsettings) {
 
 
 // make autogrow CKEditor plugin work with tabs
-if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && AOSsettings.CKEplugins.indexOf('autogrow') !== -1) {
+if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && AOSsettings.CKEaddons_plugins.indexOf('autogrow') !== -1) {
 
     $(document).on('wiretabclick',  function (e, elem) {
 
