@@ -23,6 +23,9 @@ if (AOSsettings) {
                 showblocks: ["ShowBlocks"]
             };
 
+        // keep the plugin order from admin
+        if (enabledCKEplugins) enabledCKEplugins.reverse();
+
         // set each plugin path to AOS dir
         if (CKEpluginCount > 0) {
             for (var i = 0; i < CKEpluginCount; i++) {
@@ -63,8 +66,9 @@ if (AOSsettings) {
             // set some plugin defaults
             CKEDITOR.config.autoGrow_onStartup = true;
             CKEDITOR.config.autoGrow_bottomSpace = 20;
+            CKEDITOR.config.autoGrow_maxHeight = 700;
             CKEDITOR.config.codemirror = {
-                theme: 'material',
+                theme: 'material'
             };
 
             $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
@@ -93,7 +97,7 @@ if (AOSsettings) {
                     }
                 }
 
-                var extraPlugins = enabledCKEplugins.reverse().join(',');
+                var extraPlugins = enabledCKEplugins.join(',');
 
                 CKEfield.extraPlugins += ',' + extraPlugins;
                 addCKEtoolbars(CKEfield);
@@ -102,6 +106,29 @@ if (AOSsettings) {
             })
         });
     }
+}
+
+
+// make autogrow CKEditor plugin work with tabs
+if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && AOSsettings.CKEplugins.indexOf('autogrow') !== -1) {
+
+    $(document).on('wiretabclick',  function (e, elem) {
+
+        var CKEs = $(elem).find('.InputfieldCKEditor');
+
+        if (CKEs.length) {
+            CKEs.each(function(i, el) {
+
+                var CKEid = $(el).attr('id').replace('wrap_', ''),
+                    editor = CKEDITOR.instances[CKEid];
+
+                if(editor && !editor.autogrowFired) {
+                    editor.autogrowFired = true;
+                    editor.execCommand('autogrow');
+                }
+            })
+        }
+    });
 }
 
 
@@ -411,18 +438,18 @@ $(document).ready(function () {
         //         el.attr('target', '_blank');
         //     }
 
-            // else if(el.parent().hasClass('pw-panel')) {
-            //     $('.pw-panel-container').remove();
-            //     pwPanels.init();
-            // }
+        // else if(el.parent().hasClass('pw-panel')) {
+        //     $('.pw-panel-container').remove();
+        //     pwPanels.init();
+        // }
 
-            // $('.pw-panel-container').remove();
-            //
-            // if (pwPanels && el.hasClass('pw-panel')) {
-            //     pwPanels.init();
-            // }
-             //return false;
-         //});
+        // $('.pw-panel-container').remove();
+        //
+        // if (pwPanels && el.hasClass('pw-panel')) {
+        //     pwPanels.init();
+        // }
+        //return false;
+        //});
 
 
         // workaround: add edit links to ajax-loaded fields

@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.7.4 (2016-10-07)
+
+- fix: keep the correct order of CKE toolbars when multiple CKEditor fields are present
+- fix: make CKE plugin Auto Grow autosize field on activating an admin tab
+
+
 ### 0.7.3 (2016-10-06)
 
 - fix for ajax-loaded PageListSelect fields not showing up correctly (reported by gmclelland)
