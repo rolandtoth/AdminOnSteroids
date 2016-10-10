@@ -1,6 +1,21 @@
 #Changelog
 
 
+### 0.7.6 (2016-10-10)
+
+- allow relative urls in InputfieldURLChecker (requested by gmclelland)
+- InputfieldURLChecker: support for FieldtypeAssistedURL
+- InputfieldURLChecker: removed support to open url in panel
+- PageListTweaks, "Show page IDs": only visible to superusers
+
+
+### 0.7.5 (2016-10-09)
+
+- grouped several AdminTweaks and RenoTweaks items into a new submodule "PageListTweaks"
+- added new tweak "Show page IDs in pagelists" to PageListTweaks
+- moved AdminOnSteroids.scss into the "src" subfolder
+
+
 ### 0.7.4 (2016-10-07)
 
 - fix: keep the correct order of CKE toolbars when multiple CKEditor fields are present

@@ -9,6 +9,7 @@
     right: 16px;
     padding: 0 12px;
     background: transparent;
+    z-index: 20;
 }
 
 .iuc-button.button-left {
@@ -28,6 +29,7 @@
     pointer-events: none !important;
 }
 
+#wrap_link_page_url .InputfieldPageAutocomplete .InputfieldContent,
 .InputfieldURL .InputfieldContent {
     position: relative;
 }
@@ -40,18 +42,40 @@
     position: relative;
 }
 
+.iuc-button.button-left ~ input {
+    padding-left: 36px !important;
+}
 .InputfieldMultiplierInput .iuc-button.button-left {
     left: 8px;
+}
+
+.iuc-button.button-right ~ input {
+    padding-right: 36px !important;
 }
 
 .InputfieldMultiplierInput .iuc-button.button-right {
     right: 8px;
 }
 
-.iuc-button.button-left ~ input {
-    padding-left: 36px !important;
+
+
+#wrap_link_page_url .iuc-button.button-left ~ p #link_page_url_input {
+    padding-left: 56px !important;
+}
+#wrap_link_page_url .iuc-button.button-left {
+    left: 40px;
 }
 
+
+#wrap_link_page_url .iuc-button.button-right ~ p #link_page_url_input {
+    padding-right: 56px !important;
+}
+#wrap_link_page_url .iuc-button.button-right {
+    right: 34px;
+}
+
+
+#wrap_link_page_url .InputfieldPageAutocomplete input:focus + .iuc-button i,
 .InputfieldURL input:focus + .iuc-button i {
     color: rgba(0, 0, 0, 0.32);
 }
@@ -65,6 +89,8 @@
 }
 
 .collapsed7.InputfieldURL .InputfieldContent a:hover,
-.collapsed8.InputfieldURL .InputfieldContent a:hover {
+.collapsed8.InputfieldURL .InputfieldContent a:hover,
+#wrap_link_page_url .collapsed7.InputfieldPageAutocomplete .InputfieldContent a:hover,
+#wrap_link_page_url .collapsed8.InputfieldPageAutocomplete .InputfieldContent a:hover {
     text-decoration: underline;
 }

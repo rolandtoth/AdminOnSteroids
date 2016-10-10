@@ -175,7 +175,6 @@ A few usability mods targetting the default admin theme.
 
 - **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
 - **Set wider main content**: sets the max-width of the main content from 1200px to 1480px
-- **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline. 
 - **Center login form**: align login page items to center
 
 
@@ -326,9 +325,11 @@ Hovering on the Save button in the page editor shows the dropdown menu instantly
 Enhance URL fields with a button to check typed url. It can open the URL in a new window, panel or modal. Comes with hotkey modes too.
 
 - **Mode**: button and/or hotkey modes. The button mode has an additional setting to place it in the left or right side of the field.
-- **Open URL in...**: URLs can be opened in a new tab (default), modal or panel. **Note**: modal and panel modes will fail if the target website doesn't allow embedding.
-- **Force HTTP prefix**: if checked, links will always have "http://" prefix, even if the field itself doesn't contain it. This ensures opening external links instead of relative ones.
+- **Open URL in...**: URLs can be opened in a new tab (default), or in a modal. **Note**: modal mode will fail if the target website doesn't allow embedding.
+- **Force HTTP prefix**: if checked, links will always have "http://" prefix, even if the field itself doesn't contain it. This ensures opening external links instead of relative ones. However, if the URL starts with "/" then it is treated as an internal URL and no prefix will be prepended.
 - **Enabled templates and Enabled fields**: here you can set templates and/or fields where the module will be enabled. If none selected, module will be active on all templates and all URL type fields. Note: if used, the module will be disabled on all non-listed fields/templates.
+
+Note: for button modes you can use the middle mouse button to open the URL in a new browser tab.
 
 
 
@@ -430,6 +431,15 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 
 
 
+###PageListTweaks
+
+*Pagelist related tweaks*
+
+- **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline. 
+- **Show page IDs**: adds the page ID after each page name in a superscript (visible for superusers only)
+
+
+
 ###PageListUnselect
 
 *Add unselect and restore buttons to PageListSelect fields*
@@ -466,7 +476,6 @@ A few usability mods targetting the Reno admin theme.
 - **Always show sidebar items (disable accordion)**: make sidebar submenus more compact and do not hide them
 - **Inline sidebar items instead of stacking**: check this if you would like sidebar items to appear next to each other and not in full row. This results in a much lower sidebar if you have many items in it.
 - **Single click sidebar headers**: by default the sidebar header links need double-click to open the corresponding menu page because single click is used by the accordion. This tweak will remove this limitation. It's available only if "Always show sidebar items" tweak is on.
-- **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline.
 - **Always show search field**: make the search field always available
 - **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items

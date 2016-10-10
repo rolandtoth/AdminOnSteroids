@@ -16,7 +16,6 @@ $(document).ready(function () {
         selector: 'a.iuc',
         linkHiddenClass: 'iuc-hide',
         lockedClass: 'iuc-locked-link',
-        pwPanelSelector: 'iframe.pw-panel-content',
         dummyFieldSelector: 'IUC-dummy',
         dataMode: 'data-iuc-mode',
         dataTarget: 'data-iuc-target',
@@ -35,29 +34,28 @@ $(document).ready(function () {
 
     // $(document).on('reloaded', '.Inputfield', initIUC);  // runs on all inputfields!
     // $(document).on('reloaded', '.InputfieldRepeaterItem', function() {
-
-    $(document).on('reloaded', '.InputfieldRepeaterItem .Inputfield:not(.pw-panel-items)', initIUC);
-
-    $(document).on('reloaded', '.InputfieldRepeaterItem .Inputfield.pw-panel-items', function () {
-        pwPanels.init();
-        initIUC();
-    });
+    //
+    // $(document).on('reloaded', '.InputfieldRepeaterItem .Inputfield:not(.pw-panel-items)', initIUC);
+    //
+    // $(document).on('reloaded', '.InputfieldRepeaterItem .Inputfield.pw-panel-items', function () {
+    //     pwPanels.init();
+    //     initIUC();
+    // });
 
     // ProFields table
-    $(document).on('click', 'a.InputfieldTableAddRow', initIUC);
+    $(document).on('mousedown', 'a.InputfieldTableAddRow', initIUC);
 
 
-    function initIUC() {
+    function initIUC(e) {
 
         $(IUC.selector).not('[' + IUC.dataLoaded + '="1"]').each(function () {
 
-
-            var currInput = $(this).siblings('input:not([type="hidden"])');
+            var iucLink = $(this);
 
             // set link height
             setTimeout(function () {
                 if (IUC.btnHeight > 0) {
-                    currInput.parent().children(IUC.selector).css({
+                    iucLink.css({
                         'height': IUC.btnHeight + 'px',
                         'line-height': IUC.btnHeight + 'px'
                     });
@@ -69,10 +67,10 @@ $(document).ready(function () {
         $(IUC.selector + '[' + IUC.dataMode + '!=""][' + IUC.dataMode + ']').not('[' + IUC.dataLoaded + '="1"]').each(function () {
 
             var mode = $(this).attr(IUC.dataMode),
-                input = $(this).parent().children('input:not([type="hidden"])');
+                input = $(this).parents('.InputfieldContent').first().find('input:not([type="hidden"])');
 
             // always add buttonMode because hotkey modes will trigger this
-            addButtonMode(input);
+            addButtonMode(e, input);
             addFieldListener(input);
 
             if (mode.indexOf('ctrl-shift-click') !== -1) {
@@ -80,6 +78,7 @@ $(document).ready(function () {
             }
 
             if (mode.indexOf('ctrl-shift-enter') !== -1) {
+                // addHotkeyMode(input, 'keyup', 'ctrl-shift-enter');
                 addHotkeyMode(input, 'keydown', 'ctrl-shift-enter');
             }
 
@@ -87,12 +86,11 @@ $(document).ready(function () {
         });
     }
 
-    function addButtonMode(obj) {
+    function addButtonMode(e, obj) {
 
-        obj.parent().children(IUC.selector).on('click', function () {
+        obj.parents('.InputfieldContent').first().find(IUC.selector).on('mousedown', function () {
 
-            var url = $(this).attr('href') ? $(this).attr('href').trim() : false,
-                pwPanel = $(IUC.pwPanelSelector + ':eq(0)');
+            var url = $(this).attr('href') ? $(this).attr('href').trim() : false;
 
             if (!url) {
 
@@ -101,12 +99,23 @@ $(document).ready(function () {
 
             } else {
 
-                // workaround because pw-panel is not dynamic
-                // do not update iframe if it has the same url loaded
-                if (pwPanel.length && pwPanel.attr('src') !== url) {
-                    pwPanel.attr('src', url);
+                // right click
+                if (e.which == 3) {
                     return false;
                 }
+
+                // if middle mouse button pressed, open a new page
+                if (e.which == 2 || e.button == 4) {
+                    window.open(url.replace('&modal=1', ''));
+                    return false;
+                }
+
+                // workaround because pw-panel is not dynamic
+                // do not update iframe if it has the same url loaded
+                // if (pwPanel.length && pwPanel.attr('src') !== url) {
+                //     pwPanel.attr('src', url);
+                //     return false;
+                // }
             }
             // return false;
         });
@@ -126,7 +135,8 @@ $(document).ready(function () {
             if ((mode === 'ctrl-shift-enter' && isCtrlShiftPressed && isEnterPressed) ||
                 (mode === 'ctrl-shift-click' && isCtrlShiftPressed)) {
 
-                obj.parent().children(IUC.selector).get(0).click();
+                obj.parents('.InputfieldContent').first().find(IUC.selector).get(0).click();
+                // obj.parent().children(IUC.selector).trigger('mousedown');
 
                 return false;
             }
@@ -136,37 +146,17 @@ $(document).ready(function () {
 
     function addFieldListener(obj) {
 
-        obj.on('keyup fieldchange', function () {
+        obj.on('keyup fieldchange input change keydown', function () {
 
-            var link = obj.parent().children(IUC.selector),
+            var link = obj.parents('.InputfieldContent').first().find(IUC.selector),
                 url = getUrl(obj.val(), link.attr(IUC.dataForceHttp)).trim();
 
-            link.attr('href', url).toggleClass(IUC.linkHiddenClass, url == "")
+            link.attr('href', url).toggleClass(IUC.linkHiddenClass, url == "");
         });
 
         // populate on load
         obj.trigger('fieldchange');
     }
-
-    //var als_timer;
-    //
-    //// AdminLangSwitcher z-index fix (Default theme)
-    //$("body.AdminThemeDefault #masthead, body.AdminThemeDefault .aos_adminLangSwitcher").mouseover(
-    //    function () {
-    //        if(window.als_timer) {
-    //            clearTimeout(als_timer);
-    //        }
-    //        $('#masthead').css('z-index', 33);
-    //    }
-    //);
-    //$("body.AdminThemeDefault .aos_adminLangSwitcher").mouseleave(
-    //    function () {
-    //        //console.log('here');
-    //        als_timer = setTimeout(function () {
-    //            $('#masthead').css('z-index', '');
-    //        }, 1000);
-    //    }
-    //);
 });
 
 
@@ -179,5 +169,11 @@ $(document).ready(function () {
  */
 function getUrl(url, forcePrefix) {
     var prefix = 'http';
+
+    // return the original url if starts with "/" (allows relative paths)
+    if(url.indexOf('/') === 0) {
+        return url;
+    }
+
     return (forcePrefix && url != "" && url.indexOf(prefix) === -1) ? prefix + '://' + url : url;
 }
