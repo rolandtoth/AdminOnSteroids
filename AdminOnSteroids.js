@@ -112,23 +112,35 @@ if (AOSsettings) {
 // make autogrow CKEditor plugin work with tabs
 if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && AOSsettings.CKEaddons_plugins.indexOf('autogrow') !== -1) {
 
-    $(document).on('wiretabclick',  function (e, elem) {
-
+    $(document).on('wiretabclick', function (e, elem) {
         var CKEs = $(elem).find('.InputfieldCKEditor');
-
         if (CKEs.length) {
-            CKEs.each(function(i, el) {
-
-                var CKEid = $(el).attr('id').replace('wrap_', ''),
-                    editor = CKEDITOR.instances[CKEid];
-
-                if(editor && !editor.autogrowFired) {
-                    editor.autogrowFired = true;
-                    editor.execCommand('autogrow');
-                }
-            })
+            updateAutoGrowCKE(CKEs);
         }
     });
+
+    // 'revealfield' is only a PR
+    // https://github.com/processwire/processwire/pull/16
+    // $(document).on('revealfield', function (e, elem) {
+    //     if ($(elem).hasClass('InputfieldCKEditor')) {
+    //         updateAutoGrowCKE($(elem));
+    //     }
+    // });
+}
+
+function updateAutoGrowCKE(CKEs) {
+    if (CKEs.length) {
+        CKEs.each(function (i, el) {
+
+            var CKEid = $(el).attr('id').replace('wrap_', ''),
+                editor = CKEDITOR.instances[CKEid];
+
+            if (editor && !editor.autogrowFired) {
+                editor.autogrowFired = true;
+                editor.execCommand('autogrow');
+            }
+        })
+    }
 }
 
 
@@ -355,11 +367,25 @@ $(document).ready(function () {
     if (AOSsettings.enabledSubmodules.indexOf('FieldAndTemplateEditLinks') !== -1) {
         // wrap AdminThemeDefault li.title inner in a span
         $('ul.nav li.title').wrapInner('<span>');
-        $(document).on('click', '#ProcessPageEdit .Inputfield .aos_EditField', function () {
+
+        $(document).on('mousedown', '#ProcessPageEdit .Inputfield .aos_EditField', function (e) {
+
             var editFieldLink = $(this).parents('.Inputfield').eq(0).find('.aos_EditFieldLink');
+
+            // right click
+            if (e.which == 3) return false;
+
             if (editFieldLink.length) {
-                editFieldLink[0].click();
+
+                // if middle mouse button pressed, open a new page
+                if (e.which == 2 || e.button == 4) {
+                    window.open(editFieldLink.attr('href').replace('&modal=1', ''));
+                } else {
+                    editFieldLink[0].click();
+                }
+
                 return false;
+
             }
         });
 
@@ -807,6 +833,8 @@ $(document).ready(function () {
     //PageListUnselect
     if (AOSsettings.enabledSubmodules.indexOf('PageListUnselect') !== -1) {
 
+        //var isPageListIDs = !!(AOSsettings.enabledSubmodules.indexOf('PageListTweaks') && AOSsettings.PageListTweaks.indexOf('pListIDs'));
+
         $(document).on('pageSelected', function (e, obj) {
 
             var clearButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.clear'),
@@ -814,6 +842,11 @@ $(document).ready(function () {
 
             if (obj.id !== 0) {
                 clearButton.removeClass('empty');
+                // remove page ID from title (pListIDs)
+                if (obj.title.indexOf(obj.id) !== -1) {
+                    var title = obj.title.replace(obj.id, '<sup class="pageId">' + obj.id + '</sup>');
+                    $('#wrap_' + e.target.id).find('.PageListSelectName').html(title);
+                }
             } else {
                 clearButton.addClass('empty');
             }
@@ -826,12 +859,13 @@ $(document).ready(function () {
             var button = $(this),
                 parentEl = button.parent(),
                 input = button.parent().find('input'),
-                titleElem = button.parent().find('.PageListSelectName .label_title');
+                //titleElem = button.parent().find('.PageListSelectName .label_title');
+                titleElem = button.parent().find('.PageListSelectName');
 
             // try without .label_title (on pageSelected the span disappears)
-            if (!titleElem.length) {
-                titleElem = button.parent().find('.PageListSelectName');
-            }
+            //if (!titleElem.length) {
+            //    titleElem = button.parent().find('.PageListSelectName');
+            //}
 
             if (button.hasClass('clear')) {
                 // clear

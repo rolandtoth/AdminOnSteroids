@@ -28,6 +28,7 @@ $(document).ready(function () {
     IUC.btnHeight = $('.' + IUC.dummyFieldSelector).outerHeight() - 2;
     $('.' + IUC.dummyFieldSelector).remove();
 
+    // $(document).on('ready reloaded wiretabclick opened', initIUC);
     $(document).on('ready reloaded wiretabclick opened', initIUC);
 
     // repeaters
@@ -46,6 +47,12 @@ $(document).ready(function () {
     $(document).on('mousedown', 'a.InputfieldTableAddRow', initIUC);
 
 
+    // FieldtypeAssistedURL: refresh IUC link on modal close
+    $(document).on('pw-modal-closed', function () {
+        $('.iuc ~ input:not([type="hidden"])').trigger('fieldchange');
+    });
+
+
     function initIUC(e) {
 
         $(IUC.selector).not('[' + IUC.dataLoaded + '="1"]').each(function () {
@@ -62,7 +69,6 @@ $(document).ready(function () {
                 }
             }, 0);
         });
-
 
         $(IUC.selector + '[' + IUC.dataMode + '!=""][' + IUC.dataMode + ']').not('[' + IUC.dataLoaded + '="1"]').each(function () {
 
@@ -86,13 +92,16 @@ $(document).ready(function () {
         });
     }
 
+
     function addButtonMode(e, obj) {
 
         obj.parents('.InputfieldContent').first().find(IUC.selector).on('mousedown', function () {
 
-            var url = $(this).attr('href') ? $(this).attr('href').trim() : false;
+            var url;
 
-            if (!url) {
+            url = $(this).attr('href') ? $(this).attr('href').trim() : false;
+
+            if (!url || url.indexOf('mailto:') !== -1) {
 
                 $(this).addClass(IUC.linkHiddenClass);
                 return false;
@@ -100,24 +109,14 @@ $(document).ready(function () {
             } else {
 
                 // right click
-                if (e.which == 3) {
-                    return false;
-                }
+                if (e.which == 3) return false;
 
                 // if middle mouse button pressed, open a new page
                 if (e.which == 2 || e.button == 4) {
                     window.open(url.replace('&modal=1', ''));
                     return false;
                 }
-
-                // workaround because pw-panel is not dynamic
-                // do not update iframe if it has the same url loaded
-                // if (pwPanel.length && pwPanel.attr('src') !== url) {
-                //     pwPanel.attr('src', url);
-                //     return false;
-                // }
             }
-            // return false;
         });
     }
 
@@ -136,7 +135,6 @@ $(document).ready(function () {
                 (mode === 'ctrl-shift-click' && isCtrlShiftPressed)) {
 
                 obj.parents('.InputfieldContent').first().find(IUC.selector).get(0).click();
-                // obj.parent().children(IUC.selector).trigger('mousedown');
 
                 return false;
             }
@@ -146,12 +144,19 @@ $(document).ready(function () {
 
     function addFieldListener(obj) {
 
-        obj.on('keyup fieldchange input change keydown', function () {
+        //obj.on('keyup fieldchange input change keydown', function () {
+        obj.on('keyup input change fieldchange', function () {
 
             var link = obj.parents('.InputfieldContent').first().find(IUC.selector),
                 url = getUrl(obj.val(), link.attr(IUC.dataForceHttp)).trim();
 
-            link.attr('href', url).toggleClass(IUC.linkHiddenClass, url == "");
+            if (url) {
+                link.attr('href', url);
+                link.removeClass(IUC.linkHiddenClass);
+            } else {
+                link.attr('href', '');
+                link.addClass(IUC.linkHiddenClass);
+            }
         });
 
         // populate on load
@@ -171,8 +176,12 @@ function getUrl(url, forcePrefix) {
     var prefix = 'http';
 
     // return the original url if starts with "/" (allows relative paths)
-    if(url.indexOf('/') === 0) {
+    if (url.indexOf('/') === 0) {
         return url;
+    }
+
+    if (url.indexOf('mailto:') !== -1) {
+        return "";
     }
 
     return (forcePrefix && url != "" && url.indexOf(prefix) === -1) ? prefix + '://' + url : url;

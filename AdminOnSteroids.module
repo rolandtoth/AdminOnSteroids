@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 76,
+            'version'   => 77,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1208,13 +1208,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $field = $event->object;
 
+		$pageIDstring = '';
         $originalTitle = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->title : '';
 
+        if (isset($this->PageListTweaks) && in_array('pListIDs', $this->PageListTweaks) && $this->user->isSuperUser()) {
+    		$originalID = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->id : '';
+    		$pageIDstring = isset($originalID) ? htmlentities('<sup class="pageId">' . $originalID . '</sup>') : '';
+        }
+        
         $restoreTitleTag = strlen($originalTitle) ? 'title="' . __('Restore', __FILE__) . ' &quot;' . $originalTitle . '&quot;"' : '';
 
         $clearButton = '<button class="aos_pagelist_unselect clear ui-button ' . ($field->value ? '' : 'empty') . '" title="' . __('Clear', __FILE__) . '"><i class="fa fa-times-circle"></i></button>';
 
-        $restoreButton = $field->value ? '<button class="aos_pagelist_unselect restore ui-button initial" ' . $restoreTitleTag . ' data-title-original="' . $originalTitle . '" data-value-original="' . $field->value . '" ><i class="fa fa-undo"></i></button>' : '';
+        $restoreButton = $field->value ? '<button class="aos_pagelist_unselect restore ui-button initial" ' . $restoreTitleTag . ' data-title-original="' . $originalTitle . $pageIDstring . '" data-value-original="' . $field->value . '" ><i class="fa fa-undo"></i></button>' : '';
 
         $event->return = $restoreButton . $clearButton . $event->return;
     }

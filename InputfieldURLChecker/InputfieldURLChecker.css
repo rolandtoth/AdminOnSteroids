@@ -34,6 +34,14 @@
     position: relative;
 }
 
+
+.InputfieldContent .InputfieldAssistedURL {
+	width: 100% !important;
+}
+#Inputfield_link {
+	width: calc(100% - 50px) !important;
+}
+
 .iuc-hidden {
     display: none !important;
 }

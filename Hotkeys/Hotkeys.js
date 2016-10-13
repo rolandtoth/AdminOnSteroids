@@ -66,7 +66,7 @@ $(document).ready(function () {
                 .eq(0);
 
             // modal opened, but controls have focus (outside the iframe)
-            if(aos_saveButton.length == 0) {
+            if (aos_saveButton.length == 0) {
                 aos_saveButton = $('.ui-dialog-buttonset button[role="button"]').eq(0);
             }
         }
@@ -94,7 +94,7 @@ $(document).ready(function () {
             aos_saveButton.addClass('ui-state-disabled').focus();
 
             // IE fix
-            setTimeout(function() {
+            setTimeout(function () {
                 aos_saveButton.click();
             }, 100);
         }
@@ -103,13 +103,22 @@ $(document).ready(function () {
     function setupCKESave() {
         if (window.CKEDITOR) {
             CKEDITOR.on('instanceReady', function (evt) {
-                evt.editor.document.on('keydown', function (e) {
-                    // ctrl+s
-                    if (e.data.getKeystroke() == CKEDITOR.CTRL + 83) {
-                        e.data.$.preventDefault();
+
+                evt.editor.addCommand('saveCKECommand', {
+                    exec: function (editor, data) {
                         aos_triggerSave();
                     }
                 });
+
+                evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* S */] = 'saveCKECommand';
+
+                //evt.editor.document.on('keydown', function (e) {
+                //    // ctrl+s
+                //    if (e.data.getKeystroke() == CKEDITOR.CTRL + 83) {
+                //        e.data.$.preventDefault();
+                //        aos_triggerSave();
+                //    }
+                //});
             });
         }
     }

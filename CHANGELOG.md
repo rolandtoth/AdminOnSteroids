@@ -1,12 +1,22 @@
 #Changelog
 
 
+### 0.7.7 (2016-10-13)
+
+- FieldtypeAssistedURL updates
+- allow middle mouse click on FieldEditLinks
+- pageListIDs: added support for PagelistSelect field
+- Hotkeys: better implementation of ctrl+s in CKEditor: fixes hotkey not working after modifying content in the source dialog
+
+
+
 ### 0.7.6 (2016-10-10)
 
 - allow relative urls in InputfieldURLChecker (requested by gmclelland)
 - InputfieldURLChecker: support for FieldtypeAssistedURL
 - InputfieldURLChecker: removed support to open url in panel
 - PageListTweaks, "Show page IDs": only visible to superusers
+
 
 
 ### 0.7.5 (2016-10-09)
@@ -16,10 +26,12 @@
 - moved AdminOnSteroids.scss into the "src" subfolder
 
 
+
 ### 0.7.4 (2016-10-07)
 
 - fix: keep the correct order of CKE toolbars when multiple CKEditor fields are present
 - fix: make CKE plugin Auto Grow autosize field on activating an admin tab
+
 
 
 ### 0.7.3 (2016-10-06)
@@ -27,9 +39,11 @@
 - fix for ajax-loaded PageListSelect fields not showing up correctly (reported by gmclelland)
 
 
+
 ### 0.7.2 (2016-10-03)
 
 - fix for CKEditor overlay covering CKEditor dialogs in certain cases (reported by Macrura)
+
 
 
 ### 0.7.1 (2016-10-03)
@@ -38,14 +52,17 @@
 - few CKEditor CSS fixes
 
 
+
 ### 0.7.0 (2016-09-29)
 
 - fix: do not show template edit links on pagelist when user is non-superuser (reported by gmclelland)
 
 
+
 ### 0.6.9 (2016-09-25)
 
 - fix for hard-coded admin path for pagelist templateEditLinks (reported by gmclelland)
+
 
 
 ### 0.6.8 (2016-09-23)
