@@ -616,7 +616,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 }
 
                 // add delete button to pagelist items (bypass trash)
-                if (in_array('wipeBtn', $configData[ $subModule ])) {
+                if (in_array('deleteBtn', $configData[ $subModule ])) {
                     $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
 
                         $page = $event->arguments('page');
@@ -632,13 +632,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
                         $actions  = array();
                         $adminUrl = $this->wire('config')->urls->admin . 'page/';
-//                $wipeIcon = "<i class='fa fa-trash'></i>&nbsp;";
-                        $wipeIcon = '';
+                        $icon = '';
 
-                        $actions['wipe_confirmed'] = array(
-                            'cn'   => 'Wipe aos',
-                            'name' => $wipeIcon . 'Wipe',
-                            'url'  => $adminUrl . '?action=wipe&id=' . $page->id,
+                        $actions['delete_permanently'] = array(
+                            'cn'   => 'Delete aos',
+                            'name' => $icon . 'Delete',
+                            'url'  => $adminUrl . '?action=delete&id=' . $page->id,
                             'ajax' => true
                         );
 
@@ -655,18 +654,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                             return false;
                         }
 
-                        if ($action == 'wipe_confirmed') {
+                        if ($action == 'delete_permanently') {
 
 //					        $page->setAndSave('title', $page->title . '-hello');
 //                          $page->trash();
-                            $page->delete();
+//                            $page->delete();
 
                             $event->return = array(
                                 'action'          => $action,
                                 'success'         => true,
                                 'page'            => $page->id,
                                 'updateItem'      => $page->id,
-                                'message'         => 'Wiped!',
+                                'message'         => 'Deleted permanently!',
                                 'remove'          => true,
                                 'refreshChildren' => false
                             );
@@ -796,7 +795,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'check_all'         => __('Check all', __FILE__),
             'removing'          => __('Removing...', __FILE__),
             'cancel'            => __('Cancel', __FILE__),
-            'please_confirm'    => __('Please confirm', __FILE__),
+            'delete_action'            => __('Delete', __FILE__),
+            'are_you_sure'      => __('Are you sure?', __FILE__),
             'untitled'          => __('Untitled', __FILE__)
         );
 
@@ -2128,7 +2128,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('highlightRows', __('Highlight rows on hover', __FILE__));
         $f->addOption('pListIDs', __('Show page IDs (SuperUser only)', __FILE__));
-        $f->addOption('wipeBtn', __('Add Wipe button to delete page permanently (SuperUser only)', __FILE__));
+        $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
 
         if (isset($data[ $f->name ]) && $data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);

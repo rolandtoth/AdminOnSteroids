@@ -449,7 +449,7 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 
 - **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline. 
 - **Show page IDs**: adds the page ID after each page name in a superscript (visible for superusers only)
-- **Add Wipe button to delete page permanently**: adds a new extra action to pagelist items called "Wipe". Clicking on this will show a confirmation message and on second click the page will be permanently deleted (bypassing the Trash). The feature is disabled on pages having child pages and it's visible for superusers only.
+- **Add Delete button to delete page permanently**: adds a new extra action to pagelist items called "Delete". Clicking on this will show a confirmation link and clicking on this the page will be permanently deleted (bypassing the Trash). The feature is disabled on pages having child pages and it's visible for superusers only.
 
 
 

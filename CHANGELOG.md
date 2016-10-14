@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.7.9 (2016-10-14)
+
+- PageListTweaks: Wipe button renamed to Delete + UX improvements
+
+
+
 ### 0.7.8 (2016-10-14)
 
 - new submodule: Misc

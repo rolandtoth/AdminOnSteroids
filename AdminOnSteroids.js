@@ -636,31 +636,45 @@ $(document).ready(function () {
 
 
     // Wipe action
-    $(document).on('mousedown', 'a.PageListActionExtra.PageListActionWipe.aos', function (e) {
+    $(document).on('mousedown', 'a.PageListActionExtra.PageListActionWipe', function (e) {
 
         e.preventDefault();
 
+        if (e.which == 3 || e.which == 2) return false;
+
         var link = $(this),
             url = link.attr('href'),
-            linkText = link.text();
+            linkTextDefault = AOSsettings.loc['delete_action'];
 
-        if (url.indexOf('wipe_confirmed') === -1) {
+        if (url.indexOf('delete_permanently') === -1) {
 
-            var linkClone = link.clone(true);
+            var linkCancel;
+
+            if (link.hasClass('cancel')) {
+
+                linkCancel = link.next('a');
+
+                linkCancel
+                    .removeClass('cancel')
+                    .attr('href', url.replace('delete_permanently&', 'delete&'))
+                    .contents().last()[0].textContent = linkTextDefault;
+
+                link.replaceWith(linkCancel);
+
+                return false;
+            }
+
+            linkCancel = link.clone(true);
+
+            linkCancel.
+                addClass('cancel')
+                .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
+
             // replace text only (keep icon)
-            linkClone.contents().last()[0].textContent = ' ' + AOSsettings.loc['please_confirm'];
-            linkClone.attr('href', url.replace('wipe&', 'wipe_confirmed&'));
-            linkClone.addClass('ui-state-error');
-            link.replaceWith(linkClone);
+            link.contents().last()[0].textContent = ' ' + AOSsettings.loc['are_you_sure'];
+            link.attr('href', url.replace('delete&', 'delete_permanently&'));
 
-            // restore original link text and url after a timeout
-            setTimeout(function () {
-                if (linkClone && linkClone.length) {
-                    linkClone.attr('href', url.replace('wipe_confirmed&', 'wipe&'));
-                    linkClone.removeClass('ui-state-error');
-                    linkClone.contents().last()[0].textContent = linkText;
-                }
-            }, 2000);
+            link.before(linkCancel);
         }
 
         return false;

@@ -309,15 +309,58 @@ html.aos {
   z-index: 100000 + 1000 !important;
 }
 
-a.PageListActionWipe.aos {
-  color: #BC283D !important;
+// confirm button
+.PageListItem {
+  position: relative;
+}
+a.PageListActionDelete + a {
+  //color: #BC283D !important;
+  //i {
+  //  display: none;
+  //  margin-right: 5px;
+  //}
+  //position: relative;
+  //z-index: 2;
+  //&:hover {
+    color: #fff !important;
+    background-color: #BC283D !important;
+  //}
+  &:hover:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(#BC283D, 0.08);
+    outline: 1px solid rgba(#BC283D, 0.16);
+    //outline-offset: 2px;
+    pointer-events: none !important;
+  }
 }
 
-a.PageListActionWipe.aos:hover,
-a.PageListActionWipe.aos.ui-state-error {
-  background-color: #BC283D !important;
-  border-radius: 1px !important;
-  color: #fff !important;
+
+a.PageListActionDelete.cancel {
+  //position: relative;
+  //z-index: 2;
+  //color: #fff !important;
+  //background-color: #BC283D !important;
+  margin-right: 5px;
+  font-weight: 700 !important;
+  &, &:hover {
+    background-color: transparent !important;
+    color: #BC283D !important;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+  //i {
+  //  display: block;
+  //}
+  //&:hover {
+  //  background-color: #BC283D !important;
+  //  border-radius: 1px !important;
+  //}
 }
 
 // AsmTweaks
