@@ -658,7 +658,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
 //					        $page->setAndSave('title', $page->title . '-hello');
 //                          $page->trash();
-//                            $page->delete();
+                            $page->delete();
 
                             $event->return = array(
                                 'action'          => $action,
