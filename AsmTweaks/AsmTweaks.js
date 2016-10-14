@@ -37,17 +37,18 @@ $(document).ready(function () {
             if (e.which === 2) {
                 link.unbind('click');
 
-                e.preventDefault();
-
                 var editFieldUrl = link.attr('href').split('&fieldgroup_id')[0],
                     fieldName = link.contents().first()[0].textContent;
+
+                // need to remove href to avoid Chrome opening it
+                link.removeAttr('href');
 
                 window.open(editFieldUrl, fieldName);
                 window.focus(fieldName);
 
                 setTimeout(function () {
                     link.replaceWith(linkClone);
-                }, 200);
+                }, 300);
             }
 
             return false;
