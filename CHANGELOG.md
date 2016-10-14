@@ -1,6 +1,17 @@
 #Changelog
 
 
+### 0.7.8 (2016-10-14)
+
+- new submodule: Misc
+- new tweak: add "Check All/Remove All" button to field deletion confirmation page
+- ModuleTweaks: allow editing modules in modal only on long-click instead simple click
+- PageListTweaks: add Wipe button to delete page (bypass Trash, SuperUser only)
+- asmTweaks: edit field in new tab on middle click (no template context)
+- moved 'Center login form' tweak to Misc (from AdminTweaks and RenoTweaks)
+
+
+
 ### 0.7.7 (2016-10-13)
 
 - FieldtypeAssistedURL updates

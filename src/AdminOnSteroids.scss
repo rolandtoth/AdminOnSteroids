@@ -309,6 +309,17 @@ html.aos {
   z-index: 100000 + 1000 !important;
 }
 
+a.PageListActionWipe.aos {
+  color: #BC283D !important;
+}
+
+a.PageListActionWipe.aos:hover,
+a.PageListActionWipe.aos.ui-state-error {
+  background-color: #BC283D !important;
+  border-radius: 1px !important;
+  color: #fff !important;
+}
+
 // AsmTweaks
 html.asmLeftX {
   body {
@@ -2002,6 +2013,7 @@ html.AdminThemeReno {
         box-shadow: $defaultBoxShadow;
       }
 
+      // limit long titles with ellipsis
       #title {
         max-width: calc(100% - 180px);
         line-height: 1.25em !important;
@@ -2011,9 +2023,9 @@ html.AdminThemeReno {
           overflow: hidden;
           text-overflow: ellipsis;
           max-width: 100%;
+          display: inline-block;
           //max-width: calc(100% - 40px);
           vertical-align: bottom;
-
         }
       }
 

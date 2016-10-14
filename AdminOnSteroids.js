@@ -327,7 +327,7 @@ $(document).ready(function () {
             $('h1#title').wrapInner('<span>');
         }
 
-        if (pageTitle) {
+        if (pageTitle && pageTitle.length > 64) {
             $('h1#title').attr('title', pageTitle);
         }
     }
@@ -361,6 +361,10 @@ $(document).ready(function () {
             document.cookie = 'aos_lang_id=' + lang_id + ';expires=0;path=/';
         });
     }
+
+
+    // AsmTweaks
+    // see AsmTweaks/AsmTweak.js
 
 
     // FieldAndTemplateEditLinks
@@ -567,13 +571,110 @@ $(document).ready(function () {
         });
     }
 
+// Misc
+    if (AOSsettings.enabledSubmodules.indexOf('Misc') !== -1) {
+
+        // Add Remove All button to field deletion confirmation page
+        if (AOSsettings.Misc.indexOf('removeAllFieldsBtn') !== -1) {
+
+            if ($('#Inputfield_submit_remove_fields').length) {
+
+                var removeBtn = $('#Inputfield_submit_remove_fields'),
+                    removeAllBtn = removeBtn.clone(false),
+                    removeFieldsForm = $('form[action="removeFields"]'),
+                    removeFieldCheckboxes = removeFieldsForm.find('input[name="remove_fields[]"]'),
+                    removeAllBtnTextElem = removeAllBtn.find('.ui-button-text'),
+                    removeAllBtnTextRemoveAll = AOSsettings.loc['remove_all_fields'],
+                    removeAllBtnTextCheckAll = AOSsettings.loc['check_all'],
+                    removeAllBtnTextEnd = AOSsettings.loc['removing'];
+
+                removeAllBtn
+                    .attr('id', 'Inputfield_submit_remove_fields_all')
+                    .addClass('ui-priority-secondary');
+
+                removeAllBtnTextElem.text(removeAllBtnTextCheckAll);
+
+                removeBtn.after(removeAllBtn);
+
+                // reset Check all btn if a checkbox is unchecked
+                removeFieldsForm.on('mouseup', '.InputfieldCheckboxesStacked label', function (e) {
+
+                    if ($(this).find('input:checked').length) {
+                        // if current checkbox is checked, set btn text to Clear All
+                        removeAllBtn.removeClass('doRemove');
+                        removeAllBtnTextElem.text(removeAllBtnTextCheckAll);
+                    } else {
+                        // if all checkbox is checked, set btn text to Remove All
+                        setTimeout(function () {
+                            if (removeFieldCheckboxes.length === removeFieldCheckboxes.filter(':checked').length) {
+                                removeAllBtn.addClass('doRemove');
+                                removeAllBtnTextElem.text(removeAllBtnTextRemoveAll);
+                            }
+                        }, 100);
+                    }
+                });
+
+                removeAllBtn.on('click', function (e) {
+
+                    e.preventDefault();
+
+                    if (removeAllBtn.hasClass('doRemove')) {
+                        removeAllBtnTextElem.text(removeAllBtnTextEnd);
+                        removeAllBtn.addClass('ui-state-disabled').css('pointer-events', 'none');
+                        removeBtn.trigger('click');
+                    } else {
+                        removeAllBtn.addClass('doRemove');
+                        removeAllBtnTextElem.text(removeAllBtnTextRemoveAll);
+                        removeFieldCheckboxes.prop('checked', true);
+                    }
+
+                    return false;
+                })
+            }
+        }
+    }
+
+
+    // Wipe action
+    $(document).on('mousedown', 'a.PageListActionExtra.PageListActionWipe.aos', function (e) {
+
+        e.preventDefault();
+
+        var link = $(this),
+            url = link.attr('href'),
+            linkText = link.text();
+
+        if (url.indexOf('wipe_confirmed') === -1) {
+
+            var linkClone = link.clone(true);
+            // replace text only (keep icon)
+            linkClone.contents().last()[0].textContent = ' ' + AOSsettings.loc['please_confirm'];
+            linkClone.attr('href', url.replace('wipe&', 'wipe_confirmed&'));
+            linkClone.addClass('ui-state-error');
+            link.replaceWith(linkClone);
+
+            // restore original link text and url after a timeout
+            setTimeout(function () {
+                if (linkClone && linkClone.length) {
+                    linkClone.attr('href', url.replace('wipe_confirmed&', 'wipe&'));
+                    linkClone.removeClass('ui-state-error');
+                    linkClone.contents().last()[0].textContent = linkText;
+                }
+            }, 2000);
+        }
+
+        return false;
+    });
+
+
 // ModuleTweaks
     if (AOSsettings.enabledSubmodules.indexOf('ModuleTweaks') !== -1) {
 
         if (AOSsettings.ModuleTweaks.indexOf('moduleModal') !== -1) {
 
             $('#modules_form td > a')
-                .addClass('pw-modal')
+                .addClass('pw-modal pw-modal-large pw-modal-longclick')
+                // .addClass('pw-modal')
                 .attr('data-autoclose', '#Inputfield_submit_save_module.needsReload, #Inputfield_submit_save_module_forceClose, #Inputfield_submit_save_module_forceCloseRefresh')
                 .attr('data-buttons', '#Inputfield_submit_save_module, #Inputfield_submit_save_module_forceClose, #Inputfield_submit_save_module_forceCloseRefresh');
 

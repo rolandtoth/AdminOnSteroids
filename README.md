@@ -175,7 +175,6 @@ A few usability mods targetting the default admin theme.
 
 - **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
 - **Set wider main content**: sets the max-width of the main content from 1200px to 1480px
-- **Center login form**: align login page items to center
 
 
 
@@ -185,6 +184,7 @@ A few usability mods targetting the default admin theme.
 
 - **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
 - **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
+- **Edit field in new tab on middle click (no template context)**: when editing a template clicking on fields in the asmField opens up the field for editing in a modal, using the current template as the context. If this tweak is enabled you can use the middle mouse button to open the field edit page without the template context.
 
 
 
@@ -349,13 +349,25 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 
 
+###Misc
+
+*Miscellaneous tweaks*
+
+- **add "Remove All" button to field deletion confirmation page**: when selecting fields for deletion, the confirmation page will show an extra button "Check All". Clicking on this once will check all fields for deletion, clicking twice will remove all.
+- **Center login form**: align login page items to center
+
+- **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
+- **Edit modules in modal on long-click**: long-clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
+
+
+
 ###ModuleTweaks
 
 *Module related tweaks (SuperUser only)*
 
 - **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
-- **Edit modules in modal dialog**: clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
+- **Edit modules in modal on long-click**: long-clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
 
 
 
@@ -437,6 +449,7 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 
 - **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline. 
 - **Show page IDs**: adds the page ID after each page name in a superscript (visible for superusers only)
+- **Add Wipe button to delete page permanently**: adds a new extra action to pagelist items called "Wipe". Clicking on this will show a confirmation message and on second click the page will be permanently deleted (bypassing the Trash). The feature is disabled on pages having child pages and it's visible for superusers only.
 
 
 
@@ -481,7 +494,6 @@ A few usability mods targetting the Reno admin theme.
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items
 - **Use narrow pagelist rows**: reduce the space between the main pagelist rows to save space
 - **One-line sidebar submenus (only with sbAutoHide)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
-- **Center login form**: align login page items to center
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
 
 

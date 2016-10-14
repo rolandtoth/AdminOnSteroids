@@ -24,4 +24,34 @@ $(document).ready(function () {
         });
     }
 
+
+    if (AsmTweaksSettings.indexOf('fieldMiddleEdit') !== -1) {
+
+        $(document).on('mousedown', '.asmList a[href*="/field/edit?"]', function (e) {
+
+            e = e || window.event;
+
+            var link = $(this),
+                linkClone = link.clone(true);
+
+            if (e.which === 2) {
+                link.unbind('click');
+
+                e.preventDefault();
+
+                var editFieldUrl = link.attr('href').split('&fieldgroup_id')[0],
+                    fieldName = link.contents().first()[0].textContent;
+
+                window.open(editFieldUrl, fieldName);
+                window.focus(fieldName);
+
+                setTimeout(function () {
+                    link.replaceWith(linkClone);
+                }, 200);
+            }
+
+            return false;
+        });
+    }
+
 });
