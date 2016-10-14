@@ -635,8 +635,8 @@ $(document).ready(function () {
     }
 
 
-    // Wipe action
-    $(document).on('mousedown', 'a.PageListActionExtra.PageListActionWipe', function (e) {
+    // Delete action
+    $(document).on('mousedown', 'a.PageListActionExtra.PageListActionDelete', function (e) {
 
         e.preventDefault();
 
