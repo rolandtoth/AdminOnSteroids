@@ -313,6 +313,7 @@ html.aos {
 .PageListItem {
   position: relative;
 }
+
 a.PageListActionDelete + a {
   //color: #BC283D !important;
   //i {
@@ -322,8 +323,8 @@ a.PageListActionDelete + a {
   //position: relative;
   //z-index: 2;
   //&:hover {
-    color: #fff !important;
-    background-color: #BC283D !important;
+  color: #fff !important;
+  background-color: #BC283D !important;
   //}
   &:hover:after {
     content: "";
@@ -338,7 +339,6 @@ a.PageListActionDelete + a {
     pointer-events: none !important;
   }
 }
-
 
 a.PageListActionDelete.cancel {
   //position: relative;
@@ -2884,6 +2884,27 @@ html.AdminThemeReno {
         .container {
           //max-width: 1480px;
           max-width: 1600px;
+        }
+      }
+    }
+    &.pListFullRowHover {
+      .content .PageList {
+        .PageListItem:hover {
+          .PageListActions {
+            display: inline;
+            transition-delay: .25s
+          }
+        }
+        .PageListItemOpen {
+          .PageListActions {
+            display: none !important;
+          }
+          &:hover {
+            .PageListActions {
+              display: inline !important;
+              transition-delay: .25s
+            }
+          }
         }
       }
     }

@@ -174,7 +174,8 @@ Note that in the Default theme it's added to the end of the top menu items while
 A few usability mods targetting the default admin theme.
 
 - **Make header sticky**: stick the header to the top of the browser window so it stays in place when scrolling down
-- **Set wider main content**: sets the max-width of the main content from 1200px to 1480px
+- **Set wider main content**: sets the max-width of the main content from 1200px to 1600px
+- **Show pagelist actions on full row hover**: makes pagelist actions visible on hovering anywhere in the pagelist, not only on the page title
 
 
 

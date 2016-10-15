@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0..8.0 (2016-10-15)
+
+- AdminTweaks: new tweak "Show pagelist actions on full row hover" (suggested by adrian)
+
+
+
 ### 0.7.9 (2016-10-14)
 
 - PageListTweaks: Wipe button renamed to Delete + UX improvements

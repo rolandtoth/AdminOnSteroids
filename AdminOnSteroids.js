@@ -671,7 +671,7 @@ $(document).ready(function () {
                 .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
 
             // replace text only (keep icon)
-            link.contents().last()[0].textContent = ' ' + AOSsettings.loc['are_you_sure'];
+            link.contents().last()[0].textContent = ' ' + AOSsettings.loc['permanent_delete_confirm'];
             link.attr('href', url.replace('delete&', 'delete_permanently&'));
 
             link.before(linkCancel);
