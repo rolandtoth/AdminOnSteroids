@@ -1,7 +1,13 @@
 #Changelog
 
 
-### 0..8.0 (2016-10-15)
+### 0.8.1 (2016-10-17)
+
+- fix for missing longclick action for pagelist item templateEditLink (reported by matjazp)
+
+
+
+### 0.8.0 (2016-10-15)
 
 - AdminTweaks: new tweak "Show pagelist actions on full row hover" (suggested by adrian)
 

@@ -1323,8 +1323,8 @@ form[action*="AdminOnSteroids"] {
   @include aos_tooltip($margin: 0 0 12px);
 }
 
-.PageListActionEdit.aos {
-  a {
+.PageListActionEdit {
+  a[href*="setup/template/edit"] {
     &:not(:hover) {
       color: inherit !important;
       opacity: 0.4;
