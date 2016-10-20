@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 81,
+            'version'   => 82,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1303,6 +1303,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $inputfield         = $event->object;
         $url                = $inputfield->value ? $inputfield->value : '';
+
+        // if url is an array, it's a simple pageautocomplete field (not FieldtypeAssistedURL)
+        // https://github.com/rolandtoth/AdminOnSteroids/issues/13
+        if(is_array($url)) return false;
+
         $configData         = self::$configData;
         $editedPage         = $this->editedPage;
         $editLinkAttrsArray = array();

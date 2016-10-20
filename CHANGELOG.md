@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.8.2 (2016-10-20)
+
+- array to string conversion fix for InputfieldURLChecker (reported by Toutouwai)
+
+
+
 ### 0.8.1 (2016-10-17)
 
 - fix for missing longclick action for pagelist item templateEditLink (reported by matjazp)
