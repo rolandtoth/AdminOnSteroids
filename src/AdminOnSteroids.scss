@@ -17,6 +17,19 @@ html.aos {
     overflow: auto !important;
   }
 
+  // fix hover dropdown menus not having right padding
+  &.AdminThemeReno .dropdown-menu {
+    li {
+      margin-right: 14px;
+    }
+  }
+  #headline {
+    #title {
+      // prevent title overlap with head buttons (on screen size < 960px)
+      display: inline-block;
+    }
+  }
+
   //.PageListPage .pageId {
   .PageListRoot sup {
     text-decoration: none !important;
@@ -1251,9 +1264,9 @@ form[action*="AdminOnSteroids"] {
   bottom: 100%;
   font-weight: normal !important;
   background: $bgcolor;
-  color: #fff;
+  color: rgba(#fff, 0.84) !important;
   margin: $margin;
-  font-size: 12px;
+  font-size: 13px;
   padding: 5px 10px 4px !important;
   line-height: 1.5;
   z-index: 100000 + 10000;
@@ -1263,15 +1276,19 @@ form[action*="AdminOnSteroids"] {
   &:hover {
     transition-delay: 0s !important;
     background: lighten($bgcolor, 7%) !important;
-    text-decoration: none;
+    color: #fff !important;;
+    text-decoration: underline;
+    i {
+      opacity: 1;
+    }
     &:before {
       border-top-color: lighten($bgcolor, 7%);
     }
   }
   i {
-    margin-left: 6px;
-    font-size: 13px !important;
-    opacity: 0.7;
+    margin-left: 8px;
+    font-size: 12px !important;
+    opacity: 0.84;
   }
   &:before {
     $size: 6px;
@@ -1311,7 +1328,7 @@ form[action*="AdminOnSteroids"] {
   }
   .aos_EditField {
     font-style: normal;
-    @include aos_tooltip($margin: 0 0 8px -5px);
+    @include aos_tooltip($margin: 0 0 8px -4px);
     &:hover {
       cursor: pointer;
     }
@@ -1320,7 +1337,7 @@ form[action*="AdminOnSteroids"] {
 
 .aos_EditTemplate {
   font-style: normal;
-  @include aos_tooltip($margin: 0 0 12px);
+  @include aos_tooltip($margin: 0 0 10px -8px);
 }
 
 .PageListActionEdit {

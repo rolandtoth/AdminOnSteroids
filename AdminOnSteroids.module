@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 83,
+            'version'   => 84,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1219,7 +1219,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
         $templateEditUrl = $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
-        $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . ' <i class="fa fa-pencil"></i></a>';
+        $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . '<i class="fa fa-pencil"></i></a>';
 
 
         if ($this->adminTheme == 'AdminThemeDefault') {
@@ -1254,7 +1254,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
             $editFieldUrl = $this->config->urls->admin . 'setup/field/edit?id=' . $field->id;
 
-            $editFieldTooltip = '<em class="aos_EditField">' . $inputfield->name . ' <i class="fa fa-pencil"></i></em>';
+            $editFieldTooltip = '<em class="aos_EditField">' . $inputfield->name . '<i class="fa fa-pencil"></i></em>';
 
             // needed to allow HTML in label
             $inputfield->entityEncodeLabel = false;
@@ -1395,7 +1395,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
         $templateEditUrl = $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
-        $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . ' <i class="fa fa-pencil"></i></a>';
+        $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . '<i class="fa fa-pencil"></i></a>';
 
         $event->return = str_replace('</span>', $templateEditLink . '</span>', $event->return);
     }
