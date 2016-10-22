@@ -546,7 +546,7 @@ Additionally, this tweak adds a "restore" functionality too. Note that if there 
 
 Many thanks for Bernhard for the idea and help!
 
-*PageListUnselect:*
+*PageListUnselect in action:*
 
 ![PageListUnselect](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelistunselect.png "PageListUnselect")
 
@@ -587,7 +587,7 @@ A few usability mods targetting the Reno admin theme.
 - **One-line sidebar submenus (only with sbAutoHide)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
 
-*Admin screenshot with fixed/compact header and various other RenoTweaks enabled:*
+*Admin screenshot with sticky/compact header and various other RenoTweaks enabled:*
 
 ![RenoTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-renotweaks.png "RenoTweaks")
 
