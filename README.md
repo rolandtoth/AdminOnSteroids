@@ -293,6 +293,8 @@ Note that this template edit link doesn't respect the target you've set in the m
 
 ![TemplateEditLink](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-templateeditlink.png "TemplateEditLink")
 
+![TemplateEditLinkPagelist](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-templateeditlink-pagelist.png "TemplateEditLinkPagelist")
+
 
 
 ###FileFieldTweaks
@@ -304,6 +306,8 @@ Note that this template edit link doesn't respect the target you've set in the m
 - **Show image titles in image select dialog**: by default when inserting an image to a CKEditor field the image select dialog shows images without titles. Check this to add titles to the images. If there's no title (which you can enter to the "description" field for images) the text "Untitled" will be shown. Under the title the name and extension of the image is shown.
 
 ![FilefieldTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-filefieldtweaks.png "FilefieldTweaks")
+
+![ShowImageTitles](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-filefieldtweaks-imagetitles.png "ShowImageTitles")
 
 
 
