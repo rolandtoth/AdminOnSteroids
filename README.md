@@ -49,6 +49,9 @@ This section provides an overview of the available submodules. Each can be enabl
 Each submodule has a dropdown "Roles" where you can restrict them by roles. You can find it in the top-right corner in the Submodules section, next to each item's title.
 By default each submodule is available for all roles. Adding a role will restrict the submodule to users having that role.
 
+
+![Roles](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-roles.png "Roles")
+
 Notes:
 
 - restrictions are not applied to SuperUsers
