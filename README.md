@@ -388,7 +388,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Center login form**: align login page items to center
 - **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
 
-![RemoveAllFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-removeallfields.png "RemoveAllFields")
+![RemoveAllFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-remove-all-fields.png "RemoveAllFields")
 
 ![CenterLogin](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-centerlogin.png "CenterLogin")
 
