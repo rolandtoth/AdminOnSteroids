@@ -204,7 +204,7 @@ A few usability mods targetting the default admin theme.
 - **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
 - **Edit field in new tab on middle click (no template context)**: when editing a template clicking on fields in the asmField opens up the field for editing in a modal, using the current template as the context. If this tweak is enabled you can use the middle mouse button to open the field edit page without the template context.
 
-*asmSelect fields after enabling AsmTweaks:*
+*asmSelect field after enabling AsmTweaks:*
 
 ![AsmTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-asmtweaks.png "AsmTweaks")
 
@@ -251,6 +251,7 @@ The oEmbed plugin requires the "HTML purifier" to be turned off for the CKEditor
 **Skin**
 
 Here you can choose from the default and [LightWire](http://modules.processwire.com/modules/editor-skin-lightwire/) skins. The LightWire skin is made by **nico**.
+
 Note that the setting "Enabled fields" has no effect on the skin.
 
 *CKEditor field toolbar with extra plugins and LightWire skin:*
@@ -303,7 +304,7 @@ When using the default theme, the template edit link appears on hovering the las
 A new pagelist action is added to the items as the last item, named as "#" plus the template name.
 Note that this template edit link doesn't respect the target you've set in the module settings, clicking on them always load the template edit page in the same page (you can use the middle mouse button to open in a new tab). Long-click can be used to open it in a modal window.
 
-*Template edit link when hovering on page title:*
+*Template edit link when hovering on a page title:*
 
 ![TemplateEditLink](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-templateeditlink.png "TemplateEditLink")
 
@@ -471,6 +472,10 @@ These items will have an asterisk (*) suffix to indicate visibility.
 Note that this feature is primarily for adding non-admin pages to the navigation.
 Some of the pages under the "Admin" page may not work correctly.
 
+*Custom navigation items after item "Recent":*
+
+![NavItems](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-navitems.png "NavItems")
+
 
 
 ###noAnim
@@ -511,6 +516,10 @@ Pages having no "hero_image" field or there's no image uploaded will show no thu
 
 Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Default theme always gets the smaller thumb size (32px vs 48px).
 
+*Right-aligned pagelist thumbs (with narrow pagelist rows ON):*
+
+![PageListThumbs](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelistthumbs.png "PageListThumbs")
+
 
 
 ###PageListTweaks
@@ -520,6 +529,10 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 - **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline. 
 - **Show page IDs**: adds the page ID after each page name in a superscript (visible for superusers only)
 - **Add Delete button to delete page permanently**: adds a new extra action to pagelist items called "Delete". Clicking on this will show a confirmation link and clicking on this the page will be permanently deleted (bypassing the Trash). The feature is disabled on pages having child pages and it's visible for superusers only.
+
+*PageListTweaks:*
+
+![PageListTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelisttweaks.png "PageListTweaks")
 
 
 
@@ -533,6 +546,10 @@ Additionally, this tweak adds a "restore" functionality too. Note that if there 
 
 Many thanks for Bernhard for the idea and help!
 
+*PageListUnselect:*
+
+![PageListUnselect](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelistunselect.png "PageListUnselect")
+
 
 
 ###PagePreviewBtn
@@ -540,6 +557,10 @@ Many thanks for Bernhard for the idea and help!
 *Add preview link next to page title*
 
 When enabled, an "eye" icon will be added next to the page title that links to the front-end target of the edited page. The target can be set to new tab/modal/panel.
+
+*Page preview button after page title:*
+
+![PagePreviewBtn](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagepreviewbtn.png "PagePreviewBtn")
 
 
 
@@ -566,6 +587,11 @@ A few usability mods targetting the Reno admin theme.
 - **One-line sidebar submenus (only with sbAutoHide)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
 
+*Admin screenshot with fixed/compact header and various other RenoTweaks enabled:*
+
+![RenoTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-renotweaks.png "RenoTweaks")
+
+
 
 ###TabIndex
 
@@ -584,6 +610,10 @@ Hide field descriptions and notes to an icon and show them on hover in a tooltip
 - **Enable for field descriptions**: allow moving field description to an icon
 - **Enable for field notes**: allow moving field notes to an icon
 - **Use overlay style**: when checked, the tooltip will cover the entire area of the field. This eliminates the z-index issues of the traditional tooltip style (other page elements may partly cover the tooltip).
+
+*Description tooltip:*
+
+![Tooltips](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-tooltips.png "Tooltips")
 
 
 
