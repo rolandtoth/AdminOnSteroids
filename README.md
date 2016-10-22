@@ -31,6 +31,8 @@ The file needs to be writable to use this feature.
 At the bottom of the module's settings page there' a section "Asset paths" where you can set a path for a custom admin CSS and admin JavaScript.
 The module will automatically load these files if they exist so you can add custom style or script to the admin.
 
+*Paths to custom assets:*
+
 ![AssetPaths](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-assetpaths.png "AssetPaths")
 
 
@@ -52,6 +54,7 @@ This section provides an overview of the available submodules. Each can be enabl
 Each submodule has a dropdown "Roles" where you can restrict them by roles. You can find it in the top-right corner in the Submodules section, next to each item's title.
 By default each submodule is available for all roles. Adding a role will restrict the submodule to users having that role.
 
+*Roles dropdown:*
 
 ![Roles](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-roles.png "Roles")
 
@@ -129,6 +132,8 @@ $configData['enabledSubmodules'][] = 'RenoTweaks';
 The module installs a field named "aos_column_break" that you can add your templates to have a 2-column layout.
 The field's position in the template field list determines the columns: fields before it will go to the left column, fields after to the right. Just drag the aos_column_break field to a position where you need the break.
 
+*Admin columns example:*
+
 ![AdminColumns](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-admincolumns.png "AdminColumns")
 
 Putting the "aos_column_break" field inside a tab is not allowed. See how to add columns to tabs below.
@@ -173,6 +178,8 @@ The language switcher uses a cookie so the language will be remembered even thou
 
 Note that in the Default theme it's added to the end of the top menu items while in Reno it's the first.
 
+*Admin language switcher:*
+
 ![AdminLangSwitcher](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-adminlangswitcher.png "AdminLangSwitcher")
 
 
@@ -196,6 +203,8 @@ A few usability mods targetting the default admin theme.
 - **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
 - **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
 - **Edit field in new tab on middle click (no template context)**: when editing a template clicking on fields in the asmField opens up the field for editing in a modal, using the current template as the context. If this tweak is enabled you can use the middle mouse button to open the field edit page without the template context.
+
+*asmSelect fields after enabling AsmTweaks:*
 
 ![AsmTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-asmtweaks.png "AsmTweaks")
 
@@ -235,6 +244,8 @@ The order of the asmField items determine the order of the toolbar buttons.
 
 The oEmbed plugin requires the "HTML purifier" to be turned off for the CKEditor field to work, otherwise iframes will be removed on saving the page.
 
+*CKEaddons configuration section:*
+
 ![CKEaddons](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-ckeaddons.png "CKEaddons")
 
 **Skin**
@@ -242,6 +253,9 @@ The oEmbed plugin requires the "HTML purifier" to be turned off for the CKEditor
 Here you can choose from the default and [LightWire](http://modules.processwire.com/modules/editor-skin-lightwire/) skins. The LightWire skin is made by **nico**.
 Note that the setting "Enabled fields" has no effect on the skin.
 
+*CKEditor field toolbar with extra plugins and LightWire skin:*
+
+![CKEaddons-editor](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-ckeaddons-editor.png "CKEaddons-editor")
 
 **Enabled fields**
 
@@ -289,11 +303,17 @@ When using the default theme, the template edit link appears on hovering the las
 A new pagelist action is added to the items as the last item, named as "#" plus the template name.
 Note that this template edit link doesn't respect the target you've set in the module settings, clicking on them always load the template edit page in the same page (you can use the middle mouse button to open in a new tab). Long-click can be used to open it in a modal window.
 
-![FieldEditLink](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-fieldeditlink.png "FieldEditLink")
+*Template edit link when hovering on page title:*
 
 ![TemplateEditLink](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-templateeditlink.png "TemplateEditLink")
 
+*Template edit link on pagelist:*
+
 ![TemplateEditLinkPagelist](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-templateeditlink-pagelist.png "TemplateEditLinkPagelist")
+
+*Edit link on field hover:*
+
+![FieldEditLink](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-fieldeditlink.png "FieldEditLink")
 
 
 
@@ -305,7 +325,11 @@ Note that this template edit link doesn't respect the target you've set in the m
 - **Add asset download link**: adds download links (icons) to image or file assets. In case of images, the icon is located to the right of the Edit buttons after you click on an image. The original image will be available for download. For file fields the icon is appended to the fields' label. Note: the download link uses the "download" HTML5 attribute which is not available n IE - in this case the link will open in a new tab/window.
 - **Show image titles in image select dialog**: by default when inserting an image to a CKEditor field the image select dialog shows images without titles. Check this to add titles to the images. If there's no title (which you can enter to the "description" field for images) the text "Untitled" will be shown. Under the title the name and extension of the image is shown.
 
+*Filter box and download asset link:*
+
 ![FilefieldTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-filefieldtweaks.png "FilefieldTweaks")
+
+*Show image titles in the image select dialog:*
 
 ![ShowImageTitles](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-filefieldtweaks-imagetitles.png "ShowImageTitles")
 
@@ -333,6 +357,8 @@ Settings can be configured separately for CKEditor fields.
 - **Save on ctrl+s**: save current page, even from within CKEditor. Works on various pages, eg. when editing Templates, Fieds, Roles, etc. Also disables the default browser Save as dialog even if there's no submit button on the page.
 - **Add long-click and ctrl+click actions to breadcrumbs**: if enabled, long-click on a breadcrumb item will open the corresponding front-end page in a new tab/window, and holding the Ctrl key when clicking on them will navigate to their edit screen.
 
+*Overlay and flashing save icon after hitting ctrl+s:*
+
 ![Hotkeys](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-hotkeys-save-overlay.png "Hotkeys")
 
 
@@ -342,6 +368,8 @@ Settings can be configured separately for CKEditor fields.
 *Show save dropdown on hover instead on click*
 
 Hovering on the Save button in the page editor shows the dropdown menu instantly instead on click.
+
+*Hovering on the Save button when HoverDropdown is enabled:*
 
 ![HoverDropdown](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-hoversavedropdown.png "HoverDropdown")
 
@@ -359,6 +387,8 @@ Enhance URL fields with a button to check typed url. It can open the URL in a ne
 - **Enabled templates and Enabled fields**: here you can set templates and/or fields where the module will be enabled. If none selected, module will be active on all templates and all URL type fields. Note: if used, the module will be disabled on all non-listed fields/templates.
 
 Note: for button modes you can use the middle mouse button to open the URL in a new browser tab.
+
+*Test link button added to an URL field:*
 
 ![InputfieldURLChecker](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-inputfieldurlchecker.png "InputfieldURLChecker")
 
@@ -388,7 +418,11 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Center login form**: align login page items to center
 - **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
 
+*Extra Check All/Remove all button on confirmation page:*
+
 ![RemoveAllFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-remove-all-fields.png "RemoveAllFields")
+
+*Centered login page:*
 
 ![CenterLogin](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-centerlogin.png "CenterLogin")
 
@@ -400,6 +434,8 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
 - **Edit modules in modal on long-click**: long-clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
+
+*Screenshot of compact module list:*
 
 ![CompactModuleList](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-compactmodulelist.png "CompactModuleList")
 
