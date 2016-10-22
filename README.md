@@ -49,10 +49,15 @@ Clicking on this link will also enable/disable the module (and reloads the curre
 
 This section provides an overview of the available submodules. Each can be enabled or disabled by toggling the checkbox below them.
 
+*Available submodules (v0.8.3):*
+
+![Submodules](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-submodules.png "Submodules")
+
 **Restrict submodules by role**
 
 Each submodule has a dropdown "Roles" where you can restrict them by roles. You can find it in the top-right corner in the Submodules section, next to each item's title.
 By default each submodule is available for all roles. Adding a role will restrict the submodule to users having that role.
+
 
 *Roles dropdown:*
 
