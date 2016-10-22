@@ -12,7 +12,7 @@ if (AOSsettings) {
             CKEskin = AOSsettings.CKEaddons_skin,
             CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
             CKEpluginCount = enabledCKEplugins.length,
-            // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
+        // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
             oEmbedPluginDependencies = 'widget,lineutils',
             CKEtoolbars = {
                 justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
@@ -362,7 +362,6 @@ $(document).ready(function () {
         });
     }
 
-
     // AsmTweaks
     // see AsmTweaks/AsmTweak.js
 
@@ -632,6 +631,15 @@ $(document).ready(function () {
                 })
             }
         }
+
+        // set Home/View site link open in new tab
+        if (AOSsettings.Misc.indexOf('homeOpenNewTab') !== -1) {
+            var homeIcon = $('body').hasClass('AdminThemeDefault') ? 'fa-eye' : 'fa-home';
+            try {
+                $('#topnav i.' + homeIcon).parent('a').attr('target', '_blank');
+            } finally {
+            }
+        }
     }
 
 
@@ -852,7 +860,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+            // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -974,7 +982,7 @@ $(document).ready(function () {
             var button = $(this),
                 parentEl = button.parent(),
                 input = button.parent().find('input'),
-                //titleElem = button.parent().find('.PageListSelectName .label_title');
+            //titleElem = button.parent().find('.PageListSelectName .label_title');
                 titleElem = button.parent().find('.PageListSelectName');
 
             // try without .label_title (on pageSelected the span disappears)

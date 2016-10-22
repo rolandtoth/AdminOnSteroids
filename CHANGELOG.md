@@ -1,6 +1,11 @@
 #Changelog
 
 
+### 0.8.3 (2016-10-22)
+
+- Misc: option to open Home link (View site in Default admin theme) in new tab in topnav
+
+
 ### 0.8.2 (2016-10-20)
 
 - array to string conversion fix for InputfieldURLChecker (reported by Toutouwai)

@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 82,
+            'version'   => 83,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -114,6 +114,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'Misc'                         => array(
                 'removeAllFieldsBtn',
+                'homeOpenNewTab',
                 'centerLogin'
             ),
             'ModuleTweaks'                 => array(
@@ -2003,6 +2004,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('removeAllFieldsBtn', __('Add Remove All button to field deletion confirmation page', __FILE__));
         $f->addOption('centerLogin', __('Center login form', __FILE__));
+        $f->addOption('homeOpenNewTab', __('Open Home/View site in new tab (topnav)', __FILE__));
 
         if ($data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);

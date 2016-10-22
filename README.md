@@ -356,9 +356,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 - **add "Remove All" button to field deletion confirmation page**: when selecting fields for deletion, the confirmation page will show an extra button "Check All". Clicking on this once will check all fields for deletion, clicking twice will remove all.
 - **Center login form**: align login page items to center
-
-- **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
-- **Edit modules in modal on long-click**: long-clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
+- **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
 
 
 
