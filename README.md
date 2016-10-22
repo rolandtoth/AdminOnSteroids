@@ -47,7 +47,7 @@ Clicking on this link will also enable/disable the module (and reloads the curre
 
 ## Submodules
 
-This section provides an overview of the available submodules. Each can be enabled or disabled by toggling the checkbox below them.
+This section provides an overview of the available submodules. Each can be enabled or disabled by toggling their checkboxes.
 
 *Available submodules (v0.8.3):*
 
