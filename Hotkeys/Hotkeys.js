@@ -175,7 +175,7 @@ $(document).ready(function () {
 
         $(document).on('keydown', function (e) {
 
-            if (doubleCtrlKey != 0 && event.ctrlKey) {
+            if (doubleCtrlKey != 0 && e.ctrlKey) {
                 focusSearchBox(e);
             } else {
                 doubleCtrlKey = setTimeout(function () {
