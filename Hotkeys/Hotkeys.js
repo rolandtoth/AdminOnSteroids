@@ -102,8 +102,8 @@ $(document).ready(function () {
         }
     }
 
-    if (window.CKEDITOR) {
-        function setupCKESave() {
+    function setupCKESave() {
+        if (window.CKEDITOR) {
             CKEDITOR.on('instanceReady', function (evt) {
 
                 evt.editor.addCommand('saveCKECommand', {
@@ -123,8 +123,10 @@ $(document).ready(function () {
                 //});
             });
         }
+    }
 
-        function setupCKEfocusSearch() {
+    function setupCKEfocusSearch() {
+        if (window.CKEDITOR) {
             CKEDITOR.on('instanceReady', function (evt) {
 
                 if (HotkeysSettings.indexOf('focusSearch') !== -1) {
@@ -150,6 +152,7 @@ $(document).ready(function () {
             });
         }
     }
+
 
     if (HotkeysSettings.indexOf('save') !== -1) {
 
@@ -217,4 +220,5 @@ $(document).ready(function () {
             }
         });
     }
-});
+})
+;
