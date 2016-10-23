@@ -4,7 +4,7 @@
 ### 0.8.5 (2016-10-23)
 
 - new CKEditor plugins: Auto Link, Auto Save, Table Cells Selection
-- new tweak: focus search on alt+d or double ctrl (Hotkeys submodule, requested by gmclelland)
+- new tweak: focus search on alt+d or double shift (Hotkeys submodule, requested by gmclelland)
 
 
 

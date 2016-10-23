@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    var doubleShiftKey = 0;
+
     // $('body').removeClass('aos_saving');
     // $('#wrap, body.AdminThemeDefault #content').removeClass('ui-state-disabled');
     //
@@ -100,8 +102,8 @@ $(document).ready(function () {
         }
     }
 
-    function setupCKESave() {
-        if (window.CKEDITOR) {
+    if (window.CKEDITOR) {
+        function setupCKESave() {
             CKEDITOR.on('instanceReady', function (evt) {
 
                 evt.editor.addCommand('saveCKECommand', {
@@ -121,21 +123,43 @@ $(document).ready(function () {
                 //});
             });
         }
+
+        function setupCKEfocusSearch() {
+            CKEDITOR.on('instanceReady', function (evt) {
+
+                if (HotkeysSettings.indexOf('focusSearch') !== -1) {
+
+                    evt.editor.addCommand('focusSearchBox', {
+                        exec: function (editor, data) {
+                            focusSearchBox();
+                        }
+                    });
+                    evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* d */] = 'focusSearchBox';
+
+                    evt.editor.document.on('keydown', function (evt) {
+                        var e = evt.data.$;
+                        if (doubleShiftKey != 0 && e.shiftKey) {
+                            focusSearchBox(e);
+                        } else {
+                            doubleShiftKey = setTimeout(function () {
+                                doubleShiftKey = 0;
+                            }, 300);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     if (HotkeysSettings.indexOf('save') !== -1) {
 
         $(document).on('keydown', function (e) {
-
-
             if (e.ctrlKey && e.keyCode == 83) {
-
                 aos_triggerSave();
 
                 // intentionally disable browser Save as dialog globally
                 // only inside this function to avoid keydown hijack
                 e.preventDefault();
-
             }
         });
 
@@ -150,12 +174,14 @@ $(document).ready(function () {
     }
 
     function focusSearchBox(e, blur) {
-
         try {
             var searchBox = $('#ProcessPageSearchQuery');
-            e.preventDefault();
 
-            if(blur) {
+            if (e) {
+                e.preventDefault();
+            }
+
+            if (blur) {
                 searchBox.blur();
                 return false;
             }
@@ -171,15 +197,15 @@ $(document).ready(function () {
 
     if (HotkeysSettings.indexOf('focusSearch') !== -1) {
 
-        var doubleCtrlKey = 0;
+        setupCKEfocusSearch();
 
         $(document).on('keydown', function (e) {
 
-            if (doubleCtrlKey != 0 && e.ctrlKey) {
+            if (doubleShiftKey != 0 && e.shiftKey) {
                 focusSearchBox(e);
             } else {
-                doubleCtrlKey = setTimeout(function () {
-                    doubleCtrlKey = 0;
+                doubleShiftKey = setTimeout(function () {
+                    doubleShiftKey = 0;
                 }, 300);
             }
 
