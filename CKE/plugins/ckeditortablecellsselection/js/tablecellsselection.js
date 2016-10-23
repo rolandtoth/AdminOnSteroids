@@ -2,7 +2,7 @@
 
 (function($, window, document, undefined) {
 
-    var settings;
+    var settings = {};
     
     var systemSettings = {
         dataKey : 'cellsSelector',

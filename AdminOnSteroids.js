@@ -154,6 +154,7 @@ function updateAutoGrowCKE(CKEs) {
 // add "scrolled" body class
 var addScrolledBodyClass = debounce(function () {
     var el = document.querySelector('body');
+    if (!el) return false;
     posTop() > 20 ? el.classList.add('scrolled') : el.classList.remove('scrolled');
 }, 120);
 
