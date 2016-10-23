@@ -12,8 +12,8 @@ if (AOSsettings) {
             CKEskin = AOSsettings.CKEaddons_skin,
             CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
             CKEpluginCount = enabledCKEplugins.length,
-        // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
             oEmbedPluginDependencies = 'widget,lineutils',
+            autosavePluginDependencies = 'notification',
             CKEtoolbars = {
                 justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
                 div: ["CreateDiv"],
@@ -35,6 +35,13 @@ if (AOSsettings) {
                 // Note: html purifier needs to be disabled for oEmbed to work
                 if (pluginName == 'oembed') {
                     var dependencies = oEmbedPluginDependencies.split(',');
+                    for (var k in dependencies) {
+                        CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                    }
+                }
+
+                if (pluginName == 'autosave') {
+                    var dependencies = autosavePluginDependencies.split(',');
                     for (var k in dependencies) {
                         CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
                     }

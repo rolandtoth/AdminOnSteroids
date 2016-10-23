@@ -264,6 +264,13 @@ html.aos {
   //  line-height: inherit !important;
   //  font-family: inherit;
   //}
+  
+  //div[class*="cke_editor_"]:not(.cke_focus) .cke_floatingtools {
+  //  display: none !important;
+  //}
+  //.cke_floatingtools {
+  //  width: auto;
+  //}
 
   .CodeMirror-lines {
     font-size: 13px;

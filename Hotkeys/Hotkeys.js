@@ -148,4 +148,47 @@ $(document).ready(function () {
             setupCKESave();
         });
     }
+
+    function focusSearchBox(e, blur) {
+
+        try {
+            var searchBox = $('#ProcessPageSearchQuery');
+            e.preventDefault();
+
+            if(blur) {
+                searchBox.blur();
+                return false;
+            }
+
+            if (searchBox.is(':focus')) {
+                searchBox.blur();
+            } else {
+                searchBox.focus();
+            }
+        } finally {
+        }
+    }
+
+    if (HotkeysSettings.indexOf('focusSearch') !== -1) {
+
+        var doubleCtrlKey = 0;
+
+        $(document).on('keydown', function (e) {
+
+            if (doubleCtrlKey != 0 && event.ctrlKey) {
+                focusSearchBox(e);
+            } else {
+                doubleCtrlKey = setTimeout(function () {
+                    doubleCtrlKey = 0;
+                }, 300);
+            }
+
+            if (e.altKey && e.keyCode == 68) {  // alt+d
+                focusSearchBox(e);
+            }
+            if (e.keyCode == 27) {  // ESC
+                focusSearchBox(e, true);
+            }
+        });
+    }
 });

@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 84,
+            'version'   => 85,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -110,6 +110,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'Hotkeys'                      => array(
                 'save',
+                'focusSearch',
                 'breadcrumbTweaks'
             ),
             'Misc'                         => array(
@@ -1683,15 +1684,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $addsToolbarButtonText = '*';
 
         $f->addOption('autogrow', 'Auto Grow');
+        $f->addOption('autolink', 'Auto Link');
+        $f->addOption('autosave', 'Auto Save');
         $f->addOption('codemirror', 'CodeMirror');
         $f->addOption('div', 'Div' . $addsToolbarButtonText);
         $f->addOption('find', 'Find' . $addsToolbarButtonText);
+//        $f->addOption('floating-tools', 'Floating tools*');
         $f->addOption('justify', 'Justify' . $addsToolbarButtonText);
         $f->addOption('keystrokes', 'Keystrokes');
         $f->addOption('magicline', 'Magic Line');
         $f->addOption('maximize', 'Maximize' . $addsToolbarButtonText);
         $f->addOption('oembed', 'Media (oEmbed)' . $addsToolbarButtonText);
         $f->addOption('showblocks', 'Show Blocks' . $addsToolbarButtonText);
+        $f->addOption('ckeditortablecellsselection', 'Table Cells Selection');
 
         if (isset($data[$f->name]) && $data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -1840,6 +1845,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $f->addOption('save', __('Save on ctrl+s', __FILE__));
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
+        $f->addOption('focusSearch', __('Focus search on alt+d or double ctrl', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

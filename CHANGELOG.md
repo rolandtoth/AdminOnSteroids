@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.8.5 (2016-10-23)
+
+- new CKEditor plugins: Auto Link, Auto Save, Table Cells Selection
+- new tweak: focus search on alt+d or double ctrl (Hotkeys submodule, requested by gmclelland)
+
+
+
 ### 0.8.4 (2016-10-23)
 
 - prevent overlapping the main page title and header buttons
@@ -8,10 +15,12 @@
 - add right padding to hover dropdown menus to avoid text reaching the dropdown's side (Reno Theme)
 
 
+
 ### 0.8.3 (2016-10-22)
 
 - fix for IUC_forceHttp field save message issue (reported by matjazp)
 - Misc: option to open Home link (View site in Default admin theme) in new tab in topnav
+
 
 
 ### 0.8.2 (2016-10-20)

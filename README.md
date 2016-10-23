@@ -234,6 +234,8 @@ Note: CKEditor fields are not supported - use the CKEaddons submodule (v0.6.1+) 
 You can select from these plugins to add to CKEditor enabled fields:
 
 - [Auto Grow](http://ckeditor.com/addon/autogrow)
+- [Auto Link](http://ckeditor.com/addon/autolink)
+- [Auto Save](http://ckeditor.com/addon/autosave)
 - [CodeMirror](http://ckeditor.com/addon/codemirror) (available when viewing editor Source)
 - [Div](http://ckeditor.com/addon/div) (adds a toolbar button)
 - [Find](http://ckeditor.com/addon/find) (adds toolbar buttons)
@@ -242,7 +244,8 @@ You can select from these plugins to add to CKEditor enabled fields:
 - [Magic Line](http://ckeditor.com/addon/magicline)
 - [Maximize](http://ckeditor.com/addon/maximize) (unavailable in inline mode)
 - [Media (oEmbed)](http://ckeditor.com/addon/oembed) (adds a toolbar button)
-- [show Blocks](http://ckeditor.com/addon/showblocks) (adds a toolbar button)
+- [Show Blocks](http://ckeditor.com/addon/showblocks) (adds a toolbar button)
+- [Table Cells Selection](http://ckeditor.com/addon/ckeditortablecellsselection)
 
 If a plugin adds toolbar items then they will be added to the beginning of the toolbar.
 The order of the asmField items determine the order of the toolbar buttons.
@@ -362,6 +365,7 @@ Settings can be configured separately for CKEditor fields.
 
 - **Save on ctrl+s**: save current page, even from within CKEditor. Works on various pages, eg. when editing Templates, Fieds, Roles, etc. Also disables the default browser Save as dialog even if there's no submit button on the page.
 - **Add long-click and ctrl+click actions to breadcrumbs**: if enabled, long-click on a breadcrumb item will open the corresponding front-end page in a new tab/window, and holding the Ctrl key when clicking on them will navigate to their edit screen.
+- **Focus search on alt+d or double ctrl**: focuses the top search field on alt+d hotkey or on tapping the ctrl key (double-press). Use ESC to remove focus.
 
 *Overlay and flashing save icon after hitting ctrl+s:*
 
