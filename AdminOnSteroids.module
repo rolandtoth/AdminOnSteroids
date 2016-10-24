@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 86,
+            'version'   => 87,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -121,6 +121,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'ModuleTweaks'                 => array(
                 'loadCollapsedModuleInfos',
                 'moduleCompact',
+                'moduleFilter',
 //                'moduleModal'
             ),
             'NavItems_pages'               => array(),
@@ -2027,6 +2028,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('moduleCompact', __('Compact module list', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('moduleModal', __('Edit modules in modal on long-click', __FILE__));
+        $f->addOption('moduleFilter', __('Add search-as-you-type filter to module list', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

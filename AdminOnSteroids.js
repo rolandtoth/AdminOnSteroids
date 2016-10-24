@@ -697,76 +697,6 @@ $(document).ready(function () {
     });
 
 
-    // var moduleFilter = $('<div class="moduleFilter"><div class=""><input type="text"></div></div>');
-    //
-    // if($('#modules_form').length) {
-    //
-    //     $('#modules_form').before(moduleFilter);
-    //
-    //     // filter items
-    //     $(document).on('input keypress keyup fieldchange', '.moduleFilter input', function (e) {
-    //
-    //         var target = e.target || e.srcElement,
-    //             filter = target.value.toLowerCase(),
-    //             field = $('#modules_form').find('tr'),
-    //             // items = field.find('tr'),
-    //             items = field,
-    //             count = 0,
-    //             length = filter.length;
-    //
-    //         if (!target.value) {
-    //             $(target).parent().removeClass('hasValue');
-    //             items.removeClass('hidden');
-    //             return true;
-    //         }
-    //
-    //         $(target).parent().addClass('hasValue');
-    //
-    //         if (length > 0) {
-    //
-    //             var filter_tags = filter.split(" "); // Split user input by spaces
-    //
-    //             items.each(function () {
-    //
-    //                 var $this = $(this),
-    //                     matches = true,
-    //                     itemFilters = $this.attr('data-filter');
-    //
-    //                 if ((typeof itemFilters === typeof undefined || itemFilters === false)) {
-    //                     return;
-    //                 }
-    //
-    //                 // Match each splitted string against the whole tags string
-    //                 $.each(filter_tags, function (i, a_filter) {
-    //                     if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
-    //                         matches = false;
-    //                     }
-    //                 });
-    //
-    //                 if (matches) {
-    //                     $this.removeClass('hidden');
-    //                     count++;
-    //                 } else {
-    //                     $this.addClass('hidden');
-    //                 }
-    //             });
-    //
-    //         } else {
-    //             items.removeClass('hidden');
-    //             count++;
-    //         }
-    //
-    //         if (items.filter('.hidden').length == items.length) {
-    //             // allow escape, backspace, delete, leftarrow keys only
-    //             if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
-    //                 return true;
-    //             }
-    //             return false;
-    //         }
-    //     });
-    // }
-
-
 
 // ModuleTweaks
     if (AOSsettings.enabledSubmodules.indexOf('ModuleTweaks') !== -1) {
@@ -856,6 +786,135 @@ $(document).ready(function () {
                     }
                 });
             });
+        }
+
+        if (AOSsettings.ModuleTweaks.indexOf('moduleFilter') !== -1) {
+
+            // Module Filter
+
+            var moduleFilter = $('<div class="moduleFilter"><input type="text" placeholder="🔎"><i class="fa fa-close"></i></div>');
+
+            if($('#modules_form').length) {
+
+                // build search strings and add to rows (tr)
+                $('#modules_form').find('tr').each(function () {
+
+                    var $tr = $(this),
+                        cells = $tr.children('td'),
+                        searchStrings = [];
+
+                    $.each(cells, function (i, el) {
+                        var text = (el.innerText || el.textContent);
+                        if (text) {
+                            searchStrings.push(text.trim());
+                        }
+                    });
+
+                    $tr.attr('data-filter', searchStrings.join(" "));
+                });
+
+                // add the search markup
+                $('#modules_form').before(moduleFilter);
+
+                function clearModuleFilter() {
+                    $('.moduleFilter input')
+                        .val('')
+                        .trigger('keypress').focus()
+                        .parent().removeClass('hasValue');
+                }
+
+                // clear filterbox on ESC, remove focus on second ESC
+                $(document).on('keydown', '.moduleFilter input', function (e) {
+
+                    e = e || window.event;
+                    var target = e.target || e.srcElement;
+
+                    if (e.keyCode === 27) { // ESC
+                        if (!target.value) {
+                            target.blur();  // if input is empty, remove focus
+                        } else {
+                            setTimeout(function () {
+                                clearModuleFilter();
+                            }, 0);
+                        }
+                    }
+                });
+
+                // click on close X
+                $(document).on('click', '.moduleFilter i', function (e) {
+
+                    // e = e || window.event;
+                    // var target = e.target || e.srcElement;
+
+                    clearModuleFilter();
+
+                    return false;
+                });
+
+                // filter items
+                $(document).on('input keypress keyup fieldchange', '.moduleFilter input', function (e) {
+
+                    var target = e.target || e.srcElement,
+                        filter = target.value.toLowerCase(),
+                        field = $('#modules_form').find('.AdminDataList'),
+                        items = field.find('td'),
+                        count = 0,
+                        length = filter.length;
+
+                    $('.WireTabs a').removeClass('hasMatches');
+
+                    if (!target.value) {
+                        $(target).parent().removeClass('hasValue');
+                        items.parent('tr').removeClass('hidden');
+                        return true;
+                    }
+
+                    $(target).parent().addClass('hasValue');
+
+                    if (length > 0) {
+
+                        var filter_tags = filter.split(" "); // Split user input by spaces
+
+                        items.each(function () {
+
+                            var $this = $(this).parent('tr'),
+                                matches = true,
+                                itemFilters = $this.attr('data-filter');
+
+                            // Match each splitted string against the whole tags string
+                            $.each(filter_tags, function (i, a_filter) {
+                                if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
+                                    matches = false;
+                                }
+                            });
+
+                            if (matches) {
+                                $this.removeClass('hidden');
+
+                                var tabID = '_' + $this.parents('li[id^="tab_"]').first().attr('id');
+
+                                $('.WireTabs li a#' + tabID).addClass('hasMatches');
+
+                                count++;
+                            } else {
+                                $this.addClass('hidden');
+                            }
+                        });
+
+                    } else {
+                        items.removeClass('hidden');
+                        count++;
+                    }
+
+                    if (items.filter('.hidden').length == items.length) {
+                        // allow escape, backspace, delete, leftarrow keys only
+                        if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
         }
     }
 

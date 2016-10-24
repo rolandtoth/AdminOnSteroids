@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.8.7 (2016-10-24)
+
+- Add search-as-you-type filter to module list (ModuleTweaks)
+
+
+
 ### 0.8.6 (2016-10-24)
 
 - fix double shift for Hotkeys

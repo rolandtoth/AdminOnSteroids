@@ -444,10 +444,15 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
 - **Edit modules in modal on long-click**: long-clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
+- **Add search-as-you-type filter to module list**: adds an input field to filter modules. If there's a match the corresponding module tabs will get a dot after their name. You can search for any text inside the module's row, not only for the module title.
 
 *Screenshot of compact module list:*
 
 ![CompactModuleList](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-compactmodulelist.png "CompactModuleList")
+
+*Filtering modules - "Site" and "Configure" tabs have matching items:*
+
+![ModuleFilter](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-modulefilter.png "ModuleFilter")
 
 
 
