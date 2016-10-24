@@ -112,7 +112,7 @@ $(document).ready(function () {
                     }
                 });
 
-                evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* S */] = 'saveCKECommand';
+                evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* s */] = 'saveCKECommand';
 
                 //evt.editor.document.on('keydown', function (e) {
                 //    // ctrl+s
@@ -122,6 +122,16 @@ $(document).ready(function () {
                 //    }
                 //});
             });
+        }
+    }
+
+    function tapFocus(e) {
+        if (doubleShiftKey != 0 && e.keyCode == 16) {
+            focusSearchBox(e);
+        } else {
+            doubleShiftKey = setTimeout(function () {
+                doubleShiftKey = 0;
+            }, 300);
         }
     }
 
@@ -140,13 +150,7 @@ $(document).ready(function () {
 
                     evt.editor.document.on('keydown', function (evt) {
                         var e = evt.data.$;
-                        if (doubleShiftKey != 0 && e.shiftKey) {
-                            focusSearchBox(e);
-                        } else {
-                            doubleShiftKey = setTimeout(function () {
-                                doubleShiftKey = 0;
-                            }, 300);
-                        }
+                        tapFocus(e);
                     });
                 }
             });
@@ -204,13 +208,7 @@ $(document).ready(function () {
 
         $(document).on('keydown', function (e) {
 
-            if (doubleShiftKey != 0 && e.shiftKey) {
-                focusSearchBox(e);
-            } else {
-                doubleShiftKey = setTimeout(function () {
-                    doubleShiftKey = 0;
-                }, 300);
-            }
+            tapFocus(e);
 
             if (e.altKey && e.keyCode == 68) {  // alt+d
                 focusSearchBox(e);
@@ -220,5 +218,4 @@ $(document).ready(function () {
             }
         });
     }
-})
-;
+});

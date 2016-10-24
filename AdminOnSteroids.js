@@ -217,12 +217,178 @@ $(window).load(function () {
     }
 });
 
-
 function getClassArgument(classes, prefix) {
     for (var i = classes.length; i-- > 0;)
         if (classes[i].substring(0, prefix.length) == prefix)
             return classes[i].substring(prefix.length);
     return null;
+}
+
+// default AdminDataTable filter
+function setupAdminDataTableFilter() {
+
+    if ($('.dtFilter').length) {
+        return false;
+    }
+
+    if ($('.AdminDataTable').length) {
+
+        var dtFilter = $('<div class="dtFilter"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>'),
+            dtFilterAdded = false;
+
+        // do not add dtFilter to modules
+        if ($('#modules_form').length) {
+            return false;
+        }
+
+        // build search strings and add to rows (tr)
+        $('.AdminDataTable').each(function () {
+
+            var table = $(this);
+
+            table.find('tr').each(function () {
+
+                var $tr = $(this),
+                    cells = $tr.children('td'),
+                    searchStrings = [];
+
+                $.each(cells, function (i, el) {
+                    var text = (el.innerText || el.textContent);
+                    if (text) {
+                        searchStrings.push(text.trim());
+                    }
+                });
+
+                $tr.attr('data-filter', searchStrings.join(" "));
+            });
+
+            // add the search markup
+            if (!dtFilterAdded) {
+                if ($('.AdminDataTable').length > 1) {
+                    table.parents('.Inputfields').first().before(dtFilter);
+                } else {
+                    table.before(dtFilter);
+                }
+                dtFilterAdded = true;
+            }
+        });
+
+        function cleardtFilter(input) {
+            input.val('')
+                .trigger('keypress').focus()
+                .parent().removeClass('hasValue');
+
+            $('.Inputfield.hidden').removeClass('hidden');
+        }
+
+        // clear filterbox on ESC, remove focus on second ESC
+        $(document).on('keydown', '.dtFilter input', function (e) {
+
+            e = e || window.event;
+            var target = e.target || e.srcElement;
+
+            if (e.keyCode === 27) { // ESC
+                if (!target.value) {
+                    target.blur();  // if input is empty, remove focus
+                } else {
+                    setTimeout(function () {
+                        cleardtFilter($(target));
+                    }, 0);
+                }
+            }
+        });
+
+        // click on close X
+        $(document).on('click', '.dtFilter i', function (e) {
+
+            e = e || window.event;
+            var target = e.target || e.srcElement;
+
+            cleardtFilter($(target).prev('input'));
+
+            return false;
+        });
+
+        // filter items
+        $(document).on('input keypress keyup fieldchange', '.dtFilter input', debounce(function (e) {
+
+            var target = e.target || e.srcElement,
+                filter = target.value.toLowerCase(),
+                field = $('.AdminDataTable'),
+                items = field.find('td'),
+            //count = 0,
+                length = filter.length;
+
+            if (!target.value) {
+                $(target).parent().removeClass('hasValue');
+                $('tr.hidden').removeClass('hidden');
+                $('.Inputfield.hidden').removeClass('hidden');
+                return true;
+            }
+
+            if (e.keyCode == 13) {  // Enter
+                if ($('tr:not(.hidden) a').length) {
+                    $('tr:not(.hidden) a').first().get(0).click();
+                }
+                return false;
+            }
+
+            $(target).parent().addClass('hasValue');
+
+            if (length > 0) {
+
+                var filter_tags = filter.split(" "); // Split user input by spaces
+
+                if (filter_tags.length == 0) {
+                    return true;
+                }
+
+                items.each(function () {
+
+                    var $this = $(this).parent('tr'),
+                        matches = true,
+                        itemFilters = $this.attr('data-filter');
+
+                    // Match each splitted string against the whole tags string
+                    $.each(filter_tags, function (i, a_filter) {
+                        if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
+                            matches = false;
+                        }
+                    });
+
+                    if (matches) {
+                        $this.parents('li.Inputfield.InputfieldStateCollapsed').first().removeClass('InputfieldStateCollapsed');
+                        $this.removeClass('hidden');
+                        //count++;
+                    } else {
+                        $this.addClass('hidden');
+                    }
+                });
+
+            } else {
+
+                $this.parents('li.Inputfield.InputfieldStateCollapsed').first().removeClass('InputfieldStateCollapsed');
+
+                items.removeClass('hidden');
+
+                //count++;
+            }
+
+
+            field.each(function () {
+
+                var ff = $(this);
+
+                ff.parents('.Inputfield').first().toggleClass('hidden', ff.find('tr:not(.hidden)').length == 1);
+
+                // allow escape, backspace, delete, leftarrow keys only
+                // if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
+                //     return true;
+                // }
+                // return false;
+            })
+        }, 200));
+    }
 }
 
 
@@ -648,6 +814,13 @@ $(document).ready(function () {
             } finally {
             }
         }
+
+        // AdminDataTable filter box
+        if (AOSsettings.Misc.indexOf('dataTableFilter') !== -1) {
+            $(document).on('loaded ready', function () {
+                setupAdminDataTableFilter();
+            });
+        }
     }
 
 
@@ -682,8 +855,7 @@ $(document).ready(function () {
 
             linkCancel = link.clone(true);
 
-            linkCancel.
-                addClass('cancel')
+            linkCancel.addClass('cancel')
                 .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
 
             // replace text only (keep icon)
@@ -785,6 +957,149 @@ $(document).ready(function () {
                     }
                 });
             });
+        }
+
+        if (AOSsettings.ModuleTweaks.indexOf('moduleFilter') !== -1) {
+
+            // Module Filter
+
+            var moduleFilter = $('<div class="moduleFilter"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>');
+
+            if ($('#modules_form').length) {
+
+                // build search strings and add to rows (tr)
+                $('#modules_form').find('tr').each(function () {
+
+                    var $tr = $(this),
+                        cells = $tr.children('td'),
+                        searchStrings = [];
+
+                    $.each(cells, function (i, el) {
+                        var text = (el.innerText || el.textContent);
+                        if (text) {
+                            searchStrings.push(text.trim());
+                        }
+                    });
+
+                    $tr.attr('data-filter', searchStrings.join(" "));
+                });
+
+                // add the search markup
+                $('#modules_form').before(moduleFilter);
+
+                function clearModuleFilter() {
+                    $('.moduleFilter input')
+                        .val('')
+                        .trigger('keypress').focus()
+                        .parent().removeClass('hasValue');
+
+                    $('tr.hidden').removeClass('hidden');
+                    $('.modules_section.hidden').removeClass('hidden');
+                }
+
+                // clear filterbox on ESC, remove focus on second ESC
+                $(document).on('keydown', '.moduleFilter input', function (e) {
+
+                    e = e || window.event;
+                    var target = e.target || e.srcElement;
+
+                    if (e.keyCode === 27) { // ESC
+                        if (!target.value) {
+                            target.blur();  // if input is empty, remove focus
+                        } else {
+                            setTimeout(function () {
+                                clearModuleFilter();
+                            }, 0);
+                        }
+                    }
+                });
+
+                // click on close X
+                $(document).on('click', '.moduleFilter i', function (e) {
+
+                    // e = e || window.event;
+                    // var target = e.target || e.srcElement;
+
+                    clearModuleFilter();
+
+                    return false;
+                });
+
+                // filter items
+                $(document).on('input keypress keyup fieldchange', '.moduleFilter input', debounce(function (e) {
+
+                    var target = e.target || e.srcElement,
+                        filter = target.value.toLowerCase(),
+                        field = $('#modules_form').find('.AdminDataTable'),
+                        items = field.find('td'),
+                    //count = 0,
+                        length = filter.length;
+
+                    $('.WireTabs a').removeClass('hasMatches');
+
+                    if (e.keyCode == 13) {  // Enter
+                        if ($('tr:not(.hidden) a').length) {
+                            $('tr:not(.hidden) a').first().get(0).click();
+                        }
+                        return false;
+                    }
+
+                    if (!target.value) {
+                        $(target).parent().removeClass('hasValue');
+                        items.parent('tr').removeClass('hidden');
+                        return true;
+                    }
+
+                    $(target).parent().addClass('hasValue');
+
+                    if (length > 0) {
+
+                        var filter_tags = filter.split(" "); // Split user input by spaces
+
+                        items.each(function () {
+
+                            var $this = $(this).parent('tr'),
+                                matches = true,
+                                itemFilters = $this.attr('data-filter');
+
+                            // Match each splitted string against the whole tags string
+                            $.each(filter_tags, function (i, a_filter) {
+                                if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
+                                    matches = false;
+                                }
+                            });
+
+                            if (matches) {
+                                $this.removeClass('hidden');
+
+                                var tabID = '_' + $this.parents('li[id^="tab_"]').first().attr('id');
+
+                                $('.WireTabs li a#' + tabID).addClass('hasMatches');
+
+                                //count++;
+                            } else {
+                                $this.addClass('hidden');
+                            }
+                        });
+
+                    } else {
+                        items.removeClass('hidden');
+                        //count++;
+                    }
+
+                    $('.modules_section').each(function () {
+                        $(this).toggleClass('hidden', $(this).find('tr:not(.hidden):not(.tablesorter-headerRow)').length == 0);
+                    });
+
+                    if (items.filter('.hidden').length == items.length) {
+                        // allow escape, backspace, delete, leftarrow keys only
+                        if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }, 200));
+            }
         }
     }
 
@@ -1200,13 +1515,13 @@ $(document).ready(function () {
             });
 
             // filter items
-            $(document).on('input keypress keyup fieldchange', '.InputfieldFileFieldFilter input', function (e) {
+            $(document).on('input keypress keyup fieldchange', '.InputfieldFileFieldFilter input', debounce(function (e) {
 
                 var target = e.target || e.srcElement,
                     filter = target.value.toLowerCase(),
                     field = $(target).closest('li.Inputfield'),
                     items = field.find('[data-filter]'),
-                    count = 0,
+                //count = 0,
                     length = filter.length;
 
                 if (!target.value) {
@@ -1243,7 +1558,7 @@ $(document).ready(function () {
 
                         if (matches) {
                             $this.removeClass('hidden');
-                            count++;
+                            //count++;
                         } else {
                             $this.addClass('hidden');
                         }
@@ -1251,7 +1566,7 @@ $(document).ready(function () {
 
                 } else {
                     items.removeClass('hidden');
-                    count++;
+                    //count++;
                 }
 
                 if (items.filter('.hidden').length == items.length) {
@@ -1261,7 +1576,7 @@ $(document).ready(function () {
                     }
                     return false;
                 }
-            });
+            }, 200));
         }
     }
 

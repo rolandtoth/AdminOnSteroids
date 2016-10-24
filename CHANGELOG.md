@@ -1,6 +1,28 @@
 #Changelog
 
 
+### 0.8.8 (2016-10-24)
+
+- new tweak: "Add filter box to AdminDataTables" (Misc submodule)
+- hide empty sections when using module filter if compactModuleList is not enabled (reported by matjazp)
+- Enter key triggers a click event on first match module/datatable filter boxes (if applicable)
+- use debounce for filter boxes
+- add page title 'AdminOnSteroids' to module config page
+
+
+
+### 0.8.7 (2016-10-24)
+
+- new tweak: filter box for module list (ModuleTweaks)
+
+
+
+### 0.8.6 (2016-10-24)
+
+- fix double shift for Hotkeys
+
+
+
 ### 0.8.5 (2016-10-23)
 
 - new CKEditor plugins: Auto Link, Auto Save, Table Cells Selection

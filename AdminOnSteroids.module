@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 85,
+            'version'   => 88,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -116,11 +116,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'Misc'                         => array(
                 'removeAllFieldsBtn',
                 'homeOpenNewTab',
+                'dataTableFilter',
                 'centerLogin'
             ),
             'ModuleTweaks'                 => array(
                 'loadCollapsedModuleInfos',
                 'moduleCompact',
+                'moduleFilter',
 //                'moduleModal'
             ),
             'NavItems_pages'               => array(),
@@ -502,6 +504,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         if (!$this->enabled) {
             return false;
+        }
+
+        // set title to who in browser tab instead 'Modules'
+        if ($this->wire('input')->get('name') == 'AdminOnSteroids') {
+            $this->wire('page')->title = 'AdminOnSteroids';
         }
 
         // login page doesn't some stuff
@@ -2008,6 +2015,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('removeAllFieldsBtn', __('Add Remove All button to field deletion confirmation page', __FILE__));
         $f->addOption('centerLogin', __('Center login form', __FILE__));
         $f->addOption('homeOpenNewTab', __('Open Home/View site in new tab (topnav)', __FILE__));
+        $f->addOption('dataTableFilter', __('Add filter box to AdminDataTables', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -2027,6 +2035,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('moduleCompact', __('Compact module list', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('moduleModal', __('Edit modules in modal on long-click', __FILE__));
+        $f->addOption('moduleFilter', __('Add filter box to module list', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
