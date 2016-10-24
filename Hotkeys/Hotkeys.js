@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    var doubleShiftKey = 0;
+
     // $('body').removeClass('aos_saving');
     // $('#wrap, body.AdminThemeDefault #content').removeClass('ui-state-disabled');
     //
@@ -110,7 +112,7 @@ $(document).ready(function () {
                     }
                 });
 
-                evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* S */] = 'saveCKECommand';
+                evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* s */] = 'saveCKECommand';
 
                 //evt.editor.document.on('keydown', function (e) {
                 //    // ctrl+s
@@ -123,19 +125,48 @@ $(document).ready(function () {
         }
     }
 
+    function tapFocus(e) {
+        if (doubleShiftKey != 0 && e.keyCode == 16) {
+            focusSearchBox(e);
+        } else {
+            doubleShiftKey = setTimeout(function () {
+                doubleShiftKey = 0;
+            }, 300);
+        }
+    }
+
+    function setupCKEfocusSearch() {
+        if (window.CKEDITOR) {
+            CKEDITOR.on('instanceReady', function (evt) {
+
+                if (HotkeysSettings.indexOf('focusSearch') !== -1) {
+
+                    evt.editor.addCommand('focusSearchBox', {
+                        exec: function (editor, data) {
+                            focusSearchBox();
+                        }
+                    });
+                    evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* d */] = 'focusSearchBox';
+
+                    evt.editor.document.on('keydown', function (evt) {
+                        var e = evt.data.$;
+                        tapFocus(e);
+                    });
+                }
+            });
+        }
+    }
+
+
     if (HotkeysSettings.indexOf('save') !== -1) {
 
         $(document).on('keydown', function (e) {
-
-
             if (e.ctrlKey && e.keyCode == 83) {
-
                 aos_triggerSave();
 
                 // intentionally disable browser Save as dialog globally
                 // only inside this function to avoid keydown hijack
                 e.preventDefault();
-
             }
         });
 
@@ -146,6 +177,45 @@ $(document).ready(function () {
         // $(document).on('reloaded', '.Inputfield', function () {
         $(document).on('reloaded', '.InputfiesldRepeaterItem', function () {
             setupCKESave();
+        });
+    }
+
+    function focusSearchBox(e, blur) {
+        try {
+            var searchBox = $('#ProcessPageSearchQuery');
+
+            if (e) {
+                e.preventDefault();
+            }
+
+            if (blur) {
+                searchBox.blur();
+                return false;
+            }
+
+            if (searchBox.is(':focus')) {
+                searchBox.blur();
+            } else {
+                searchBox.focus();
+            }
+        } finally {
+        }
+    }
+
+    if (HotkeysSettings.indexOf('focusSearch') !== -1) {
+
+        setupCKEfocusSearch();
+
+        $(document).on('keydown', function (e) {
+
+            tapFocus(e);
+
+            if (e.altKey && e.keyCode == 68) {  // alt+d
+                focusSearchBox(e);
+            }
+            if (e.keyCode == 27) {  // ESC
+                focusSearchBox(e, true);
+            }
         });
     }
 });

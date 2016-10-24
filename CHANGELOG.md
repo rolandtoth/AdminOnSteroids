@@ -1,6 +1,58 @@
 #Changelog
 
 
+### 0.8.6 (2016-10-24)
+
+- fix double shift for Hotkeys
+
+
+
+### 0.8.5 (2016-10-23)
+
+- new CKEditor plugins: Auto Link, Auto Save, Table Cells Selection
+- new tweak: focus search on alt+d or double shift (Hotkeys submodule, requested by gmclelland)
+
+
+
+### 0.8.4 (2016-10-23)
+
+- prevent overlapping the main page title and header buttons
+- force white text color on tooltips to avoid illegible texts
+- add right padding to hover dropdown menus to avoid text reaching the dropdown's side (Reno Theme)
+
+
+
+### 0.8.3 (2016-10-22)
+
+- fix for IUC_forceHttp field save message issue (reported by matjazp)
+- Misc: option to open Home link (View site in Default admin theme) in new tab in topnav
+
+
+
+### 0.8.2 (2016-10-20)
+
+- array to string conversion fix for InputfieldURLChecker (reported by Toutouwai)
+
+
+
+### 0.8.1 (2016-10-17)
+
+- fix for missing longclick action for pagelist item templateEditLink (reported by matjazp)
+
+
+
+### 0.8.0 (2016-10-15)
+
+- AdminTweaks: new tweak "Show pagelist actions on full row hover" (suggested by adrian)
+
+
+
+### 0.7.9 (2016-10-14)
+
+- PageListTweaks: Wipe button renamed to Delete + UX improvements
+
+
+
 ### 0.7.8 (2016-10-14)
 
 - new submodule: Misc

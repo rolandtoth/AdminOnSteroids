@@ -38,7 +38,7 @@
 .InputfieldContent .InputfieldAssistedURL {
 	width: 100% !important;
 }
-#Inputfield_link {
+.InputfieldAssistedURL.InputfieldMaxWidth {
 	width: calc(100% - 50px) !important;
 }
 

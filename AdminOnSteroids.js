@@ -12,8 +12,8 @@ if (AOSsettings) {
             CKEskin = AOSsettings.CKEaddons_skin,
             CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
             CKEpluginCount = enabledCKEplugins.length,
-            // embedPluginDependencies = 'lineutils,notification,notificationaggregator,widget,embedbase',
             oEmbedPluginDependencies = 'widget,lineutils',
+            autosavePluginDependencies = 'notification',
             CKEtoolbars = {
                 justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
                 div: ["CreateDiv"],
@@ -35,6 +35,13 @@ if (AOSsettings) {
                 // Note: html purifier needs to be disabled for oEmbed to work
                 if (pluginName == 'oembed') {
                     var dependencies = oEmbedPluginDependencies.split(',');
+                    for (var k in dependencies) {
+                        CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                    }
+                }
+
+                if (pluginName == 'autosave') {
+                    var dependencies = autosavePluginDependencies.split(',');
                     for (var k in dependencies) {
                         CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
                     }
@@ -147,6 +154,7 @@ function updateAutoGrowCKE(CKEs) {
 // add "scrolled" body class
 var addScrolledBodyClass = debounce(function () {
     var el = document.querySelector('body');
+    if (!el) return false;
     posTop() > 20 ? el.classList.add('scrolled') : el.classList.remove('scrolled');
 }, 120);
 
@@ -361,7 +369,6 @@ $(document).ready(function () {
             document.cookie = 'aos_lang_id=' + lang_id + ';expires=0;path=/';
         });
     }
-
 
     // AsmTweaks
     // see AsmTweaks/AsmTweak.js
@@ -632,39 +639,133 @@ $(document).ready(function () {
                 })
             }
         }
+
+        // set Home/View site link open in new tab
+        if (AOSsettings.Misc.indexOf('homeOpenNewTab') !== -1) {
+            var homeIcon = $('body').hasClass('AdminThemeDefault') ? 'fa-eye' : 'fa-home';
+            try {
+                $('#topnav i.' + homeIcon).parent('a').attr('target', '_blank');
+            } finally {
+            }
+        }
     }
 
 
-    // Wipe action
-    $(document).on('mousedown', 'a.PageListActionExtra.PageListActionWipe.aos', function (e) {
+    // Delete action
+    $(document).on('mousedown', 'a.PageListActionExtra.PageListActionDelete', function (e) {
 
         e.preventDefault();
 
+        if (e.which == 3 || e.which == 2) return false;
+
         var link = $(this),
             url = link.attr('href'),
-            linkText = link.text();
+            linkTextDefault = AOSsettings.loc['delete_action'];
 
-        if (url.indexOf('wipe_confirmed') === -1) {
+        if (url.indexOf('delete_permanently') === -1) {
 
-            var linkClone = link.clone(true);
+            var linkCancel;
+
+            if (link.hasClass('cancel')) {
+
+                linkCancel = link.next('a');
+
+                linkCancel
+                    .removeClass('cancel')
+                    .attr('href', url.replace('delete_permanently&', 'delete&'))
+                    .contents().last()[0].textContent = linkTextDefault;
+
+                link.replaceWith(linkCancel);
+
+                return false;
+            }
+
+            linkCancel = link.clone(true);
+
+            linkCancel.
+                addClass('cancel')
+                .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
+
             // replace text only (keep icon)
-            linkClone.contents().last()[0].textContent = ' ' + AOSsettings.loc['please_confirm'];
-            linkClone.attr('href', url.replace('wipe&', 'wipe_confirmed&'));
-            linkClone.addClass('ui-state-error');
-            link.replaceWith(linkClone);
+            link.contents().last()[0].textContent = ' ' + AOSsettings.loc['permanent_delete_confirm'];
+            link.attr('href', url.replace('delete&', 'delete_permanently&'));
 
-            // restore original link text and url after a timeout
-            setTimeout(function () {
-                if (linkClone && linkClone.length) {
-                    linkClone.attr('href', url.replace('wipe_confirmed&', 'wipe&'));
-                    linkClone.removeClass('ui-state-error');
-                    linkClone.contents().last()[0].textContent = linkText;
-                }
-            }, 2000);
+            link.before(linkCancel);
         }
 
         return false;
     });
+
+
+    // var moduleFilter = $('<div class="moduleFilter"><div class=""><input type="text"></div></div>');
+    //
+    // if($('#modules_form').length) {
+    //
+    //     $('#modules_form').before(moduleFilter);
+    //
+    //     // filter items
+    //     $(document).on('input keypress keyup fieldchange', '.moduleFilter input', function (e) {
+    //
+    //         var target = e.target || e.srcElement,
+    //             filter = target.value.toLowerCase(),
+    //             field = $('#modules_form').find('tr'),
+    //             // items = field.find('tr'),
+    //             items = field,
+    //             count = 0,
+    //             length = filter.length;
+    //
+    //         if (!target.value) {
+    //             $(target).parent().removeClass('hasValue');
+    //             items.removeClass('hidden');
+    //             return true;
+    //         }
+    //
+    //         $(target).parent().addClass('hasValue');
+    //
+    //         if (length > 0) {
+    //
+    //             var filter_tags = filter.split(" "); // Split user input by spaces
+    //
+    //             items.each(function () {
+    //
+    //                 var $this = $(this),
+    //                     matches = true,
+    //                     itemFilters = $this.attr('data-filter');
+    //
+    //                 if ((typeof itemFilters === typeof undefined || itemFilters === false)) {
+    //                     return;
+    //                 }
+    //
+    //                 // Match each splitted string against the whole tags string
+    //                 $.each(filter_tags, function (i, a_filter) {
+    //                     if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
+    //                         matches = false;
+    //                     }
+    //                 });
+    //
+    //                 if (matches) {
+    //                     $this.removeClass('hidden');
+    //                     count++;
+    //                 } else {
+    //                     $this.addClass('hidden');
+    //                 }
+    //             });
+    //
+    //         } else {
+    //             items.removeClass('hidden');
+    //             count++;
+    //         }
+    //
+    //         if (items.filter('.hidden').length == items.length) {
+    //             // allow escape, backspace, delete, leftarrow keys only
+    //             if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
+    //                 return true;
+    //             }
+    //             return false;
+    //         }
+    //     });
+    // }
+
 
 
 // ModuleTweaks
@@ -838,7 +939,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+            // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -960,7 +1061,7 @@ $(document).ready(function () {
             var button = $(this),
                 parentEl = button.parent(),
                 input = button.parent().find('input'),
-                //titleElem = button.parent().find('.PageListSelectName .label_title');
+            //titleElem = button.parent().find('.PageListSelectName .label_title');
                 titleElem = button.parent().find('.PageListSelectName');
 
             // try without .label_title (on pageSelected the span disappears)
