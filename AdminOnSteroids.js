@@ -270,19 +270,21 @@ function setupAdminDataTableFilter() {
             });
 
             // add to DOM
-
             if ($('.AdminDataTable').length == 1) {
                 table.before(dtFilter.clone());
 
             } else {
                 if (table.parents('.WireTab').length) {
                     table.before(dtFilter.clone());
-                    // table.parents('.Inputfield.WireTab').first().prepend(dtFilter.clone());
 
                 } else {
                     if (!$('body').hasClass('dtFilterAdded')) {
-                        table.parents('.Inputfields').first().prepend(dtFilter);
+                        table.parents('.Inputfields').first().prepend(dtFilter.clone());
                         $('body').addClass('dtFilterAdded');
+                    }
+
+                    if (table.parents('#ProcessListerTable').length) {
+                        table.parents('#ProcessListerTable').first().prepend(dtFilter.clone());
                     }
                 }
             }
@@ -344,6 +346,12 @@ function setupAdminDataTableFilter() {
                 items = field.find('tbody td'),
                 //count = 0,
                 length = filter.length;
+
+                // Lister page: process only closest tables (exception)
+                if($('body').hasClass('id-1007')) {
+                    field = $(target).parent().parent().find('.AdminDataTable');
+                    items = field.find('tbody td');
+                }
 
             if (!target.value) {
                 $(target).parent().removeClass('hasValue');
@@ -407,6 +415,7 @@ function setupAdminDataTableFilter() {
                 //count++;
             }
 
+            // used for hiding empty inputfields
             var fieldCount = function (table) {
                 var count = 1;
                 if (table.parents('.WireTab').length) {
