@@ -35,7 +35,17 @@ html.aos {
   }
 
   .AdminDataTable {
-    margin-bottom: 2em;
+    margin-bottom: 0;
+    tr:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
+  }
+  #modules_form {
+    .AdminDataTable {
+      margin-bottom: 2em;
+    }
   }
 
   //.PageListPage .pageId {
@@ -1684,8 +1694,11 @@ html.moduleCompact {
     .modules_section:not(:first-of-type) thead {
       display: none;
     }
-    table {
-      margin-bottom: 0;
+    .modules_section + p {
+      margin-top: 3.2em;
+    }
+    .AdminDataTable {
+      margin-bottom: 0 !important;
     }
     h2 {
       display: none;
