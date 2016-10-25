@@ -347,11 +347,11 @@ function setupAdminDataTableFilter() {
                 //count = 0,
                 length = filter.length;
 
-                // Lister page: process only closest tables (exception)
-                if($('body').hasClass('id-1007')) {
-                    field = $(target).parent().parent().find('.AdminDataTable');
-                    items = field.find('tbody td');
-                }
+            // Lister page: process only closest tables (exception)
+            if ($('body').hasClass('id-1007')) {
+                field = $(target).parent().parent().find('.AdminDataTable');
+                items = field.find('tbody td');
+            }
 
             if (!target.value) {
                 $(target).parent().removeClass('hasValue');
@@ -1730,15 +1730,27 @@ function setColWidths(tableSelector) {
     setTimeout(function () {
 
         // use selector instead jQuery object to handle ajax items
-        var table = $(tableSelector);
+        var table = $(tableSelector),
+            tab,
+            isInsideHiddenTab = false;
 
         if (!table.length || table.find('th').length == 0) return false;
+
+        if (table.parents('.WireTab').not(':visible').length) {
+            tab = table.parents('.WireTab').first();
+            isInsideHiddenTab = true;
+        }
+
+        if (isInsideHiddenTab) tab.css({position: "absolute", visibility: "hidden", display: "block"});
 
         table.find('th').each(function () {
             var el = $(this);
             el.css('width', el.outerWidth() + 'px');
         });
-    }, 100);
+
+        if (isInsideHiddenTab) tab.css({position: "", visibility: "", display: ""});
+
+    }, 200);
 }
 
 // $(window).load(function() {
