@@ -227,30 +227,28 @@ function getClassArgument(classes, prefix) {
 // default AdminDataTable filter
 function setupAdminDataTableFilter() {
 
-    if ($('.dtFilter').length) return false;
+    // do not add dtFilter to modules
+    if ($('#modules_form').length) {
+        return false;
+    }
+
+    // if ($('.dtFilter').length) return false;
 
     if ($('.AdminDataTable').length) {
 
-        var dtFilter = $('<div class="dtFilter"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>'),
-            dtFilterAdded = false;
-
-        // do not add dtFilter to modules
-        if ($('#modules_form').length) {
-            return false;
-        }
+        var dtFilter = $('<div class="dtFilter"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>');
 
         // build search strings and add to rows (tr)
         $('.AdminDataTable').each(function () {
 
             var table = $(this);
 
-            // disable column width change when filtering
-            // table.css('table-layout', 'fixed');
+            if (table.attr('data-dtfilter-added')) return true;
+
+            // continue if table is under Module Info section
+            if (table.parents('#ModuleEditForm').length) return true;
 
             setColWidths('#' + table.attr('id'));
-
-            // skip Module Info table
-            if (table.parents('#ModuleEditForm').length) return true;
 
             table.find('tbody tr').each(function () {
 
@@ -271,15 +269,25 @@ function setupAdminDataTableFilter() {
                 $tr.attr('data-filter', searchStrings.join(" "));
             });
 
-            // add the search markup
-            if (!dtFilterAdded) {
-                if (table.parents('.Inputfields').length) {
-                    table.parents('.Inputfields').first().before(dtFilter);
+            // add to DOM
+
+            if ($('.AdminDataTable').length == 1) {
+                table.before(dtFilter.clone());
+
+            } else {
+                if (table.parents('.WireTab').length) {
+                    table.before(dtFilter.clone());
+                    // table.parents('.Inputfield.WireTab').first().prepend(dtFilter.clone());
+
                 } else {
-                    table.before(dtFilter);
+                    if (!$('body').hasClass('dtFilterAdded')) {
+                        table.parents('.Inputfields').first().prepend(dtFilter);
+                        $('body').addClass('dtFilterAdded');
+                    }
                 }
-                dtFilterAdded = true;
             }
+
+            table.attr('data-dtfilter-added', '1');
         });
 
         function cleardtFilter(input) {
@@ -317,6 +325,15 @@ function setupAdminDataTableFilter() {
 
             return false;
         });
+
+        // focus
+        // $(document).on('wiretabclick', function (e, elem) {
+        //     if (elem.find('.dtFilter').length) {
+        //         setTimeout(function () {
+        //             elem.find('.dtFilter').first().focus();
+        //         }, 100);
+        //     }
+        // });
 
         // filter items
         $(document).on('input keyup fieldchange', '.dtFilter input', debounce(function (e) {
@@ -390,7 +407,18 @@ function setupAdminDataTableFilter() {
                 //count++;
             }
 
-            var fieldCount = field.length;
+            var fieldCount = function (table) {
+                var count = 1;
+                if (table.parents('.WireTab').length) {
+                    // table is inside a tab
+                    // currently there's only 1 table per tab
+                    count = 1;
+                } else {
+                    count = field.length;
+                }
+
+                return count;
+            };
 
             field.each(function () {
                 var ff = $(this),
@@ -399,7 +427,7 @@ function setupAdminDataTableFilter() {
                 ff.find('thead tr').toggleClass('hidden', isAllRowsHidden);
 
                 // hide empty inputfields (only if there are more than 1)
-                if (fieldCount > 1) {
+                if (fieldCount(ff) > 1) {
                     ff.parents('.Inputfield').first().toggleClass('hidden', isAllRowsHidden);
                 }
             });

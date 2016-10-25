@@ -1,10 +1,16 @@
 #Changelog
 
 
+### 0.9.0 (2016-10-25)
+
+- even more filter box improvements
+
+
+
 ### 0.8.9 (2016-10-25)
 
 - improvements to filter boxes
-- disable content jump when scrollbar appears (Reno stickyHeader)
+- disable content jump when body height changes
 
 
 
