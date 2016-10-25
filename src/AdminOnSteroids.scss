@@ -12,11 +12,15 @@ $defaultBoxShadow: 0 3px 4px -3px rgba(#465b69, 0.5);
 
 // general style overrides
 html.aos {
-  // try to avoid pwPanel jump to top
-  body {
-    overflow: auto !important;
+  // disable page jump
+  &.AdminThemeReno:not(.headSticky) {
+    body {
+      overflow-y: scroll;
+    }
   }
-
+  body.AdminThemeDefault {
+    overflow-y: scroll;
+  }
   // fix hover dropdown menus not having right padding
   &.AdminThemeReno .dropdown-menu {
     li {
@@ -29,7 +33,7 @@ html.aos {
       display: inline-block;
     }
   }
-  
+
   .AdminDataTable {
     margin-bottom: 2em;
   }
@@ -311,7 +315,7 @@ html.aos {
       display: none;
     }
   }
-  
+
   li.Inputfield.hidden {
     display: none;
   }
@@ -409,7 +413,7 @@ html.aos {
       }
     }
   }
-  
+
   .modules_section.hidden {
     display: none;
   }
