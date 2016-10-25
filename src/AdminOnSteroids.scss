@@ -29,6 +29,10 @@ html.aos {
       display: inline-block;
     }
   }
+  
+  .AdminDataTable {
+    margin-bottom: 2em;
+  }
 
   //.PageListPage .pageId {
   .PageListRoot sup {
@@ -299,6 +303,74 @@ html.aos {
     }
   }
 
+  .AdminDataTable {
+    tr.hidden {
+      display: none;
+    }
+  }
+  
+  li.Inputfield.hidden {
+    display: none;
+  }
+
+  //.hasHiddenMatch {
+  //
+  //}
+
+  .hasMatches {
+    &:after {
+      content: "•";
+      position: absolute;
+      margin-left: 2px;
+      display: inline-block;
+      transform: translateY(-4px);
+    }
+  }
+
+  .dtFilter {
+    position: relative;
+    z-index: 10;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    clear: both;
+    input {
+      padding-right: 32px !important;
+      min-width: 250px;
+      display: inline-block;
+      + .fa-close {
+        color: inherit;
+        margin-left: -30px;
+        opacity: 0.33;
+        display: none;
+        padding: 6px;
+        &:hover {
+          cursor: pointer;
+          opacity: 0.84;
+        }
+      }
+    }
+    &.hasValue {
+      input + .fa-close {
+        display: inline-block;
+      }
+    }
+    input:focus::-webkit-input-placeholder {
+      color: transparent;
+    }
+    input:focus:-moz-placeholder {
+      color: transparent;
+    }
+    /* FF 4-18 */
+    input:focus::-moz-placeholder {
+      color: transparent;
+    }
+    /* FF 19+ */
+    input:focus:-ms-input-placeholder {
+      color: transparent;
+    }
+    /* IE 10+ */
+  }
+
   // module filter
   @media only screen and (min-width: 1140px) {
     &.headSticky.AdminThemeReno {
@@ -331,6 +403,10 @@ html.aos {
         margin-right: 0;
       }
     }
+  }
+  
+  .modules_section.hidden {
+    display: none;
   }
 
   .moduleFilter {
@@ -373,16 +449,6 @@ html.aos {
       color: transparent;
     }
     /* IE 10+ */
-  }
-
-  .WireTabs a.hasMatches {
-    &:after {
-      content: "•";
-      position: absolute;
-      margin-left: 2px;
-      display: inline-block;
-      transform: translateY(-4px);
-    }
   }
 
   #modules_form {
