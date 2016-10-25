@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 0.8.9 (2016-10-25)
+
+- improvements to filter boxes
+- disable content jump when scrollbar appears (Reno stickyHeader)
+
+
+
 ### 0.8.8 (2016-10-24)
 
 - new tweak: "Add filter box to AdminDataTables" (Misc submodule)

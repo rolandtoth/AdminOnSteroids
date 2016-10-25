@@ -227,9 +227,7 @@ function getClassArgument(classes, prefix) {
 // default AdminDataTable filter
 function setupAdminDataTableFilter() {
 
-    if ($('.dtFilter').length) {
-        return false;
-    }
+    if ($('.dtFilter').length) return false;
 
     if ($('.AdminDataTable').length) {
 
@@ -246,14 +244,25 @@ function setupAdminDataTableFilter() {
 
             var table = $(this);
 
-            table.find('tr').each(function () {
+            // disable column width change when filtering
+            // table.css('table-layout', 'fixed');
+
+            setColWidths('#' + table.attr('id'));
+
+            // skip Module Info table
+            if (table.parents('#ModuleEditForm').length) return true;
+
+            table.find('tbody tr').each(function () {
 
                 var $tr = $(this),
                     cells = $tr.children('td'),
                     searchStrings = [];
 
                 $.each(cells, function (i, el) {
-                    var text = (el.innerText || el.textContent);
+
+                    // get text from html element, or its value (in case of inputs)
+                    var text = ((el.innerText || el.textContent) || $(el).find('input').val());
+
                     if (text) {
                         searchStrings.push(text.trim());
                     }
@@ -264,7 +273,7 @@ function setupAdminDataTableFilter() {
 
             // add the search markup
             if (!dtFilterAdded) {
-                if ($('.AdminDataTable').length > 1) {
+                if (table.parents('.Inputfields').length) {
                     table.parents('.Inputfields').first().before(dtFilter);
                 } else {
                     table.before(dtFilter);
@@ -275,7 +284,7 @@ function setupAdminDataTableFilter() {
 
         function cleardtFilter(input) {
             input.val('')
-                .trigger('keypress').focus()
+                .trigger('fieldchange').focus()
                 .parent().removeClass('hasValue');
 
             $('.Inputfield.hidden').removeClass('hidden');
@@ -310,13 +319,13 @@ function setupAdminDataTableFilter() {
         });
 
         // filter items
-        $(document).on('input keypress keyup fieldchange', '.dtFilter input', debounce(function (e) {
+        $(document).on('input keyup fieldchange', '.dtFilter input', debounce(function (e) {
 
             var target = e.target || e.srcElement,
                 filter = target.value.toLowerCase(),
                 field = $('.AdminDataTable'),
-                items = field.find('td'),
-            //count = 0,
+                items = field.find('tbody td'),
+                //count = 0,
                 length = filter.length;
 
             if (!target.value) {
@@ -333,6 +342,15 @@ function setupAdminDataTableFilter() {
                 return false;
             }
 
+            // if (field.find('tbody tr:not(.hidden)').length == 0) {
+            //     $(target).addClass('empty');
+            //     return false;
+            //     // allow escape, backspace, delete, leftarrow keys only
+            //     // return e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46;
+            // }
+
+            $(target).removeClass('empty');
+
             $(target).parent().addClass('hasValue');
 
             if (length > 0) {
@@ -345,9 +363,9 @@ function setupAdminDataTableFilter() {
 
                 items.each(function () {
 
-                    var $this = $(this).parent('tr'),
-                        matches = true,
-                        itemFilters = $this.attr('data-filter');
+                    var row = $(this).parent('tr'),
+                        itemFilters = row.attr('data-filter'),
+                        matches = true;
 
                     // Match each splitted string against the whole tags string
                     $.each(filter_tags, function (i, a_filter) {
@@ -357,36 +375,35 @@ function setupAdminDataTableFilter() {
                     });
 
                     if (matches) {
-                        $this.parents('li.Inputfield.InputfieldStateCollapsed').first().removeClass('InputfieldStateCollapsed');
-                        $this.removeClass('hidden');
+                        row.parents('li.Inputfield.InputfieldStateCollapsed').first().removeClass('InputfieldStateCollapsed');
+                        row.removeClass('hidden');
                         //count++;
                     } else {
-                        $this.addClass('hidden');
+                        row.addClass('hidden');
                     }
                 });
 
             } else {
 
-                $this.parents('li.Inputfield.InputfieldStateCollapsed').first().removeClass('InputfieldStateCollapsed');
-
+                row.parents('li.Inputfield.InputfieldStateCollapsed').first().removeClass('InputfieldStateCollapsed');
                 items.removeClass('hidden');
-
                 //count++;
             }
 
+            var fieldCount = field.length;
 
             field.each(function () {
+                var ff = $(this),
+                    isAllRowsHidden = ff.find('tbody tr:not(.hidden)').length == 0;
 
-                var ff = $(this);
+                ff.find('thead tr').toggleClass('hidden', isAllRowsHidden);
 
-                ff.parents('.Inputfield').first().toggleClass('hidden', ff.find('tr:not(.hidden)').length == 1);
+                // hide empty inputfields (only if there are more than 1)
+                if (fieldCount > 1) {
+                    ff.parents('.Inputfield').first().toggleClass('hidden', isAllRowsHidden);
+                }
+            });
 
-                // allow escape, backspace, delete, leftarrow keys only
-                // if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
-                //     return true;
-                // }
-                // return false;
-            })
         }, 200));
     }
 }
@@ -817,7 +834,7 @@ $(document).ready(function () {
 
         // AdminDataTable filter box
         if (AOSsettings.Misc.indexOf('dataTableFilter') !== -1) {
-            $(document).on('loaded ready', function () {
+            $(document).on('loaded ready reloaded wiretabclick', function () {
                 setupAdminDataTableFilter();
             });
         }
@@ -867,7 +884,6 @@ $(document).ready(function () {
 
         return false;
     });
-
 
 
 // ModuleTweaks
@@ -968,11 +984,16 @@ $(document).ready(function () {
 
             if ($('#modules_form').length) {
 
-                // build search strings and add to rows (tr)
-                $('#modules_form').find('tr').each(function () {
+                // disable column width change when filtering
+                // $('#modules_form').find('table').css('table-layout', 'fixed');
 
-                    var $tr = $(this),
-                        cells = $tr.children('td'),
+                setColWidths('#modules_form table');
+
+                // build search strings and add to rows (tr)
+                $('#modules_form').find('tbody tr').each(function () {
+
+                    var row = $(this),
+                        cells = row.children('td'),
                         searchStrings = [];
 
                     $.each(cells, function (i, el) {
@@ -982,7 +1003,7 @@ $(document).ready(function () {
                         }
                     });
 
-                    $tr.attr('data-filter', searchStrings.join(" "));
+                    row.attr('data-filter', searchStrings.join(" "));
                 });
 
                 // add the search markup
@@ -1016,13 +1037,8 @@ $(document).ready(function () {
                 });
 
                 // click on close X
-                $(document).on('click', '.moduleFilter i', function (e) {
-
-                    // e = e || window.event;
-                    // var target = e.target || e.srcElement;
-
+                $(document).on('click', '.moduleFilter i', function () {
                     clearModuleFilter();
-
                     return false;
                 });
 
@@ -1033,7 +1049,7 @@ $(document).ready(function () {
                         filter = target.value.toLowerCase(),
                         field = $('#modules_form').find('.AdminDataTable'),
                         items = field.find('td'),
-                    //count = 0,
+                        //count = 0,
                         length = filter.length;
 
                     $('.WireTabs a').removeClass('hasMatches');
@@ -1046,8 +1062,8 @@ $(document).ready(function () {
                     }
 
                     if (!target.value) {
-                        $(target).parent().removeClass('hasValue');
-                        items.parent('tr').removeClass('hidden');
+                        moduleFilter.removeClass('hasValue');
+                        field.find('tr.hidden, modules_section.hidden').removeClass('hidden');
                         return true;
                     }
 
@@ -1089,7 +1105,7 @@ $(document).ready(function () {
                     }
 
                     $('.modules_section').each(function () {
-                        $(this).toggleClass('hidden', $(this).find('tr:not(.hidden):not(.tablesorter-headerRow)').length == 0);
+                        $(this).toggleClass('hidden', $(this).find('tbody tr:not(.hidden)').length == 0);
                     });
 
                     if (items.filter('.hidden').length == items.length) {
@@ -1184,7 +1200,7 @@ $(document).ready(function () {
         if (window.Ps) {
 
             var sidebarNav = document.querySelector('#main-nav'),
-            // mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
                 mainContent = document.querySelector('#main'),
                 PsSettings = {
                     wheelSpeed: 2,
@@ -1306,7 +1322,7 @@ $(document).ready(function () {
             var button = $(this),
                 parentEl = button.parent(),
                 input = button.parent().find('input'),
-            //titleElem = button.parent().find('.PageListSelectName .label_title');
+                //titleElem = button.parent().find('.PageListSelectName .label_title');
                 titleElem = button.parent().find('.PageListSelectName');
 
             // try without .label_title (on pageSelected the span disappears)
@@ -1522,7 +1538,7 @@ $(document).ready(function () {
                     filter = target.value.toLowerCase(),
                     field = $(target).closest('li.Inputfield'),
                     items = field.find('[data-filter]'),
-                //count = 0,
+                    //count = 0,
                     length = filter.length;
 
                 if (!target.value) {
@@ -1671,6 +1687,22 @@ $(document).ready(function () {
     });
 
 });
+
+function setColWidths(tableSelector) {
+
+    setTimeout(function () {
+
+        // use selector instead jQuery object to handle ajax items
+        var table = $(tableSelector);
+
+        if (!table.length || table.find('th').length == 0) return false;
+
+        table.find('th').each(function () {
+            var el = $(this);
+            el.css('width', el.outerWidth() + 'px');
+        });
+    }, 100);
+}
 
 // $(window).load(function() {
 //     if ($('li.Inputfield_aos_column_break').length) {

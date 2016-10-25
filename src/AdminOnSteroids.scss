@@ -304,7 +304,10 @@ html.aos {
   }
 
   .AdminDataTable {
-    tr.hidden {
+    thead tr.hidden {
+      opacity: 0.5;
+    }
+    tbody tr.hidden {
       display: none;
     }
   }
@@ -312,10 +315,6 @@ html.aos {
   li.Inputfield.hidden {
     display: none;
   }
-
-  //.hasHiddenMatch {
-  //
-  //}
 
   .hasMatches {
     &:after {
@@ -337,6 +336,12 @@ html.aos {
       padding-right: 32px !important;
       min-width: 250px;
       display: inline-block;
+      &:focus {
+        background: #fff !important;
+      }
+      &.empty {
+        border-color: $colorDelete !important;
+      }
       + .fa-close {
         color: inherit;
         margin-left: -30px;
@@ -449,12 +454,6 @@ html.aos {
       color: transparent;
     }
     /* IE 10+ */
-  }
-
-  #modules_form {
-    tr.hidden {
-      display: none;
-    }
   }
 }
 
@@ -2208,7 +2207,10 @@ html.AdminThemeReno {
         //overflow-y: hidden;
         border-top: 156px solid transparent;
         max-height: 100%;
-        overflow: auto;
+        min-height: 100%;
+        //overflow: auto;
+        // disable page jump
+        overflow-y: scroll;
         #content {
           // layout scrolbar fix
           //border-top: 156px solid transparent;

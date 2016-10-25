@@ -455,6 +455,14 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 ![ModuleFilter](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-modulefilter.png "ModuleFilter")
 
+*AdminDataTable filter using on single table:*
+
+![AdminDataTableSingle](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-permissions.png "AdminDataTableSingle")
+
+*AdminDataTable filter using on multiple tables (filtering tagged Fields, using keywords "body" AND "email":*
+
+![AdminDataTableMulti](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-fields.png "AdminDataTableMulti")
+
 
 
 ###NavItems
