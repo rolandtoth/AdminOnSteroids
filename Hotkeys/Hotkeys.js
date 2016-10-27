@@ -79,6 +79,14 @@ $(document).ready(function () {
 
     function aos_triggerSave() {
 
+        // return if there's an open cke dialog (eg. Source)
+        if ($('.cke_dialog:visible').length) {
+            if ($('.cke_dialog:visible').find('.cke_dialog_ui_button_ok').length) {
+                aos_saveButton = $('.cke_dialog:visible').find('.cke_dialog_ui_button_ok').first().get(0).click();
+                return false;
+            }
+        }
+
         var aos_saveButton = getSaveButton();
 
         if (aos_saveButton.length) {

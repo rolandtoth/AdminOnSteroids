@@ -35,7 +35,7 @@ html.aos {
   }
 
   .AdminDataTable {
-    margin-bottom: 0;
+    //margin-bottom: 0;
     tr:last-child {
       td {
         border-bottom: none;
@@ -163,9 +163,6 @@ html.aos {
     }
     // workaround to show icons to left with overflow: hidden
     .PageList {
-      .PageListItem:not(.PageListSortItem) {
-        left: 2em;
-      }
       .PageList {
         padding-left: 2em;
         left: -2em;
@@ -320,6 +317,7 @@ html.aos {
   .AdminDataTable {
     thead tr.hidden {
       opacity: 0.5;
+      border-bottom: 3em solid transparent;
     }
     tbody tr.hidden {
       display: none;
@@ -344,12 +342,16 @@ html.aos {
     position: relative;
     z-index: 10;
     margin-top: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     clear: both;
+    padding: 6px;
+    background: #EAF0F2;
+    color: #6c96a4;
     input {
       padding-right: 32px !important;
       min-width: 250px;
       display: inline-block;
+      background: rgba(#fff, 0.66) !important;
       &:focus {
         background: #fff !important;
       }
@@ -362,6 +364,8 @@ html.aos {
         opacity: 0.33;
         display: none;
         padding: 6px;
+        top: 10px;
+        position: absolute;
         &:hover {
           cursor: pointer;
           opacity: 0.84;
@@ -372,20 +376,58 @@ html.aos {
       input + .fa-close {
         display: inline-block;
       }
+      .counter {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    .counter {
+      opacity: 0;
+      visibility: hidden;
+      display: inline-block;
+      margin-left: 12px;
+      transition: opacity $defaultTransition;
+      position: relative;
+      top: 1px;
+      em, strong {
+        display: inline-block;
+      }
+      em {
+        font-style: normal;
+        opacity: 0.66;
+        font-size: 12px;
+        //word-spacing: -1px;
+      }
+      strong {
+        font-size: 16px;
+        margin-right: 2px;
+      }
     }
     input:focus::-webkit-input-placeholder {
       color: transparent;
     }
+    input::-webkit-input-placeholder {
+      color: #6c96a4;
+    }
     input:focus:-moz-placeholder {
       color: transparent;
+    }
+    input:-moz-placeholder {
+      color: #6c96a4;
     }
     /* FF 4-18 */
     input:focus::-moz-placeholder {
       color: transparent;
     }
+    input::-moz-placeholder {
+      color: #6c96a4;
+    }
     /* FF 19+ */
     input:focus:-ms-input-placeholder {
       color: transparent;
+    }
+    input:-ms-input-placeholder {
+      color: #6c96a4;
     }
     /* IE 10+ */
   }
@@ -1321,11 +1363,13 @@ form[action*="AdminOnSteroids"] {
 
   }
 
+  // fieldsets need extra styling not to look different
   #Inputfield_tweaks {
 
     #Inputfield_InputfieldURLChecker,
     #Inputfield_CKEaddons,
     #Inputfield_NavItems,
+    #Inputfield_ListerTweaks,
     #Inputfield_PageListThumbs {
       label {
         background: transparent;
@@ -1695,11 +1739,11 @@ html.moduleCompact {
       display: none;
     }
     .modules_section + p {
-      margin-top: 3.2em;
+      margin-top: 2em;
     }
-    .AdminDataTable {
-      margin-bottom: 0 !important;
-    }
+    //.AdminDataTable {
+    //  margin-bottom: 0 !important;
+    //}
     h2 {
       display: none;
     }

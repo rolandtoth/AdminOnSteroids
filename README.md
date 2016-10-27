@@ -412,6 +412,23 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 
 
 
+###ListerTweaks
+
+*Lister enhancements*
+
+This submodule lets you set the default columns in the Find and Users listers.
+
+- **Find lister columns**: here you can select the fields for the Find lister (found under the Pages section in the sidebar/topnav).
+- **Users lister columns**: here you can select the fields for the Users lister (found under the Access section in the sidebar/topnav).
+
+There is a special field called [DEFAULTS] which is a placeholder for the default fields, eg. 'name, email, roles' in case of the Users lister. You can add fields before or after this special field to add extra columns easily.
+
+Lister bookmarks are not affected by these settings.
+
+Note: the "Columns" tab in the listers may not show the correct fields for the asmSelect field.
+
+
+
 ###LongClickDuration
 
 *Custom long-click action duration*
@@ -427,15 +444,16 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **add "Remove All" button to field deletion confirmation page**: when selecting fields for deletion, the confirmation page will show an extra button "Check All". Clicking on this once will check all fields for deletion, clicking twice will remove all.
 - **Center login form**: align login page items to center
 - **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
-- **Add filter box to AdminDataTables**: adds a search-as-you-type filter box to various tables in the admin, eg. Fields, Templates, Logs, Users, Roles etc (where AdminDataTables are used). Only one filter box is added per page even if there are more tables (eg. when Fields are grouped using tags). You can use the enter key to open the first item (only if it has a link). To clear the filter box use the ESC key or click on the "X" button.
+- **Add filter box to AdminDataTables**: adds a search-as-you-type filter box to various tables in the admin, eg. Fields, Templates, Logs, Users, Roles etc (where AdminDataTables are used). Only one filter box is added per page even if there are more tables (eg. when Fields are grouped using tags). You can use the enter key to open the first item (only if it has a link). To clear the filter box use the ESC key or click on the "X" button. *Hint*: use the exclamation mark ("!") character to invert the results. For example, if you search for "English" in the Users lister and then typing an exclamation mark the lister will show users not having "English". You can add the "!" before or after the keyword: both "!English" and "English!" will work.
 
 *Extra Check All/Remove all button on confirmation page:*
 
-![RemoveAllFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-remove-all-fields.png "RemoveAllFields")
+![RemoveAllFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-remove-all-fields.png "RemoveAllFields"
 
 *Centered login page:*
 
 ![CenterLogin](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-centerlogin.png "CenterLogin")
+
 
 
 ###ModuleTweaks

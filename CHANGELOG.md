@@ -1,6 +1,18 @@
 #Changelog
 
 
+### 0.9.1 (2016-10-27)
+
+- new submodule ListerTweaks: set default Lister columns (Find and Users listers)
+- set browser title to 'AdminOnSteroids' with JavaScript (avoid renaming "Modules" in the sidebar/topnav) 
+- dtFilter: use "!" as first or last character for inverted search (eg. 'basic-page!')
+- dtFilter: added counter
+- dtFilter: full width panel
+- dfFilter: only show filter box if there is more than one item
+- Hotkeys: trigger OK button on CKEditor edit source dialog if opened instead the main Save button
+
+
+
 ### 0.9.0 (2016-10-25)
 
 - even more filter box improvements
@@ -435,6 +447,7 @@ timestamp for main module CSS and JavaScript file to prevent caching issues
 - added "Pagelist enhancements" tweak with pagelist thumbnail feature
 - added "narrow pagelist items" tweak to RenoTweaks
 - fix z-index issue with FieldtypeLeafletMapMarker (reported by Juergen)
+
 
 
 ### 0.3.5 (2016-07-23)

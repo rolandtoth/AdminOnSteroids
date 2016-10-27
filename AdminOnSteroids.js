@@ -224,6 +224,28 @@ function getClassArgument(classes, prefix) {
     return null;
 }
 
+// build search strings and add to rows && set column widths
+function setDtTable(table) {
+    setColWidths('#' + table.attr('id'));
+
+    table.find('tbody tr').each(function () {
+
+        var $tr = $(this),
+            cells = $tr.children('td'),
+            searchStrings = [];
+
+        $.each(cells, function (i, el) {
+
+            // get text from html element, or its value (in case of inputs)
+            var text = ((el.innerText || el.textContent) || $(el).find('input').val());
+
+            if (text) searchStrings.push(text.trim());;
+        });
+
+        $tr.attr('data-filter', searchStrings.join(" "));
+    });
+}
+
 // default AdminDataTable filter
 function setupAdminDataTableFilter() {
 
@@ -236,9 +258,27 @@ function setupAdminDataTableFilter() {
 
     if ($('.AdminDataTable').length) {
 
-        var dtFilter = $('<div class="dtFilter"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>');
+        var dtFilter = $('<div class="dtFilter"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i><span class="counter"></span></div>');
 
-        // build search strings and add to rows (tr)
+        function updateDtFilterCounter(num, input, total) {
+
+            // $(input).toggleClass('hidden', !num);
+
+            var counter = $(input).siblings('.counter');
+
+            // see in CSS
+            // if((!num)) {
+            //     counter.text('');
+            // } else {
+            counter.html('<strong>' + num + '</strong>' + '<em>/ ' + total + '</em>');
+            // }
+        }
+
+        // do not show if there is only 1 item
+        if ($('.AdminDataTable').find('tbody tr').length <= 1) {
+            return false;
+        }
+
         $('.AdminDataTable').each(function () {
 
             var table = $(this);
@@ -248,30 +288,18 @@ function setupAdminDataTableFilter() {
             // continue if table is under Module Info section
             if (table.parents('#ModuleEditForm').length) return true;
 
-            setColWidths('#' + table.attr('id'));
-
-            table.find('tbody tr').each(function () {
-
-                var $tr = $(this),
-                    cells = $tr.children('td'),
-                    searchStrings = [];
-
-                $.each(cells, function (i, el) {
-
-                    // get text from html element, or its value (in case of inputs)
-                    var text = ((el.innerText || el.textContent) || $(el).find('input').val());
-
-                    if (text) {
-                        searchStrings.push(text.trim());
-                    }
-                });
-
-                $tr.attr('data-filter', searchStrings.join(" "));
-            });
+            setDtTable(table);
 
             // add to DOM
             if ($('.AdminDataTable').length == 1) {
-                table.before(dtFilter.clone());
+
+                // Sessions page
+                if ($('body').hasClass('id-1095')) {
+                    table.parents('.Inputfields').first().prepend(dtFilter.clone());
+                } else {
+                    table.before(dtFilter.clone());
+
+                }
 
             } else {
                 if (table.parents('.WireTab').length) {
@@ -296,8 +324,11 @@ function setupAdminDataTableFilter() {
             input.val('')
                 .trigger('fieldchange').focus()
                 .parent().removeClass('hasValue');
+            // .removeClass('noMatch');
 
             $('.Inputfield.hidden').removeClass('hidden');
+            // note: hiding the counter is in CSS
+            // updateDtFilterCounter();
         }
 
         // clear filterbox on ESC, remove focus on second ESC
@@ -345,7 +376,8 @@ function setupAdminDataTableFilter() {
                 field = $('.AdminDataTable'),
                 items = field.find('tbody td'),
                 //count = 0,
-                length = filter.length;
+                length = filter.length,
+                invertedSearch = false;
 
             // Lister page: process only closest tables (exception)
             if ($('body').hasClass('id-1007')) {
@@ -354,6 +386,7 @@ function setupAdminDataTableFilter() {
             }
 
             if (!target.value) {
+                updateDtFilterCounter();
                 $(target).parent().removeClass('hasValue');
                 $('tr.hidden').removeClass('hidden');
                 $('.Inputfield.hidden').removeClass('hidden');
@@ -361,11 +394,28 @@ function setupAdminDataTableFilter() {
             }
 
             if (e.keyCode == 13) {  // Enter
-                if ($('tr:not(.hidden) a').length) {
-                    $('tr:not(.hidden) a').first().get(0).click();
+                if ($('tbody tr:not(.hidden) a').length) {
+                    $('tbody tr:not(.hidden) a').first().get(0).click();
                 }
                 return false;
             }
+
+            // check if first or last character is "!" and remove if yes
+            // only if filter is at least 2 chars long (enables searching for single "!")
+            // use filter.length because it changes
+            if (filter.length > 1) {
+                if (filter.charAt(0) === '!') {
+                    filter = filter.slice(1);
+                    invertedSearch = true;
+                }
+                if (filter.charAt(filter.length - 1) === '!') {
+                    filter = filter.slice(0, -1);
+                    invertedSearch = true;
+                }
+            }
+
+            // set new length as it may have changed
+            length = filter.length;
 
             // if (field.find('tbody tr:not(.hidden)').length == 0) {
             //     $(target).addClass('empty');
@@ -375,7 +425,6 @@ function setupAdminDataTableFilter() {
             // }
 
             $(target).removeClass('empty');
-
             $(target).parent().addClass('hasValue');
 
             if (length > 0) {
@@ -392,10 +441,20 @@ function setupAdminDataTableFilter() {
                         itemFilters = row.attr('data-filter'),
                         matches = true;
 
+                    // no item filters - table is probably replaced by AJAX
+                    if(!itemFilters) {
+                        setDtTable(field);
+                        return false;
+                    }
+
                     // Match each splitted string against the whole tags string
                     $.each(filter_tags, function (i, a_filter) {
-                        if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
-                            matches = false;
+                        var isFilterMatch = itemFilters.toLowerCase().indexOf(a_filter);
+                        // if (itemFilters.toLowerCase().indexOf(a_filter) === -1) {
+                        if (invertedSearch) {
+                            if (isFilterMatch !== -1) matches = false;
+                        } else {
+                            if (isFilterMatch === -1) matches = false;
                         }
                     });
 
@@ -405,6 +464,7 @@ function setupAdminDataTableFilter() {
                         //count++;
                     } else {
                         row.addClass('hidden');
+                        // $(target).parent().addClass('noMatch');
                     }
                 });
 
@@ -428,6 +488,8 @@ function setupAdminDataTableFilter() {
 
                 return count;
             };
+
+            updateDtFilterCounter(field.find('tbody tr:not(.hidden)').length, target, field.find('tbody tr').length);
 
             field.each(function () {
                 var ff = $(this),
@@ -499,6 +561,11 @@ $(document).ready(function () {
             $longClickSlider.slider('option', 'value', val);
             sliderTooltip();
         });
+    }
+
+    // set browser title
+    if (window.location.href.indexOf('name=AdminOnSteroids') !== -1) {
+        $(document).prop('title', 'AdminOnSteroids' + ' • ProcessWire');
     }
 
     // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle)
