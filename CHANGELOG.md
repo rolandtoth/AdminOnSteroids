@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.9.2 (2016-10-27)
+
+- PHP version syntax error (reported by gmclelland)
+
+
+
 ### 0.9.1 (2016-10-27)
 
 - new submodule ListerTweaks: set default Lister columns (Find and Users listers)

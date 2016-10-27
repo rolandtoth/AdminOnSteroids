@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 91,
+            'version'   => 92,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -713,6 +713,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 $lister  = $event->object;
                 $columns = array();
                 $pageID  = $this->page->id;
+                $defaultData = self::getDefaultData();
 
                 // 1007: Find
                 // 29: Users
@@ -722,7 +723,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 	                $listerType = 'ListerTweaks_users';
                 }
 
-                $defaultFields = (self::getDefaultData())[$listerType];
+                $defaultFields = $defaultData[$listerType];
 
                 if (!empty(self::$configData[$listerType])) {
                     foreach (self::$configData[$listerType] as $ff) {
