@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 92,
+            'version'   => 93,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -132,6 +132,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'removeAllFieldsBtn',
                 'homeOpenNewTab',
                 'dataTableFilter',
+                'transFilter',
                 'centerLogin'
             ),
             'ModuleTweaks'                 => array(
@@ -2152,6 +2153,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('centerLogin', __('Center login form', __FILE__));
         $f->addOption('homeOpenNewTab', __('Open Home/View site in new tab (topnav)', __FILE__));
         $f->addOption('dataTableFilter', __('Add filter box to AdminDataTables', __FILE__));
+        $f->addOption('transFilter', __('Add filter box to Language Translator', __FILE__));
 
         if ($data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);

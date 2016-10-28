@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 0.9.3 (2016-10-28)
+
+- Misc: new tweak "Add filter box to Language Translator"
+
+
+
 ### 0.9.2 (2016-10-27)
 
 - PHP version syntax error (reported by gmclelland)
@@ -10,8 +16,8 @@
 ### 0.9.1 (2016-10-27)
 
 - new submodule ListerTweaks: set default Lister columns (Find and Users listers)
-- set browser title to 'AdminOnSteroids' with JavaScript (avoid renaming "Modules" in the sidebar/topnav) 
-- dtFilter: use "!" as first or last character for inverted search (eg. 'basic-page!')
+- set browser title to "AdminOnSteroids" with JavaScript (avoid renaming "Modules" in the sidebar/topnav) 
+- dtFilter: use "!" as first or last character for inverted search (eg. "basic-page!")
 - dtFilter: added counter
 - dtFilter: full width panel
 - dfFilter: only show filter box if there is more than one item

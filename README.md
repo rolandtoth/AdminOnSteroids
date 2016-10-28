@@ -445,6 +445,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Center login form**: align login page items to center
 - **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
 - **Add filter box to AdminDataTables**: adds a search-as-you-type filter box to various tables in the admin, eg. Fields, Templates, Logs, Users, Roles etc (where AdminDataTables are used). Only one filter box is added per page even if there are more tables (eg. when Fields are grouped using tags). You can use the enter key to open the first item (only if it has a link). To clear the filter box use the ESC key or click on the "X" button. *Hint*: use the exclamation mark ("!") character to invert the results. For example, if you search for "English" in the Users lister and then typing an exclamation mark the lister will show users not having "English". You can add the "!" before or after the keyword: both "!English" and "English!" will work.
+- **Add filter box to Language Translator**: adds a filter box the Language Translator page.
 
 *Extra Check All/Remove all button on confirmation page:*
 
@@ -453,6 +454,16 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 *Centered login page:*
 
 ![CenterLogin](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-centerlogin.png "CenterLogin")
+
+*Filter boxes on various places:*
+
+![FilterboxFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-fields.png "FilterboxFields")
+
+![FilterboxBCE](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-bce.png "FilterboxBCE")
+
+![FilterboxPermissions](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-permissions.png "FilterboxPermissions")
+
+![FilterboxTranslator](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-filterbox-translator.png "FilterboxTranslator")
 
 
 

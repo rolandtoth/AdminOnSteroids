@@ -239,7 +239,8 @@ function setDtTable(table) {
             // get text from html element, or its value (in case of inputs)
             var text = ((el.innerText || el.textContent) || $(el).find('input').val());
 
-            if (text) searchStrings.push(text.trim());;
+            if (text) searchStrings.push(text.trim());
+            ;
         });
 
         $tr.attr('data-filter', searchStrings.join(" "));
@@ -258,7 +259,7 @@ function setupAdminDataTableFilter() {
 
     if ($('.AdminDataTable').length) {
 
-        var dtFilter = $('<div class="dtFilter"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i><span class="counter"></span></div>');
+        var dtFilter = $('<div class="dtFilter filterbox"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i><span class="counter"></span></div>');
 
         function updateDtFilterCounter(num, input, total) {
 
@@ -321,10 +322,8 @@ function setupAdminDataTableFilter() {
         });
 
         function cleardtFilter(input) {
-            input.val('')
-                .trigger('fieldchange').focus()
-                .parent().removeClass('hasValue');
-            // .removeClass('noMatch');
+            input.val('').focus();
+            input.parent().removeClass('hasValue');
 
             $('.Inputfield.hidden').removeClass('hidden');
             // note: hiding the counter is in CSS
@@ -394,8 +393,9 @@ function setupAdminDataTableFilter() {
             }
 
             if (e.keyCode == 13) {  // Enter
-                if ($('tbody tr:not(.hidden) a').length) {
-                    $('tbody tr:not(.hidden) a').first().get(0).click();
+                var visibleRowLinks = $('tbody tr:not(.hidden) a');
+                if (visibleRowLinks.length) {
+                    visibleRowLinks.first().get(0).click();
                 }
                 return false;
             }
@@ -431,9 +431,7 @@ function setupAdminDataTableFilter() {
 
                 var filter_tags = filter.split(" "); // Split user input by spaces
 
-                if (filter_tags.length == 0) {
-                    return true;
-                }
+                if (filter_tags.length == 0) return true;
 
                 items.each(function () {
 
@@ -442,7 +440,7 @@ function setupAdminDataTableFilter() {
                         matches = true;
 
                     // no item filters - table is probably replaced by AJAX
-                    if(!itemFilters) {
+                    if (!itemFilters) {
                         setDtTable(field);
                         return false;
                     }
@@ -464,7 +462,6 @@ function setupAdminDataTableFilter() {
                         //count++;
                     } else {
                         row.addClass('hidden');
-                        // $(target).parent().addClass('noMatch');
                     }
                 });
 
@@ -505,6 +502,122 @@ function setupAdminDataTableFilter() {
 
         }, 200));
     }
+}
+
+
+// Translator filter box
+function setupTranslatorFilter() {
+
+    var transFilter = $('<div class="transFilter filterbox"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>');
+
+    $('form .Inputfields > .Inputfield').each(function () {
+
+        var $tr = $(this),
+            cells = $tr.find('p, span, input'),
+            searchStrings = [];
+
+        $.each(cells, function (i, el) {
+
+            // get text from html element, or its value (in case of inputs)
+            var text = ((el.innerText || el.textContent) || $(el).val());
+
+            if (text) searchStrings.push(text.trim());
+        });
+
+        $tr.attr('data-filter', searchStrings.join(" "));
+    });
+
+    // add to DOM
+    $('form .Inputfields').before(transFilter);
+
+    function clearTransFilter(input) {
+        input.val('').focus();
+        input.parent().removeClass('hasValue');
+        $('.Inputfield.hidden').removeClass('hidden');
+    }
+
+    // clear filterbox on ESC, remove focus on second ESC
+    $('.transFilter input').on('keydown', function (e) {
+
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+
+        if (e.keyCode === 27) { // ESC
+            if (!target.value) {
+                target.blur();  // if input is empty, remove focus
+            } else {
+                setTimeout(function () {
+                    clearTransFilter($(target));
+                }, 0);
+            }
+        }
+    });
+
+    // click on close X
+    $('.transFilter i').click(function (e) {
+
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+
+        clearTransFilter($(target).prev('input'));
+
+        return false;
+    });
+
+    // filter items
+    $(document).on('input keyup fieldchange', '.transFilter input', debounce(function (e) {
+
+        var target = e.target || e.srcElement,
+            filter = target.value.toLowerCase(),
+            length = filter.length,
+            field = $('form .Inputfields'),
+            items = field.children('.Inputfield');
+
+        if (!target.value) {
+            $(target).parent().removeClass('hasValue');
+            clearTransFilter($(target));
+            return true;
+        }
+
+        //if (e.keyCode == 13) {  // Enter
+        //    var visibleItems = items.filter(':not(.hidden)');
+        //    if (visibleItems.length) {
+        //        visibleItems.first().find('input').focus();
+        //        e.preventDefault();
+        //    }
+        //    return false;
+        //}
+
+        $(target).removeClass('empty');
+        $(target).parent().addClass('hasValue');
+
+        if (length > 0) {
+
+            var filter_tags = filter.split(" "); // Split user input by spaces
+
+            if (filter_tags.length == 0) return true;
+
+            items.each(function () {
+
+                var row = $(this),
+                    itemFilters = row.attr('data-filter'),
+                    matches = true;
+
+                // Match each splitted string against the whole tags string
+                $.each(filter_tags, function (i, a_filter) {
+                    var isFilterMatch = itemFilters.toLowerCase().indexOf(a_filter);
+                    if (isFilterMatch === -1) matches = false;
+                });
+
+                if (matches) {
+                    row.removeClass('hidden');
+                } else {
+                    row.addClass('hidden');
+                }
+            });
+        }
+
+    }, 200));
 }
 
 
@@ -938,9 +1051,17 @@ $(document).ready(function () {
 
         // AdminDataTable filter box
         if (AOSsettings.Misc.indexOf('dataTableFilter') !== -1) {
-            $(document).on('loaded ready reloaded wiretabclick', function () {
+            setupAdminDataTableFilter();
+            $(document).on('loaded reloaded wiretabclick', function () {
                 setupAdminDataTableFilter();
             });
+        }
+
+        // Translator filter box
+        if (AOSsettings.Misc.indexOf('transFilter') !== -1) {
+            if ($('body').hasClass('id-1021')) {
+                setupTranslatorFilter();
+            }
         }
     }
 
@@ -988,6 +1109,49 @@ $(document).ready(function () {
 
         return false;
     });
+
+
+    // ProcessEditFile matjazp
+    // $(document).on('keydown', function (e) {
+    //
+    //     e = e || window.event;
+    //     var closeBtn = $('.ui-dialog-titlebar-close');
+    //
+    //     if (e.keyCode === 27 && closeBtn.length) { // ESC
+    //         e.stopImmediatePropagation();
+    //         // closeBtn.trigger('mousedown');
+    //     }
+    // });
+    //
+    //
+    // $(document).on('pw-modal-opened', function (event, ui) {
+    //
+    //     var iframe = $(ui.event.currentTarget);
+    //
+    //     $(iframe).on("load", function () {
+    //
+    //         var isEditFormChanged = false,
+    //             editForm = $(iframe).contents().find('#editForm'),
+    //             closeBtn = $(document).find('.ui-dialog-titlebar-close');
+    //
+    //         // set flag to true
+    //         editForm.on('input', function () {
+    //             isEditFormChanged = true;
+    //         });
+    //
+    //         closeBtn.on('mousedown', function (e) {
+    //             if (isEditFormChanged) {
+    //                 var confirm = window.confirm('File is not saved. Continue?');
+    //                 if (!confirm) {
+    //                     e.preventDefault();
+    //                     return false;
+    //                 }
+    //                 isEditFormChanged = false;
+    //                 closeBtn.click();
+    //             }
+    //         });
+    //     });
+    // });
 
 
 // ModuleTweaks

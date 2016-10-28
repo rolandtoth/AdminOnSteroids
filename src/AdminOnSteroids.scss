@@ -325,7 +325,7 @@ html.aos {
   }
 
   li.Inputfield.hidden {
-    display: none;
+    display: none !important;
   }
 
   .hasMatches {
@@ -338,7 +338,7 @@ html.aos {
     }
   }
 
-  .dtFilter {
+  div.filterbox {
     position: relative;
     z-index: 10;
     margin-top: 8px;
@@ -364,7 +364,8 @@ html.aos {
         opacity: 0.33;
         display: none;
         padding: 6px;
-        top: 10px;
+        top: 50%;
+        transform: translateY(-50%);
         position: absolute;
         &:hover {
           cursor: pointer;
