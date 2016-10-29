@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 88,
+            'version'   => 94,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -66,6 +66,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'AdminTweaks',
                 'NavItems',
                 'RenoTweaks',
+                'ListerTweaks',
                 'LongClickDuration',
                 'HoverDropdown',
                 'Hotkeys',
@@ -113,10 +114,25 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'focusSearch',
                 'breadcrumbTweaks'
             ),
+            'ListerTweaks'                 => '',
+            'ListerTweaks_find'            => array(
+                'title',
+                'template',
+                'parent',
+                'modified',
+                'modified_users_id'
+            ),
+            'ListerTweaks_users'           => array(
+                'name',
+                'email',
+                'roles'
+            ),
+            'LongClickDuration'            => 600,
             'Misc'                         => array(
                 'removeAllFieldsBtn',
                 'homeOpenNewTab',
                 'dataTableFilter',
+                'transFilter',
                 'centerLogin'
             ),
             'ModuleTweaks'                 => array(
@@ -156,7 +172,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'pListIDs',
                 'highlightRows'
             ),
-            'LongClickDuration'            => 600,
             'RenoTweaks'                   => array(
 //                'sbSingleClickHeads',
                 'headSticky',
@@ -234,13 +249,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $this->wire('modules')->saveModuleConfigData($this, $settings);
 
         $this->_installColumnBreakField();
-
     }
 
 
     public function ___uninstall() {
         // save current config to settings.php
-        @file_put_contents($this->settingsFile, json_encode($this->modules->getModuleConfigData($this)));
+        $settings = array_filter($this->modules->getModuleConfigData($this));
+        @file_put_contents($this->settingsFile, json_encode($settings));
     }
 
 
@@ -507,9 +522,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         // set title to who in browser tab instead 'Modules'
-        if ($this->wire('input')->get('name') == 'AdminOnSteroids') {
-            $this->wire('page')->title = 'AdminOnSteroids';
-        }
+        // bug: renames sidebar item "Modules" too
+//        if ($this->wire('input')->get('name') == 'AdminOnSteroids') {
+//            $this->wire('page')->title = 'AdminOnSteroids';
+//        }
 
         // login page doesn't some stuff
         if ($this->page->id != 23) {
@@ -603,7 +619,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         if (in_array($subModule, $enabledSubmodules)) {
 
             $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
-            $cssFiles[] = $root . '/' . $subModule . '/' . $subModule . '.css';
+//            $cssFiles[] = $root . '/' . $subModule . '/' . $subModule . '.css';
 
             $this->addHookAfter('InputfieldURL::renderValue', $this, 'addIUCLink');
             $this->addHookAfter('InputfieldURL::render', $this, 'addIUCLink');
@@ -686,6 +702,44 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 }
             }
         }
+
+
+        // ListerTweaks
+
+        $subModule = 'ListerTweaks';
+        // default columns: only add hook if there's no bookmark requested
+        if (in_array($subModule, $enabledSubmodules) && (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false)) {
+            $this->addHookBefore('ProcessPageLister::execute', function ($event) {
+
+                $lister = $event->object;
+                $columns = array();
+                $pageID = $this->page->id;
+                $defaultData = self::getDefaultData();
+
+                // 1007: Find
+                // 29: Users
+                if ($pageID == 1007) {
+                    $listerType = 'ListerTweaks_find';
+                } elseif ($pageID == 29) {
+                    $listerType = 'ListerTweaks_users';
+                }
+
+                $defaultFields = $defaultData[$listerType];
+
+                if (!empty(self::$configData[$listerType])) {
+                    foreach (self::$configData[$listerType] as $ff) {
+                        if ($ff == '[DEFAULTS]') {
+                            $columns += $defaultFields;
+                            continue;
+                        }
+                        $columns[] = $ff;
+                    }
+                }
+
+                $lister->sessionSet('columns', (empty($columns)) ? $defaultFields : $columns);
+            });
+        }
+
 
         //RenoTweaks
         $subModule = 'RenoTweaks';
@@ -772,6 +826,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                         $field->addClass('InputfieldStateCollapsed');
                     }
                 });
+            }
+            
+            if (in_array('moduleBrowserTitle', $configData[$subModule])) {
+                // set browser title to module name
+                if($this->page->process && $this->page->process == 'ProcessModule') {
+                    $this->wire('processBrowserTitle', $this->input->get('name'));
+                }
             }
         }
 
@@ -1315,7 +1376,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // if url is an array, it's a simple pageautocomplete field (not FieldtypeAssistedURL)
         // https://github.com/rolandtoth/AdminOnSteroids/issues/13
-        if (is_array($url)) return false;
+        if (is_array($url)) {
+            return false;
+        }
 
         $configData = self::$configData;
         $editedPage = $this->editedPage;
@@ -1568,6 +1631,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $defaultData = self::getDefaultData();
         $data = array_merge(self::getDefaultData(), $data);
 
+        // exception to ListerTweaks: use "[DEFAULTS]" if empty
+        if (empty($data['ListerTweaks_find'])) $data['ListerTweaks_find'] = array('[DEFAULTS]');
+        if (empty($data['ListerTweaks_users'])) $data['ListerTweaks_users'] = array('[DEFAULTS]');
+
         $wrapper = new InputfieldWrapper();
 
         // Enable module ----------------------------------------------- //
@@ -1609,6 +1676,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('InputfieldURLChecker', '**InputfieldURLChecker**' . __('Add button or hotkey to check URL', __FILE__));
         $f->addOption('LangTabHotkeySwitcher', '**LangTabHotkeySwitcher**' . __('Switch language tabs on ctrl+arrow keys', __FILE__));
         $f->addOption('LongClickDuration', '**LongClickDuration**' . __('Custom long-click action duration', __FILE__));
+        $f->addOption('ListerTweaks', '**ListerTweaks**' . __('Lister enhancements', __FILE__));
         $f->addOption('Misc', '**Misc**' . __('Miscellaneous tweaks', __FILE__));
         $f->addOption('ModuleTweaks', '**ModuleTweaks**' . __('Module related tweaks (SuperUser only)', __FILE__));
         $f->addOption('NavItems', '**NavItems**' . __('Add pages to navigation', __FILE__));
@@ -1749,6 +1817,86 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetCKE->add($f);
 
         $fset->add($fsetCKE);
+
+
+        // ListerTweaks ----------------------------------------------- //
+
+        // system labels + id, path
+        $extraFieldNames = array(
+            'id',
+            'name',
+            'path',
+            'status',
+            'template',
+            'templates_id',
+            'modified',
+            'created',
+            'published',
+            'modified_users_id',
+            'created_users_id',
+            'parent',
+            'num_children',
+        );
+
+        $fsetLT = wire('modules')->get("InputfieldFieldset");
+        $fsetLT->attr('name', 'ListerTweaks');
+        $fsetLT->label = __('ListerTweaks', __FILE__);
+        $fsetLT->showIf = 'enabledSubmodules=ListerTweaks';
+
+        // Find lister
+
+        $f = wire('modules')->get('InputfieldAsmSelect');
+        $f->name = 'ListerTweaks_find';
+        $f->label = __('Find lister columns', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $lister_fieldnames = $this->wire('fields')->find('type!=FieldtypeFieldsetOpen|FieldtypeFieldsetClose|FieldtypeFieldsetTabOpen|FieldtypeFieldsetTabClose, sort=label')->name();
+        $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
+        natcasesort($lister_fieldnames);
+
+        array_unshift($lister_fieldnames, '[DEFAULTS]');
+
+        foreach ($lister_fieldnames as $fieldname) {
+            $f->addOption($fieldname);
+        }
+
+        if (isset($data[$f->name]) && $data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetLT->add($f);
+
+        $fset->add($fsetLT);
+
+        // User lister
+
+        $f = wire('modules')->get('InputfieldAsmSelect');
+        $f->name = 'ListerTweaks_users';
+        $f->label = __('Users lister columns', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $lister_fieldnames = $this->wire('templates')->get('user')->fields->find('name!=pass, sort=label')->name();
+        $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
+        natcasesort($lister_fieldnames);
+
+        array_unshift($lister_fieldnames, '[DEFAULTS]');
+
+        foreach ($lister_fieldnames as $fieldname) {
+            $f->addOption($fieldname);
+        }
+
+//        foreach ($lister_fieldnames as $ff) {
+//            $f->addOption($ff->name, self::getFormattedOptionName($ff));
+//        }
+
+        if (isset($data[$f->name]) && $data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetLT->add($f);
+
+        $fset->add($fsetLT);
+
 
         // DeselectRadios ----------------------------------------------- //
 
@@ -2016,6 +2164,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('centerLogin', __('Center login form', __FILE__));
         $f->addOption('homeOpenNewTab', __('Open Home/View site in new tab (topnav)', __FILE__));
         $f->addOption('dataTableFilter', __('Add filter box to AdminDataTables', __FILE__));
+        $f->addOption('transFilter', __('Add filter box to Language Translator', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -2036,6 +2185,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('moduleModal', __('Edit modules in modal on long-click', __FILE__));
         $f->addOption('moduleFilter', __('Add filter box to module list', __FILE__));
+        $f->addOption('moduleBrowserTitle', __('Set browser title to module name', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

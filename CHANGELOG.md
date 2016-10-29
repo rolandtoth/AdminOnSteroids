@@ -1,6 +1,58 @@
 #Changelog
 
 
+### 0.9.4 (2016-10-29)
+
+- InputfieldURLChecker: fix overlapping icons with FieldtypeAssistedURL (reported by gmclelland)
+- set default ListerTWeak fields to "[DEFAULTS]"
+- dtFilter: navigate paginated results using ctrl+right and ctrl+left
+- moduleFilter: use the same styling as other filterboxes (full-row with background)
+- moduleFilter: use ctrl+left, ctrl+righ tno navigate between tabs having matches
+- compact module list improvements
+- added links to GitHub documentation to submodules
+- do not export empty settings to settings.php
+- ModuleTweaks: "Set browser title to module name"
+
+
+
+
+### 0.9.3 (2016-10-28)
+
+- Misc: new tweak "Add filter box to Language Translator"
+
+
+
+### 0.9.2 (2016-10-27)
+
+- PHP version syntax error (reported by gmclelland)
+
+
+
+### 0.9.1 (2016-10-27)
+
+- new submodule ListerTweaks: set default Lister columns (Find and Users listers)
+- set browser title to "AdminOnSteroids" with JavaScript (avoid renaming "Modules" in the sidebar/topnav) 
+- dtFilter: use "!" as first or last character for inverted search (eg. "basic-page!")
+- dtFilter: added counter
+- dtFilter: full width panel
+- dfFilter: only show filter box if there is more than one item
+- Hotkeys: trigger OK button on CKEditor edit source dialog if opened instead the main Save button
+
+
+
+### 0.9.0 (2016-10-25)
+
+- even more filter box improvements
+
+
+
+### 0.8.9 (2016-10-25)
+
+- improvements to filter boxes
+- disable content jump when body height changes
+
+
+
 ### 0.8.8 (2016-10-24)
 
 - new tweak: "Add filter box to AdminDataTables" (Misc submodule)
@@ -422,6 +474,7 @@ timestamp for main module CSS and JavaScript file to prevent caching issues
 - added "Pagelist enhancements" tweak with pagelist thumbnail feature
 - added "narrow pagelist items" tweak to RenoTweaks
 - fix z-index issue with FieldtypeLeafletMapMarker (reported by Juergen)
+
 
 
 ### 0.3.5 (2016-07-23)

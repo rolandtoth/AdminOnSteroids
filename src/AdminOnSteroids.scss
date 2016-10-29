@@ -12,11 +12,15 @@ $defaultBoxShadow: 0 3px 4px -3px rgba(#465b69, 0.5);
 
 // general style overrides
 html.aos {
-  // try to avoid pwPanel jump to top
-  body {
-    overflow: auto !important;
+  // disable page jump
+  &.AdminThemeReno:not(.headSticky) {
+    body {
+      overflow-y: scroll;
+    }
   }
-
+  body.AdminThemeDefault {
+    overflow-y: scroll;
+  }
   // fix hover dropdown menus not having right padding
   &.AdminThemeReno .dropdown-menu {
     li {
@@ -29,10 +33,20 @@ html.aos {
       display: inline-block;
     }
   }
-  
+
   .AdminDataTable {
-    margin-bottom: 2em;
+    //margin-bottom: 0;
+    tr:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
   }
+  //#modules_form {
+  //  .AdminDataTable {
+  //    margin-bottom: 2em;
+  //  }
+  //}
 
   //.PageListPage .pageId {
   .PageListRoot sup {
@@ -149,9 +163,6 @@ html.aos {
     }
     // workaround to show icons to left with overflow: hidden
     .PageList {
-      .PageListItem:not(.PageListSortItem) {
-        left: 2em;
-      }
       .PageList {
         padding-left: 2em;
         left: -2em;
@@ -304,18 +315,18 @@ html.aos {
   }
 
   .AdminDataTable {
-    tr.hidden {
+    thead tr.hidden {
+      opacity: 0.5;
+      border-bottom: 3em solid transparent;
+    }
+    tbody tr.hidden {
       display: none;
     }
   }
-  
-  li.Inputfield.hidden {
-    display: none;
-  }
 
-  //.hasHiddenMatch {
-  //
-  //}
+  li.Inputfield.hidden {
+    display: none !important;
+  }
 
   .hasMatches {
     &:after {
@@ -327,22 +338,35 @@ html.aos {
     }
   }
 
-  .dtFilter {
+  div.filterbox {
     position: relative;
     z-index: 10;
     margin-top: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     clear: both;
+    padding: 6px;
+    background: #EAF0F2;
+    color: #6c96a4;
     input {
       padding-right: 32px !important;
       min-width: 250px;
       display: inline-block;
+      background: rgba(#fff, 0.66) !important;
+      &:focus {
+        background: #fff !important;
+      }
+      &.empty {
+        border-color: $colorDelete !important;
+      }
       + .fa-close {
         color: inherit;
         margin-left: -30px;
         opacity: 0.33;
         display: none;
         padding: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
         &:hover {
           cursor: pointer;
           opacity: 0.84;
@@ -353,109 +377,141 @@ html.aos {
       input + .fa-close {
         display: inline-block;
       }
+      .counter {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    .counter {
+      opacity: 0;
+      visibility: hidden;
+      display: inline-block;
+      margin-left: 12px;
+      transition: opacity $defaultTransition;
+      position: relative;
+      top: 1px;
+      em, strong {
+        display: inline-block;
+      }
+      em {
+        font-style: normal;
+        opacity: 0.66;
+        font-size: 12px;
+        //word-spacing: -1px;
+      }
+      strong {
+        font-size: 16px;
+        margin-right: 2px;
+      }
     }
     input:focus::-webkit-input-placeholder {
       color: transparent;
     }
+    input::-webkit-input-placeholder {
+      color: #6c96a4;
+    }
     input:focus:-moz-placeholder {
       color: transparent;
+    }
+    input:-moz-placeholder {
+      color: #6c96a4;
     }
     /* FF 4-18 */
     input:focus::-moz-placeholder {
       color: transparent;
     }
+    input::-moz-placeholder {
+      color: #6c96a4;
+    }
     /* FF 19+ */
     input:focus:-ms-input-placeholder {
       color: transparent;
+    }
+    input:-ms-input-placeholder {
+      color: #6c96a4;
     }
     /* IE 10+ */
   }
 
   // module filter
-  @media only screen and (min-width: 1140px) {
-    &.headSticky.AdminThemeReno {
-      .moduleFilter {
-        margin-bottom: -40px;
-        transform: translateY(12px);
-      }
-      &.headStickyCompact {
-        .moduleFilter {
-          margin-right: 10px;
-        }
-      }
-    }
+  //@media only screen and (min-width: 1140px) {
+  //  &.headSticky.AdminThemeReno {
+  //    .moduleFilter {
+  //      margin-bottom: -40px;
+  //      transform: translateY(12px);
+  //    }
+  //    &.headStickyCompact {
+  //      .moduleFilter {
+  //        margin-right: 10px;
+  //      }
+  //    }
+  //  }
+  //
+  //  .moduleFilter {
+  //    float: right;
+  //  }
+  //}
 
-    .moduleFilter {
-      float: right;
-    }
-  }
+  //body.AdminThemeDefault {
+  //  .moduleFilter {
+  //    transform: translateY(-40px);
+  //    margin-right: 12px;
+  //  }
+  //  @media only screen and (min-width: 840px) {
+  //    .moduleFilter {
+  //      float: right;
+  //      transform: translateY(0) !important;
+  //      margin-top: -40px;
+  //      margin-right: 0;
+  //    }
+  //  }
+  //}
 
-  body.AdminThemeDefault {
-    .moduleFilter {
-      transform: translateY(-40px);
-      margin-right: 12px;
-    }
-    @media only screen and (min-width: 840px) {
-      .moduleFilter {
-        float: right;
-        transform: translateY(0) !important;
-        margin-top: -40px;
-        margin-right: 0;
-      }
-    }
-  }
-  
   .modules_section.hidden {
     display: none;
   }
 
-  .moduleFilter {
-    position: relative;
-    z-index: 10;
-    margin-bottom: 12px;
-    input {
-      padding-right: 32px !important;
-      min-width: 250px;
-      display: inline-block;
-      + .fa-close {
-        color: inherit;
-        margin-left: -30px;
-        opacity: 0.33;
-        display: none;
-        padding: 6px;
-        &:hover {
-          cursor: pointer;
-          opacity: 0.84;
-        }
-      }
-    }
-    &.hasValue {
-      input + .fa-close {
-        display: inline-block;
-      }
-    }
-    input:focus::-webkit-input-placeholder {
-      color: transparent;
-    }
-    input:focus:-moz-placeholder {
-      color: transparent;
-    }
-    /* FF 4-18 */
-    input:focus::-moz-placeholder {
-      color: transparent;
-    }
-    /* FF 19+ */
-    input:focus:-ms-input-placeholder {
-      color: transparent;
-    }
+  //.moduleFilter {
+  //  position: relative;
+  //  z-index: 10;
+  //  margin-bottom: 12px;
+  //  input {
+  //    padding-right: 32px !important;
+  //    min-width: 250px;
+  //    display: inline-block;
+  //    + .fa-close {
+  //      color: inherit;
+  //      margin-left: -30px;
+  //      opacity: 0.33;
+  //      display: none;
+  //      padding: 6px;
+  //      &:hover {
+  //        cursor: pointer;
+  //        opacity: 0.84;
+  //      }
+  //    }
+  //  }
+  //  &.hasValue {
+  //    input + .fa-close {
+  //      display: inline-block;
+  //    }
+  //  }
+  //  input:focus::-webkit-input-placeholder {
+  //    color: transparent;
+  //  }
+  //  input:focus:-moz-placeholder {
+  //    color: transparent;
+  //  }
+  //  /* FF 4-18 */
+  //  input:focus::-moz-placeholder {
+  //    color: transparent;
+  //  }
+  //  /* FF 19+ */
+  //  input:focus:-ms-input-placeholder {
+  //    color: transparent;
+  //  }
     /* IE 10+ */
-  }
-
-  #modules_form {
-    tr.hidden {
-      display: none;
-    }
-  }
+  //}
 }
 
 .cke_maximized {
@@ -1075,7 +1131,18 @@ html.asmCollapse {
   }
 }
 
-// module's own CSS styles
+// module's own styles
+
+.docLink {
+  position: absolute;
+  right: 16px;
+  bottom: 9px;
+  display: inline-block;
+  z-index: 5;
+  &:not(:hover) {
+    color: rgba(#2c3e55, 0.2);
+  }
+}
 
 .aos_disabled {
   pointer-events: none;
@@ -1153,17 +1220,19 @@ html.asmCollapse {
             outline-offset: -1px;
           }
         }
-        &:hover {
-          input:not(:checked) {
-            + span {
-              &:before {
-                //background: rgba(#97AAB4, 0.2);
-                background: rgba(#97AAB4, 0.12);
-                //box-shadow: inset 0 0 2px 1px rgba(#fff, 0.7);
-                outline-color: rgba(#97AAB4, 0.33);
-                //outline: 1px solid rgba(#97AAB4, 0.4);
-                //background: darken(#D2DCE6, 2%);
-              }
+
+      }
+      a.docLink:hover + label,
+      label:hover {
+        input:not(:checked) {
+          + span {
+            &:before {
+              //background: rgba(#97AAB4, 0.2);
+              background: rgba(#97AAB4, 0.12);
+              //box-shadow: inset 0 0 2px 1px rgba(#fff, 0.7);
+              outline-color: rgba(#97AAB4, 0.33);
+              //outline: 1px solid rgba(#97AAB4, 0.4);
+              //background: darken(#D2DCE6, 2%);
             }
           }
         }
@@ -1232,7 +1301,7 @@ html.asmCollapse {
   }
   .asmList {
     margin-top: 0 !important;
-    margin-right: 10px;
+    margin-right: 20px;
   }
 }
 
@@ -1258,12 +1327,13 @@ form[action*="AdminOnSteroids"] {
           font-style: normal;
           display: block;
           font-weight: bold;
-          //margin-bottom: 4px;
+          margin-bottom: 4px;
         }
       }
       ul {
         > li {
           break-inside: avoid;
+          position: relative;
         }
         @media only screen and (min-width: 960px) {
           column-count: 2;
@@ -1308,11 +1378,13 @@ form[action*="AdminOnSteroids"] {
 
   }
 
+  // fieldsets need extra styling not to look different
   #Inputfield_tweaks {
 
     #Inputfield_InputfieldURLChecker,
     #Inputfield_CKEaddons,
     #Inputfield_NavItems,
+    #Inputfield_ListerTweaks,
     #Inputfield_PageListThumbs {
       label {
         background: transparent;
@@ -1681,9 +1753,12 @@ html.moduleCompact {
     .modules_section:not(:first-of-type) thead {
       display: none;
     }
-    table {
-      margin-bottom: 0;
+    .modules_section + p {
+      margin-top: 2em;
     }
+    //.AdminDataTable {
+    //  margin-bottom: 0 !important;
+    //}
     h2 {
       display: none;
     }
@@ -2208,7 +2283,10 @@ html.AdminThemeReno {
         //overflow-y: hidden;
         border-top: 156px solid transparent;
         max-height: 100%;
-        overflow: auto;
+        min-height: 100%;
+        //overflow: auto;
+        // disable page jump
+        overflow-y: scroll;
         #content {
           // layout scrolbar fix
           //border-top: 156px solid transparent;
@@ -3241,6 +3319,108 @@ html.HoverDropdown {
     }
   }
 }
+
+// InputfieldURLChecker
+.iuc-button {
+  position: absolute;
+  margin-top: 1px;
+  right: 16px;
+  padding: 0 12px;
+  background: transparent;
+  z-index: 20;
+  &.button-left {
+    right: auto;
+    left: 16px;
+  }
+  &.iuc-hide {
+    pointer-events: none !important;
+  }
+  &.button-left ~ input {
+    padding-left: 36px !important;
+  }
+  &.button-right ~ input {
+    padding-right: 36px !important;
+  }
+  &:not(.iuc-hide):hover i {
+    color: inherit !important;
+  }
+  &:active i {
+    font-size: 0.88em !important;
+  }
+  i {
+    color: rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+    -webkit-transition: color 0.2s;
+    -moz-transition: color 0.2s;
+    transition: color 0.2s;
+  }
+}
+
+.InputfieldContent .InputfieldAssistedURL {
+  width: 100% !important;
+}
+
+.InputfieldAssistedURL {
+  .button-left {
+    left: 66px;
+  }
+  .InputfieldMaxWidth {
+    width: calc(100% - 50px) !important;
+  }
+}
+
+.iuc-hidden {
+  display: none !important;
+}
+
+.InputfieldMultiplierInput {
+  position: relative;
+  .iuc-button.button-left {
+    left: 8px;
+  }
+  .iuc-button.button-right {
+    right: 8px;
+  }
+}
+
+#wrap_link_page_url {
+  .InputfieldPageAutocomplete,
+  .InputfieldURL {
+    .InputfieldContent {
+      position: relative;
+    }
+  }
+  .iuc-button.button-left {
+    left: 40px;
+    ~ p #link_page_url_input {
+      padding-left: 56px !important;
+    }
+  }
+  .iuc-button.button-right {
+    right: 34px;
+    ~ p #link_page_url_input {
+      padding-right: 56px !important;
+    }
+  }
+}
+
+#wrap_link_page_url .InputfieldPageAutocomplete,
+.InputfieldURL {
+  input:focus + .iuc-button i {
+    color: rgba(0, 0, 0, 0.32);
+  }
+}
+
+.collapsed7.InputfieldURL,
+.collapsed8.InputfieldURL,
+#wrap_link_page_url .collapsed7.InputfieldPageAutocomplete,
+#wrap_link_page_url .collapsed8.InputfieldPageAutocomplete {
+  .InputfieldContent a:hover {
+    text-decoration: underline;
+  }
+}
+
+//end of InputfieldURLChecker
 
 @keyframes spinIn {
   0% {

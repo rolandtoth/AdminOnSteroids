@@ -412,6 +412,25 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 
 
 
+###ListerTweaks
+
+*Lister enhancements*
+
+This submodule lets you set the default columns in the Find and Users listers.
+
+- **Find lister columns**: here you can select the fields for the Find lister (found under the Pages section in the sidebar/topnav).
+- **Users lister columns**: here you can select the fields for the Users lister (found under the Access section in the sidebar/topnav).
+
+**[DEFAULTS] field**
+
+There is a special field called [DEFAULTS] which is a placeholder for the default fields, eg. 'name, email, roles' in case of the Users lister. You can add fields before or after this special field to add extra columns easily. The module will automatically set this field if you remove all fields and on install.
+
+Lister bookmarks are not affected by these settings.
+
+Note: the "Columns" tab in the listers may not show the correct fields for the asmSelect field.
+
+
+
 ###LongClickDuration
 
 *Custom long-click action duration*
@@ -427,15 +446,33 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **add "Remove All" button to field deletion confirmation page**: when selecting fields for deletion, the confirmation page will show an extra button "Check All". Clicking on this once will check all fields for deletion, clicking twice will remove all.
 - **Center login form**: align login page items to center
 - **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
-- **Add filter box to AdminDataTables**: adds a search-as-you-type filter box to various tables in the admin, eg. Fields, Templates, Logs, Users, Roles etc (where AdminDataTables are used). Only one filter box is added per page even if there are more tables (eg. when Fields are grouped using tags). You can use the enter key to open the first item (only if it has a link). To clear the filter box use the ESC key or click on the "X" button.
+- **Add filter box to AdminDataTables**: adds a search-as-you-type filter box to various tables in the admin, eg. Fields, Templates, Logs, Users, Roles etc (where AdminDataTables are used). Only one filter box is added per page even if there are more tables (eg. when Fields are grouped using tags). You can use the enter key to open the first item (only if it has a link). To clear the filter box use the ESC key or click on the "X" button. *Hint*: use the exclamation mark ("!") character to invert the results. For example, if you search for "English" in the Users lister and then typing an exclamation mark the lister will show users not having "English". You can add the "!" before or after the keyword: both "!English" and "English!" will work.
+- **Add filter box to Language Translator**: adds a filter box the Language Translator page.
+
+**Paginated AdminDatatables and filterbox**
+
+Filter boxes can't filter items of paginated tables that are not loaded (eg. items on page 2 will not show up on page 1 when filtering).
+
+However, you can navigate paginated tables using ctrl+right and ctrl+left hotkeys. This will load the previous/next set of results with keeping the current filter keyword.
 
 *Extra Check All/Remove all button on confirmation page:*
 
-![RemoveAllFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-remove-all-fields.png "RemoveAllFields")
+![RemoveAllFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-remove-all-fields.png "RemoveAllFields"
 
 *Centered login page:*
 
 ![CenterLogin](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-centerlogin.png "CenterLogin")
+
+*Filter boxes on various places:*
+
+![FilterboxFields](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-fields.png "FilterboxFields")
+
+![FilterboxBCE](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-bce.png "FilterboxBCE")
+
+![FilterboxPermissions](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-permissions.png "FilterboxPermissions")
+
+![FilterboxTranslator](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-filterbox-translator.png "FilterboxTranslator")
+
 
 
 ###ModuleTweaks
@@ -445,7 +482,8 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
 - **Edit modules in modal on long-click**: long-clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
-- **Add filter box to module list**: adds an input field to filter modules. If there's a match the corresponding module tabs will get a dot after their name. You can search for any text inside the module's row, not only for the module title. Hitting enter will go to the first matching module on the list.
+- **Add filter box to module list**: adds an input field to filter modules. If there's a match the corresponding module tabs will get a dot after their name. You can search for any text inside the module's row, not only for the module title. Hitting enter will go to the first matching module on the list. You can use the ctrl+right and ctrl+left hotkeys to navigate between tabs having matches.
+- **Set browser title to module name**: if checked, sets the title of the browser tab to the module's name on module config pages (instead the general "Modules").
 
 *Screenshot of compact module list:*
 
@@ -454,6 +492,14 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 *Filtering modules - "Site" and "Configure" tabs have matching items:*
 
 ![ModuleFilter](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-modulefilter.png "ModuleFilter")
+
+*AdminDataTable filter using on single table:*
+
+![AdminDataTableSingle](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-permissions.png "AdminDataTableSingle")
+
+*AdminDataTable filter using on multiple tables (filtering tagged Fields, using keywords "body" AND "email":*
+
+![AdminDataTableMulti](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-dtfilter-fields.png "AdminDataTableMulti")
 
 
 
