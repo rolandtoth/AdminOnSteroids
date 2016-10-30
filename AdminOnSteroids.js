@@ -1310,6 +1310,55 @@ $(document).ready(function () {
                 });
             }
 
+            // flatModules
+            if ($('html.flatModules').length) {
+
+                var modulesArray = [],
+                    mainTbody = '#modules_form .AdminDataTable:eq(0) tbody';
+
+                $('#modules_form p.detail').each(function () {
+                    $(this).appendTo('#modules_form');
+                });
+
+                $('body').removeClass('hasWireTabs');
+
+                $('#modules_form tr').each(function () {
+
+                    var row = $(this),
+                        moduleName;
+
+                    // continue if current row is in thead
+                    if (row.parent('thead').length) return true;
+
+                    moduleName = row.children('td').first().find('a span').last().text().trim();
+
+                    // some module names aren't in a span
+                    if (!moduleName) {
+                        moduleName = row.children('td').first().find('a').text().trim();
+                    }
+
+                    // create modulesArray without duplications
+                    if (modulesArray.indexOf(moduleName) === -1) {
+                        modulesArray.push(moduleName);
+                        // set data-aos-name in each row
+                        row.attr('data-aos-name', moduleName);
+                    } else {
+                        row.remove();
+                    }
+                });
+
+                // sort alphabetically (case insensitive)
+                modulesArray.sort(function (a, b) {
+                    return a.toLowerCase().localeCompare(b.toLowerCase());
+                });
+
+                //console.log(modulesArray.join('\n'));
+
+                $.each(modulesArray, function (i) {
+                    var item = $('#modules_form tr[data-aos-name="' + modulesArray[i] + '"]');
+                    item.appendTo(mainTbody);
+                });
+            }
 
             if (AOSsettings.ModuleTweaks.indexOf('moduleCompact') !== -1) {
 
@@ -1420,7 +1469,7 @@ $(document).ready(function () {
                             var nextMatches = currentTab.parent().nextAll('li').has('.hasMatches'),
                                 prevMatches = currentTab.parent().prevAll('li').has('.hasMatches');
 
-                            if (hasMatchesTabs.length < 2) return false;
+                            if (hasMatchesTabs.length < 2) return true;
 
                             switch (keyCode) {
 

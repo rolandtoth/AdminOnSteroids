@@ -510,7 +510,7 @@ html.aos {
   //  input:focus:-ms-input-placeholder {
   //    color: transparent;
   //  }
-    /* IE 10+ */
+  /* IE 10+ */
   //}
 }
 
@@ -1715,6 +1715,61 @@ html.filterbox {
 }
 
 // ModuleTweaks
+
+//html.noModuleTabs {
+html.flatModules body.id-21 {
+  .WireTabs.nav {
+    display: none;
+  }
+  // always hide modules category and table headers
+  #modules_form {
+    h2, thead {
+      display: none;
+    }
+  }
+  //.Inputfield.WireTab:not([id='tab_site_modules']) {
+  //  display: none !important;
+  //}
+  #modules_form > .Inputfields > .Inputfield {
+    display: block !important;
+    &#tab_configurable_modules,
+    &#tab_install_modules {
+      display: none !important;
+    }
+    &:not(:first-child) thead {
+      display: none !important;
+    }
+    .AdminDataTable,
+    .Inputfields .InputfieldMarkup .InputfieldHeader + .InputfieldContent {
+      margin-bottom: 0;
+      padding-bottom: 0;
+
+    }
+    .InputfieldContent > p:first-child {
+      display: none;
+    }
+    > .Inputfields > .Inputfield:not(.InputfieldFieldset) .InputfieldHeader {
+      height: 0;
+      overflow: hidden;
+      position: relative;
+      top: -1px;
+      margin-bottom: -1px;
+      //padding: 0;
+      //border: none;
+      //border-bottom: none;
+    }
+
+  }
+
+  #tab_new_modules {
+    .InputfieldMarkup {
+      display: none;
+    }
+  }
+}
+
+//}
+
 html.moduleModal {
 
   .ui-dialog-buttonpane {

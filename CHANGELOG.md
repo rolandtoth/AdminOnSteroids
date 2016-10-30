@@ -1,6 +1,10 @@
 #Changelog
 
 
+### 0.9.4 (2016-10-30)
+
+- ModuleTweaks: added "Do not distribute modules into tabs" feature (show flattened modules list)
+
 ### 0.9.4 (2016-10-29)
 
 - InputfieldURLChecker: fix overlapping icons with FieldtypeAssistedURL (reported by gmclelland)

@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 94,
+            'version'   => 95,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -137,6 +137,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             ),
             'ModuleTweaks'                 => array(
                 'loadCollapsedModuleInfos',
+                'flatModules',
                 'moduleCompact',
                 'moduleFilter',
 //                'moduleModal'
@@ -268,6 +269,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'asmLeftX',
             'centerLogin',
             'filterbox',
+            'flatModules',
             'headBtnToTitle',
             'headSticky',
             'headStickyCompact',
@@ -2182,6 +2184,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $f->notes = __('', __FILE__);
 
         $f->addOption('moduleCompact', __('Compact module list', __FILE__));
+        $f->addOption('flatModules', __('Do not distribute modules into tabs', __FILE__));
         $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
         $f->addOption('moduleModal', __('Edit modules in modal on long-click', __FILE__));
         $f->addOption('moduleFilter', __('Add filter box to module list', __FILE__));
