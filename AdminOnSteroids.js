@@ -1311,7 +1311,7 @@ $(document).ready(function () {
             }
 
             // flatModules
-            if ($('html.flatModules').length) {
+            if ($('html.flatModules body.id-21').length) {
 
                 var modulesArray = [],
                     mainTbody = '#modules_form .AdminDataTable:eq(0) tbody';

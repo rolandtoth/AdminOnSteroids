@@ -1,9 +1,16 @@
 #Changelog
 
 
-### 0.9.4 (2016-10-30)
+### 0.9.6 (2016-10-31)
+
+- fixed class "hasWireTabs" removed from all admin pages rather than only Modules page (reported by Robin S)
+
+
+### 0.9.5 (2016-10-30)
 
 - ModuleTweaks: added "Do not distribute modules into tabs" feature (show flattened modules list)
+
+
 
 ### 0.9.4 (2016-10-29)
 
