@@ -338,6 +338,11 @@ html.aos {
     }
   }
 
+  &:not(.flatModules) body.AdminThemeDefault .moduleFilter {
+    position: relative;
+    top: -2.7em;
+  }
+
   div.filterbox {
     position: relative;
     z-index: 10;
@@ -351,6 +356,7 @@ html.aos {
       margin-top: 0;
       margin-bottom: 0.7em;
     }
+
     input {
       padding-right: 32px !important;
       min-width: 250px;

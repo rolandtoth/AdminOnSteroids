@@ -1311,81 +1311,82 @@ $(document).ready(function () {
             }
 
             // flatModules
-            if ($('html.flatModules body.id-21').length) {
+            if (AOSsettings.ModuleTweaks.indexOf('flatModules') !== -1) {
+                if ($('html.flatModules body.id-21').length) {
 
-                var modulesArray = [],
-                    mainTbody = '#modules_form .AdminDataTable:eq(0) tbody',
-                    addNewBtn = '<button type="button" id="add_new_button" class="ui-button ui-widget ui-corner-all ui-priority-secondary"><span class="ui-button-text"><i class="fa fa-plus-circle"></i> ' + AOSsettings.loc['add_new'] + '</span></button>',
-                    addNewBlock = $('#tab_new_modules'),
-                    addNewBlockInput = addNewBlock.find('input:eq(0)'),
-                    mainBlock = $('#tab_site_modules');
+                    var modulesArray = [],
+                        mainTbody = '#modules_form .AdminDataTable:eq(0) tbody',
+                        addNewBtn = '<button type="button" id="add_new_button" class="ui-button ui-widget ui-corner-all ui-priority-secondary"><span class="ui-button-text"><i class="fa fa-plus-circle"></i> ' + AOSsettings.loc['add_new'] + '</span></button>',
+                        addNewBlock = $('#tab_new_modules'),
+                        addNewBlockInput = addNewBlock.find('input:eq(0)'),
+                        mainBlock = $('#tab_site_modules');
 
-                $('#reset_modules').parent().prepend(addNewBtn);
+                    $('#reset_modules').parent().prepend(addNewBtn);
 
-                $(document).on('click', '#add_new_button', function (e) {
+                    $(document).on('click', '#add_new_button', function (e) {
 
-                    var btn = $(this);
+                        var btn = $(this);
 
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    e.stopPropagation();
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
 
-                    if (btn.hasClass('active')) {
-                        btn.removeClass('active');
-                        mainBlock.after(addNewBlock);
-                    } else {
-                        btn.addClass('active');
-                        mainBlock.before(addNewBlock);
-                        // use focus() to jump to block if page is scrolled down
-                        addNewBlockInput.focus();
-                    }
+                        if (btn.hasClass('active')) {
+                            btn.removeClass('active');
+                            mainBlock.after(addNewBlock);
+                        } else {
+                            btn.addClass('active');
+                            mainBlock.before(addNewBlock);
+                            // use focus() to jump to block if page is scrolled down
+                            addNewBlockInput.focus();
+                        }
 
-                    return false;
+                        return false;
+                    });
 
-                });
+                    $('#modules_form p.detail').each(function () {
+                        $(this).appendTo('#modules_form');
+                    });
 
-                $('#modules_form p.detail').each(function () {
-                    $(this).appendTo('#modules_form');
-                });
+                    $('body').removeClass('hasWireTabs');
 
-                $('body').removeClass('hasWireTabs');
+                    $('#modules_form tr').each(function () {
 
-                $('#modules_form tr').each(function () {
+                        var row = $(this),
+                            moduleName;
 
-                    var row = $(this),
-                        moduleName;
+                        // continue if current row is in thead
+                        if (row.parent('thead').length) return true;
 
-                    // continue if current row is in thead
-                    if (row.parent('thead').length) return true;
+                        moduleName = row.children('td').first().find('a span').last().text().trim();
 
-                    moduleName = row.children('td').first().find('a span').last().text().trim();
+                        // some module names aren't in a span
+                        if (!moduleName) {
+                            moduleName = row.children('td').first().find('a').text().trim();
+                        }
 
-                    // some module names aren't in a span
-                    if (!moduleName) {
-                        moduleName = row.children('td').first().find('a').text().trim();
-                    }
+                        // create modulesArray without duplications
+                        if (modulesArray.indexOf(moduleName) === -1) {
+                            modulesArray.push(moduleName);
+                            // set data-aos-name in each row
+                            row.attr('data-aos-name', moduleName);
+                        } else {
+                            row.remove();
+                        }
+                    });
 
-                    // create modulesArray without duplications
-                    if (modulesArray.indexOf(moduleName) === -1) {
-                        modulesArray.push(moduleName);
-                        // set data-aos-name in each row
-                        row.attr('data-aos-name', moduleName);
-                    } else {
-                        row.remove();
-                    }
-                });
+                    // sort alphabetically (case insensitive)
+                    modulesArray.sort(function (a, b) {
+                        return a.toLowerCase().localeCompare(b.toLowerCase());
+                    });
 
-                // sort alphabetically (case insensitive)
-                modulesArray.sort(function (a, b) {
-                    return a.toLowerCase().localeCompare(b.toLowerCase());
-                });
+                    //console.log(modulesArray.join('\n'));
 
-                //console.log(modulesArray.join('\n'));
-
-                $.each(modulesArray, function (i) {
-                    var item = $('#modules_form tr[data-aos-name="' + modulesArray[i] + '"]');
-                    item.appendTo(mainTbody);
-                });
+                    $.each(modulesArray, function (i) {
+                        var item = $('#modules_form tr[data-aos-name="' + modulesArray[i] + '"]');
+                        item.appendTo(mainTbody);
+                    });
+                }
             }
 
             if (AOSsettings.ModuleTweaks.indexOf('moduleCompact') !== -1) {
