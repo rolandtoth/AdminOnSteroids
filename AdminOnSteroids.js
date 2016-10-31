@@ -1315,8 +1315,9 @@ $(document).ready(function () {
 
                 var modulesArray = [],
                     mainTbody = '#modules_form .AdminDataTable:eq(0) tbody',
-                    addNewBtn = '<button type="button" id="add_new_button" class="ui-button ui-widget ui-corner-all ui-priority-secondary"><span class="ui-button-text"><i class="fa fa-plus-circle"></i> ' + AOSsettings.loc['add_new'] +'</span></button>',
+                    addNewBtn = '<button type="button" id="add_new_button" class="ui-button ui-widget ui-corner-all ui-priority-secondary"><span class="ui-button-text"><i class="fa fa-plus-circle"></i> ' + AOSsettings.loc['add_new'] + '</span></button>',
                     addNewBlock = $('#tab_new_modules'),
+                    addNewBlockInput = addNewBlock.find('input:eq(0)'),
                     mainBlock = $('#tab_site_modules');
 
                 $('#reset_modules').parent().prepend(addNewBtn);
@@ -1335,6 +1336,8 @@ $(document).ready(function () {
                     } else {
                         btn.addClass('active');
                         mainBlock.before(addNewBlock);
+                        // use focus() to jump to block if page is scrolled down
+                        addNewBlockInput.focus();
                     }
 
                     return false;
