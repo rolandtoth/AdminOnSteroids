@@ -1314,7 +1314,32 @@ $(document).ready(function () {
             if ($('html.flatModules body.id-21').length) {
 
                 var modulesArray = [],
-                    mainTbody = '#modules_form .AdminDataTable:eq(0) tbody';
+                    mainTbody = '#modules_form .AdminDataTable:eq(0) tbody',
+                    addNewBtn = '<button type="button" id="add_new_button" class="ui-button ui-widget ui-corner-all ui-priority-secondary"><span class="ui-button-text"><i class="fa fa-plus-circle"></i> ' + AOSsettings.loc['add_new'] +'</span></button>',
+                    addNewBlock = $('#tab_new_modules'),
+                    mainBlock = $('#tab_site_modules');
+
+                $('#reset_modules').parent().prepend(addNewBtn);
+
+                $(document).on('click', '#add_new_button', function (e) {
+
+                    var btn = $(this);
+
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+
+                    if (btn.hasClass('active')) {
+                        btn.removeClass('active');
+                        mainBlock.after(addNewBlock);
+                    } else {
+                        btn.addClass('active');
+                        mainBlock.before(addNewBlock);
+                    }
+
+                    return false;
+
+                });
 
                 $('#modules_form p.detail').each(function () {
                     $(this).appendTo('#modules_form');

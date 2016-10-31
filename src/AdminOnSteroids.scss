@@ -347,6 +347,10 @@ html.aos {
     padding: 6px;
     background: #EAF0F2;
     color: #6c96a4;
+    &.moduleFilter {
+      margin-top: 0;
+      margin-bottom: 0.7em;
+    }
     input {
       padding-right: 32px !important;
       min-width: 250px;
@@ -1727,11 +1731,22 @@ html.flatModules body.id-21 {
       display: none;
     }
   }
+  #tab_new_modules {
+    margin-bottom: 1em;
+    display: block !important;
+  }
+
+  // hide unnecessary links from sidebar Modules section
+  //#main-nav a.module + ul > li:not(:first-child):not(:last-child) {
+  //  display: none !important;
+  //}
   //.Inputfield.WireTab:not([id='tab_site_modules']) {
   //  display: none !important;
   //}
-  #modules_form > .Inputfields > .Inputfield {
+  #modules_form #tab_site_modules {
     display: block !important;
+  }
+  #modules_form > .Inputfields > .Inputfield {
     &#tab_configurable_modules,
     &#tab_install_modules {
       display: none !important;

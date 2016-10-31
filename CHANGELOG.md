@@ -1,9 +1,16 @@
 #Changelog
 
 
+### 0.9.7 (2016-10-31)
+
+- added "Add new" button to the header when tab-less module list is enabled
+
+
+
 ### 0.9.6 (2016-10-31)
 
 - fixed class "hasWireTabs" removed from all admin pages rather than only Modules page (reported by Robin S)
+
 
 
 ### 0.9.5 (2016-10-30)

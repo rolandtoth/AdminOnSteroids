@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 96,
+            'version'   => 97,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -829,10 +829,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                     }
                 });
             }
-            
+
             if (in_array('moduleBrowserTitle', $configData[$subModule])) {
                 // set browser title to module name
-                if($this->page->process && $this->page->process == 'ProcessModule') {
+                if ($this->page->process && $this->page->process == 'ProcessModule') {
                     $this->wire('processBrowserTitle', $this->input->get('name'));
                 }
             }
@@ -863,6 +863,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // add translations
         $configData['loc'] = array(
+            'add_new'                  => __('Add new', __FILE__),
             'save'                     => __('Save', __FILE__),
             'save_and_exit'            => __('Save + Exit', __FILE__),
             'save_and_reload'          => __('Save + Reload', __FILE__),
