@@ -84,7 +84,7 @@ if (AOSsettings) {
                     CKEfield = ProcessWire.config[CKEname];
 
                 // only add once
-                if (CKEfield.aos) return true;
+                if (!CKEfield || CKEfield.aos) return true;
 
                 // load custom config if exists
                 if (AOSsettings.customCKEScript) {
