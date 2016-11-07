@@ -1,4 +1,4 @@
-Admin On Steroids
+AdminOnSteroids
 ========================
 
 Various admin tweaks to enhance ProcessWire admin. See more at [https://processwire.com/talk/topic/13389-adminonsteroids/](https://processwire.com/talk/topic/13389-adminonsteroids/)
@@ -15,26 +15,53 @@ Various admin tweaks to enhance ProcessWire admin. See more at [https://processw
 
 Follow the uninstall instructions on the link above.
 
-The module uses a file "settings.php" in the module's directory which is populated with module config data on uninstall and on next install imports it.
-This way you can reinstall the module later and continue where you've left off.
+**Restore settings on next install**
 
-Additionally you can copy this file to other ProcessWire installations to use the same settings.
-Make sure to copy the file before installing the module.
+Check this checkbox at the bottom of the module to create a file "settings.php" in the module's directory on uninstall containing module data. This file will be imported on next install so you can continue where you have left off.
 
-To enable this feature, check the option "Restore settings on next install".
+Additionally you can copy this file to other ProcessWire installations to use the same settings. Make sure to copy the file before installing the module.
 
-The file needs to be writable to use this feature.
+Note: the module has to be saved first if you change this feature to take effect. The file also needs to be writable.
 
 
-## Adding custom CSS and JavaScript to the admin
+## Table of Contents
 
-At the bottom of the module's settings page there' a section "Asset paths" where you can set a path for a custom admin CSS and admin JavaScript.
-The module will automatically load these files if they exist so you can add custom style or script to the admin.
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-*Paths to custom assets:*
 
-![AssetPaths](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-assetpaths.png "AssetPaths")
+- [Enable module](#enable-module)
+- [Submodules](#submodules)
+  - [AdminColumns](#admincolumns)
+  - [AdminLangSwitcher](#adminlangswitcher)
+  - [AdminTweaks](#admintweaks)
+  - [AsmTweaks](#asmtweaks)
+  - [AutosizeTextareas](#autosizetextareas)
+  - [CKEaddons](#ckeaddons)
+  - [DeselectRadios](#deselectradios)
+  - [FieldAndTemplateEditLinks](#fieldandtemplateeditlinks)
+  - [FileFieldTweaks](#filefieldtweaks)
+  - [FocusInputOnLangTabSwitch](#focusinputonlangtabswitch)
+  - [Hotkeys](#hotkeys)
+  - [HoverDropdown](#hoverdropdown)
+  - [InputfieldURLChecker](#inputfieldurlchecker)
+  - [LangTabHotkeySwitcher](#langtabhotkeyswitcher)
+  - [ListerTweaks](#listertweaks)
+  - [LongClickDuration](#longclickduration)
+  - [Misc](#misc)
+  - [ModuleTweaks](#moduletweaks)
+  - [NavItems](#navitems)
+  - [noAnim](#noanim)
+  - [PageListThumbs](#pagelistthumbs)
+  - [PageListTweaks](#pagelisttweaks)
+  - [PageListUnselect](#pagelistunselect)
+  - [PagePreviewBtn](#pagepreviewbtn)
+  - [RenoTweaks](#renotweaks)
+  - [TabIndex](#tabindex)
+  - [Tooltips](#tooltips)
+- [Add custom CSS or JavaScript to the admin](#add-custom-css-or-javascript-to-the-admin)
 
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 ## Enable module
@@ -47,7 +74,9 @@ Clicking on this link will also enable/disable the module (and reloads the curre
 
 ## Submodules
 
-This section provides an overview of the available submodules. Each can be enabled or disabled by toggling their checkboxes.
+This section provides an overview of the available submodules. Each can be enabled or disabled by toggling their checkboxes in the submodule's "panel".
+
+If a submodule is configurable, its panel has a "cog" icon in the bottom-right corner. Clicking on it the page scrolls down to its options.
 
 *Available submodules (v0.8.3):*
 
@@ -130,7 +159,7 @@ $configData['enabledSubmodules'][] = 'RenoTweaks';
 
 
 
-###AdminColumns
+### AdminColumns
 
 *Add "aos_column_break" field to create left/right admin columns*
 
@@ -172,7 +201,7 @@ Note: use the default language input for the Notes if you have a multilanguage s
 
 
 
-###AdminLangSwitcher
+### AdminLangSwitcher
 
 *Add language switcher to the admin*
 
@@ -189,7 +218,7 @@ Note that in the Default theme it's added to the end of the top menu items while
 
 
 
-###AdminTweaks
+### AdminTweaks
 
 *Apply default admin theme tweaks*
 
@@ -201,7 +230,7 @@ A few usability mods targetting the default admin theme.
 
 
 
-###AsmTweaks
+### AsmTweaks
 
 *asmSelect tweaks*
 
@@ -215,7 +244,7 @@ A few usability mods targetting the default admin theme.
 
 
 
-###AutosizeTextareas
+### AutosizeTextareas
 
 *Autosize textareas according to content*
 
@@ -225,7 +254,7 @@ Note: CKEditor fields are not supported - use the CKEaddons submodule (v0.6.1+) 
 
 
 
-###CKEaddons
+### CKEaddons
 
 *Autoload CKEditor plugins and skins*
 
@@ -288,7 +317,7 @@ Similarly you can enter a custom path to a CSS file and that will be used if the
 
 
 
-###DeselectRadios
+### DeselectRadios
 
 *Enable clearing checked radio buttons*
 
@@ -298,7 +327,7 @@ By default required fields can't be deselected but it can be enabled tweaking th
 
 
 
-###FieldAndTemplateEditLinks
+### FieldAndTemplateEditLinks
 
 *Add shortcut links to templates and fields (SuperUser only)*
 
@@ -326,7 +355,7 @@ Note that this template edit link doesn't respect the target you've set in the m
 
 
 
-###FileFieldTweaks
+### FileFieldTweaks
 
 *File and image field enhancements*
 
@@ -344,7 +373,7 @@ Note that this template edit link doesn't respect the target you've set in the m
 
 
 
-###FocusInputOnLangTabSwitch
+### FocusInputOnLangTabSwitch
 
 *Focus input on switching language tabs*
 
@@ -359,7 +388,7 @@ Settings can be configured separately for CKEditor fields.
 
 
 
-###Hotkeys
+### Hotkeys
 
 *Hotkey tweaks*
 
@@ -373,7 +402,7 @@ Settings can be configured separately for CKEditor fields.
 
 
 
-###HoverDropdown
+### HoverDropdown
 
 *Show save dropdown on hover instead on click*
 
@@ -385,7 +414,7 @@ Hovering on the Save button in the page editor shows the dropdown menu instantly
 
 
 
-###InputfieldURLChecker
+### InputfieldURLChecker
 
 *Add button or hotkey to FieldtypeURL to check URL*
 
@@ -404,7 +433,7 @@ Note: for button modes you can use the middle mouse button to open the URL in a 
 
 
 
-###LangTabHotkeySwitcher
+### LangTabHotkeySwitcher
 
 *Switch language tabs on ctrl+arrow keys*
 
@@ -412,7 +441,7 @@ Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+l
 
 
 
-###ListerTweaks
+### ListerTweaks
 
 *Lister enhancements*
 
@@ -420,8 +449,13 @@ This submodule lets you set the default columns in the Find and Users listers.
 
 - **Find lister columns**: here you can select the fields for the Find lister (found under the Pages section in the sidebar/topnav).
 - **Users lister columns**: here you can select the fields for the Users lister (found under the Access section in the sidebar/topnav).
+- **Lister options**:
+  - Show action buttons on hover: action buttons will appear on hovering on lister rows (instead on click)
+  - Hide template edit action: by default if you enable the FieldAndTemplateEditLinks submodule listers will also have an extra template edit action button. Here you can disable it.
 
-There is a special field called [DEFAULTS] which is a placeholder for the default fields, eg. 'name, email, roles' in case of the Users lister. You can add fields before or after this special field to add extra columns easily.
+**[DEFAULTS] field**
+
+There is a special field called [DEFAULTS] which is a placeholder for the default fields, eg. 'name, email, roles' in case of the Users lister. You can add fields before or after this special field to add extra columns easily. The module will automatically set this field if you remove all fields and on install.
 
 Lister bookmarks are not affected by these settings.
 
@@ -429,7 +463,7 @@ Note: the "Columns" tab in the listers may not show the correct fields for the a
 
 
 
-###LongClickDuration
+### LongClickDuration
 
 *Custom long-click action duration*
 
@@ -437,7 +471,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 
 
-###Misc
+### Misc
 
 *Miscellaneous tweaks*
 
@@ -446,6 +480,12 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
 - **Add filter box to AdminDataTables**: adds a search-as-you-type filter box to various tables in the admin, eg. Fields, Templates, Logs, Users, Roles etc (where AdminDataTables are used). Only one filter box is added per page even if there are more tables (eg. when Fields are grouped using tags). You can use the enter key to open the first item (only if it has a link). To clear the filter box use the ESC key or click on the "X" button. *Hint*: use the exclamation mark ("!") character to invert the results. For example, if you search for "English" in the Users lister and then typing an exclamation mark the lister will show users not having "English". You can add the "!" before or after the keyword: both "!English" and "English!" will work.
 - **Add filter box to Language Translator**: adds a filter box the Language Translator page.
+
+**Paginated AdminDatatables and filterbox**
+
+Filter boxes can't filter items of paginated tables that are not loaded (eg. items on page 2 will not show up on page 1 when filtering).
+
+However, you can navigate paginated tables using ctrl+right and ctrl+left hotkeys. This will load the previous/next set of results with keeping the current filter keyword.
 
 *Extra Check All/Remove all button on confirmation page:*
 
@@ -467,14 +507,16 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 
 
-###ModuleTweaks
+### ModuleTweaks
 
 *Module related tweaks (SuperUser only)*
 
 - **Compact module list**: remove table headers (except the first) and category titles from the module list page. Items remain sortable by clicking on the table header. Module settings icons are placed after module titles, and install/delete buttons are placed to the far right.
+- **Do not distribute modules into tabs**: if enabled, the module list will show up as one table instead separate tables under tabs ("Site, Configure, Core, etc). This makes easier to find a module, especially when module filter is ON (see below). This setting also removes table headers and category titles. The "Add new module" tab's content is placed to the bottom of the page, plus there's an "Add new" button in the header to show/hide the add new section on the top of the module list.
 - **Load module info fields collapsed**: when entering a module page in the admin the info field may occupy much of the screen. Checking this tweak will load them collapsed so more of their configuration fields will be visible.
 - **Edit modules in modal on long-click**: long-clicking on a module on the Modules page loads the module in a modal. When uninstalling a module, the dialog closes and the Modules page reloads.
-- **Add filter box to module list**: adds an input field to filter modules. If there's a match the corresponding module tabs will get a dot after their name. You can search for any text inside the module's row, not only for the module title. Hitting enter will go to the first matching module on the list.
+- **Add filter box to module list**: adds an input field to filter modules. If there's a match the corresponding module tabs will get a dot after their name. You can search for any text inside the module's row, not only for the module title. Hitting enter will go to the first matching module on the list. You can use the ctrl+right and ctrl+left hotkeys to navigate between tabs having matches.
+- **Set browser title to module name**: if checked, sets the title of the browser tab to the module's name on module config pages (instead the general "Modules").
 
 *Screenshot of compact module list:*
 
@@ -494,7 +536,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 
 
-###NavItems
+### NavItems
 
 *Add pages to navigation*
 
@@ -505,7 +547,7 @@ Clicking on a custom nav item will load a page list containing its children.
 There's an "Edit" icon to the right of the items that opens the page for editing.
 This is available only if the user has proper rights and for items selected from the tree.
 
-####Additional items
+**Additional items**
 
 If you need to add items that are unavailable from the pages tree you can add them here.
 Use the syntax "Title: url" where "url" needs to be relative to the admin.
@@ -530,7 +572,7 @@ Some of the pages under the "Admin" page may not work correctly.
 
 
 
-###noAnim
+### noAnim
 
 *Disable all admin animations*
 
@@ -538,7 +580,7 @@ Disable all CSS and JavaScript animations in the admin to make things feel more 
 
 
 
-###PageListThumbs
+### PageListThumbs
 
 *Pagelist thumbnails*
 
@@ -574,7 +616,7 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 
 
 
-###PageListTweaks
+### PageListTweaks
 
 *Pagelist related tweaks*
 
@@ -588,7 +630,7 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 
 
 
-###PageListUnselect
+### PageListUnselect
 
 *Add unselect and restore buttons to PageListSelect fields*
 
@@ -604,7 +646,7 @@ Many thanks for Bernhard for the idea and help!
 
 
 
-###PagePreviewBtn
+### PagePreviewBtn
 
 *Add preview link next to page title*
 
@@ -616,7 +658,7 @@ When enabled, an "eye" icon will be added next to the page title that links to t
 
 
 
-###RenoTweaks
+### RenoTweaks
 
 *Apply Reno theme tweaks*
 
@@ -636,7 +678,6 @@ A few usability mods targetting the Reno admin theme.
 - **Place header button next to the main title**: moves the top (cloned) main button next to the title to make it easier to reach
 - **Hide sidebar quick links (flash icons)**: this will hide the quicklink icons from the sidebar. Use this if you don't use this feature and/or you would like to make easier to click on submenu items
 - **Use narrow pagelist rows**: reduce the space between the main pagelist rows to save space
-- **One-line sidebar submenus (only with sbAutoHide)**: if AutoHideSidebar setting is on, using this will force the sidebar submenu items to be in one row (the sidebar width will grow)
 - **Move notice close buttons to the left**: put the close button of the notice message to the left for easier access
 
 *Admin screenshot with sticky/compact header and various other RenoTweaks enabled:*
@@ -645,7 +686,7 @@ A few usability mods targetting the Reno admin theme.
 
 
 
-###TabIndex
+### TabIndex
 
 *Add sequential tabindex to fields*
 
@@ -653,7 +694,7 @@ Enables jumping to next input in the admin with TAB key (or backwards with shift
 
 
 
-###Tooltips
+### Tooltips
 
 *Hide field descriptions and notes to tooltips*
 
@@ -668,10 +709,11 @@ Hide field descriptions and notes to an icon and show them on hover in a tooltip
 ![Tooltips](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-tooltips.png "Tooltips")
 
 
+## Add custom CSS or JavaScript to the admin
 
-##Restore settings on next install
+At the bottom of the module's settings page there is a section "Asset paths" where you can set a path for a custom admin CSS and admin JavaScript.
+The module will automatically load these files if they exist so you can add custom style or script to the admin.
 
-If checked, on module uninstall module configuration will be saved to settings.php in the module's directory.
-See more in the "Install" section in the beginning of this readme.
+*Paths to custom assets:*
 
-Note: the module has to be saved first if you change this feature to take effect.
+![AssetPaths](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-assetpaths.png "AssetPaths")

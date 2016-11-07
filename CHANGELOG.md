@@ -1,6 +1,116 @@
 #Changelog
 
 
+### 0.9.98 (2016-11-07)
+
+- CSS fixes for RenoTweaks sidebar (autohide, noticeLeftX)
+- removed "One-line sidebar menus" from RenoTweaks
+
+
+
+### 0.9.97 (2016-11-06)
+
+- ListerTweaks colummns: exclude ListerPro
+- added auto-close, auto-width tweaks to quicklinks (RenoTweaks)
+- fixed disappearing uninstalled modules from the module list
+- do not add template edit action if module is disabled (reported by adrian)
+- improvements to autohide sidebar + quicklinks
+
+
+
+### 0.9.96 (2016-11-06)
+
+- show pagelist action buttons on hovering lister rows (requested by adrian)
+- ListerTweaks: option to disable template edit action (requested by szabesz)
+- fix: add TemplateEditLink to the end of pagelist actions if no extra actions exist (reported by adrian)
+
+
+
+### 0.9.95 (2016-11-06)
+
+- hide submodule config jumplink if submodule is disabled
+- preview some tweaks "real-time" on AOS config page (checkboxes only)
+
+
+
+### 0.9.94 (2016-11-06)
+
+- browser compability fixes for AOS submodule jumplinks (reported by Robin S)
+- Delete pagelist action didn't worked in Lister (reported by adrian)
+- fix for template edit link not positioned as last action before Extras in Lister pagelists
+- removed the two-column layout for submodule options
+- Perfect Scrollbar updated to 0.6.14
+
+
+
+### 0.9.93 (2016-11-05)
+
+- added TOC to readme, link to github readme (suggested by bernhard)
+- submodule info links to github replaced by jumplinks to submodule options (suggested by bernhard)
+
+
+
+### 0.9.92 (2016-11-05)
+
+- upgrade CSS to support classes without "pw-" prefix (PW 3.0.40+, reported by matjazp)
+
+
+
+### 0.9.91 (2016-11-04)
+
+- fix for duplicated modules in flat module list (reported by bernhard)
+- hide unnecessary table headers in flat module list (reported by matjazp)
+- fix for not able to enter space or tab to codemirror editors (reported by matjazp)
+
+
+
+### 0.9.9 (2016-11-01)
+
+- determine lister type by url instead id
+
+
+
+### 0.9.8 (2016-10-31)
+
+- moduleFilter: include module classname in filter for better results (eg. finds "InputfieldPageName" even if module name is "Page Name")
+- "Add new" button: hide the moduleFilter and the module list + show minus sign icon when active
+- "Add new" button: fix minor jump on first hover (reported by gmclelland)
+
+
+
+### 0.9.7 (2016-10-31)
+
+- added "Add new" button to the header when tab-less module list is enabled
+
+
+
+### 0.9.6 (2016-10-31)
+
+- fixed class "hasWireTabs" removed from all admin pages rather than only Modules page (reported by Robin S)
+
+
+
+### 0.9.5 (2016-10-30)
+
+- ModuleTweaks: added "Do not distribute modules into tabs" feature (show flattened modules list)
+
+
+
+### 0.9.4 (2016-10-29)
+
+- InputfieldURLChecker: fix overlapping icons with FieldtypeAssistedURL (reported by gmclelland)
+- set default ListerTWeak fields to "[DEFAULTS]"
+- dtFilter: navigate paginated results using ctrl+right and ctrl+left
+- moduleFilter: use the same styling as other filterboxes (full-row with background)
+- moduleFilter: use ctrl+left, ctrl+righ tno navigate between tabs having matches
+- compact module list improvements
+- added links to GitHub documentation to submodules
+- do not export empty settings to settings.php
+- ModuleTweaks: "Set browser title to module name"
+
+
+
+
 ### 0.9.3 (2016-10-28)
 
 - Misc: new tweak "Add filter box to Language Translator"

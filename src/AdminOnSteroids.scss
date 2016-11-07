@@ -1,3 +1,15 @@
+//form[action*=AdminOnSteroids] #Inputfield_tweaks>.InputfieldContent>.Inputfields>li {
+//  &.fixedConfig {
+//    position: fixed;
+//    bottom: 0;
+//    left: 0;
+//    right: 0;
+//    width: 100%;
+//    z-index: 100000 + 50000;
+//    background: #fff;
+//  }
+//}
+
 @mixin clearfix {
   &:after {
     content: "";
@@ -13,15 +25,32 @@ $defaultBoxShadow: 0 3px 4px -3px rgba(#465b69, 0.5);
 // general style overrides
 html.aos {
   // disable page jump
-  &.AdminThemeReno:not(.headSticky) {
-    body {
-      overflow-y: scroll;
+  &.AdminThemeReno {
+    #search {
+      z-index: 8;
+    }
+    .quicklinks {
+      z-index: 100000 + 30000;
+    }
+    &:not(.headSticky) {
+      body {
+        overflow-y: scroll;
+      }
+    }
+    #sidebar {
+      min-width: 210px !important;
+    }
+    @media only screen and (min-width: 1200px) {
+      #sidebar {
+        min-width: 230px !important;
+      }
     }
   }
   body.AdminThemeDefault {
     overflow-y: scroll;
   }
   // fix hover dropdown menus not having right padding
+  &.AdminThemeReno .pw-dropdown-menu,
   &.AdminThemeReno .dropdown-menu {
     li {
       margin-right: 14px;
@@ -42,11 +71,11 @@ html.aos {
       }
     }
   }
-  #modules_form {
-    .AdminDataTable {
-      margin-bottom: 2em;
-    }
-  }
+  //#modules_form {
+  //  .AdminDataTable {
+  //    margin-bottom: 2em;
+  //  }
+  //}
 
   //.PageListPage .pageId {
   .PageListRoot sup {
@@ -291,11 +320,12 @@ html.aos {
     font-size: 13px;
   }
 
-  .CodeMirror-line {
-    span {
-      white-space: normal !important;
-    }
-  }
+  // this would cause tab, space, etc not working in editors
+  //.CodeMirror-line {
+  //  span {
+  //    white-space: normal !important;
+  //  }
+  //}
 
   .cke_top .cke_button_icon.cke_button__oembed_icon {
     background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
@@ -338,6 +368,11 @@ html.aos {
     }
   }
 
+  &:not(.flatModules) body.AdminThemeDefault .moduleFilter {
+    position: relative;
+    top: -2.7em;
+  }
+
   div.filterbox {
     position: relative;
     z-index: 10;
@@ -347,6 +382,12 @@ html.aos {
     padding: 6px;
     background: #EAF0F2;
     color: #6c96a4;
+
+    &.moduleFilter {
+      margin-top: 0;
+      margin-bottom: 0.7em;
+    }
+
     input {
       padding-right: 32px !important;
       min-width: 250px;
@@ -434,84 +475,84 @@ html.aos {
   }
 
   // module filter
-  @media only screen and (min-width: 1140px) {
-    &.headSticky.AdminThemeReno {
-      .moduleFilter {
-        margin-bottom: -40px;
-        transform: translateY(12px);
-      }
-      &.headStickyCompact {
-        .moduleFilter {
-          margin-right: 10px;
-        }
-      }
-    }
+  //@media only screen and (min-width: 1140px) {
+  //  &.headSticky.AdminThemeReno {
+  //    .moduleFilter {
+  //      margin-bottom: -40px;
+  //      transform: translateY(12px);
+  //    }
+  //    &.headStickyCompact {
+  //      .moduleFilter {
+  //        margin-right: 10px;
+  //      }
+  //    }
+  //  }
+  //
+  //  .moduleFilter {
+  //    float: right;
+  //  }
+  //}
 
-    .moduleFilter {
-      float: right;
-    }
-  }
-
-  body.AdminThemeDefault {
-    .moduleFilter {
-      transform: translateY(-40px);
-      margin-right: 12px;
-    }
-    @media only screen and (min-width: 840px) {
-      .moduleFilter {
-        float: right;
-        transform: translateY(0) !important;
-        margin-top: -40px;
-        margin-right: 0;
-      }
-    }
-  }
+  //body.AdminThemeDefault {
+  //  .moduleFilter {
+  //    transform: translateY(-40px);
+  //    margin-right: 12px;
+  //  }
+  //  @media only screen and (min-width: 840px) {
+  //    .moduleFilter {
+  //      float: right;
+  //      transform: translateY(0) !important;
+  //      margin-top: -40px;
+  //      margin-right: 0;
+  //    }
+  //  }
+  //}
 
   .modules_section.hidden {
     display: none;
   }
 
-  .moduleFilter {
-    position: relative;
-    z-index: 10;
-    margin-bottom: 12px;
-    input {
-      padding-right: 32px !important;
-      min-width: 250px;
-      display: inline-block;
-      + .fa-close {
-        color: inherit;
-        margin-left: -30px;
-        opacity: 0.33;
-        display: none;
-        padding: 6px;
-        &:hover {
-          cursor: pointer;
-          opacity: 0.84;
-        }
-      }
-    }
-    &.hasValue {
-      input + .fa-close {
-        display: inline-block;
-      }
-    }
-    input:focus::-webkit-input-placeholder {
-      color: transparent;
-    }
-    input:focus:-moz-placeholder {
-      color: transparent;
-    }
-    /* FF 4-18 */
-    input:focus::-moz-placeholder {
-      color: transparent;
-    }
-    /* FF 19+ */
-    input:focus:-ms-input-placeholder {
-      color: transparent;
-    }
-    /* IE 10+ */
-  }
+  //.moduleFilter {
+  //  position: relative;
+  //  z-index: 10;
+  //  margin-bottom: 12px;
+  //  input {
+  //    padding-right: 32px !important;
+  //    min-width: 250px;
+  //    display: inline-block;
+  //    + .fa-close {
+  //      color: inherit;
+  //      margin-left: -30px;
+  //      opacity: 0.33;
+  //      display: none;
+  //      padding: 6px;
+  //      &:hover {
+  //        cursor: pointer;
+  //        opacity: 0.84;
+  //      }
+  //    }
+  //  }
+  //  &.hasValue {
+  //    input + .fa-close {
+  //      display: inline-block;
+  //    }
+  //  }
+  //  input:focus::-webkit-input-placeholder {
+  //    color: transparent;
+  //  }
+  //  input:focus:-moz-placeholder {
+  //    color: transparent;
+  //  }
+  //  /* FF 4-18 */
+  //  input:focus::-moz-placeholder {
+  //    color: transparent;
+  //  }
+  //  /* FF 19+ */
+  //  input:focus:-ms-input-placeholder {
+  //    color: transparent;
+  //  }
+  /* IE 10+ */
+  //}
 }
 
 .cke_maximized {
@@ -548,6 +589,7 @@ html.aos {
   position: relative;
 }
 
+a.PageDelete.aos + a,
 a.PageListActionDelete + a {
   //color: #BC283D !important;
   //i {
@@ -560,20 +602,23 @@ a.PageListActionDelete + a {
   color: #fff !important;
   background-color: #BC283D !important;
   //}
-  &:hover:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(#BC283D, 0.08);
-    outline: 1px solid rgba(#BC283D, 0.16);
-    //outline-offset: 2px;
-    pointer-events: none !important;
-  }
 }
 
+// red background on hover: only in normal pagelists (not in Lister)
+a.PageListActionDelete + a:hover:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(#BC283D, 0.08);
+  outline: 1px solid rgba(#BC283D, 0.16);
+  //outline-offset: 2px;
+  pointer-events: none !important;
+}
+
+a.PageDelete.aos.cancel,
 a.PageListActionDelete.cancel {
   //position: relative;
   //z-index: 2;
@@ -596,6 +641,10 @@ a.PageListActionDelete.cancel {
   //  border-radius: 1px !important;
   //}
 }
+
+//table.ProcessListerTable tr.open > td {
+//  position: relative;
+//}
 
 // AsmTweaks
 html.asmLeftX {
@@ -668,7 +717,7 @@ html.asmLeftX {
         width: 0;
         line-height: 1.45;
         height: 0;
-        z-index: 100000 + 1;
+        //z-index: 100000 + 1;
         backface-visibility: hidden;
 
         // IE hack
@@ -1131,16 +1180,56 @@ html.asmCollapse {
   }
 }
 
-// module's own CSS styles
+// module's own styles
+
+.configLink {
+  position: absolute;
+  right: 13px;
+  bottom: 7px;
+  display: inline-block;
+  z-index: 5;
+  i {
+    opacity: 0.66;
+    font-size: 20px !important;
+    //transition: all 0.09s;
+    backface-visibility: hidden;
+    color: rgba(#2c3e55, 0.7) !important;
+  }
+  &:not(:hover) {
+    i {
+      color: inherit;
+      transform: scale(0.9);
+    }
+  }
+}
+
+#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore, #Inputfield_AssetPaths {
+  transition: 0.3s;
+  //  transform-origin: top;
+}
 
 .aos_disabled {
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.5;
   filter: saturate(0);
+  //transform: scaleY(0.96);
 }
 
 #Inputfield_tweaks {
-  //margin: 1em 0;
+  .InputfieldCheckboxesStacked {
+    label {
+      padding-right: 1em;
+    }
+  }
+  .focused {
+    //box-shadow: 0 0 20px -6px rgba(#1C2836, 0.8);
+    z-index: 2;
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: -2px;
+    backface-visibility: hidden;
+    animation: focusOut 4s ease-out -0.33s forwards !important;
+  }
   > label {
     font-size: 21px;
     padding-bottom: 0.5em;
@@ -1149,6 +1238,7 @@ html.asmCollapse {
 }
 
 #wrap_Inputfield_enabledSubmodules {
+
   > label,
   > .InputfieldContent {
     //border: none;
@@ -1178,7 +1268,6 @@ html.asmCollapse {
 
   .InputfieldCheckboxesStacked {
     overflow: visible;
-
     > li {
       @include clearfix;
       display: block;
@@ -1209,20 +1298,29 @@ html.asmCollapse {
             outline-offset: -1px;
           }
         }
-        &:hover {
-          input:not(:checked) {
-            + span {
-              &:before {
-                //background: rgba(#97AAB4, 0.2);
-                background: rgba(#97AAB4, 0.12);
-                //box-shadow: inset 0 0 2px 1px rgba(#fff, 0.7);
-                outline-color: rgba(#97AAB4, 0.33);
-                //outline: 1px solid rgba(#97AAB4, 0.4);
-                //background: darken(#D2DCE6, 2%);
-              }
+
+      }
+      //a.configLink:hover + label,
+      label:hover {
+        input:not(:checked) {
+          > span {
+            &:before {
+              //background: rgba(#97AAB4, 0.2);
+              background: rgba(#97AAB4, 0.12);
+              //box-shadow: inset 0 0 2px 1px rgba(#fff, 0.7);
+              outline-color: rgba(#97AAB4, 0.33);
+              //outline: 1px solid rgba(#97AAB4, 0.4);
+              //background: darken(#D2DCE6, 2%);
             }
           }
         }
+      }
+    }
+    input:not(:checked) {
+      ~ a.configLink {
+        opacity: 0;
+        pointer-events: none;
+        transition: all $defaultTransition;
       }
     }
     input:checked {
@@ -1288,7 +1386,11 @@ html.asmCollapse {
   }
   .asmList {
     margin-top: 0 !important;
-    margin-right: 10px;
+    margin-right: 20px;
+  }
+  > .InputfieldContent .InputfieldCheckboxesStacked li:hover .configLink i {
+    color: inherit !important;
+    opacity: 1;
   }
 }
 
@@ -1314,12 +1416,13 @@ form[action*="AdminOnSteroids"] {
           font-style: normal;
           display: block;
           font-weight: bold;
-          //margin-bottom: 4px;
+          margin-bottom: 6px;
         }
       }
       ul {
         > li {
           break-inside: avoid;
+          position: relative;
         }
         @media only screen and (min-width: 960px) {
           column-count: 2;
@@ -1337,24 +1440,25 @@ form[action*="AdminOnSteroids"] {
     }
   }
 
-  html.AdminThemeReno & {
-    @media only screen and (min-width: 1900px) {
-      #Inputfield_tweaks > .InputfieldContent > .Inputfields {
-        column-gap: 6px;
-        column-count: 2;
-        column-fill: balance; // Firefox only
-      }
-    }
-  }
-  html.AdminThemeDefault & {
-    @media only screen and (min-width: 1479px) {
-      #Inputfield_tweaks > .InputfieldContent > .Inputfields {
-        column-gap: 6px;
-        column-count: 2;
-        column-fill: balance; // Firefox only
-      }
-    }
-  }
+  //html.AdminThemeReno & {
+  //  //@media only screen and (min-width: 1900px) {
+  //  @media only screen and (min-width: 11479px) {
+  //    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
+  //      column-gap: 6px;
+  //      column-count: 2;
+  //      column-fill: balance; // Firefox only
+  //    }
+  //  }
+  //}
+  //html.AdminThemeDefault & {
+  //  @media only screen and (min-width: 1599px) {
+  //    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
+  //      column-gap: 6px;
+  //      column-count: 2;
+  //      column-fill: balance; // Firefox only
+  //    }
+  //  }
+  //}
 
   .Inputfields .InputfieldRadiosColumns {
     > li {
@@ -1412,8 +1516,10 @@ form[action*="AdminOnSteroids"] {
             position: relative;
             background: transparent;
             width: 100%;
-            top: 1px;
-            border-left: none;
+            //top: 1px;
+            //border-left: none;
+            //border: 1px solid #fff;
+            //border: none;
           }
         }
       }
@@ -1470,8 +1576,7 @@ form[action*="AdminOnSteroids"] {
   input#Inputfield_RenoTweaks_headStickyCompact,
   input#Inputfield_RenoTweaks_stickyCKEBar,
   input#Inputfield_CKEaddons_plugins_div_toolbar,
-  input#Inputfield_CKEaddons_plugins_justify_toolbar,
-  input#Inputfield_RenoTweaks_sbItemsRow {
+  input#Inputfield_CKEaddons_plugins_justify_toolbar {
     margin-left: 21px;
   }
 }
@@ -1563,12 +1668,11 @@ form[action*="AdminOnSteroids"] {
   @include aos_tooltip($margin: 0 0 10px -8px);
 }
 
-.PageListActionEdit {
-  a[href*="setup/template/edit"] {
-    &:not(:hover) {
-      color: inherit !important;
-      opacity: 0.4;
-    }
+.PageListActionEdit a[href*="setup/template/edit"],
+.PageListerActions .PageEdit[href*="setup/template/edit"] {
+  &:not(:hover) {
+    color: inherit !important;
+    opacity: 0.4;
   }
 }
 
@@ -1697,10 +1801,98 @@ html.filterbox {
       display: none;
     }
   }
-
 }
 
 // ModuleTweaks
+
+//html.noModuleTabs {
+html.flatModules body.id-21 {
+  #add_new_button.active:not(:hover) {
+    opacity: 0.4;
+  }
+  .WireTabs.nav {
+    display: none;
+  }
+  // hide last row's border-bottom
+  #tab_site_modules .Inputfields .InputfieldContent {
+    padding-bottom: 10px !important;
+    &:after {
+      content: "";
+      height: 1px;
+      position: absolute;
+      left: 1px;
+      right: 1px;
+      bottom: 11px;
+      display: block;
+      background: #fff;
+    }
+  }
+  // always hide modules category and table headers
+  #modules_form {
+    h2 {
+      display: none;
+    }
+  }
+
+  .modules_section:not(:first-of-type) thead {
+    display: none !important;
+  }
+  // hide unnecessary links from sidebar Modules section
+  //#main-nav a.module + ul > li:not(:first-child):not(:last-child) {
+  //  display: none !important;
+  //}
+  //.Inputfield.WireTab:not([id='tab_site_modules']) {
+  //  display: none !important;
+  //}
+  #modules_form #tab_site_modules {
+    display: block !important;
+  }
+  #modules_form > .Inputfields > .Inputfield {
+    &#tab_configurable_modules,
+    &#tab_install_modules {
+      display: none !important;
+    }
+    &:not(:first-child) thead {
+      display: none !important;
+    }
+    .AdminDataTable,
+    .Inputfields .InputfieldMarkup .InputfieldHeader + .InputfieldContent {
+      margin-bottom: 0;
+      padding-bottom: 0;
+
+    }
+    .InputfieldContent > p:first-child {
+      display: none;
+    }
+    > .Inputfields > .Inputfield:not(.InputfieldFieldset) .InputfieldHeader {
+      height: 0;
+      overflow: hidden;
+      position: relative;
+      top: -1px;
+      margin-bottom: -1px;
+      //padding: 0;
+      //border: none;
+      //border-bottom: none;
+    }
+  }
+
+  #tab_new_modules {
+    margin-bottom: 1em;
+    display: block !important;
+    .InputfieldMarkup {
+      display: none;
+    }
+    + #tab_site_modules {
+      display: none !important;
+    }
+  }
+  li + #tab_new_modules {
+    margin-top: 1em;
+  }
+}
+
+//}
+
 html.moduleModal {
 
   .ui-dialog-buttonpane {
@@ -2141,6 +2333,7 @@ html.AdminThemeReno {
 
   // headSticky
   &.hoverTopSubmenus:not(.modal) {
+    #topnav .pw-dropdown,
     #topnav .dropdown {
       ul {
         transition: 0.075s $defaultTransition !important;
@@ -2209,6 +2402,7 @@ html.AdminThemeReno {
 
       .pw-button-dropdown,
       .dropdown-menu,
+      .pw-dropdown-menu,
       #pw-panel-shade,
       .pw-panel-container {
         z-index: 100000 + 10100 !important;
@@ -2472,7 +2666,7 @@ html.AdminThemeReno {
         background: #fff;
       }
       #main {
-        border-top: 100px solid transparent;
+        border-top: 103px solid transparent;
         &:not(.closed) #headline {
           padding-left: 232px;
         }
@@ -2538,6 +2732,7 @@ html.AdminThemeReno {
       #masthead #topnav {
         top: 50px;
         z-index: 100000 + 260;
+        .avatar.pw-dropdown,
         .avatar.dropdown {
           margin-right: -0.5em !important;
           a {
@@ -2553,6 +2748,7 @@ html.AdminThemeReno {
         a {
           margin-left: 1px;
         }
+        li.pw-dropdown ul,
         li.dropdown ul {
           //box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.12);
           box-shadow: none;
@@ -2606,7 +2802,7 @@ html.AdminThemeReno {
       @media only screen and (min-width: 960px) {
         #main {
           // layout fix to scroll div only the fixed header
-          border-top: 134px solid transparent;
+          border-top: 137px solid transparent;
 
           &:not(.closed) {
             .WireTabs {
@@ -2756,8 +2952,39 @@ html.AdminThemeReno {
     position: fixed !important;
   }
 
+  a.quicklinks-open {
+    + ul.quicklinks {
+      min-width: 250px;
+      max-width: 500px;
+      width: auto !important;
+      display: inline-block !important;
+      //&:after {
+      //  content: "";
+      //  position: absolute;
+      //  left: 100%;
+      //  top: 0;
+      //  bottom: 0;
+      //  width: 3em;
+      //  background: red;
+      //}
+      li a {
+        padding-right: 2em !important;
+      }
+    }
+  }
+
   // sbAutoHide
   &.sbAutoHide:not(.modal) {
+
+    &.noticeLeftX #notices {
+      //left: -1em;
+      //padding-left: 1em;
+      .NoticeMessage {
+        position: relative;
+        padding-left: 3.25em;
+      }
+    }
+
     @media only screen and (min-width: 960px) {
 
       //padding-left: 1em;
@@ -2771,21 +2998,18 @@ html.AdminThemeReno {
       #headline,
       #breadcrumbs,
       #notices .NoticeMessage,
+      #footer,
       #masthead {
         border-left: 16px solid transparent;
       }
 
-      #main {
-        margin-left: 0;
+      .WireTabs.nav {
+        left: 0 !important;
+        padding-left: 16px;
       }
 
-      #notices {
-        left: -1em;
-        .NoticeMessage {
-          position: relative;
-          //left: -1em;
-          padding-left: 2.5em;
-        }
+      #main {
+        margin-left: 0;
       }
 
       #sidebar.closed, #sidebar.hide,
@@ -2798,16 +3022,15 @@ html.AdminThemeReno {
       }
 
       #sidebar {
+        padding-top: 0;
         transform: translateX(-100%);
-
         z-index: 100000 + 8000 !important;
-
         &:before {
           content: "";
           position: absolute;
           top: 0;
           left: 100%;
-          width: 0.7em;
+          width: 16px;
           height: 100%;
           background: transparent;
         }
@@ -2817,7 +3040,7 @@ html.AdminThemeReno {
       }
       body.pw-ready {
         #sidebar {
-          transition: transform 0.12s;
+          transition: transform $defaultTransition;
         }
       }
     }
@@ -2859,7 +3082,6 @@ html.AdminThemeReno {
         //  top: 50px !important;
         //}
       }
-
     }
   }
 
@@ -3010,17 +3232,6 @@ html.AdminThemeReno {
       i.quicklink-open {
         display: none;
       }
-    }
-    //}
-  }
-
-  // sbItemsRow (only with sbAutoHide)
-  &.sbItemsRow.sbAutoHide {
-    //@media only screen and (min-width: 960px) {
-    #sidebar {
-      z-index: 19;
-      width: auto;
-      min-width: 210px;
     }
     //}
   }
@@ -3182,6 +3393,24 @@ html.AdminThemeReno {
 
 }
 
+// ListerTweaks listerHoverBtn
+@media only screen and (min-width: 960px) {
+  html.listerHoverBtn {
+    .ProcessListerTable tr:hover td:first-child {
+      .PageListerActions {
+        display: inline-block !important;
+        .PageExtras ~ a {
+          display: none;
+        }
+        .PageExtras.extras-open,
+        .PageExtras.extras-open ~ a {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
 @media only screen and (min-width: 960px) {
   li.navItem {
     position: relative;
@@ -3289,7 +3518,6 @@ html.HoverDropdown {
     }
 
     &[id^="pw-dropdown-toggle-"] {
-      //&.dropdown-toggle {
       &, span {
         width: 0 !important;
         overflow: hidden;
@@ -3305,6 +3533,115 @@ html.HoverDropdown {
     }
   }
 }
+
+// InputfieldURLChecker
+.InputfieldURL,
+.InputfieldAssistedURL {
+  .InputfieldContent {
+    position: relative;
+  }
+}
+
+.iuc-button {
+  position: absolute;
+  margin-top: 1px;
+  right: 16px;
+  padding: 0 12px;
+  background: transparent;
+  z-index: 20;
+  &.button-left {
+    right: auto;
+    left: 16px;
+  }
+  &.iuc-hide {
+    pointer-events: none !important;
+  }
+  &.button-left ~ input {
+    padding-left: 36px !important;
+  }
+  &.button-right ~ input {
+    padding-right: 36px !important;
+  }
+  &:not(.iuc-hide):hover i {
+    color: inherit !important;
+  }
+  &:active i {
+    font-size: 0.88em !important;
+  }
+  i {
+    color: rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+    -webkit-transition: color 0.2s;
+    -moz-transition: color 0.2s;
+    transition: color 0.2s;
+  }
+}
+
+.InputfieldContent .InputfieldAssistedURL {
+  width: 100% !important;
+}
+
+.InputfieldAssistedURL {
+  .button-left {
+    left: 66px;
+  }
+  .InputfieldMaxWidth {
+    width: calc(100% - 50px) !important;
+  }
+}
+
+.iuc-hidden {
+  display: none !important;
+}
+
+.InputfieldMultiplierInput {
+  position: relative;
+  .iuc-button.button-left {
+    left: 8px;
+  }
+  .iuc-button.button-right {
+    right: 8px;
+  }
+}
+
+#wrap_link_page_url {
+  .InputfieldPageAutocomplete,
+  .InputfieldURL {
+    .InputfieldContent {
+      position: relative;
+    }
+  }
+  .iuc-button.button-left {
+    left: 40px;
+    ~ p #link_page_url_input {
+      padding-left: 56px !important;
+    }
+  }
+  .iuc-button.button-right {
+    right: 34px;
+    ~ p #link_page_url_input {
+      padding-right: 56px !important;
+    }
+  }
+}
+
+#wrap_link_page_url .InputfieldPageAutocomplete,
+.InputfieldURL {
+  input:focus + .iuc-button i {
+    color: rgba(0, 0, 0, 0.32);
+  }
+}
+
+.collapsed7.InputfieldURL,
+.collapsed8.InputfieldURL,
+#wrap_link_page_url .collapsed7.InputfieldPageAutocomplete,
+#wrap_link_page_url .collapsed8.InputfieldPageAutocomplete {
+  .InputfieldContent a:hover {
+    text-decoration: underline;
+  }
+}
+
+//end of InputfieldURLChecker
 
 @keyframes spinIn {
   0% {
@@ -3342,5 +3679,17 @@ html.HoverDropdown {
   100% {
     opacity: 0;
     transform: scale(0.8);
+  }
+}
+
+@keyframes focusOut {
+  0% {
+    outline-color: transparent;
+  }
+  2% {
+    outline-color: #81A70B;
+  }
+  100% {
+    outline-color: transparent;
   }
 }
