@@ -1,6 +1,16 @@
 #Changelog
 
 
+### 0.9.99 (2016-11-08)
+
+- RenoTweak: fixed position of branding if sticky sidebar is on but sticky header is not
+- autofocus filterboxes only on module/template/field/translator list pages
+- do not add filter box for InputfieldTable (ProFields)
+- filter box: always show search icon
+- removed tap shift to focus main search (Hotkeys)
+
+
+
 ### 0.9.98 (2016-11-07)
 
 - CSS fixes for RenoTweaks sidebar (autohide, noticeLeftX)

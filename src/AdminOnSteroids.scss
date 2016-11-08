@@ -38,6 +38,7 @@ html.aos {
       }
     }
     #sidebar {
+      backface-visibility: hidden;
       min-width: 210px !important;
     }
     @media only screen and (min-width: 1200px) {
@@ -388,11 +389,23 @@ html.aos {
       margin-bottom: 0.7em;
     }
 
+    &:before {
+      content: "🔎";
+      position: absolute;
+      padding: 6px 11px;
+      top: 51%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: #6c96a4;
+      pointer-events: none;
+    }
+
     input {
       padding-right: 32px !important;
       min-width: 250px;
       display: inline-block;
-      background: rgba(#fff, 0.66) !important;
+      background: rgba(#fff, 0.5) !important;
+      padding-left: 33px !important;
       &:focus {
         background: #fff !important;
       }
@@ -1684,6 +1697,7 @@ body.aos_saving {
     font-family: FontAwesome;
     font-size: 45px;
     position: fixed;
+    backface-visibility: hidden;
     top: 45%;
     left: 0;
     width: 100%;
@@ -2370,6 +2384,7 @@ html.AdminThemeReno {
         //z-index: 100000 + 240;
         z-index: 100000 + 55;
         position: fixed;
+        backface-visibility: hidden;
         top: 50px;
         left: 0;
         right: 0;
@@ -2418,6 +2433,7 @@ html.AdminThemeReno {
       .main-nav-toggle {
         z-index: 100000 + 80;
         position: fixed;
+        backface-visibility: hidden;
       }
       #masthead {
         width: 100%;
@@ -2427,6 +2443,7 @@ html.AdminThemeReno {
         }
       }
       #breadcrumbs {
+        backface-visibility: hidden;
         position: fixed;
         top: 50px;
         //height: 47px;
@@ -2439,6 +2456,7 @@ html.AdminThemeReno {
       #headline {
         top: 86px;
         position: fixed;
+        backface-visibility: hidden;
         width: 100%;
         left: 0;
         z-index: 100000 + 11;
@@ -2528,6 +2546,7 @@ html.AdminThemeReno {
         box-sizing: border-box;
         border-top: 1px solid rgba(0, 0, 0, 0.1);
         position: fixed;
+        backface-visibility: hidden;
         width: 100%;
       }
       #main.closed {
@@ -2547,6 +2566,7 @@ html.AdminThemeReno {
       &.openSearch {
         #search {
           position: fixed;
+          backface-visibility: hidden;
         }
       }
     }
@@ -2582,6 +2602,7 @@ html.AdminThemeReno {
       .content #fieldgroupContext {
         top: 105px;
         position: fixed;
+        backface-visibility: hidden;
         z-index: 100000 + 220;
         select {
           padding: 3px 1px 3px 3px;
@@ -2637,6 +2658,7 @@ html.AdminThemeReno {
         z-index: 100000 + 250;
       }
       #breadcrumbs {
+        backface-visibility: hidden;
         position: fixed;
         top: 0;
         width: 100%;
@@ -2657,6 +2679,7 @@ html.AdminThemeReno {
         box-shadow: $defaultBoxShadow;
         top: 33px;
         position: fixed;
+        backface-visibility: hidden;
         width: 100%;
         left: 0;
         z-index: 100000 + 200;
@@ -2679,6 +2702,7 @@ html.AdminThemeReno {
           max-width: 360px;
           z-index: 100000 + 210;
           position: fixed;
+          backface-visibility: hidden;
           //right: -8px;
           right: 8px;
           text-align: right;
@@ -2718,6 +2742,7 @@ html.AdminThemeReno {
 
       #ProcessPageSearchAutocomplete {
         position: fixed;
+        backface-visibility: hidden;
         left: auto !important;
         right: 26px !important;
         top: 41px !important;
@@ -2763,6 +2788,7 @@ html.AdminThemeReno {
       &.openSearch {
         #search {
           position: fixed;
+          backface-visibility: hidden;
           z-index: 100000 + 80;
         }
       }
@@ -2813,6 +2839,7 @@ html.AdminThemeReno {
           .WireTabs {
             transition: left $defaultTransition;
             position: fixed;
+            backface-visibility: hidden;
             top: 100px;
             left: 0;
             right: 0;
@@ -2950,6 +2977,7 @@ html.AdminThemeReno {
   ul.quicklinks {
     // hack because cannot have overflow-x and overflow-y work together as expected
     position: fixed !important;
+    backface-visibility: hidden;
   }
 
   a.quicklinks-open {
@@ -3077,10 +3105,17 @@ html.AdminThemeReno {
     @media only screen and (min-width: 960px) {
       #sidebar {
         position: fixed;
+        backface-visibility: hidden;
         z-index: 9;
         //.quicklinks {
         //  top: 50px !important;
         //}
+      }
+    }
+    &:not(.headSticky):not(.sbAutoHide) {
+      #branding {
+        position: fixed;
+        backface-visibility: hidden;
       }
     }
   }
@@ -3286,6 +3321,7 @@ html.AdminThemeReno {
 
         #masthead {
           position: fixed;
+          backface-visibility: hidden;
           z-index: 30;
           //z-index: 100000 + 1000;
           width: 100%;
@@ -3298,6 +3334,7 @@ html.AdminThemeReno {
         }
 
         #breadcrumbs {
+          backface-visibility: hidden;
           position: fixed;
           //z-index: 100000 + 1000;
           z-index: 30;

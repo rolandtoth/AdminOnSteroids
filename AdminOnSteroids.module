@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '0.9.98',
+            'version'   => '0.9.99',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -2057,7 +2057,7 @@ HTML;
 
         $f->addOption('save', __('Save on ctrl+s', __FILE__));
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
-        $f->addOption('focusSearch', __('Focus search on alt+d or double shift', __FILE__));
+        $f->addOption('focusSearch', __('Focus search on alt+d', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

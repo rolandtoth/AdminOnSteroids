@@ -152,15 +152,15 @@ function updateAutoGrowCKE(CKEs) {
 
 
 // add "scrolled" body class
-var addScrolledBodyClass = debounce(function () {
-    var el = document.querySelector('body');
-    if (!el) return false;
-    posTop() > 20 ? el.classList.add('scrolled') : el.classList.remove('scrolled');
-}, 120);
-
-['scroll', 'resize', 'load'].forEach(function (e) {
-    window.addEventListener(e, addScrolledBodyClass);
-});
+//var addScrolledBodyClass = debounce(function () {
+//    var el = document.querySelector('body');
+//    if (!el) return false;
+//    posTop() > 20 ? el.classList.add('scrolled') : el.classList.remove('scrolled');
+//}, 120);
+//
+//['scroll', 'resize', 'load'].forEach(function (e) {
+//    window.addEventListener(e, addScrolledBodyClass);
+//});
 
 function posTop() {
     return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
@@ -264,13 +264,15 @@ function toggleFilterBoxState(input, on) {
 
 function restoreFilterBoxValue(input) {
 
+    var prevValue = $('body').attr('data-filterbox');
+
+    if(!prevValue) return false;
+
     toggleFilterBoxState(input, true);
 
-    input
-        .val($('body').attr('data-filterbox'))
+    input.val(prevValue)
         .trigger('fieldchange')
         .focus();
-
 
     $('body').removeAttr('data-filterbox');
 }
@@ -285,9 +287,10 @@ function setupAdminDataTableFilter() {
 
     // if ($('.dtFilter').length) return false;
 
-    if ($('.AdminDataTable').length) {
+    if ($('.AdminDataTable:not(.InputfieldTable)').length) {
 
-        var dtFilter = $('<div class="dtFilter filterbox"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i><span class="counter"></span></div>');
+        var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '',
+            dtFilter = $('<div class="dtFilter filterbox"><input type="text"' + autofocus + '><i class="fa fa-close"></i><span class="counter"></span></div>');
 
         function updateDtFilterCounter(num, input, total) {
 
@@ -580,7 +583,7 @@ function setupAdminDataTableFilter() {
 // Translator filter box
 function setupTranslatorFilter() {
 
-    var transFilter = $('<div class="transFilter filterbox"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>');
+    var transFilter = $('<div class="transFilter filterbox"><input type="text" autofocus><i class="fa fa-close"></i></div>');
 
     $('form > .Inputfields > .Inputfield:not(.Inputfield_abandoned_fieldset)').each(function () {
 
@@ -698,15 +701,13 @@ $(document).ready(function () {
             isRenoTheme = !!(html.hasClass('AdminThemeReno')),
             isDefaultTheme = !!(html.hasClass('AdminThemeDefault'));
 
-        //$('#Inputfield_tweaks input[type="checkbox"], #wrap_Inputfield_enabledSubmodules input').on('click', function (e) {
         $('#Inputfield_tweaks input[type="checkbox"]').on('click', function (e) {
 
             var checkbox = $(this),
                 currentId = checkbox.attr('id'),
                 idArray = currentId.split('_');
 
-            if (
-                currentId.indexOf('AdminTweaks') !== -1 && isRenoTheme ||
+            if (currentId.indexOf('AdminTweaks') !== -1 && isRenoTheme ||
                 currentId.indexOf('RenoTweaks') !== -1 && isDefaultTheme
             ) return true;
 
@@ -778,14 +779,12 @@ $(document).ready(function () {
         // config jumplinks
         if ($('.Inputfield_enabledSubmodules').length) {
 
-            var configLink = '<a class="configLink" title="Configuration"><i class="fa fa-cog"></a>',
-                animParent = ($('html').hasClass('headSticky') && $('#main').length) ? $('#main') : $('html,body');
+            var configLink = '<a class="configLink" title="Configuration"><i class="fa fa-cog"></a>';
 
 
             $('#wrap_Inputfield_enabledSubmodules input[id^="Inputfield_enabledSubmodules_"]').each(function () {
 
                 var input = $(this),
-                //submodule = input.parent().parent('li'),
                     submoduleName = input.attr('id').replace('Inputfield_enabledSubmodules_', ''),
                     target = '#wrap_Inputfield_' + submoduleName;
 
@@ -805,9 +804,9 @@ $(document).ready(function () {
                 e.preventDefault();
 
                 var targetId = $(this).attr('href'),
-                    target = $(targetId);
-
-                //target.attr('tabIndex', 1);
+                    target = $(targetId),
+                    // determine animparent here to make dynamic
+                    animParent = ($('html').hasClass('headSticky') && $('#main').length) ? $('#main') : $('html,body');
 
                 animParent.animate({
                     scrollTop: target.offset().top - 200
@@ -1191,7 +1190,7 @@ $(document).ready(function () {
             // AdminDataTable filter box
             if (AOSsettings.Misc.indexOf('dataTableFilter') !== -1) {
                 setupAdminDataTableFilter();
-                $(document).on('loaded reloaded wiretabclick', function () {
+                $(document).on('loaded opened reloaded wiretabclick', function () {
                     setupAdminDataTableFilter();
                 });
             }
@@ -1506,7 +1505,7 @@ $(document).ready(function () {
 
                 // Module Filter
 
-                var moduleFilter = $('<div class="moduleFilter filterbox"><input type="text" placeholder="🔎" autofocus><i class="fa fa-close"></i></div>');
+                var moduleFilter = $('<div class="moduleFilter filterbox"><input type="text" autofocus><i class="fa fa-close"></i></div>');
 
                 if ($('#modules_form').length) {
 

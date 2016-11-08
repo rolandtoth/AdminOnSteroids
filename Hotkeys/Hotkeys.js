@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-    var doubleShiftKey = 0;
-
     // $('body').removeClass('aos_saving');
     // $('#wrap, body.AdminThemeDefault #content').removeClass('ui-state-disabled');
     //
@@ -133,16 +131,6 @@ $(document).ready(function () {
         }
     }
 
-    function tapFocus(e) {
-        if (doubleShiftKey != 0 && e.keyCode == 16) {
-            focusSearchBox(e);
-        } else {
-            doubleShiftKey = setTimeout(function () {
-                doubleShiftKey = 0;
-            }, 300);
-        }
-    }
-
     function setupCKEfocusSearch() {
         if (window.CKEDITOR) {
             CKEDITOR.on('instanceReady', function (evt) {
@@ -156,10 +144,10 @@ $(document).ready(function () {
                     });
                     evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* d */] = 'focusSearchBox';
 
-                    evt.editor.document.on('keydown', function (evt) {
-                        var e = evt.data.$;
-                        tapFocus(e);
-                    });
+                    //evt.editor.document.on('keydown', function (evt) {
+                    //    var e = evt.data.$;
+                    //    tapFocus(e);
+                    //});
                 }
             });
         }
@@ -216,13 +204,13 @@ $(document).ready(function () {
 
         $(document).on('keydown', function (e) {
 
-            tapFocus(e);
+            if (e.keyCode == 27) {  // ESC
+                focusSearchBox(e, true);
+                return false;
+            }
 
             if (e.altKey && e.keyCode == 68) {  // alt+d
                 focusSearchBox(e);
-            }
-            if (e.keyCode == 27) {  // ESC
-                focusSearchBox(e, true);
             }
         });
     }
