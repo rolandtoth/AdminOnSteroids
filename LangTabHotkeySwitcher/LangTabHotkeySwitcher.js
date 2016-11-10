@@ -91,7 +91,7 @@ function setLangTabSwicherHotkeys() {
             inputs.eq(index).focus();
         }
 
-        if (e.ctrlKey) {
+        if (e.metaKey || e.ctrlKey) {
 
             switch (keyCode) {
 

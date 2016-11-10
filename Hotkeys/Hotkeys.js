@@ -41,7 +41,7 @@ $(document).ready(function () {
         });
 
         $('#breadcrumbs').on('click', 'a', function (e) {
-            if (e.ctrlKey && $(this).attr('data-editurl')) {
+            if ((e.metaKey || e.ctrlKey) && $(this).attr('data-editurl')) {
                 e.preventDefault();
                 var url = $(this).attr('data-editurl');
                 window.location = url;
@@ -157,7 +157,10 @@ $(document).ready(function () {
     if (HotkeysSettings.indexOf('save') !== -1) {
 
         $(document).on('keydown', function (e) {
-            if (e.ctrlKey && e.keyCode == 83) {
+
+            var keyCode = e.keyCode || e.charCode;
+
+            if ((e.metaKey || e.ctrlKey) && keyCode == 83) {
                 aos_triggerSave();
 
                 // intentionally disable browser Save as dialog globally

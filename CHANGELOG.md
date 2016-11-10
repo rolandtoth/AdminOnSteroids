@@ -1,6 +1,27 @@
 #Changelog
 
 
+### 1.0.1 (2016-11-10)
+
+- fix for undefined index (ListerTweaks, reported by Macrura)
+- possible improvements to e.metaKey
+
+
+
+### 1.0.0 (2016-11-09)
+
+- moved AdminLangSwitcher, noAnim, HoverDropdown, LangTabHotkeySwitcher, AdminColumns, AutosizeTextareas, TabIndex submodules into Misc submodule
+- moved PageListUnselect submodule into PageListTweaks submodule
+- added e.metaKey besides e.ctrlKey (suggested by adrian)
+- separate CSS/JS for AOS configuration page (suggested by matjazp)
+- do not load module CSS/JS when module is disabled
+- flatModules: make "Add new module" section visible when clicking on "Add new" from sidebar/top menu (reported by adrian)
+- force loading of longclick.js for moduleModal (reported by gmclelland)
+- fix for invisible AsmList items on drag (reported by adrian)
+- added hash navigation for module config page
+
+
+
 ### 0.9.99 (2016-11-08)
 
 - RenoTweak: fixed position of branding if sticky sidebar is on but sticky header is not

@@ -32,32 +32,25 @@ Note: the module has to be saved first if you change this feature to take effect
 
 - [Enable module](#enable-module)
 - [Submodules](#submodules)
-  - [AdminColumns](#admincolumns)
-  - [AdminLangSwitcher](#adminlangswitcher)
   - [AdminTweaks](#admintweaks)
   - [AsmTweaks](#asmtweaks)
-  - [AutosizeTextareas](#autosizetextareas)
   - [CKEaddons](#ckeaddons)
   - [DeselectRadios](#deselectradios)
   - [FieldAndTemplateEditLinks](#fieldandtemplateeditlinks)
   - [FileFieldTweaks](#filefieldtweaks)
   - [FocusInputOnLangTabSwitch](#focusinputonlangtabswitch)
   - [Hotkeys](#hotkeys)
-  - [HoverDropdown](#hoverdropdown)
   - [InputfieldURLChecker](#inputfieldurlchecker)
-  - [LangTabHotkeySwitcher](#langtabhotkeyswitcher)
   - [ListerTweaks](#listertweaks)
   - [LongClickDuration](#longclickduration)
   - [Misc](#misc)
   - [ModuleTweaks](#moduletweaks)
   - [NavItems](#navitems)
-  - [noAnim](#noanim)
   - [PageListThumbs](#pagelistthumbs)
   - [PageListTweaks](#pagelisttweaks)
   - [PageListUnselect](#pagelistunselect)
   - [PagePreviewBtn](#pagepreviewbtn)
   - [RenoTweaks](#renotweaks)
-  - [TabIndex](#tabindex)
   - [Tooltips](#tooltips)
 - [Add custom CSS or JavaScript to the admin](#add-custom-css-or-javascript-to-the-admin)
 
@@ -158,66 +151,6 @@ $configData['enabledSubmodules'][] = 'RenoTweaks';
 ```
 
 
-
-### AdminColumns
-
-*Add "aos_column_break" field to create left/right admin columns*
-
-The module installs a field named "aos_column_break" that you can add your templates to have a 2-column layout.
-The field's position in the template field list determines the columns: fields before it will go to the left column, fields after to the right. Just drag the aos_column_break field to a position where you need the break.
-
-*Admin columns example:*
-
-![AdminColumns](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-admincolumns.png "AdminColumns")
-
-Putting the "aos_column_break" field inside a tab is not allowed. See how to add columns to tabs below.
-
-**Column widths**
-
-By default the left column is 67% wide and the right is 33%. If you need custom column widths, edit the field's "Column Width" setting under the "Input tab". For example, setting a 55% width will result in a 55/45 left/right percentages. You can override the default width globally or per template as usual. Setting a 100% width (that is, using the default) will result in the module's default 67/33 values.
-
-Note: the "aos_column_break" field will not be removed on module uninstall. However, the field won't show up in the page edit page (only on the template field list). You can of course remove it manually if you wish.
-
-**Columns inside tabs**
-
-You can't add the "aos_column_break" field inside tabs but there's a workaround if you need this feature.
-Edit the "FieldSetTabOpen" field in question (this is the starting tab field) and enter this into it's "Notes" field:
-
-```
-colbreak_myfield
-```
-
-This will produce a column break after the field "myfield".
-
-To specify custom width, use this:
-
-```
-colbreak_myfield:60
-```
-
-You can set the Note's value at editing the field and/or in template context to override the default.
-
-Note: use the default language input for the Notes if you have a multilanguage setup.
-
-
-
-### AdminLangSwitcher
-
-*Add language switcher to the admin*
-
-This tweak will add a dropdown to the main navigation that allows changing the admin language.
-Page names, the admin interface will be loaded in the selected language, and the page edit screen will also load the language in that language.
-
-The language switcher uses a cookie so the language will be remembered even though the user's profile is actually not saved. 
-
-Note that in the Default theme it's added to the end of the top menu items while in Reno it's the first.
-
-*Admin language switcher:*
-
-![AdminLangSwitcher](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-adminlangswitcher.png "AdminLangSwitcher")
-
-
-
 ### AdminTweaks
 
 *Apply default admin theme tweaks*
@@ -241,16 +174,6 @@ A few usability mods targetting the default admin theme.
 *asmSelect field after enabling AsmTweaks:*
 
 ![AsmTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-asmtweaks.png "AsmTweaks")
-
-
-
-### AutosizeTextareas
-
-*Autosize textareas according to content*
-
-Adds auto-grow functionality to fit textarea to its content. The submodule has no settings to configure.
-
-Note: CKEditor fields are not supported - use the CKEaddons submodule (v0.6.1+) and enable the [Auto Grow](http://ckeditor.com/addon/autogrow) plugin to autosize CKEditors.
 
 
 
@@ -402,18 +325,6 @@ Settings can be configured separately for CKEditor fields.
 
 
 
-### HoverDropdown
-
-*Show save dropdown on hover instead on click*
-
-Hovering on the Save button in the page editor shows the dropdown menu instantly instead on click.
-
-*Hovering on the Save button when HoverDropdown is enabled:*
-
-![HoverDropdown](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-hoversavedropdown.png "HoverDropdown")
-
-
-
 ### InputfieldURLChecker
 
 *Add button or hotkey to FieldtypeURL to check URL*
@@ -430,14 +341,6 @@ Note: for button modes you can use the middle mouse button to open the URL in a 
 *Test link button added to an URL field:*
 
 ![InputfieldURLChecker](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-inputfieldurlchecker.png "InputfieldURLChecker")
-
-
-
-### LangTabHotkeySwitcher
-
-*Switch language tabs on ctrl+arrow keys*
-
-Enables switching language tabs on multilanguage fields using ctrl+right, ctrl+left hotkeys. Also adds ctrl+up, ctrl+down hotkeys to collapse/expand language fields. The latter doesn't work on CKEditor fields.
 
 
 
@@ -475,11 +378,60 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 
 *Miscellaneous tweaks*
 
+- **noAnim**: Disable all CSS and JavaScript animations in the admin to make things feel more snappy.
+
 - **add "Remove All" button to field deletion confirmation page**: when selecting fields for deletion, the confirmation page will show an extra button "Check All". Clicking on this once will check all fields for deletion, clicking twice will remove all.
 - **Center login form**: align login page items to center
 - **Open Home/View site in new tab (topnav)**: clicking on the "Home" in the top-right corner will open in a new tab
 - **Add filter box to AdminDataTables**: adds a search-as-you-type filter box to various tables in the admin, eg. Fields, Templates, Logs, Users, Roles etc (where AdminDataTables are used). Only one filter box is added per page even if there are more tables (eg. when Fields are grouped using tags). You can use the enter key to open the first item (only if it has a link). To clear the filter box use the ESC key or click on the "X" button. *Hint*: use the exclamation mark ("!") character to invert the results. For example, if you search for "English" in the Users lister and then typing an exclamation mark the lister will show users not having "English". You can add the "!" before or after the keyword: both "!English" and "English!" will work.
 - **Add filter box to Language Translator**: adds a filter box the Language Translator page.
+- **Add "aos_column_break" field to create admin columns*: this tweak installs a field named "aos_column_break" that you can add your templates to have a 2-column layout. The field's position in the template field list determines the columns: fields before it will go to the left column, fields after to the right. Just drag the aos_column_break field to a position where you need the break.
+- **Show save dropdown on hover instead on click**: hovering on the Save button in the page editor shows the dropdown menu instantly instead on click.
+- **Switch language tabs on ctrl+arrow keys**: nables switching language tabs on multilanguage fields using ctrl+right, ctrl+left hotkeys. Also adds ctrl+up, ctrl+down hotkeys to collapse/expand language fields. The latter doesn't work on CKEditor fields.
+ **Autosize textareas according to content**: adds auto-grow functionality to fit textarea to its content. The submodule has no settings to configure. Note: CKEditor fields are not supported - use the CKEaddons submodule (v0.6.1+) and enable the [Auto Grow](http://ckeditor.com/addon/autogrow) plugin to autosize CKEditors.
+- **Add sequential tabindex to fields**: enables jumping to next input in the admin with TAB key (or backwards with shift+TAB). By default the TAB key jumps to the next input on second or third trigger only (depending on whether there are language tabs or other buttons in the field wrap), this tweak fixes it.
+- **Add language switcher to the admin**: this tweak will add a dropdown to the main navigation that allows changing the admin language. Page names, the admin interface will be loaded in the selected language, and the page edit screen will also load the language in that language. The language switcher uses a cookie so the language will be remembered even though the user's profile is actually not saved. Note that in the Default theme it's added to the end of the top menu items while in Reno it's the first.
+
+*Admin language switcher:*
+
+![AdminLangSwitcher](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-adminlangswitcher.png "AdminLangSwitcher")
+
+*Hovering on the Save button when HoverDropdown is enabled:*
+
+![HoverDropdown](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-hoversavedropdown.png "HoverDropdown")
+
+*Admin columns example:*
+
+![AdminColumns](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-admincolumns.png "AdminColumns")
+
+Putting the "aos_column_break" field inside a tab is not allowed. See how to add columns to tabs below.
+
+**Column widths**
+
+By default the left column is 67% wide and the right is 33%. If you need custom column widths, edit the field's "Column Width" setting under the "Input tab". For example, setting a 55% width will result in a 55/45 left/right percentages. You can override the default width globally or per template as usual. Setting a 100% width (that is, using the default) will result in the module's default 67/33 values.
+
+Note: the "aos_column_break" field will not be removed on module uninstall. However, the field won't show up in the page edit page (only on the template field list). You can of course remove it manually if you wish.
+
+**Columns inside tabs**
+
+You can't add the "aos_column_break" field inside tabs but there's a workaround if you need this feature.
+Edit the "FieldSetTabOpen" field in question (this is the starting tab field) and enter this into it's "Notes" field:
+
+```
+colbreak_myfield
+```
+
+This will produce a column break after the field "myfield".
+
+To specify custom width, use this:
+
+```
+colbreak_myfield:60
+```
+
+You can set the Note's value at editing the field and/or in template context to override the default.
+
+Note: use the default language input for the Notes if you have a multilanguage setup.
 
 **Paginated AdminDatatables and filterbox**
 
@@ -569,14 +521,6 @@ Some of the pages under the "Admin" page may not work correctly.
 *Custom navigation items after item "Recent":*
 
 ![NavItems](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-navitems.png "NavItems")
-
-
-
-### noAnim
-
-*Disable all admin animations*
-
-Disable all CSS and JavaScript animations in the admin to make things feel more snappy.
 
 
 
@@ -683,15 +627,6 @@ A few usability mods targetting the Reno admin theme.
 *Admin screenshot with sticky/compact header and various other RenoTweaks enabled:*
 
 ![RenoTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-renotweaks.png "RenoTweaks")
-
-
-
-### TabIndex
-
-*Add sequential tabindex to fields*
-
-Enables jumping to next input in the admin with TAB key (or backwards with shift+TAB). By default the TAB key jumps to the next input on second or third trigger only (depending on whether there are language tabs or other buttons in the field wrap), this tweak fixes it.
-
 
 
 ### Tooltips

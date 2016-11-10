@@ -1,26 +1,5 @@
-//form[action*=AdminOnSteroids] #Inputfield_tweaks>.InputfieldContent>.Inputfields>li {
-//  &.fixedConfig {
-//    position: fixed;
-//    bottom: 0;
-//    left: 0;
-//    right: 0;
-//    width: 100%;
-//    z-index: 100000 + 50000;
-//    background: #fff;
-//  }
-//}
-
-@mixin clearfix {
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-}
-
-$colorDelete: #B93E42;
-$defaultTransition: 0.12s;
-$defaultBoxShadow: 0 3px 4px -3px rgba(#465b69, 0.5);
+@import '_variables';
+@import '_mixins';
 
 // general style overrides
 html.aos {
@@ -32,11 +11,6 @@ html.aos {
     .quicklinks {
       z-index: 100000 + 30000;
     }
-    &:not(.headSticky) {
-      body {
-        overflow-y: scroll;
-      }
-    }
     #sidebar {
       backface-visibility: hidden;
       min-width: 210px !important;
@@ -47,7 +21,7 @@ html.aos {
       }
     }
   }
-  body.AdminThemeDefault {
+  &.AdminThemeDefault {
     overflow-y: scroll;
   }
   // fix hover dropdown menus not having right padding
@@ -487,85 +461,9 @@ html.aos {
     /* IE 10+ */
   }
 
-  // module filter
-  //@media only screen and (min-width: 1140px) {
-  //  &.headSticky.AdminThemeReno {
-  //    .moduleFilter {
-  //      margin-bottom: -40px;
-  //      transform: translateY(12px);
-  //    }
-  //    &.headStickyCompact {
-  //      .moduleFilter {
-  //        margin-right: 10px;
-  //      }
-  //    }
-  //  }
-  //
-  //  .moduleFilter {
-  //    float: right;
-  //  }
-  //}
-
-  //body.AdminThemeDefault {
-  //  .moduleFilter {
-  //    transform: translateY(-40px);
-  //    margin-right: 12px;
-  //  }
-  //  @media only screen and (min-width: 840px) {
-  //    .moduleFilter {
-  //      float: right;
-  //      transform: translateY(0) !important;
-  //      margin-top: -40px;
-  //      margin-right: 0;
-  //    }
-  //  }
-  //}
-
   .modules_section.hidden {
     display: none;
   }
-
-  //.moduleFilter {
-  //  position: relative;
-  //  z-index: 10;
-  //  margin-bottom: 12px;
-  //  input {
-  //    padding-right: 32px !important;
-  //    min-width: 250px;
-  //    display: inline-block;
-  //    + .fa-close {
-  //      color: inherit;
-  //      margin-left: -30px;
-  //      opacity: 0.33;
-  //      display: none;
-  //      padding: 6px;
-  //      &:hover {
-  //        cursor: pointer;
-  //        opacity: 0.84;
-  //      }
-  //    }
-  //  }
-  //  &.hasValue {
-  //    input + .fa-close {
-  //      display: inline-block;
-  //    }
-  //  }
-  //  input:focus::-webkit-input-placeholder {
-  //    color: transparent;
-  //  }
-  //  input:focus:-moz-placeholder {
-  //    color: transparent;
-  //  }
-  //  /* FF 4-18 */
-  //  input:focus::-moz-placeholder {
-  //    color: transparent;
-  //  }
-  //  /* FF 19+ */
-  //  input:focus:-ms-input-placeholder {
-  //    color: transparent;
-  //  }
-  /* IE 10+ */
-  //}
 }
 
 .cke_maximized {
@@ -1190,407 +1088,6 @@ html.asmCollapse {
       opacity: 1;
       transform: scaleY(1);
     }
-  }
-}
-
-// module's own styles
-
-.configLink {
-  position: absolute;
-  right: 13px;
-  bottom: 7px;
-  display: inline-block;
-  z-index: 5;
-  i {
-    opacity: 0.66;
-    font-size: 20px !important;
-    //transition: all 0.09s;
-    backface-visibility: hidden;
-    color: rgba(#2c3e55, 0.7) !important;
-  }
-  &:not(:hover) {
-    i {
-      color: inherit;
-      transform: scale(0.9);
-    }
-  }
-}
-
-#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore, #Inputfield_AssetPaths {
-  transition: 0.3s;
-  //  transform-origin: top;
-}
-
-.aos_disabled {
-  pointer-events: none;
-  opacity: 0.5;
-  filter: saturate(0);
-  //transform: scaleY(0.96);
-}
-
-#Inputfield_tweaks {
-  .InputfieldCheckboxesStacked {
-    label {
-      padding-right: 1em;
-    }
-  }
-  .focused {
-    //box-shadow: 0 0 20px -6px rgba(#1C2836, 0.8);
-    z-index: 2;
-    outline-style: solid;
-    outline-width: 2px;
-    outline-offset: -2px;
-    backface-visibility: hidden;
-    animation: focusOut 4s ease-out -0.33s forwards !important;
-  }
-  > label {
-    font-size: 21px;
-    padding-bottom: 0.5em;
-    font-weight: normal;
-  }
-}
-
-#wrap_Inputfield_enabledSubmodules {
-
-  > label,
-  > .InputfieldContent {
-    //border: none;
-    background: #F0F3F7;
-  }
-
-  > label {
-    font-size: 21px;
-    padding-bottom: 0.5em;
-    font-weight: normal;
-  }
-
-  .InputfieldAsmSelect {
-    margin: 8px 8px 8px 20px !important;
-    > * {
-      border: none;
-      padding: 0;
-    }
-  }
-
-  input[type="checkbox"] {
-    vertical-align: top;
-    position: absolute;
-    top: 14px;
-    left: 11px;
-  }
-
-  .InputfieldCheckboxesStacked {
-    overflow: visible;
-    > li {
-      @include clearfix;
-      display: block;
-      margin: 0;
-      padding: 3px 0 !important;
-      > label {
-        position: relative;
-        display: block;
-        padding: 10px 20px 10px 30px;
-        z-index: 1;
-        > span {
-          z-index: 1;
-          &:before {
-            content: "";
-            position: absolute;
-            //z-index: -1;
-            pointer-events: none;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            transition: all $defaultTransition;
-            //background: rgba(#97AAB4, 0.2);
-            //outline: 1px solid rgba(#97AAB4, 0.1);
-            outline: 1px solid transparent;
-            //background: rgba(#97AAB4, 0.2);
-            background: rgba(#F0F3F7, 0.25);
-            outline-offset: -1px;
-          }
-        }
-
-      }
-      //a.configLink:hover + label,
-      label:hover {
-        input:not(:checked) {
-          > span {
-            &:before {
-              //background: rgba(#97AAB4, 0.2);
-              background: rgba(#97AAB4, 0.12);
-              //box-shadow: inset 0 0 2px 1px rgba(#fff, 0.7);
-              outline-color: rgba(#97AAB4, 0.33);
-              //outline: 1px solid rgba(#97AAB4, 0.4);
-              //background: darken(#D2DCE6, 2%);
-            }
-          }
-        }
-      }
-    }
-    input:not(:checked) {
-      ~ a.configLink {
-        opacity: 0;
-        pointer-events: none;
-        transition: all $defaultTransition;
-      }
-    }
-    input:checked {
-      + span {
-        &:before {
-          z-index: -1;
-          background: #fff !important;
-          outline: 1px solid rgba(#97AAB4, 0.5);
-        }
-      }
-    }
-  }
-
-  li.InputfieldAsmSelect {
-    position: static;
-    margin: 0 !important;
-    background: transparent !important;
-  }
-
-  .asmSelect {
-    position: absolute;
-    right: 12px;
-    top: 8px;
-
-    @-moz-document url-prefix() {
-      top: 4px !important;
-    }
-
-    width: auto !important;
-    background: transparent;
-    font-size: 66%;
-    text-align: right;
-    text-align-last: right;
-    z-index: 30;
-    opacity: 0.66;
-    padding: 2px 4px 2px 0;
-    option {
-      font-size: 14px;
-      background: transparent;
-      text-align: left;
-      &[disabled="disabled"]:first-child {
-        display: none;
-      }
-    }
-    border: 4px solid transparent !important;
-    border-right-width: 0 !important;
-
-    &:focus,
-    &:hover {
-      background: #fff;
-      cursor: pointer;
-      opacity: 1;
-    }
-  }
-  .asmListItem {
-    margin-bottom: 1px !important;
-    &:first-child {
-      margin-top: 4px !important;
-    }
-    //&:last-child {
-    //  margin-bottom: 2px !important;
-    //}
-  }
-  .asmList {
-    margin-top: 0 !important;
-    margin-right: 20px;
-  }
-  > .InputfieldContent .InputfieldCheckboxesStacked li:hover .configLink i {
-    color: inherit !important;
-    opacity: 1;
-  }
-}
-
-form[action*="AdminOnSteroids"] {
-
-  > .Inputfields > li {
-    margin-bottom: 0.7em;
-  }
-  //.Inputfield_enabled {
-  //  margin-top: 1em;
-  //}
-  //.Inputfield_AssetsPaths {
-  //  margin-bottom: 1em;
-  //}
-
-  #wrap_Inputfield_enabledSubmodules {
-    > .InputfieldContent {
-      label {
-        font-size: 94%;
-        line-height: 1.45;
-        strong {
-          //margin-top: 1px;
-          font-style: normal;
-          display: block;
-          font-weight: bold;
-          margin-bottom: 6px;
-        }
-      }
-      ul {
-        > li {
-          break-inside: avoid;
-          position: relative;
-        }
-        @media only screen and (min-width: 960px) {
-          column-count: 2;
-          column-gap: 6px;
-        }
-        @media only screen and (min-width: 1320px) {
-          column-count: 3;
-        }
-        html.AdminThemeReno & {
-          @media only screen and (min-width: 1640px) {
-            column-count: 4;
-          }
-        }
-      }
-    }
-  }
-
-  //html.AdminThemeReno & {
-  //  //@media only screen and (min-width: 1900px) {
-  //  @media only screen and (min-width: 11479px) {
-  //    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
-  //      column-gap: 6px;
-  //      column-count: 2;
-  //      column-fill: balance; // Firefox only
-  //    }
-  //  }
-  //}
-  //html.AdminThemeDefault & {
-  //  @media only screen and (min-width: 1599px) {
-  //    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
-  //      column-gap: 6px;
-  //      column-count: 2;
-  //      column-fill: balance; // Firefox only
-  //    }
-  //  }
-  //}
-
-  .Inputfields .InputfieldRadiosColumns {
-    > li {
-      width: auto !important;
-      padding-right: 3%;
-    }
-
-  }
-
-  // fieldsets need extra styling not to look different
-  #Inputfield_tweaks {
-
-    #Inputfield_InputfieldURLChecker,
-    #Inputfield_CKEaddons,
-    #Inputfield_NavItems,
-    #Inputfield_ListerTweaks,
-    #Inputfield_PageListThumbs {
-      label {
-        background: transparent;
-      }
-      .Inputfields {
-        margin-left: -1em;
-        margin-right: -0.33em;
-        label, .InputfieldContent {
-          padding-top: 0;
-          //padding-left: 0;
-          border: none;
-        }
-      }
-    }
-
-    @media only screen and (min-width: 960px) {
-
-      > .InputfieldContent > .Inputfields {
-
-        > li {
-          position: relative;
-          break-inside: avoid;
-
-          > label.InputfieldHeader,
-          > .InputfieldContent {
-            padding-top: 1em;
-            padding-bottom: 1em;
-          }
-          > label.InputfieldHeader {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            font-size: 94%;
-          }
-          > .InputfieldContent {
-            padding-left: 300px;
-            position: relative;
-            background: transparent;
-            width: 100%;
-            //top: 1px;
-            //border-left: none;
-            //border: 1px solid #fff;
-            //border: none;
-          }
-        }
-      }
-    }
-  }
-
-  label {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .InputfieldCheckboxesStacked {
-    li.disabled {
-      opacity: 0.7;
-      label {
-        &:hover {
-          cursor: not-allowed !important;
-        }
-      }
-    }
-  }
-
-  .AdminDataTable tr td:first-child {
-    color: inherit !important;
-  }
-
-  input[type="radio"],
-  input[type="checkbox"] {
-    vertical-align: top;
-    position: relative;
-    top: 5px;
-    &:hover {
-      cursor: pointer;
-    }
-    + span {
-      //opacity: 0.7;
-      white-space: normal;
-      display: inline-block;
-      //padding-right: 20px;
-    }
-    &:checked {
-      + span {
-        opacity: 1;
-      }
-    }
-  }
-
-  // push these items to the right to mimic hiearchy (indent)
-  input#Inputfield_RenoTweaks_sbSingleClickHeads,
-    //input#Inputfield_RenoTweaks_sbItemsInline,
-  input#Inputfield_RenoTweaks_miniScrollSb,
-  input#Inputfield_RenoTweaks_miniScrollMain,
-  input#Inputfield_RenoTweaks_headStickyCompact,
-  input#Inputfield_RenoTweaks_stickyCKEBar,
-  input#Inputfield_CKEaddons_plugins_div_toolbar,
-  input#Inputfield_CKEaddons_plugins_justify_toolbar {
-    margin-left: 21px;
   }
 }
 
@@ -2483,8 +1980,9 @@ html.AdminThemeReno {
         max-height: 100%;
         min-height: 100%;
         //overflow: auto;
+        overflow-y: auto;
         // disable page jump
-        overflow-y: scroll;
+        //overflow-y: scroll;
         #content {
           // layout scrolbar fix
           //border-top: 156px solid transparent;
@@ -3535,7 +3033,7 @@ html.AdminThemeReno {
   }
 }
 
-html.HoverDropdown {
+html.hoverDropdown {
   //@media only screen and (min-width: 960px) {
   .ui-button {
 
@@ -3548,7 +3046,9 @@ html.HoverDropdown {
           font-family: 'FontAwesome', sans-serif;
           position: relative;
           margin-left: 6px;
-          top: 1px;
+          font-size: 12px;
+          margin-right: 1px;
+          //top: 0;
           display: inline-block;
         }
       }
@@ -3716,17 +3216,5 @@ html.HoverDropdown {
   100% {
     opacity: 0;
     transform: scale(0.8);
-  }
-}
-
-@keyframes focusOut {
-  0% {
-    outline-color: transparent;
-  }
-  2% {
-    outline-color: #81A70B;
-  }
-  100% {
-    outline-color: transparent;
   }
 }

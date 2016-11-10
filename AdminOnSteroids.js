@@ -2,8 +2,8 @@ var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWi
 
 if (AOSsettings) {
 
-    var aosUrl = AOSsettings.aosUrl,
-        aosModuleUrl = AOSsettings.aosModuleUrl;
+    var aosUrl = AOSsettings.aosUrl;
+        //aosModuleUrl = AOSsettings.aosModuleUrl;
 
     if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && ProcessWire.config.InputfieldCKEditor) {
 
@@ -181,11 +181,6 @@ function debounce(func, wait, immediate) {
     };
 }
 
-
-function checkAOSstate(el) {
-    $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore, #Inputfield_AssetPaths').toggleClass('aos_disabled', !el.is(':checked'));
-}
-
 // function to add image titles to image select dialog (opened by CKEditor image button)
 function addImageSelectLabels(imageUL) {
     if (imageUL.children('li').length) {
@@ -201,27 +196,6 @@ function addImageSelectLabels(imageUL) {
             link.append('<span class="imageSelectLabel">' + imgTitle + '<small>' + imgName + '</small></span>');
         });
     }
-}
-
-$(window).load(function () {
-
-    if ($('form[action*="AdminOnSteroids"] #Inputfield_enabled').length) {
-
-        var el = $('form[action*="AdminOnSteroids"] #Inputfield_enabled');
-
-        el.on('change', function () {
-            checkAOSstate(el);
-        });
-
-        checkAOSstate(el);
-    }
-});
-
-function getClassArgument(classes, prefix) {
-    for (var i = classes.length; i-- > 0;)
-        if (classes[i].substring(0, prefix.length) == prefix)
-            return classes[i].substring(prefix.length);
-    return null;
 }
 
 // build search strings and add to rows && set column widths
@@ -266,7 +240,7 @@ function restoreFilterBoxValue(input) {
 
     var prevValue = $('body').attr('data-filterbox');
 
-    if(!prevValue) return false;
+    if (!prevValue) return false;
 
     toggleFilterBoxState(input, true);
 
@@ -404,10 +378,10 @@ function setupAdminDataTableFilter() {
 
             var input = $(this),
                 pager = input.parents('form').find('.MarkupPagerNav'),
-                keyCode = e.keyCode || e.which,
+                keyCode = e.keyCode || e.charCode || e.which,
                 arrow = {left: 37, up: 38, right: 39, down: 40};
 
-            if (e.ctrlKey) {
+            if (e.metaKey || e.ctrlKey) {
                 switch (keyCode) {
                     case arrow.left:
                         // prevent moving cursor
@@ -449,7 +423,7 @@ function setupAdminDataTableFilter() {
                 filter = target.value.toLowerCase(),
                 field = $('.AdminDataTable'),
                 items = field.find('tbody td'),
-            //count = 0,
+                //count = 0,
                 length = filter.length,
                 invertedSearch = false;
 
@@ -695,79 +669,6 @@ $(document).ready(function () {
             return false;
         }
 
-        // apply AOS tweaks real-time
-
-        var html = $('html'),
-            isRenoTheme = !!(html.hasClass('AdminThemeReno')),
-            isDefaultTheme = !!(html.hasClass('AdminThemeDefault'));
-
-        $('#Inputfield_tweaks input[type="checkbox"]').on('click', function (e) {
-
-            var checkbox = $(this),
-                currentId = checkbox.attr('id'),
-                idArray = currentId.split('_');
-
-            if (currentId.indexOf('AdminTweaks') !== -1 && isRenoTheme ||
-                currentId.indexOf('RenoTweaks') !== -1 && isDefaultTheme
-            ) return true;
-
-            html.toggleClass(idArray[idArray.length - 1]);
-        });
-
-        // AOS LongClick slider (module options page)
-        var $longClickElem = $("#Inputfield_LongClickDuration");
-
-        if ($longClickElem.length) {
-
-            var longClickMin = 600,
-                longClickMax = 3000,
-                longClickUnit = ' ms',
-                longClickStep = 100,
-                $longClickSlider = $("<div id='longClickSlider'></div>"),
-                columnWidthVal = parseInt($longClickElem.val());
-
-            function sliderTooltip(ui) {
-                var curValue = (ui && ui.value) || $longClickElem.val(); // current value (when sliding) or initial value (at start)
-                var tooltip = '<div class="sliderTooltip"><div class="sliderTooltip-inner ui-button"><span>' + curValue + '</span>' + longClickUnit + '</div><div class="sliderTooltip-arrow"></div></div>';
-
-                $('.ui-slider-handle').html(tooltip); //attach tooltip to the slider handle
-            }
-
-            $longClickElem.val(columnWidthVal);
-            $longClickElem.after($longClickSlider);
-            $longClickSlider.slider({
-                range: 'min',
-                step: longClickStep,
-                min: longClickMin,
-                max: longClickMax,
-                value: parseInt($longClickElem.val()),
-                slide: function (e, ui) {
-                    var val = ui.value;
-                    $longClickElem.val(val);
-                    sliderTooltip(ui);
-                },
-                create: function (e, ui) {
-                    sliderTooltip(ui);
-                }
-            });
-
-            // update the slider if the columnWidth field is changed manually
-            $longClickElem.change(function () {
-                var val = parseInt($(this).val());
-                if (val > longClickMax) val = longClickMax;
-                if (val < longClickMin) val = longClickMin;
-                if (val % longClickStep != 0) val = Math.round(val / 100) * 100;
-                $(this).val(val);
-                $longClickSlider.slider('option', 'value', val);
-                sliderTooltip();
-            });
-        }
-
-        // set browser title
-        //if (window.location.href.indexOf('name=AdminOnSteroids') !== -1) {
-        //    $(document).prop('title', 'AdminOnSteroids' + ' • ProcessWire');
-        //}
-
         // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle)
         if ($('html.AdminThemeReno.headStickyCompact:not(.headBtnToTitle):not(.modal)').length) {
             var saveBtnWidth = $('#Inputfield_submit_save_module_copy').outerWidth();
@@ -775,50 +676,6 @@ $(document).ready(function () {
                 $('#search').attr('style', 'right: ' + (saveBtnWidth + 120 + 24) + 'px !important');
             }
         }
-
-        // config jumplinks
-        if ($('.Inputfield_enabledSubmodules').length) {
-
-            var configLink = '<a class="configLink" title="Configuration"><i class="fa fa-cog"></a>';
-
-
-            $('#wrap_Inputfield_enabledSubmodules input[id^="Inputfield_enabledSubmodules_"]').each(function () {
-
-                var input = $(this),
-                    submoduleName = input.attr('id').replace('Inputfield_enabledSubmodules_', ''),
-                    target = '#wrap_Inputfield_' + submoduleName;
-
-
-                if (!$(target).length) {
-                    target = '#Inputfield_' + submoduleName;
-                }
-
-                if (!$(target).length) return true;
-
-                configLink = $(configLink).clone().attr('href', target);
-
-                input.next('span').after(configLink);
-            });
-
-            $('.configLink').on('click', function (e) {
-                e.preventDefault();
-
-                var targetId = $(this).attr('href'),
-                    target = $(targetId),
-                    // determine animparent here to make dynamic
-                    animParent = ($('html').hasClass('headSticky') && $('#main').length) ? $('#main') : $('html,body');
-
-                animParent.animate({
-                    scrollTop: target.offset().top - 200
-                }, 300, function () {
-                    target.siblings().removeClass('focused');
-                    target.addClass('focused');
-                });
-
-                return false;
-            });
-        }
-
 
         // check for AdminColumns in tabs
         if ($('#ProcessPageEdit li[data-column-break]').length) {
@@ -870,42 +727,6 @@ $(document).ready(function () {
             }
         }
 
-        // move role asmSelect to submodules section
-        //$('#Inputfield_enabledSubmodules_AdminLangSwitcher + span').after($('#wrap_Inputfield_AdminLangSwitcherRoles'));
-        $('#wrap_Inputfield_enabledSubmodules .InputfieldCheckboxesStacked li span').each(function () {
-            var obj = $(this),
-                current = obj.parent().children('input').attr('id').replace('enabledSubmodules_', '');
-
-            obj.after($('#wrap_' + current + 'Roles'));
-        });
-
-
-        //if ($('html.aos #docinfo').length) {
-        //    $('html.aos #docinfo').find('p').prependTo($('#wrap_Inputfield_enabledSubmodules .InputfieldContent'));
-        //     $('html.aos #docinfo').remove();
-        //}
-
-
-        if ($('.aos_adminLangSwitcher').length) {
-
-            var langSwitcher = $('.aos_adminLangSwitcher');
-
-            if ($('body').hasClass('AdminThemeReno')) {
-                langSwitcher.prependTo('#topnav');
-            } else {
-                langSwitcher.appendTo('#topnav');
-                // put inside 'a' to have top menu highlighted on hover
-                $('.aos_adminLangSwitcher > a').append($('.aos_adminLangSwitcher > a + ul'));
-            }
-
-            langSwitcher.removeAttr('style');
-
-            langSwitcher.on('click', 'a[data-lang-id]', function () {
-                var lang_id = $(this).attr('data-lang-id');
-                document.cookie = 'aos_lang_id=' + lang_id + ';expires=0;path=/';
-            });
-        }
-
         // AsmTweaks
         // see AsmTweaks/AsmTweak.js
 
@@ -936,95 +757,6 @@ $(document).ready(function () {
                 }
             });
 
-
-            // link inside link workaround
-            // create a clone of the parent link on mousedown, remove click event, then restore
-            // $(document).on('hover', '.PageListItem:not([data-template-edit-loaded])', function (e) {
-            //
-            //     var el = $(this),
-            //         templateName = getClassArgument(el.attr('class').split(' '), 'PageListTemplate_');
-            //
-            //     $.getJSON(aosModuleUrl + '&getTemplateEditLink=' + templateName, function (templateEditLink) {
-            //         if (!el.find('.aos_EditTemplate').length) {
-            //             el.attr('data-template-edit-loaded', true);
-            //             el.find('span[class^="label_"]').append($(templateEditLink));
-            //         }
-            //     });
-            // });
-
-
-            // $(document).on('mousedown', '.aos_EditTemplate', function (e) {
-            //
-            //     var el = $(this),
-            //         parentLink = el.parents('a').first(),
-            //         parentLinkClone = parentLink.clone(true);
-            //
-            //     parentLink.unbind('click');
-            //
-            //     $('.pw-panel-container').remove();
-            //
-            //
-            //     if (pwPanels && el.hasClass('pw-panel')) {
-            //         pwPanels.init();
-            //     }
-            //
-            //     setTimeout(function () {
-            //         parentLink.replaceWith(parentLinkClone);
-            //     }, 200);
-            // });
-
-            // $(document).on('hover', '.PageListActionEditTemplate.pw-panel', function () {
-            //     if (pwPanels && !$('body').hasClass('pwPanelsStarted')) {
-            //         $('body').addClass('pwPanelsStarted');
-            //         pwPanels.init();
-            //     }
-            //     $(this).removeClass('pw-panel').children('a').addClass('pw-panel pw-panel-reload');
-            // });
-
-            // $(document).on('hover', '.PageListActionEditTemplate.pw-modal', function () {
-            //     $(this).removeClass('pw-modal').children('a').addClass('pw-modal');
-            // });
-
-            // $(document).on('hover', '.pw-panel', function () {
-            //     if (pwPanels && !$('body').hasClass('pwPanelsStarted')) {
-            //         $('body').addClass('pwPanelsStarted');
-            //         pwPanels.init();
-            //     }
-            //     return false;
-            // });
-
-            // $(document).on('click', '#pw-panel-shade', function () {
-            //     // console.log('removing');
-            //     // $('#pw-panel-shade').remove();
-            //     // $('.pw-panel-container').each(function() {
-            //     // $('.pw-panel-container').each(function() {
-            //     //     $(this).remove();
-            //     // })
-            // });
-
-            // $(document).on('click', 'ul.actions > li ~ .PageListActionEdit a', function () {
-            ////
-            //     var el = $(this);
-            ////
-            //     if (el.attr('href').indexOf('&target=blank') !== -1) {
-            //         el.attr('href', el.attr('href').slice(0, -13));
-            //         el.attr('target', '_blank');
-            //     }
-
-            // else if(el.parent().hasClass('pw-panel')) {
-            //     $('.pw-panel-container').remove();
-            //     pwPanels.init();
-            // }
-
-            // $('.pw-panel-container').remove();
-            //
-            // if (pwPanels && el.hasClass('pw-panel')) {
-            //     pwPanels.init();
-            // }
-            //return false;
-            //});
-
-
             // workaround: add edit links to ajax-loaded fields
             $('.Inputfield:not(.InputfieldPageListSelect)').on('reloaded', function () {
                 var field = $(this),
@@ -1044,17 +776,6 @@ $(document).ready(function () {
             });
         }
 
-
-// HoverDropdown
-        if (AOSsettings.enabledSubmodules.indexOf('HoverDropdown') !== -1) {
-
-            $('.pw-dropdown-toggle-click').removeClass('pw-dropdown-toggle-click');
-            $('.dropdown-toggle-click').removeClass('dropdown-toggle-click');
-
-            // force align dropdown menus to right of parent button
-            $('.pw-button-dropdown.pw-dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
-            $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
-        }
 
 // LongClickDuration
         if (AOSsettings.enabledSubmodules.indexOf('LongClickDuration') !== -1) {
@@ -1091,32 +812,72 @@ $(document).ready(function () {
             });
         }
 
+// PageListTweaks
+        if (AOSsettings.enabledSubmodules.indexOf('PageListTweaks') !== -1) {
 
-// tabIndex
-        if (AOSsettings.enabledSubmodules.indexOf('TabIndex') !== -1) {
+            // pageListUnselect
+            if (AOSsettings.PageListTweaks.indexOf('pageListUnselect') !== -1) {
 
-            function aos_updateTabIndices() {
-                $('input, textarea, select').each(function (index) {
-                    $(this).prop('tabindex', index + 1);
+                $(document).on('pageSelected', function (e, obj) {
+
+                    var clearButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.clear'),
+                        restoreButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.restore');
+
+                    if (obj.id !== 0) {
+                        clearButton.removeClass('empty');
+                        // remove page ID from title (pListIDs)
+                        if (obj.title.indexOf(obj.id) !== -1) {
+                            var title = obj.title.replace(obj.id, '<sup class="pageId">' + obj.id + '</sup>');
+                            $('#wrap_' + e.target.id).find('.PageListSelectName').html(title);
+                        }
+                    } else {
+                        clearButton.addClass('empty');
+                    }
+
+                    restoreButton.removeClass('empty').removeClass('initial');
+                });
+
+                $(document).on('click', '.aos_pagelist_unselect', function () {
+
+                    var button = $(this),
+                        parentEl = button.parent(),
+                        input = button.parent().find('input'),
+                        //titleElem = button.parent().find('.PageListSelectName .label_title');
+                        titleElem = button.parent().find('.PageListSelectName');
+
+                    // try without .label_title (on pageSelected the span disappears)
+                    //if (!titleElem.length) {
+                    //    titleElem = button.parent().find('.PageListSelectName');
+                    //}
+
+                    if (button.hasClass('clear')) {
+                        // clear
+                        input.removeAttr('value');
+                        titleElem.html('');
+                        button.addClass('empty');
+
+                        parentEl.find('button.restore[data-value-original!=""]').removeClass('empty');
+                        parentEl.find('button.restore').removeClass('initial');
+                    } else {
+                        // restore
+                        input.val(button.attr('data-value-original'));
+                        titleElem.html(button.attr('data-title-original'));
+                        button.addClass('empty');
+                        parentEl.find('button.clear').removeClass('empty');
+                    }
+
+                    // if pagelist is open, close it
+                    if (parentEl.find('.PageListItemOpen').length) {
+                        parentEl.find('a.PageListSelectActionToggle').trigger('click');
+                    }
+
+                    return false;
                 });
             }
-
-            $(document).on('ready opened reloaded', function () {
-                aos_updateTabIndices();
-            });
-
-            // repeaters
-            $(document).on('reloaded', '.InputfieldRepeater', function () {
-                aos_updateTabIndices();
-            });
-
-            // profield table
-            $(document).on('click', 'a.InputfieldTableAddRow', function () {
-                aos_updateTabIndices();
-            });
         }
 
-// Misc
+
+        // Misc
         if (AOSsettings.enabledSubmodules.indexOf('Misc') !== -1) {
 
             // Add Remove All button to field deletion confirmation page
@@ -1194,12 +955,72 @@ $(document).ready(function () {
                     setupAdminDataTableFilter();
                 });
             }
+            // AdminDataTable filter box
+            if (AOSsettings.Misc.indexOf('adminLangSwitcher') !== -1) {
+                if ($('.aos_adminLangSwitcher').length) {
+
+                    var langSwitcher = $('.aos_adminLangSwitcher');
+
+                    if ($('body').hasClass('AdminThemeReno')) {
+                        langSwitcher.prependTo('#topnav');
+                    } else {
+                        langSwitcher.appendTo('#topnav');
+                        // put inside 'a' to have top menu highlighted on hover
+                        $('.aos_adminLangSwitcher > a').append($('.aos_adminLangSwitcher > a + ul'));
+                    }
+
+                    langSwitcher.removeAttr('style');
+
+                    langSwitcher.on('click', 'a[data-lang-id]', function () {
+                        var lang_id = $(this).attr('data-lang-id');
+                        document.cookie = 'aos_lang_id=' + lang_id + ';expires=0;path=/';
+                    });
+                }
+            }
 
             // Translator filter box
             if (AOSsettings.Misc.indexOf('transFilter') !== -1) {
                 if ($('body').hasClass('id-1021')) {
                     setupTranslatorFilter();
                 }
+            }
+
+            // noAnim
+            if (AOSsettings.Misc.indexOf('noAnim') !== -1) {
+                $.fx.off = true;
+            }
+
+            // hoverDropdown
+            if (AOSsettings.Misc.indexOf('hoverDropdown') !== -1) {
+                $('.pw-dropdown-toggle-click').removeClass('pw-dropdown-toggle-click');
+                $('.dropdown-toggle-click').removeClass('dropdown-toggle-click');
+
+                // force align dropdown menus to right of parent button
+                $('.pw-button-dropdown.pw-dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
+                $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
+            }
+
+            // tabIndex
+            if (AOSsettings.Misc.indexOf('tabIndex') !== -1) {
+                function aos_updateTabIndices() {
+                    $('input, textarea, select').each(function (index) {
+                        $(this).prop('tabindex', index + 1);
+                    });
+                }
+
+                $(document).on('ready opened reloaded', function () {
+                    aos_updateTabIndices();
+                });
+
+                // repeaters
+                $(document).on('reloaded', '.InputfieldRepeater', function () {
+                    aos_updateTabIndices();
+                });
+
+                // profield table
+                $(document).on('click', 'a.InputfieldTableAddRow', function () {
+                    aos_updateTabIndices();
+                });
             }
         }
 
@@ -1247,50 +1068,6 @@ $(document).ready(function () {
 
             return false;
         });
-
-
-        // ProcessEditFile matjazp
-        // $(document).on('keydown', function (e) {
-        //
-        //     e = e || window.event;
-        //     var closeBtn = $('.ui-dialog-titlebar-close');
-        //
-        //     if (e.keyCode === 27 && closeBtn.length) { // ESC
-        //         e.stopImmediatePropagation();
-        //         // closeBtn.trigger('mousedown');
-        //     }
-        // });
-        //
-        //
-        // $(document).on('pw-modal-opened', function (event, ui) {
-        //
-        //     var iframe = $(ui.event.currentTarget);
-        //
-        //     $(iframe).on("load", function () {
-        //
-        //         var isEditFormChanged = false,
-        //             editForm = $(iframe).contents().find('#editForm'),
-        //             closeBtn = $(document).find('.ui-dialog-titlebar-close');
-        //
-        //         // set flag to true
-        //         editForm.on('input', function () {
-        //             isEditFormChanged = true;
-        //         });
-        //
-        //         closeBtn.on('mousedown', function (e) {
-        //             if (isEditFormChanged) {
-        //                 var confirm = window.confirm('File is not saved. Continue?');
-        //                 if (!confirm) {
-        //                     e.preventDefault();
-        //                     return false;
-        //                 }
-        //                 isEditFormChanged = false;
-        //                 closeBtn.click();
-        //             }
-        //         });
-        //     });
-        // });
-
 
 // ListerTWeaks
         if (AOSsettings.enabledSubmodules.indexOf('ListerTweaks') !== -1) {
@@ -1392,7 +1169,6 @@ $(document).ready(function () {
 
                     $('#reset_modules').parent().prepend(addNewBtn);
 
-
                     $(document).on('click', '#add_new_button', function (e) {
 
                         var btn = $(this);
@@ -1459,7 +1235,7 @@ $(document).ready(function () {
                             modulesArray.push(moduleName);
                             // set data-aos-name in each row
                             row.attr('data-aos-name', moduleName);
-                        //} else {
+                            //} else {
                             //row.remove();
                         }
                     });
@@ -1475,6 +1251,16 @@ $(document).ready(function () {
                         var item = $('#modules_form tr[data-aos-name="' + modulesArray[i] + '"]');
                         item.appendTo(mainTbody);
                     });
+                }
+
+                // trigger addnew on url
+                if (window.location.href.indexOf('module/?new') !== -1) {
+                    setTimeout(function () {
+                        // $('.moduleFilter').blur();
+                        $('#add_new_button').trigger('click');
+                        // $('#download_name').focus();
+                    }, 0);
+
                 }
             }
 
@@ -1505,7 +1291,9 @@ $(document).ready(function () {
 
                 // Module Filter
 
-                var moduleFilter = $('<div class="moduleFilter filterbox"><input type="text" autofocus><i class="fa fa-close"></i></div>');
+                var hiddenStyle = window.location.href.indexOf('module/?new') !== -1 ? ' style="display: none"' : '';
+
+                var moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');
 
                 if ($('#modules_form').length) {
 
@@ -1579,13 +1367,13 @@ $(document).ready(function () {
 
                         var currentTab = $('#modules_form').find('.WireTabs .on'),
                             hasMatchesTabs = $('.WireTabs .hasMatches'),
-                            keyCode = e.keyCode || e.which,
+                            keyCode = e.keyCode || e.charCode || e.which,
                             arrow = {left: 37, up: 38, right: 39, down: 40},
                             tabID,
                             prevTab,
                             nextTab;
 
-                        if (e.ctrlKey) {
+                        if (e.metaKey || e.ctrlKey) {
 
                             var nextMatches = currentTab.parent().nextAll('li').has('.hasMatches'),
                                 prevMatches = currentTab.parent().prevAll('li').has('.hasMatches');
@@ -1632,12 +1420,13 @@ $(document).ready(function () {
                             filter = target.value.toLowerCase(),
                             field = $('#modules_form').find('.AdminDataTable'),
                             items = field.find('td'),
-                        //count = 0,
+                            keyCode = e.keyCode || e.charCode,
+                            //count = 0,
                             length = filter.length;
 
                         $('.WireTabs a').removeClass('hasMatches');
 
-                        if (e.keyCode == 13) {  // Enter
+                        if (keyCode == 13) {  // Enter
                             if ($('tr:not(.hidden) a').length) {
                                 $('tr:not(.hidden) a').first().get(0).click();
                             }
@@ -1694,7 +1483,7 @@ $(document).ready(function () {
 
                         if (items.filter('.hidden').length == items.length) {
                             // allow escape, backspace, delete, leftarrow keys only
-                            if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 46) {
+                            if (keyCode == 27 || keyCode == 8 || keyCode == 37 || keyCode == 46) {
                                 return true;
                             }
                             return false;
@@ -1704,51 +1493,7 @@ $(document).ready(function () {
             }
         }
 
-
-        function getParentCheckbox(cb) {
-
-            if (window.getComputedStyle(cb.get(0), null).getPropertyValue('margin-left') !== '0px') {
-                cb = getParentCheckbox(cb.parent().parent('li').prev('li').find('input'));
-            }
-
-            return cb;
-        }
-
-
-        function setupCheckbox(currentCheckbox) {
-
-            var nextCheckbox = currentCheckbox.parent().parent('li').next('li').find('input');
-
-            if (nextCheckbox.length) {
-
-                if (window.getComputedStyle(nextCheckbox.get(0), null).getPropertyValue('margin-left') !== '0px') {
-
-                    var parentCheckbox = getParentCheckbox(currentCheckbox);
-
-                    var isChecked = parentCheckbox.is(':checked');
-                    nextCheckbox.parent().parent('li').toggleClass('disabled', !isChecked);
-                    // note: setting to disabled won't save the value
-                }
-
-                setupCheckbox(nextCheckbox);
-            }
-        }
-
-        // setupCheckbox($('#wrap_Inputfield_CKE_plugins .InputfieldCheckboxesStacked li:eq(0) input[type="checkbox"]'));
-        //
-        // $('#wrap_Inputfield_CKE_plugins .InputfieldCheckboxesStacked input[type="checkbox"]').on('change', function () {
-        //     setupCheckbox($(this));
-        // });
-        //
-        // // do not allow checking checkboxes if it's parent is set to disabled
-        // $('#wrap_Inputfield_CKE_plugins .InputfieldCheckboxesStacked').on('click', 'li.disabled input[type="checkbox"]', function (e) {
-        //     e.preventDefault();
-        //     return false;
-        // });
-
 // RenoTWeaks
-
-
 
         if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
@@ -1803,7 +1548,7 @@ $(document).ready(function () {
             if (window.Ps) {
 
                 var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+                    // mainContent = document.querySelector('#content'),
                     mainContent = document.querySelector('body:not(.modal-inline) #main'),
                     PsSettings = {
                         wheelSpeed: 2,
@@ -1865,11 +1610,6 @@ $(document).ready(function () {
             $('.NavItems').remove();
         }
 
-// noAnim
-        if (AOSsettings.enabledSubmodules.indexOf('noAnim') !== -1) {
-            $.fx.off = true;
-        }
-
 
 // PagePreviewBtn
         if (AOSsettings.enabledSubmodules.indexOf('PagePreviewBtn') !== -1) {
@@ -1897,68 +1637,6 @@ $(document).ready(function () {
                     $(this).prev('.aos_EditTemplate').removeAttr('style');
                 }
             );
-        }
-
-        //PageListUnselect
-        if (AOSsettings.enabledSubmodules.indexOf('PageListUnselect') !== -1) {
-
-            //var isPageListIDs = !!(AOSsettings.enabledSubmodules.indexOf('PageListTweaks') && AOSsettings.PageListTweaks.indexOf('pListIDs'));
-
-            $(document).on('pageSelected', function (e, obj) {
-
-                var clearButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.clear'),
-                    restoreButton = obj.a.parents('.InputfieldPageListSelect').first().find('button.restore');
-
-                if (obj.id !== 0) {
-                    clearButton.removeClass('empty');
-                    // remove page ID from title (pListIDs)
-                    if (obj.title.indexOf(obj.id) !== -1) {
-                        var title = obj.title.replace(obj.id, '<sup class="pageId">' + obj.id + '</sup>');
-                        $('#wrap_' + e.target.id).find('.PageListSelectName').html(title);
-                    }
-                } else {
-                    clearButton.addClass('empty');
-                }
-
-                restoreButton.removeClass('empty').removeClass('initial');
-            });
-
-            $(document).on('click', '.aos_pagelist_unselect', function () {
-
-                var button = $(this),
-                    parentEl = button.parent(),
-                    input = button.parent().find('input'),
-                //titleElem = button.parent().find('.PageListSelectName .label_title');
-                    titleElem = button.parent().find('.PageListSelectName');
-
-                // try without .label_title (on pageSelected the span disappears)
-                //if (!titleElem.length) {
-                //    titleElem = button.parent().find('.PageListSelectName');
-                //}
-
-                if (button.hasClass('clear')) {
-                    // clear
-                    input.removeAttr('value');
-                    titleElem.html('');
-                    button.addClass('empty');
-
-                    parentEl.find('button.restore[data-value-original!=""]').removeClass('empty');
-                    parentEl.find('button.restore').removeClass('initial');
-                } else {
-                    // restore
-                    input.val(button.attr('data-value-original'));
-                    titleElem.html(button.attr('data-title-original'));
-                    button.addClass('empty');
-                    parentEl.find('button.clear').removeClass('empty');
-                }
-
-                // if pagelist is open, close it
-                if (parentEl.find('.PageListItemOpen').length) {
-                    parentEl.find('a.PageListSelectActionToggle').trigger('click');
-                }
-
-                return false;
-            });
         }
 
 
@@ -2144,7 +1822,7 @@ $(document).ready(function () {
                         filter = target.value.toLowerCase(),
                         field = $(target).closest('li.Inputfield'),
                         items = field.find('[data-filter]'),
-                    //count = 0,
+                        //count = 0,
                         length = filter.length;
 
                     if (!target.value) {
@@ -2273,25 +1951,6 @@ $(document).ready(function () {
                 });
             }
         }
-
-        /**
-         * Add placeholder to asmSelect
-         * Selector: http://stackoverflow.com/questions/10641258/jquery-select-data-attributes-that-arent-empty#answer-23944081
-         */
-        $(function () {
-            $('select[data-asm-placeholder!=""][data-asm-placeholder]').each(function () {
-
-                var placeholder = $(this).data('asmPlaceholder');
-
-                if (placeholder) {
-                    $(this).parent().find('.asmSelect option:first').attr({
-                        'selected': true,
-                        'disabled': true
-                    }).text(placeholder);
-                }
-            });
-        });
-
     }
 );
 

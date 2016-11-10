@@ -126,8 +126,9 @@ $(document).ready(function () {
         obj.on(eventName, function (e) {
 
             var url = $(this).val(),
-                isCtrlShiftPressed = e.ctrlKey && e.shiftKey,
-                isEnterPressed = e.keyCode == 10 || e.keyCode == 13;
+                isCtrlShiftPressed = (e.metaKey || e.ctrlKey) && e.shiftKey,
+                keyCode = e.keyCode || e.charCode,
+                isEnterPressed = keyCode == 10 || keyCode == 13;
 
             if (!url && url.trim() === "") return;
 
