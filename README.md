@@ -1,7 +1,13 @@
 AdminOnSteroids
 ========================
 
-Various admin tweaks to enhance ProcessWire admin. See more at [https://processwire.com/talk/topic/13389-adminonsteroids/](https://processwire.com/talk/topic/13389-adminonsteroids/)
+Various ProcessWire admin tweaks to boost productivity. 
+
+See more at
+
+ - [AdminOnSteroids on ProcessWire forums](https://processwire.com/talk/topic/13389-adminonsteroids/)
+ - [AdminOnSteroids on ProcessWire Modules Directory](http://modules.processwire.com/modules/admin-on-steroids/)
+
 
 
 ## Install
