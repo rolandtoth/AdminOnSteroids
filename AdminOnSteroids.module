@@ -52,23 +52,24 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     static public function getDefaultData() {
         return array(
             'enabledSubmodules'            => array(
+                'AdminTweaks',
                 'AsmTweaks',
                 'CKEaddons',
                 'DeselectRadios',
-                'FileFieldTweaks',
                 'FieldAndTemplateEditLinks',
+                'FileFieldTweaks',
                 'FocusInputOnLangTabSwitch',
-                'AdminTweaks',
-                'NavItems',
-                'RenoTweaks',
-                'LongClickDuration',
                 'Hotkeys',
                 'InputfieldURLChecker',
                 'ListerTweaks',
+                'LongClickDuration',
+                'Misc',
+                'ModuleTweaks',
+                'NavItems',
+                'RenoTweaks',
                 'PageListThumbs',
                 'PageListTweaks',
                 'PagePreviewBtn',
-                'ModuleTweaks',
                 'Tooltips'
             ),
             'enabled'                      => 1,
@@ -125,16 +126,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'IUC_enabledFields'            => array(),
             'ListerTweaks'                 => '',
             'ListerTweaks_find'            => array(
-                'title',
-                'template',
-                'parent',
-                'modified',
-                'modified_users_id'
+                '[DEFAULTS]'
             ),
             'ListerTweaks_users'           => array(
-                'name',
-                'email',
-                'roles'
+                '[DEFAULTS]'
             ),
             'ListerTweaks_options'         => array(
                 'listerHoverBtn',
