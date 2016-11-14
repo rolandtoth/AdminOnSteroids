@@ -198,7 +198,8 @@ You can select from these plugins to add to CKEditor enabled fields:
 - [Div](http://ckeditor.com/addon/div) (adds a toolbar button)
 - [Find](http://ckeditor.com/addon/find) (adds toolbar buttons)
 - [Justify](http://ckeditor.com/addon/justify) (adds text-align toolbar buttons)
-- [Keystrokes](https://processwire.com/talk/topic/12768-anyone-successfully-added-ckeditor-shortcut-keys/?do=findComment&comment=116190) - thanks **Robin S**!
+- [Keep TextSelection](http://ckeditor.com/addon/textselection) - thanks **Robin S**!
+- [Keystrokes](https://processwire.com/talk/topic/12768-anyone-successfully-added-ckeditor-shortcut-keys/?do=findComment&comment=116190)
 - [Magic Line](http://ckeditor.com/addon/magicline)
 - [Maximize](http://ckeditor.com/addon/maximize) (unavailable in inline mode)
 - [Media (oEmbed)](http://ckeditor.com/addon/oembed) (adds a toolbar button)
@@ -209,6 +210,8 @@ If a plugin adds toolbar items then they will be added to the beginning of the t
 The order of the asmField items determine the order of the toolbar buttons.
 
 The oEmbed plugin requires the "HTML purifier" to be turned off for the CKEditor field to work, otherwise iframes will be removed on saving the page.
+
+The Keep TextSelection plugin currently doesn't work with the dialog source mode but only with the "default" source mode. You'll have to add this command "Source" to your field's toolbar configuration manually, or you can use ctrl+u if you have enabled the Keystrokes plugin from the list.
 
 *CKEaddons configuration section:*
 
@@ -324,6 +327,7 @@ Settings can be configured separately for CKEditor fields.
 - **Save on ctrl+s**: save current page, even from within CKEditor. Works on various pages, eg. when editing Templates, Fieds, Roles, etc. Also disables the default browser Save as dialog even if there's no submit button on the page.
 - **Add long-click and ctrl+click actions to breadcrumbs**: if enabled, long-click on a breadcrumb item will open the corresponding front-end page in a new tab/window, and holding the Ctrl key when clicking on them will navigate to their edit screen.
 - **Focus search on alt+d**: focuses the top search field on alt+d hotkey. Use ESC to remove focus.
+- **Remove notices on first ESC keypress**: if the very first keypress when a page loads in the admin is ESC, it will remove system notice messages (if any). This is a quick way to close them without clicking on the notice close button.
 
 *Overlay and flashing save icon after hitting ctrl+s:*
 

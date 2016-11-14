@@ -1,6 +1,29 @@
 #Changelog
 
 
+### 1.0.4 (2016-11-14)
+
+- CKEaddons "keystrokes" plugin: add hotkeys alt+n, alt+b for numbered/bulleted lists, plus ctrl+u for source mode (non-dialog)
+- new CKEaddons plugin: "Keep TextSelection" (works only with non-dialog source mode)
+- possible fix for "$this when not in object context" (reported by Noboru)
+- CSS fix for fieldEditLinks for non-ProcessPageEdit pages (repored by bernhard)
+
+
+
+### 1.0.3 (2016-11-12)
+
+- use only CSS instead of a html tag to dislay page IDs on pagelists
+- fix JavaScript error when not on module config page
+
+
+
+### 1.0.2 (2016-11-10)
+
+- new tweak "Remove notices on first ESC keypress": (Hotkeys)
+- fix for template edit pagelist action active even if FieldAndTemplateEditLinks submodule is disabled (reported by matjazp)
+
+
+
 ### 1.0.1 (2016-11-10)
 
 - fix for undefined index (ListerTweaks, reported by Macrura)

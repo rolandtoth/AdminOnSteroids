@@ -1,12 +1,12 @@
 /*
-*  The "codemirror" plugin. It's indented to enhance the
-*  "sourcearea" editing mode, which displays the xhtml source code with
-*  syntax highlight and line numbers.
-* Licensed under the MIT license
-* CodeMirror Plugin: http://codemirror.net/ (MIT License)
-*/
+ *  The "codemirror" plugin. It's indented to enhance the
+ *  "sourcearea" editing mode, which displays the xhtml source code with
+ *  syntax highlight and line numbers.
+ * Licensed under the MIT license
+ * CodeMirror Plugin: http://codemirror.net/ (MIT License)
+ */
 
-(function() {
+(function () {
     CKEDITOR.plugins.add('codemirror', {
         icons: 'searchcode,autoformat,commentselectedrange,uncommentselectedrange,autocomplete', // %REMOVE_LINE_CORE%
         lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en-au,en-ca,en-gb,en,eo,es,et,eu,fa,fi,fo,fr-ca,fr,gl,gu,he,hi,hr,hu,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt-br,pt,ro,ru,sk,sl,sr-latn,sr,sv,th,tr,ug,uk,vi,zh-cn,zh', // %REMOVE_LINE_CORE%
@@ -39,11 +39,11 @@
                     theme: 'default',
                     useBeautify: false
                 };
-            
+
             // Get Config & Lang
             var config = CKEDITOR.tools.extend(defaultConfig, editor.config.codemirror || {}, true),
                 lang = editor.lang.codemirror;
-            
+
             // check for old config settings for legacy support
             if (editor.config.codemirror_theme) {
                 config.theme = editor.config.codemirror_theme;
@@ -59,7 +59,7 @@
 
             // Source mode isn't available in inline mode yet.
             if (editor.elementMode === CKEDITOR.ELEMENT_MODE_INLINE || editor.plugins.sourcedialog) {
-                
+
                 // Override Source Dialog
                 CKEDITOR.dialog.add('sourcedialog', function (editor) {
                     var size = CKEDITOR.document.getWindow().getViewPaneSize(),
@@ -104,7 +104,7 @@
 
                         // Store config so we can access it within commands etc.
                         window["codemirror_" + editor.id].config = config;
-                        
+
                         if (config.autoFormatOnStart) {
                             if (config.useBeautify) {
                                 var indent_size = 4,
@@ -165,9 +165,10 @@
                                     }
                                 } else if (evt.type === "keydown" && evt.ctrlKey && evt.keyCode === 75 && !evt.shiftKey && evt.altKey) {
                                     window["codemirror_" + editor.id].autoFormatRange(range.from, range.to);
-                                }/* else if (evt.type === "keydown") {
-                                CodeMirror.commands.newlineAndIndentContinueMarkdownList(window["codemirror_" + editor.id]);
-                            }*/
+                                }
+                                /* else if (evt.type === "keydown") {
+                                 CodeMirror.commands.newlineAndIndentContinueMarkdownList(window["codemirror_" + editor.id]);
+                                 }*/
                             }
                         });
                     }
@@ -177,14 +178,14 @@
                         title: editor.lang.sourcedialog.title,
                         minWidth: width,
                         minHeight: height,
-                        resizable : CKEDITOR.DIALOG_RESIZE_NONE,
+                        resizable: CKEDITOR.DIALOG_RESIZE_NONE,
                         onShow: function () {
                             // Set Elements
                             this.getContentElement('main', 'data').focus();
                             this.getContentElement('main', 'AutoComplete').setValue(config.autoCloseTags, true);
-                            
+
                             var textArea = this.getContentElement('main', 'data').getInputElement().$;
-                            
+
                             // Load the content
                             this.setValueOf('main', 'data', oldData = editor.getData());
 
@@ -198,9 +199,9 @@
 
                             if (typeof (CodeMirror) == 'undefined') {
 
-                                CKEDITOR.scriptLoader.load(rootPath + 'js/codemirror.min.js', function() {
+                                CKEDITOR.scriptLoader.load(rootPath + 'js/codemirror.min.js', function () {
 
-                                    CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function() {
+                                    CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function () {
                                         loadCodeMirrorInline(editor, textArea);
                                     });
                                 });
@@ -212,7 +213,7 @@
                                     loadCodeMirrorInline(editor, textArea);
                                 } else {
                                     // loading the add-on scripts.
-                                    CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function() {
+                                    CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function () {
                                         loadCodeMirrorInline(editor, textArea);
                                     });
                                 }
@@ -278,7 +279,7 @@
                                             label: '',
                                             title: lang.searchCode,
                                             'class': 'searchCodeButton',
-                                            onClick: function() {
+                                            onClick: function () {
                                                 CodeMirror.commands.find(window["codemirror_" + editor.id]);
                                             }
                                         }, {
@@ -287,7 +288,7 @@
                                             label: '',
                                             title: lang.autoFormat,
                                             'class': 'autoFormat',
-                                            onClick: function() {
+                                            onClick: function () {
                                                 var range = {
                                                     from: window["codemirror_" + editor.id].getCursor(true),
                                                     to: window["codemirror_" + editor.id].getCursor(false)
@@ -337,10 +338,10 @@
                                     id: 'data',
                                     dir: 'ltr',
                                     inputStyle: 'cursor:auto;' +
-                                        'width:' + width + 'px;' +
-                                        'height:' + height + 'px;' +
-                                        'tab-size:4;' +
-                                        'text-align:left;',
+                                    'width:' + width + 'px;' +
+                                    'height:' + height + 'px;' +
+                                    'tab-size:4;' +
+                                    'text-align:left;',
                                     'class': 'cke_source cke_enable_context_menu'
                                 }
                             ]
@@ -348,39 +349,39 @@
                     };
                 });
 
-               // return;
+                // return;
             }
-            
+
             /*
-            // Override Copy Button
-            if (editor.commands.copy) {
-                editor.commands.copy.modes = {
-                    wysiwyg: 1,
-                    source: 1
-                };
+             // Override Copy Button
+             if (editor.commands.copy) {
+             editor.commands.copy.modes = {
+             wysiwyg: 1,
+             source: 1
+             };
 
-                // TODO
-            }
+             // TODO
+             }
 
-            // Override Paste Button
-            if (editor.commands.paste) {
-                editor.commands.paste.modes = {
-                    wysiwyg: 1,
-                    source: 1
-                };
-                // TODO
+             // Override Paste Button
+             if (editor.commands.paste) {
+             editor.commands.paste.modes = {
+             wysiwyg: 1,
+             source: 1
+             };
+             // TODO
 
-            }
+             }
 
-            // Override Cut Button
-            if (editor.commands.cut) {
-                editor.commands.cut.modes = {
-                    wysiwyg: 1,
-                    source: 1
-                };
+             // Override Cut Button
+             if (editor.commands.cut) {
+             editor.commands.cut.modes = {
+             wysiwyg: 1,
+             source: 1
+             };
 
-                // TODO
-            }*/
+             // TODO
+             }*/
 
             // Override Find Button
             if (editor.commands.find) {
@@ -389,7 +390,7 @@
                     source: 1
                 };
 
-                editor.commands.find.exec = function() {
+                editor.commands.find.exec = function () {
                     if (editor.mode === 'wysiwyg') {
                         editor.openDialog('find');
                     } else {
@@ -397,7 +398,7 @@
                     }
                 };
             }
-            
+
             // Override Replace Button
             if (editor.commands.replace) {
                 editor.commands.replace.modes = {
@@ -413,9 +414,9 @@
                     }
                 };
             }
-            
+
             var sourcearea = CKEDITOR.plugins.sourcearea;
-            
+
             // check if sourcearea plugin is overrriden
             if (!sourcearea.commands.searchCode) {
 
@@ -427,7 +428,7 @@
                         },
                         editorFocus: false,
                         readOnly: 1,
-                        exec: function(editorInstance) {
+                        exec: function (editorInstance) {
                             if (editorInstance.mode === 'wysiwyg') {
                                 editorInstance.fire('saveSnapshot');
                             }
@@ -533,9 +534,9 @@
 
                 if (typeof (CodeMirror) == 'undefined') {
 
-                    CKEDITOR.scriptLoader.load(rootPath + 'js/codemirror.min.js', function() {
+                    CKEDITOR.scriptLoader.load(rootPath + 'js/codemirror.min.js', function () {
 
-                        CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function() {
+                        CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function () {
                             loadCodeMirror(editor);
                             callback();
                         });
@@ -546,7 +547,7 @@
                         callback();
                     } else {
                         // loading the add-on scripts.
-                        CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function() {
+                        CKEDITOR.scriptLoader.load(getCodeMirrorScripts(), function () {
                             loadCodeMirror(editor);
                             callback();
                         });
@@ -558,44 +559,38 @@
                 var scriptFiles = [rootPath + 'js/codemirror.addons.min.js'];
 
                 switch (config.mode) {
-                case "bbcode":
-                    {
+                    case "bbcode": {
                         scriptFiles.push(rootPath + 'js/codemirror.mode.bbcode.min.js');
                     }
 
-                    break;
-                case "bbcodemixed":
-                        {
-                            scriptFiles.push(rootPath + 'js/codemirror.mode.bbcodemixed.min.js');
-                        }
+                        break;
+                    case "bbcodemixed": {
+                        scriptFiles.push(rootPath + 'js/codemirror.mode.bbcodemixed.min.js');
+                    }
 
                         break;
-                case "htmlmixed":
-                    {
+                    case "htmlmixed": {
                         scriptFiles.push(rootPath + 'js/codemirror.mode.htmlmixed.min.js');
                     }
 
-                    break;
-                case "text/html":
-                    {
+                        break;
+                    case "text/html": {
                         scriptFiles.push(rootPath + 'js/codemirror.mode.htmlmixed.min.js');
                     }
 
-                    break;
-                case "application/x-httpd-php":
-                    {
+                        break;
+                    case "application/x-httpd-php": {
                         scriptFiles.push(rootPath + 'js/codemirror.mode.php.min.js');
                     }
 
-                    break;
-                case "text/javascript":
-                    {
+                        break;
+                    case "text/javascript": {
                         scriptFiles.push(rootPath + 'js/codemirror.mode.javascript.min.js');
                     }
 
-                    break;
-                default:
-                    scriptFiles.push(rootPath + 'js/codemirror.mode.htmlmixed.min.js');
+                        break;
+                    default:
+                        scriptFiles.push(rootPath + 'js/codemirror.mode.htmlmixed.min.js');
                 }
 
                 if (config.useBeautify) {
@@ -643,8 +638,8 @@
                     holderElement = sourceAreaElement.getParent();
 
                 /*CodeMirror.commands.autocomplete = function(cm) {
-                    CodeMirror.showHint(cm, CodeMirror.htmlHint);
-                };*/
+                 CodeMirror.showHint(cm, CodeMirror.htmlHint);
+                 };*/
 
                 // Enable Code Folding (Requires 'lineNumbers' to be set to 'true')
                 if (config.lineNumbers && config.enableCodeFolding) {
@@ -687,14 +682,18 @@
                 }
 
                 var extraKeys = {
-                    "Ctrl-Q": function(codeMirror_Editor) {
+                    "Ctrl-Q": function (codeMirror_Editor) {
                         if (config.enableCodeFolding) {
                             window["foldFunc_" + editor.id](codeMirror_Editor, codeMirror_Editor.getCursor().line);
                         }
-                    }
+                    },
+                    // "Alt-Shift-U": function (codeMirror_Editor) {
+                    //     editor.setMode('wysiwyg');
+                    // }
                 };
 
                 addCKEditorKeystrokes(extraKeys);
+                // addCKEditorKeystrokes(CodeMirror.normalizeKeyMap(extraKeys));
 
                 window["codemirror_" + editor.id] = CodeMirror.fromTextArea(sourceAreaElement.$, {
                     mode: config.mode,
@@ -758,7 +757,7 @@
                 });
 
                 window["codemirror_" + editor.id].setSize(null, holderHeight);
-                
+
                 // Enable Code Folding (Requires 'lineNumbers' to be set to 'true')
                 if (config.lineNumbers && config.enableCodeFolding) {
                     window["codemirror_" + editor.id].on("gutterClick", window["foldFunc_" + editor.id]);
@@ -786,9 +785,10 @@
                             }
                         } else if (evt.type === "keydown" && evt.ctrlKey && evt.keyCode === 75 && !evt.shiftKey && evt.altKey) {
                             window["codemirror_" + editor.id].autoFormatRange(range.from, range.to);
-                        }/* else if (evt.type === "keydown") {
-                                CodeMirror.commands.newlineAndIndentContinueMarkdownList(window["codemirror_" + editor.id]);
-                            }*/
+                        }
+                        /* else if (evt.type === "keydown") {
+                         CodeMirror.commands.newlineAndIndentContinueMarkdownList(window["codemirror_" + editor.id]);
+                         }*/
                     }
                 });
             }
@@ -810,15 +810,15 @@
 
                 if (editor.ui.addButton) {
                     if (config.showFormatButton || config.showCommentButton || config.showUncommentButton || config.showSearchButton) {
-                        editor.ui.add('-', CKEDITOR.UI_SEPARATOR, { toolbar: 'mode,30' });
+                        editor.ui.add('-', CKEDITOR.UI_SEPARATOR, {toolbar: 'mode,30'});
                     }
                     /*if (config.showSearchButton && config.enableSearchTools) {
-                        editor.ui.addButton('searchCode', {
-                            label: lang.searchCode,
-                            command: 'searchCode',
-                            toolbar: 'mode,40'
-                        });
-                    }*/
+                     editor.ui.addButton('searchCode', {
+                     label: lang.searchCode,
+                     command: 'searchCode',
+                     toolbar: 'mode,40'
+                     });
+                     }*/
                     if (config.showFormatButton) {
                         editor.ui.addButton('autoFormat', {
                             label: lang.autoFormat,
@@ -849,7 +849,7 @@
                     }
                 }
             }
-            
+
             editor.on('beforeModeUnload', function (evt) {
                 if (editor.mode === 'source' && editor.plugins.textselection) {
 
@@ -897,7 +897,7 @@
                 }
 
             });
-            editor.on('resize', function() {
+            editor.on('resize', function () {
                 if (window["editable_" + editor.id] && editor.mode === 'source') {
                     var holderElement = window["editable_" + editor.id].getParent();
                     var holderHeight = holderElement.$.clientHeight + 'px';
@@ -905,13 +905,13 @@
                     window["codemirror_" + editor.id].setSize(holderWidth, holderHeight);
                 }
             });
-            
+
             editor.on('readOnly', function () {
                 if (window["editable_" + editor.id] && editor.mode === 'source') {
                     window["codemirror_" + editor.id].setOption("readOnly", this.readOnly);
                 }
             });
-            
+
             editor.on('instanceReady', function (evt) {
 
                 // Fix native context menu
@@ -949,12 +949,12 @@
             });
 
             if (typeof (jQuery) != 'undefined' && jQuery('a[data-toggle="tab"]') && window["codemirror_" + editor.id]) {
-                jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function() {
+                jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function () {
                     window["codemirror_" + editor.id].refresh();
                 });
             }
 
-            editor.on('setData', function(data) {
+            editor.on('setData', function (data) {
 
                 if (window["editable_" + data.editor.id] && data.editor.mode === 'source') {
                     window["codemirror_" + data.editor.id].setValue(data.data.dataValue);
@@ -975,30 +975,30 @@
 
                 this.editor.fire('dataReady');
             },
-            getData: function() {
+            getData: function () {
                 return this.getValue();
             },
             // Insertions are not supported in source editable.
-            insertHtml: function() {
+            insertHtml: function () {
             },
-            insertElement: function() {
+            insertElement: function () {
             },
-            insertText: function() {
+            insertText: function () {
             },
             // Read-only support for textarea.
-            setReadOnly: function(isReadOnly) {
+            setReadOnly: function (isReadOnly) {
                 this[(isReadOnly ? 'set' : 'remove') + 'Attribute']('readOnly', 'readonly');
             },
             editorID: null,
-            detach: function() {
+            detach: function () {
                 window["codemirror_" + this.editorID].toTextArea();
-                
+
                 // Free Memory on destroy
                 window["editable_" + this.editorID] = null;
                 window["codemirror_" + this.editorID] = null;
 
                 sourceEditable.baseProto.detach.call(this);
-                
+
                 this.clearCustomData();
                 this.remove();
             }
@@ -1014,7 +1014,7 @@ CKEDITOR.plugins.sourcearea = {
             },
             editorFocus: false,
             readOnly: 1,
-            exec: function(editor) {
+            exec: function (editor) {
                 if (editor.mode === 'wysiwyg') {
                     editor.fire('saveSnapshot');
                 }
@@ -1031,7 +1031,7 @@ CKEDITOR.plugins.sourcearea = {
             },
             editorFocus: false,
             readOnly: 1,
-            exec: function(editor) {
+            exec: function (editor) {
                 CodeMirror.commands.find(window["codemirror_" + editor.id]);
             },
             canUndo: true
@@ -1075,7 +1075,7 @@ CKEDITOR.plugins.sourcearea = {
             },
             editorFocus: false,
             readOnly: 0,
-            exec: function(editor) {
+            exec: function (editor) {
                 var range = {
                     from: window["codemirror_" + editor.id].getCursor(true),
                     to: window["codemirror_" + editor.id].getCursor(false)
@@ -1122,24 +1122,24 @@ function LineChannelToOffSet(ed, linech) {
 
 function OffSetToLineChannel(ed, n) {
     var line = 0, ch = 0, index = 0;
-    for (i = 0; i < ed.lineCount() ; i++) {
+    for (i = 0; i < ed.lineCount(); i++) {
         len = (ed.getLine(i)).length;
         if (n < index + len) {
-            
+
             line = i;
             ch = n - index;
-            return { line: line, ch: ch };
+            return {line: line, ch: ch};
         }
         len++;//for \n char
         index += len;
     }
-    return { line: line, ch: ch };
+    return {line: line, ch: ch};
 }
 
 function IsStyleSheetAlreadyLoaded(href) {
     var links = CKEDITOR.document.getHead().find('link');
 
-    for (var i = 0; i < links.count() ; i++) {
+    for (var i = 0; i < links.count(); i++) {
         if (links.getItem(i).$.href === href) {
             return true;
         }

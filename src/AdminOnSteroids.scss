@@ -53,25 +53,18 @@ html.aos {
   //}
 
   //.PageListPage .pageId {
-  .PageListRoot sup {
-    text-decoration: none !important;
-    font-style: normal;
+  .PageListRoot span.label_title:after {
+    content: attr(data-pid);
+    text-decoration: none!important;
+    font-weight: normal !important;
     font-size: 10px;
     display: inline-block;
-    padding: 0.33em 0.5em 0.25em !important;
-    margin-left: -3px;
-    transform: translateY(-2px);
-    margin-right: -0.3em;
-    //position: relative;
-    //top: -1px;
+    padding: 0 !important;
+    margin-left: 2px;
+    transform: translateY(-10px);
+    margin-right: 4px;
     line-height: 1;
-    //letter-spacing: -0.5px;
-    color: rgba(#1C2836, 0.52);
-    //background: rgba(#1C2836, 0.04);
-    //border-radius: 10px;
-    //color: #fff !important;
-    //opacity: 0.9;
-    font-weight: normal !important;
+    color: rgba(28,40,54,.4);
   }
 
   // allow template edit links to appear
@@ -1150,8 +1143,9 @@ html.asmCollapse {
   }
 }
 
-// both for Reno & Default themes
-#ProcessPageEdit .aos_hasTooltip .title,
+ //both for Reno & Default themes
+//#ProcessPageEdit .aos_hasTooltip .title,
+.aos_hasTooltip .title,
 .InputfieldCheckbox label {
   position: relative;
   display: inline-block;

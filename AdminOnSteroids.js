@@ -3,7 +3,6 @@ var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWi
 if (AOSsettings) {
 
     var aosUrl = AOSsettings.aosUrl;
-        //aosModuleUrl = AOSsettings.aosModuleUrl;
 
     if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && ProcessWire.config.InputfieldCKEditor) {
 
@@ -46,7 +45,7 @@ if (AOSsettings) {
                         CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
                     }
                 }
-
+				
                 CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
             }
         }
@@ -60,7 +59,7 @@ if (AOSsettings) {
                 if (CKEtoolbars.hasOwnProperty(toolbarName) && enabledCKEplugins.indexOf(toolbarName) !== -1) {
                     instance.toolbar.unshift(CKEtoolbars[toolbarName]);
                 }
-            }
+            }			
         }
 
         $(document).ready(function () {
@@ -736,7 +735,8 @@ $(document).ready(function () {
             // wrap AdminThemeDefault li.title inner in a span
             $('ul.nav li.title').wrapInner('<span>');
 
-            $(document).on('mousedown', '#ProcessPageEdit .Inputfield .aos_EditField', function (e) {
+            //$(document).on('mousedown', '#ProcessPageEdit .Inputfield .aos_EditField', function (e) {
+            $(document).on('mousedown', '.Inputfield .aos_EditField', function (e) {
 
                 var editFieldLink = $(this).parents('.Inputfield').eq(0).find('.aos_EditFieldLink');
 
@@ -825,11 +825,6 @@ $(document).ready(function () {
 
                     if (obj.id !== 0) {
                         clearButton.removeClass('empty');
-                        // remove page ID from title (pListIDs)
-                        if (obj.title.indexOf(obj.id) !== -1) {
-                            var title = obj.title.replace(obj.id, '<sup class="pageId">' + obj.id + '</sup>');
-                            $('#wrap_' + e.target.id).find('.PageListSelectName').html(title);
-                        }
                     } else {
                         clearButton.addClass('empty');
                     }
@@ -1498,25 +1493,6 @@ $(document).ready(function () {
         if (AOSsettings.enabledSubmodules.indexOf('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
 
             var renoTweaksSettings = AOSsettings.RenoTweaks;
-
-            // js tweaks to form configuration page
-            if ($('form[action*="AdminOnSteroids"]').length) {
-
-                var RenoTweaksSelector = '#wrap_Inputfield_RenoTweaks';
-
-                $(RenoTweaksSelector + ' input[type="checkbox"]').on('change', function () {
-                    setupCheckbox($(this));
-                });
-
-                // do not allow checking checkboxes if it's parent is set to disabled
-                $(RenoTweaksSelector).on('click', 'li.disabled input[type="checkbox"]', function (e) {
-                    e.preventDefault();
-                    return false;
-                });
-
-                setupCheckbox($(RenoTweaksSelector + ' li:eq(0) input[type="checkbox"]'));
-            }
-
 
             // hide quicklinks
             var closeQuicklinksTimer;

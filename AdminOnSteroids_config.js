@@ -40,6 +40,11 @@ $(window).load(function () {
 
         checkAOSstate(el);
     }
+
+    //$('.asmList').sortable('option', 'grid', [20, 10]);
+    //$('.asmList').sortable('option', 'axis', null);
+    //$('.asmList').sortable('refresh');
+
 });
 
 $(document).ready(function () {
@@ -177,7 +182,7 @@ $(document).ready(function () {
                     target.siblings().removeClass('focused');
                     target.addClass('focused');
 
-                     if (modifyHash === false) return true;
+                    if (modifyHash === false) return true;
 
                     if (history.pushState) {
                         history.pushState(null, null, targetId);
@@ -191,9 +196,9 @@ $(document).ready(function () {
                 scrollToSection(location.hash, false);
             });
 
-            $(window).on('popstate', function () {
-                scrollToSection(location.hash, true);
-            });
+            // $(window).on('popstate', function () {
+            //     scrollToSection(location.hash, true);
+            // });
 
             $('.configLink').on('click', function (e) {
                 e.preventDefault();
@@ -211,6 +216,25 @@ $(document).ready(function () {
 
             obj.after($('#wrap_' + current + 'Roles'));
         });
+
+
+        // js tweaks to form configuration page
+        //if ($('form[action*="AdminOnSteroids"]').length) {
+
+            var RenoTweaksSelector = '#wrap_Inputfield_RenoTweaks';
+
+            $(RenoTweaksSelector + ' input[type="checkbox"]').on('change', function () {
+                setupCheckbox($(this));
+            });
+
+            // do not allow checking checkboxes if it's parent is set to disabled
+            $(RenoTweaksSelector).on('click', 'li.disabled input[type="checkbox"]', function (e) {
+                e.preventDefault();
+                return false;
+            });
+
+            setupCheckbox($(RenoTweaksSelector + ' li:eq(0) input[type="checkbox"]'));
+        //}
 
         /**
          * Add placeholder to asmSelect

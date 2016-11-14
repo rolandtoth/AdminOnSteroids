@@ -13,6 +13,31 @@ $(document).ready(function () {
         BreadcrumbsSettings = ProcessWire.config.AOS_breadcrumbs;
 
 
+    if (HotkeysSettings.indexOf('removeNoticeHotkey')) {
+
+        function removeNoticeHotkey(e) {
+
+            var keyCode = e.keyCode || e.charCode;
+
+            // always remove event because only first keydown should trigger the notice removal
+            $(document).off('keydown', removeNoticeHotkey);
+
+            if (keyCode == 27) {
+                if ($('a.notice-remove').length) {
+                    $('a.notice-remove').first().trigger('click');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        if ($('a.notice-remove').length) {
+            $(document).on('keydown', removeNoticeHotkey);
+        }
+    }
+
+
     if (HotkeysSettings.indexOf('breadcrumbTweaks') && BreadcrumbsSettings) {
 
         // add "data-*" markups
@@ -174,7 +199,7 @@ $(document).ready(function () {
 
         // ctrl+s in CKEditor (repeaters)
         // $(document).on('reloaded', '.Inputfield', function () {
-        $(document).on('reloaded', '.InputfiesldRepeaterItem', function () {
+        $(document).on('reloaded', '.InputfieldRepeaterItem', function () {
             setupCKESave();
         });
     }
