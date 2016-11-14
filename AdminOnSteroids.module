@@ -146,12 +146,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'langTabHotkeySwitcher',
                 'centerLogin',
                 'hoverDropdown',
-                'tabIndex',
-                'noAnim'
+                'tabIndex'
+//                'noAnim'
             ),
             'ModuleTweaks'                 => array(
                 'loadCollapsedModuleInfos',
-                'flatModules',
+//                'flatModules',
                 'moduleCompact',
                 'moduleFilter',
 //                'moduleModal'

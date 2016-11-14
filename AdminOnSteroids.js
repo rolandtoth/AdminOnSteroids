@@ -1210,6 +1210,10 @@ $(document).ready(function () {
 
                         if (moduleLink.length) {
                             moduleName = moduleLink.attr('href').split('?name=')[1].trim();
+                        } else {
+	                        // tab_install_modules
+                        	moduleLink = row.find('td:first-child > a[href="#"]');
+	                        moduleName = moduleLink.find('span').attr('data-name');
                         }
 
                         // some module names aren't in a span
