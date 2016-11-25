@@ -54,11 +54,11 @@ Note: the module has to be saved first if you change this feature to take effect
   - [NavItems](#navitems)
   - [PageListThumbs](#pagelistthumbs)
   - [PageListTweaks](#pagelisttweaks)
-  - [PageListUnselect](#pagelistunselect)
   - [PagePreviewBtn](#pagepreviewbtn)
   - [RenoTweaks](#renotweaks)
   - [Tooltips](#tooltips)
 - [Add custom CSS or JavaScript to the admin](#add-custom-css-or-javascript-to-the-admin)
+- [Extra classes added to "body" tag](#extra-classes-added-to-body-tag)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -270,7 +270,7 @@ When using the default theme, the template edit link appears on hovering the las
 
 **Template edit links in the main pagelist**
 
-A new pagelist action is added to the items as the last item, named as "#" plus the template name.
+A new pagelist action is added to the items as the last item if the submodule is enabled.
 Note that this template edit link doesn't respect the target you've set in the module settings, clicking on them always load the template edit page in the same page (you can use the middle mouse button to open in a new tab). Long-click can be used to open it in a modal window.
 
 *Template edit link when hovering on a page title:*
@@ -400,6 +400,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Switch language tabs on ctrl+arrow keys**: nables switching language tabs on multilanguage fields using ctrl+right, ctrl+left hotkeys. Also adds ctrl+up, ctrl+down hotkeys to collapse/expand language fields. The latter doesn't work on CKEditor fields.
  **Autosize textareas according to content**: adds auto-grow functionality to fit textarea to its content. The submodule has no settings to configure. Note: CKEditor fields are not supported - use the CKEaddons submodule (v0.6.1+) and enable the [Auto Grow](http://ckeditor.com/addon/autogrow) plugin to autosize CKEditors.
 - **Add sequential tabindex to fields**: enables jumping to next input in the admin with TAB key (or backwards with shift+TAB). By default the TAB key jumps to the next input on second or third trigger only (depending on whether there are language tabs or other buttons in the field wrap), this tweak fixes it.
+- **Add toggle button to change case of Page title field**: adds a button to the right side of the title field which allows looping through cases of the text (original, sentence case, capitalize, uppercase, lowercase). Changing the default language title will change the main page title too.
 - **Add language switcher to the admin**: this tweak will add a dropdown to the main navigation that allows changing the admin language. Page names, the admin interface will be loaded in the selected language, and the page edit screen will also load the language in that language. The language switcher uses a cookie so the language will be remembered even though the user's profile is actually not saved. Note that in the Default theme it's added to the end of the top menu items while in Reno it's the first.
 
 *Admin language switcher:*
@@ -577,26 +578,18 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 - **Highlight rows on hover**: adds a slight background color on the hovered row. Works in pagelists and data tables (eg. Finder, modules list, etc). In pagelists an opened state item gets bold and a darker underline. 
 - **Show page IDs**: adds the page ID after each page name in a superscript (visible for superusers only)
 - **Add Delete button to delete page permanently**: adds a new extra action to pagelist items called "Delete". Clicking on this will show a confirmation link and clicking on this the page will be permanently deleted (bypassing the Trash). The feature is disabled on pages having child pages and it's visible for superusers only.
+- **Add unselect/restore buttons to PageListSelect**: a rewrite of Bernhard Baumrock's PageListSelectUnselectButton module which allows clearing of PageListSelect field value using a dedicated button. Additionally, this tweak adds a "restore" functionality too. Note that if there is no previous value to restore, the restore button will not show up. Many thanks for Bernhard for the idea and help!
+- **Icon-only pagelist actions**: hide pagelist action texts and use icons instead. The texts are visible after hovering about 1 seconds on an action (and the text remains there to avoid jumps). This setting also replaces Lister actions with icons.
+- **Make active pagelist items bold**: when a pagelist item is clicked (opened) then it becomes bold to make it move visible.
+- **Always show pagelist actions**: show all (non-extra) pagelist items by default (non only on hover)
+
+*Pagelist unselect in action:*
+
+![PageListUnselect](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelistunselect.png "PageListUnselect")
 
 *PageListTweaks:*
 
 ![PageListTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelisttweaks.png "PageListTweaks")
-
-
-
-### PageListUnselect
-
-*Add unselect and restore buttons to PageListSelect fields*
-
-This is a rewrite of Bernhard Baumrock's PageListSelectUnselectButton module which allows clearing of PageListSelect field value using a dedicated button.
-
-Additionally, this tweak adds a "restore" functionality too. Note that if there is no previous value to restore, the restore button will not show up.
-
-Many thanks for Bernhard for the idea and help!
-
-*PageListUnselect in action:*
-
-![PageListUnselect](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelistunselect.png "PageListUnselect")
 
 
 
@@ -662,3 +655,8 @@ The module will automatically load these files if they exist so you can add cust
 *Paths to custom assets:*
 
 ![AssetPaths](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-assetpaths.png "AssetPaths")
+
+
+## Extra classes added to "body" tag
+
+The modules adds a few extra classes (user roles, edited page information, etc) to the "body" to make it easier targeting admin pages through CSS and JavaScript. Idea and implementation borrowed from Robin S - thanks!

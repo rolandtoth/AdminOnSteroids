@@ -3,11 +3,22 @@
 
 // general style overrides
 html.aos {
-  // disable page jump
+  //.PageListItem:hover .PageListActions {
+  //  line-height: 1;
+  //}
+
+  // prevent page list jumps on hover
+  //.pw-content .PageList .PageListItem {
+  //  line-height: 1em !important;
+  //}
+  .PageListPage {
+    line-height: 1.5em !important;
+  }
   &.AdminThemeReno {
     #search {
       z-index: 8;
     }
+
     .quicklinks {
       z-index: 100000 + 30000;
     }
@@ -22,7 +33,10 @@ html.aos {
     }
   }
   &.AdminThemeDefault {
-    overflow-y: scroll;
+    // fix for third menu nav items
+    #topnav .topnav {
+      border-right: 1px solid transparent;
+    }
   }
   // fix hover dropdown menus not having right padding
   &.AdminThemeReno .pw-dropdown-menu,
@@ -53,9 +67,10 @@ html.aos {
   //}
 
   //.PageListPage .pageId {
-  .PageListRoot span.label_title:after {
+  //.PageListRoot span.label_title:after {
+  .PageListRoot [data-pid]:after {
     content: attr(data-pid);
-    text-decoration: none!important;
+    text-decoration: none !important;
     font-weight: normal !important;
     font-size: 10px;
     display: inline-block;
@@ -64,7 +79,7 @@ html.aos {
     transform: translateY(-10px);
     margin-right: 4px;
     line-height: 1;
-    color: rgba(28,40,54,.4);
+    color: rgba(28, 40, 54, .5);
   }
 
   // allow template edit links to appear
@@ -1143,7 +1158,7 @@ html.asmCollapse {
   }
 }
 
- //both for Reno & Default themes
+//both for Reno & Default themes
 //#ProcessPageEdit .aos_hasTooltip .title,
 .aos_hasTooltip .title,
 .InputfieldCheckbox label {
@@ -1176,7 +1191,11 @@ html.asmCollapse {
 .PageListerActions .PageEdit[href*="setup/template/edit"] {
   &:not(:hover) {
     color: inherit !important;
-    opacity: 0.4;
+    opacity: 0.5;
+    font-size: 13px;
+  }
+  &:hover {
+    font-size: 13px !important;
   }
 }
 
@@ -1405,14 +1424,14 @@ html.moduleModal {
     width: 100%;
     .ui-dialog-buttonset {
       float: none;
-      text-align: center;
+      //text-align: center;
       margin-left: 12px;
       button {
         display: inline-block !important;
         //opacity: 1 !important;
         visibility: visible !important;
         min-width: 92px;
-        margin-right: 6px;
+        margin-right: 8px;
         &:not(:first-child) {
           span {
             font-weight: normal;
@@ -1641,23 +1660,31 @@ html.PageListThumbs {
         //background: #F0F3F7;
         display: inline-block;
         line-height: $thumbSize;
-        height: $thumbSize;
+        //height: $thumbSize;
+        min-width: $thumbSize;
+        min-height: $thumbSize;
         text-align: center;
         font-style: normal;
         position: relative;
-        margin: -5px 12px -5px 0;
+        margin: -5px 20px -5px 0;
         // required for cropping with border-radius
         z-index: 20;
         a {
           display: block;
           padding: 0;
           position: relative;
+          height: $thumbSize;
+        }
+        img {
+          display: inline-block;
+          vertical-align: middle;
         }
         // create a pseudo to make items align vertically (:before on next item)
         // exclude the page icon (.fa)
         + *:not(.fa):before {
           content: "";
           height: $thumbSize - 10px;
+          //height: $thumbSize;
           display: inline-block;
           width: 0;
           visibility: hidden !important;
@@ -1669,6 +1696,8 @@ html.PageListThumbs {
         &.square,
         &.circle {
           width: $thumbSize;
+          //min-width: $thumbSize;
+          //min-height: $thumbSize;
           //img {
           //  display: block;
           //}
@@ -1732,9 +1761,14 @@ html.PageListThumbs {
       $thumbSize: 32px;
       .PageListItem {
         figure {
-          height: $thumbSize;
+          //height: $thumbSize;
           line-height: $thumbSize;
-          margin: -2px 10px -2px 0;
+          min-width: $thumbSize;
+          min-height: $thumbSize;
+          margin: -2px 16px -2px 0;
+          a {
+            height: $thumbSize;
+          }
           + *:before {
             height: $thumbSize - 4px;
           }
@@ -1779,8 +1813,34 @@ html.highlightRows {
   .AdminDataTable.AdminDataList tr:hover td {
     background: rgba(#EAF0F2, 0.48);
   }
+
+}
+
+html.pListShowActions {
+  .content .PageList {
+    .PageListItem {
+      .PageListActions {
+        display: inline-block !important;
+        opacity: 1 !important;
+        [class^="PageListAction"]:not(.PageListActionExtra) {
+          filter: saturate(0.6);
+          opacity: 0.5;
+        }
+        &:hover {
+          [class^="PageListAction"]:not(.PageListActionExtra) {
+            opacity: 1;
+            filter: saturate(1);
+          }
+        }
+      }
+    }
+
+  }
+}
+
+html.pListActiveBold {
   .PageListItemOpen:not(.PageListSortItem) {
-    border-bottom-color: rgba(#2F4248, 0.15) !important;
+    //border-bottom-color: rgba(#2F4248, 0.15) !important;
     a.PageListPage {
       font-weight: bold;
       background-color: transparent !important;
@@ -1816,6 +1876,51 @@ html.highlightRows {
       font-size: 0.88em;
       color: rgba(#2F4248, 0.7);
     }
+  }
+}
+
+a.case-toggle {
+  position: absolute;
+  right: 16px;
+  .LanguageSupport & {
+    right: 0;
+  }
+  padding: 5px 8px;
+  html.AdminThemeDefault & {
+    padding: 1px 6px;
+    right: 16px !important;
+  }
+  + input {
+    padding-right: 36px !important;
+  }
+  i {
+    &:before {
+      font-size: 12px;
+    }
+    + i:before {
+      font-size: 9px;
+    }
+  }
+  &:not(:hover) {
+    color: rgba(#2f4248, 0.5);
+
+  }
+  &:hover {
+    cursor: pointer;
+    &:before {
+      width: auto;
+      margin-right: 8px;
+      transform: scaleX(1);
+    }
+  }
+  &:before {
+    width: 0;
+    display: inline-block;
+    content: attr(data-case);
+    font-size: 12px;
+    color: rgba(#2f4248, 0.7);
+    transform-origin: right;
+    transform: scaleX(0);
   }
 }
 
@@ -2877,8 +2982,8 @@ html.AdminThemeReno {
       .content .PageList {
         .PageListItem:hover {
           .PageListActions {
-            display: inline;
-            transition-delay: .25s
+            display: inline-block !important;
+            //transition-delay: .25s
           }
         }
         .PageListItemOpen {
@@ -2887,8 +2992,8 @@ html.AdminThemeReno {
           }
           &:hover {
             .PageListActions {
-              display: inline !important;
-              transition-delay: .25s
+              display: inline-block !important;
+              //transition-delay: .25s
             }
           }
         }
@@ -2925,7 +3030,7 @@ html.AdminThemeReno {
 // ListerTweaks listerHoverBtn
 @media only screen and (min-width: 960px) {
   html.listerHoverBtn {
-    .ProcessListerTable tr:hover td:first-child {
+    .ProcessListerTable tr td:first-child:hover {
       .PageListerActions {
         display: inline-block !important;
         .PageExtras ~ a {
@@ -2936,6 +3041,126 @@ html.AdminThemeReno {
           display: inline-block;
         }
       }
+    }
+  }
+}
+
+// icons for pagelist, ProcessListerTable
+
+// disable white font color when hovering on Lister actions
+html.aos .pw-content .AdminDataList td a:not(.PageExtras):hover {
+  color: inherit !important;
+}
+
+@mixin pageListIcon($icon) {
+  max-width: 24px;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: middle;
+  backface-visibility: hidden;
+  //transition: color 0.1s, transform 0.5s, max-width 0.3s;
+  transition: max-width 0.3s;
+  margin-bottom: 0 !important;
+  position: relative;
+  z-index: 2;
+  font-size: 13px;
+  &:not(.PageExtras) {
+    background: transparent !important;
+    //color: inherit !important;
+    color: #7ea0ab !important;
+    &:hover {
+      color: #2F4248 !important;
+      z-index: 20;
+      &:before {
+        transform: scale(1.1428);
+      }
+    }
+  }
+  // .aos-hovered is added by JS
+  &:not(.aos-hovered):hover {
+    animation: 0.33s showText 1.2s forwards;
+  }
+  &.aos-hovered {
+    max-width: 100px !important;
+  }
+  &:before {
+    content: $icon;
+    font-family: Fontawesome;
+    padding: 0 4px;
+    text-align: center;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 0;
+  }
+  tr.open & {
+    display: inline-block !important;
+  }
+}
+
+html.pListIconOnly {
+  // for default theme
+  .PageExtras.extras-open ~ a {
+    display: inline-block !important;
+  }
+  .PageListerActions,
+  .PageListActions {
+    > li {
+      margin-right: 1px;
+    }
+    .PageListActionEdit > a[href*="page/edit"],
+    a.PageEdit {
+      @include pageListIcon("\f040");
+    }
+    .PageListActionView > a,
+    a.PageView {
+      @include pageListIcon("\f14c");
+    }
+    .PageListActionNew > a,
+    a.PageNew {
+      @include pageListIcon("\f055");
+    }
+    .PageListActionMove > a {
+      @include pageListIcon("\f0dc");
+    }
+    .PageListActionHide > a,
+    .PageHide {
+      @include pageListIcon("\f070");
+    }
+    .PageListActionCopy > a,
+    .PageCopy {
+      @include pageListIcon("\f067");
+    }
+    .PageListActionUnhide > a,
+    .PageUnhide {
+      @include pageListIcon("\f06e");
+    }
+    .PageListActionPublish > a,
+    .PagePublish {
+      @include pageListIcon("\f058");
+    }
+    .PageListActionUnpublish > a,
+    .PageUnpublish {
+      @include pageListIcon("\f057");
+    }
+    .PageListActionLock > a,
+    .PageLock {
+      @include pageListIcon("\f023");
+    }
+    .PageListActionUnlock > a,
+    .PageUnlock {
+      @include pageListIcon("\f13e");
+    }
+    .PageListActionTrash > a,
+    .PageTrash {
+      @include pageListIcon("\f1f8");
+      i {
+        display: none;
+      }
+    }
+    .PageListActionDelete.aos > a:not(.cancel):first-of-type,
+    .PageDelete.aos:not(.cancel):not(.confirm) {
+      @include pageListIcon("\f12d");
     }
   }
 }
@@ -2985,7 +3210,6 @@ html.AdminThemeReno {
         a:not(.current) {
           font-weight: normal !important;
         }
-
         .page-edit {
           padding: 5px 17px !important;
         }
@@ -3210,5 +3434,16 @@ html.hoverDropdown {
   100% {
     opacity: 0;
     transform: scale(0.8);
+  }
+}
+
+@keyframes showText {
+  0% {
+    max-width: 24px;
+    //overflow: hidden;
+  }
+  100% {
+    max-width: 100px;
+    //overflow: visible;
   }
 }

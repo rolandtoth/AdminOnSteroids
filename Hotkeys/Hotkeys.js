@@ -42,7 +42,8 @@ $(document).ready(function () {
 
         // add "data-*" markups
         // skip first item in Default admin theme (.pw-panel)
-        $('#breadcrumbs a:not(.pw-panel)').each(function (i) {
+        // skip debug (href #, default theme)
+        $('#breadcrumbs a:not(.pw-panel):not([href="#"])').each(function (i) {
 
             // Default admin theme has an extra element in the beginning of the breadcrumb
             if (!BreadcrumbsSettings[i]) {
@@ -221,6 +222,10 @@ $(document).ready(function () {
                 searchBox.blur();
             } else {
                 searchBox.focus();
+                searchBoxValue = searchBox.val().trim();
+                // use zero-width space to trigger autocomplete dropdown
+                searchBox.val('​' + searchBoxValue);
+                searchBox.trigger('keydown');
             }
         } finally {
         }

@@ -68,8 +68,10 @@ var ckeSrcTimeout,
             editor.addCommand('u', {
                 exec: function (editor) {
                     // editor.setMode( editor.mode == 'source' ? 'wysiwyg' : 'source' );
-                    setCKESrcToggleLock();
+                    // note: codemirror requires manual editing of codemirror/plugin.js, set sourcearea editorFocus to true
                     editor.execCommand('source');
+                    editor.focus();
+                    setCKESrcToggleLock();
                 }
             });
 
@@ -82,7 +84,7 @@ var ckeSrcTimeout,
             editor.setKeystroke(CKEDITOR.ALT + 55, 'p'); // ALT + 7
             editor.setKeystroke(CKEDITOR.ALT + 78, 'n'); // ALT + n
             editor.setKeystroke(CKEDITOR.ALT + 66, 'b'); // ALT + b
-            editor.setKeystroke(CKEDITOR.CTRL + 85, 'u'); // CTRL + u
+            editor.setKeystroke(CKEDITOR.CTRL + CKEDITOR.SHIFT + 85, 'u'); // CTRL + SHIFT + u
         }
     });
 })();
@@ -95,16 +97,20 @@ $(document).on('keyup', '.InputfieldCKEditor', function (e) {
 
     if (ckeSrcTimeoutActive) return true;
 
-    if ((e.metaKey || e.ctrlKey) && keyCode == 85) { // CTRL + u
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && keyCode == 85) { // CTRL + SHIFT + u
 
         e.preventDefault();
         e.stopImmediatePropagation();
 
         setCKESrcToggleLock();
 
-        var instanceID = $(this).find('textarea.InputfieldCKEditorLoaded').attr('id');
+        var instanceID = $(this).find('textarea.InputfieldCKEditorLoaded').attr('id'),
+            instance = CKEDITOR.instances[instanceID];
 
-        CKEDITOR.instances[instanceID].execCommand('source');
+        instance.fire('saveSnapshot');
+        instance.execCommand('source');
+        // CKEDITOR.instances[instanceID].execCommand('wysiwyg');
+
         return false;
     }
 });

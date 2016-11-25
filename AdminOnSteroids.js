@@ -2,7 +2,8 @@ var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWi
 
 if (AOSsettings) {
 
-    var aosUrl = AOSsettings.aosUrl;
+    var aosUrl = AOSsettings.aosUrl,
+        CKEtemplatesFile = AOSsettings.customCKEtemplates;
 
     if (AOSsettings.enabledSubmodules.indexOf('CKEaddons') !== -1 && ProcessWire.config.InputfieldCKEditor) {
 
@@ -19,7 +20,8 @@ if (AOSsettings) {
                 find: ["Find", "Replace"],
                 maximize: ["Maximize"],
                 oembed: ["oembed"],
-                showblocks: ["ShowBlocks"]
+                showblocks: ["ShowBlocks"],
+                templates: ["Templates"]
             };
 
         // keep the plugin order from admin
@@ -45,7 +47,7 @@ if (AOSsettings) {
                         CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
                     }
                 }
-				
+
                 CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
             }
         }
@@ -59,7 +61,7 @@ if (AOSsettings) {
                 if (CKEtoolbars.hasOwnProperty(toolbarName) && enabledCKEplugins.indexOf(toolbarName) !== -1) {
                     instance.toolbar.unshift(CKEtoolbars[toolbarName]);
                 }
-            }			
+            }
         }
 
         $(document).ready(function () {
@@ -69,12 +71,20 @@ if (AOSsettings) {
                 CKEDITOR.config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
             }
 
+            // Content Templates templates.js
+            if (CKEtemplatesFile) {
+                CKEDITOR.config.templates_files = [CKEtemplatesFile];
+                CKEDITOR.config.templates = 'default';
+                CKEDITOR.config.templates_replaceContent = false;
+            }
+
             // set some plugin defaults
             CKEDITOR.config.autoGrow_onStartup = true;
             CKEDITOR.config.autoGrow_bottomSpace = 20;
             CKEDITOR.config.autoGrow_maxHeight = 700;
             CKEDITOR.config.codemirror = {
-                theme: 'material'
+                theme: 'material',
+                autofocus: true
             };
 
             $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
@@ -104,6 +114,16 @@ if (AOSsettings) {
                 }
 
                 var extraPlugins = enabledCKEplugins.join(',');
+
+                // remove magicline from Removed plugins (PW by default)
+                if (extraPlugins.indexOf('magicline') !== -1) {
+                    var removedPluginsArr = CKEfield.removePlugins.split(','),
+                        index = removedPluginsArr.indexOf('magicline');
+
+                    if (index > -1) removedPluginsArr.splice(index, 1);
+
+                    CKEfield.removePlugins = removedPluginsArr.join(',');
+                }
 
                 CKEfield.extraPlugins += ',' + extraPlugins;
                 addCKEtoolbars(CKEfield);
@@ -815,8 +835,14 @@ $(document).ready(function () {
 // PageListTweaks
         if (AOSsettings.enabledSubmodules.indexOf('PageListTweaks') !== -1) {
 
-            // pageListUnselect
-            if (AOSsettings.PageListTweaks.indexOf('pageListUnselect') !== -1) {
+            // pListIconOnly
+            if (AOSsettings.PageListTweaks.indexOf('pListIconOnly') !== -1) {
+                $(document).on("webkitAnimationEnd oanimationend msAnimationEnd animationend", ".PageListerActions a, .PageListActions a", function () {
+                    $(this).addClass('aos-hovered');
+                });
+            }
+
+            if (AOSsettings.PageListTweaks.indexOf('pListUnselect') !== -1) {
 
                 $(document).on('pageSelected', function (e, obj) {
 
@@ -874,6 +900,114 @@ $(document).ready(function () {
 
         // Misc
         if (AOSsettings.enabledSubmodules.indexOf('Misc') !== -1) {
+
+            // titleCaseToggle
+            if (AOSsettings.Misc.indexOf('titleCaseToggle') !== -1) {
+
+                if ($('[id^="Inputfield_title"]').length) {
+
+                    var $titleFields = $('[id^="Inputfield_title"]'),
+                        titleCases = {
+                            'original': function (string, $btn) {
+                                return $btn.attr('data-original');
+                            },
+                            'sentencecase': function (string) {
+                                return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+                            },
+                            'capitalize': function (string) {
+                                return string.replace(/\w\S*/g, function (txt) {
+                                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                                })
+                            },
+                            'uppercase': function (string) {
+                                return string.toLocaleUpperCase();
+                            },
+                            'lowercase': function (string) {
+                                return string.toLocaleLowerCase();
+                            }
+                        };
+
+                    $titleFields.each(function () {
+
+                        var $input = $(this),
+                            dataOriginal = '';
+
+                        $input.on('caseChange', function (e, $toggleBtn) {
+                            toggleCase($input, $toggleBtn);
+                        });
+
+                        if ($input.val().length) {
+                            dataOriginal = ' data-original="' + $input.val() + '"';
+                        }
+
+                        $(this).before('<a class="case-toggle" data-case="original"' + dataOriginal + '><i class="fa fa-font"></i><i class="fa fa-font"></i></a>');
+                    });
+
+
+                    function getMode(currentMode) {
+
+                        var modesArray = Object.keys(titleCases),
+                            mode = modesArray[0];
+
+                        if (modesArray.indexOf(currentMode) !== modesArray.length - 1) {
+                            mode = modesArray[modesArray.indexOf(currentMode) + 1];
+                        }
+
+                        return mode;
+                    }
+
+                    function toggleCase($input, $toggleBtn) {
+
+                        var string = $input.val(),
+                            mode = getMode($toggleBtn.attr('data-case')),
+                            newValue,
+                            pageTitleSelector = $('h1#title > span').length ? 'h1#title > span' : 'h1#title';
+
+                        if ($('body.AdminThemeDefault').length) {
+                            pageTitleSelector = $('#breadcrumbs li.title > span').length ? '#breadcrumbs li.title span' : '#breadcrumbs li.title';
+                        }
+
+                        if (titleCases[mode]) {
+                            newValue = titleCases[mode](string, $toggleBtn);
+                        }
+
+                        if (newValue && newValue.length) {
+
+                            $input.val(newValue);
+
+                            // #Inputfield_title: only modify page title if it's the default language title input
+                            if ($input.attr('id') == 'Inputfield_title' && $(pageTitleSelector).length) {
+                                // $(pageTitleSelector).text(newValue);
+                                // $(pageTitleSelector).get(0).childNodes[0].nodeValue = newValue;
+                                $(pageTitleSelector).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(newValue);
+                            }
+
+                            $toggleBtn.attr('data-case', mode);
+                        }
+
+                        $input.focus();
+                    }
+
+                    $(document).on('click', '.case-toggle', function () {
+
+                        var $toggleBtn = $(this),
+                            $input = $(this).parent().find('[id^="Inputfield_title"]');
+
+
+                        if ($input.length) {
+
+                            if (!$input.val()) {
+                                // add data-original if it's first click (was empty on start)
+                                $toggleBtn.attr('data-original', $input.val());
+                            }
+
+                            $input.trigger('caseChange', [$toggleBtn]);
+                        }
+
+                        return false;
+                    });
+                }
+            }
 
             // Add Remove All button to field deletion confirmation page
             if (AOSsettings.Misc.indexOf('removeAllFieldsBtn') !== -1) {
@@ -1036,11 +1170,11 @@ $(document).ready(function () {
                 var linkCancel;
 
                 if (link.hasClass('cancel')) {
-
                     linkCancel = link.next('a');
 
                     linkCancel
                         .removeClass('cancel')
+                        .removeClass('confirm')
                         .attr('href', url.replace('delete_permanently&', 'delete&'))
                         .contents().last()[0].textContent = linkTextDefault;
 
@@ -1050,6 +1184,8 @@ $(document).ready(function () {
                 }
 
                 linkCancel = link.clone(true);
+
+                link.addClass('confirm');
 
                 linkCancel.addClass('cancel')
                     .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
@@ -1211,9 +1347,9 @@ $(document).ready(function () {
                         if (moduleLink.length) {
                             moduleName = moduleLink.attr('href').split('?name=')[1].trim();
                         } else {
-	                        // tab_install_modules
-                        	moduleLink = row.find('td:first-child > a[href="#"]');
-	                        moduleName = moduleLink.find('span').attr('data-name');
+                            // tab_install_modules
+                            moduleLink = row.find('td:first-child > a[href="#"]');
+                            moduleName = moduleLink.find('span').attr('data-name');
                         }
 
                         // some module names aren't in a span
@@ -1502,7 +1638,7 @@ $(document).ready(function () {
             var closeQuicklinksTimer;
 
             $(document).on('mouseleave', 'ul.quicklinks', function () {
-                var speed = $('html').hasClass('sbAutoHide') ? 0 : 1000;
+                var speed = $('html').hasClass('sbAutoHide') ? 0 : 500;
                 closeQuicklinksTimer = setTimeout(function () {
                     $('ul.quicklinks:visible').removeAttr('style');
                     $('a.quicklinks-open').removeClass('quicklinks-open').children('i').removeClass('active');

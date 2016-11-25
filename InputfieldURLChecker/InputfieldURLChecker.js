@@ -75,18 +75,22 @@ $(document).ready(function () {
             var mode = $(this).attr(IUC.dataMode),
                 input = $(this).parents('.InputfieldContent').first().find('input:not([type="hidden"])');
 
-            // always add buttonMode because hotkey modes will trigger this
-            addButtonMode(e, input);
-            addFieldListener(input);
+            // (see .module file) process inputs that are not autocomplete fields, or autocomplete fields in the page edit link modal
+            // if (!input.hasClass('ui-autocomplete-input') || input.parents('#ProcessPageEditLinkForm').length) {
 
-            if (mode.indexOf('ctrl-shift-click') !== -1) {
-                addHotkeyMode(input, 'click', 'ctrl-shift-click');
-            }
+                // always add buttonMode because hotkey modes will trigger this
+                addButtonMode(e, input);
+                addFieldListener(input);
 
-            if (mode.indexOf('ctrl-shift-enter') !== -1) {
-                // addHotkeyMode(input, 'keyup', 'ctrl-shift-enter');
-                addHotkeyMode(input, 'keydown', 'ctrl-shift-enter');
-            }
+                if (mode.indexOf('ctrl-shift-click') !== -1) {
+                    addHotkeyMode(input, 'click', 'ctrl-shift-click');
+                }
+
+                if (mode.indexOf('ctrl-shift-enter') !== -1) {
+                    // addHotkeyMode(input, 'keyup', 'ctrl-shift-enter');
+                    addHotkeyMode(input, 'keydown', 'ctrl-shift-enter');
+                }
+            // }
 
             $(this).attr(IUC.dataLoaded, 1);
         });
@@ -109,7 +113,7 @@ $(document).ready(function () {
             } else {
 
                 // right click
-                if (e.which == 3) return false;
+                if (e.which == 3) return true;
 
                 // if middle mouse button pressed, open a new page
                 if (e.which == 2 || e.button == 4) {

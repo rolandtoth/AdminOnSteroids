@@ -8,7 +8,7 @@ CKEDITOR.editorConfig = function (config) {
     // config.autoGrow_maxHeight = 700;
 
     // LightWire skin
-    if (aosUrl && CKEskin && CKEskin !== 'default') {
-        config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
-    }
+    // if (aosUrl && CKEskin && CKEskin !== 'default') {
+    //     config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
+    // }
 };

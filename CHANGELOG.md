@@ -1,6 +1,29 @@
 #Changelog
 
 
+### 1.0.5 (2016-11-25)
+
+- new tweak for Misc: add toggle button to change case of Page title field
+- new options for PageListTweaks: Icon-only pagelist actions / Always show pagelist actions / Make active pagelist items bold
+- show Lister actions only on hovering on the first table cell instead on full row
+- renamed PageListUnselect to pListUnselect
+- pListUnselect: do not append page ID if pListID is enabled after page selection
+- InputfieldURLChecker: do not add to regular autocomplete field, only to edit link modal
+- CKEaddons: if MagicLine plugin is enabled, remove it from PW's removed plugins
+- CKEplugins: added Content Templates + path to custom templates.js file
+- CKEplugins: CodeMirror update
+- CKEaddon keystrokes: changed cltr+u to ctrl+hift+u
+- Hotkeys: on focusing the search box (alt+d) trigger the autocomplete with previously set keyword
+- add extra clases to admin body (by Robin S)
+- fix for missing pagelist IDs (reported by adrian)
+- added workaround for the subpixel issue in topnav third menu items (Default theme) 
+- pagelist template edit action: fix missing action buttons (reported by adrian)
+- removed the "#" prefix from pagelist template edit links (and made the action link texts smaller)
+- PageListThumbs display fixes
+- do not align modal buttons to center
+
+
+
 ### 1.0.4 (2016-11-14)
 
 - CKEaddons "keystrokes" plugin: add hotkeys alt+n, alt+b for numbered/bulleted lists, plus ctrl+u for source mode (non-dialog)
