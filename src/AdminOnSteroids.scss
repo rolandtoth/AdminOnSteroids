@@ -34,7 +34,7 @@ html.aos {
   }
   &.AdminThemeDefault {
     // fix for third menu nav items
-    #topnav .topnav {
+    .topnav {
       border-right: 1px solid transparent;
     }
   }
@@ -343,7 +343,8 @@ html.aos {
 
   .hasMatches {
     &:after {
-      content: "•";
+      // bullet character
+      content: "\2022";
       position: absolute;
       margin-left: 2px;
       display: inline-block;
@@ -372,7 +373,9 @@ html.aos {
     }
 
     &:before {
-      content: "🔎";
+      //content: "🔎";
+      // search character icons
+      content: "\1F50E";
       position: absolute;
       padding: 6px 11px;
       top: 51%;
@@ -1817,6 +1820,7 @@ html.highlightRows {
 }
 
 html.pListShowActions {
+  //&[class*="AdminTheme"] {
   .content .PageList {
     .PageListItem {
       .PageListActions {
@@ -1834,7 +1838,7 @@ html.pListShowActions {
         }
       }
     }
-
+    //}
   }
 }
 
@@ -2978,7 +2982,7 @@ html.AdminThemeReno {
         }
       }
     }
-    &.pListFullRowHover {
+    &.pListFullRowHover:not(.pListShowActions) {
       .content .PageList {
         .PageListItem:hover {
           .PageListActions {

@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 105,
+            'version'   => 106,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -973,7 +973,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $page = $event->arguments("page");
 //        $event->return = '<span data-pid="' . $page->id . '" class="label_title">' . $event->return . '</span>';
 //        $event->return = str_replace('span', 'span data-pid="' . $page->id . '" ', $event->return);
-        $event->return = str_replace('span', 'span data-pid="' . $page->id . '" ', $event->return);
+        $event->return = '<span data-pid="' . $page->id . '" class="label_title">' . $event->return . '</span>';
     }
 
 
@@ -1220,10 +1220,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         // add currently edited page info (template, id)
-        if ($this->editedPage) {
-            $theme->addBodyClass("template-" . $this->editedPage->template->name);
-            $theme->addBodyClass("id-" . $this->editedPage->id);
-        }
+//        if ($this->editedPage) {
+//            $theme->addBodyClass("template-" . $this->editedPage->template->name);
+//            $theme->addBodyClass("id-" . $this->editedPage->id);
+//        }
         $theme->addBodyClass("user-{$user->name}");
     }
 

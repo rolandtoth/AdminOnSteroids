@@ -656,6 +656,16 @@ The module will automatically load these files if they exist so you can add cust
 
 ![AssetPaths](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-assetpaths.png "AssetPaths")
 
+### Auto-loaded files
+
+There are special files which will be loaded by the module if they exist (no need to manually set their paths above):
+
+- /site/templates/**admin.css**: CSS file loaded for the entire admin
+- /site/templates/**admin.js**: JavaScript file loaded for the entire admin
+- /site/templates/**cke.js**: JavaScript file loaded for CKEditor fields
+- /site/templates/**cke.css**: CSS file loaded for CKEditor fields
+- /site/templates/**templates.js**: fallback for the CKEditor "templates" plugin templates
+
 
 ## Extra classes added to "body" tag
 

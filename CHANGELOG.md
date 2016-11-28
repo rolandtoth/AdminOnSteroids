@@ -1,6 +1,16 @@
 #Changelog
 
 
+### 1.0.6 (2016-11-28)
+
+- fix for "Always show pagelist actions" on pagelist items with children (reported by adrian)
+- add documentation to auto-loaded assets (Asset Paths)
+- second attempt to fix for missing pagelist IDs
+- second attempt to fix topnav third-level menu subpixel issue
+- PHP notice fix when adding page template and page id classes to body
+
+
+
 ### 1.0.5 (2016-11-25)
 
 - new tweak for Misc: add toggle button to change case of Page title field
