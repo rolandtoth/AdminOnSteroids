@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 1.0.7 (2016-11-29)
+
+- new tweak: use middle mouse click/ctrl+click to View/Edit page in pagelist (PageListTweaks)
+- removed custom styling for the pagelist template edit action for the Default theme
+
+
+
 ### 1.0.6 (2016-11-28)
 
 - fix for "Always show pagelist actions" on pagelist items with children (reported by adrian)

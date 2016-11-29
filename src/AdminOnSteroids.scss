@@ -1190,15 +1190,17 @@ html.asmCollapse {
   @include aos_tooltip($margin: 0 0 10px -8px);
 }
 
-.PageListActionEdit a[href*="setup/template/edit"],
-.PageListerActions .PageEdit[href*="setup/template/edit"] {
-  &:not(:hover) {
-    color: inherit !important;
-    opacity: 0.5;
-    font-size: 13px;
-  }
-  &:hover {
-    font-size: 13px !important;
+html.AdminThemeReno {
+  .PageListActionEdit a[href*="setup/template/edit"],
+  .PageListerActions .PageEdit[href*="setup/template/edit"] {
+    &:not(:hover) {
+      color: inherit !important;
+      opacity: 0.5;
+      font-size: 13px;
+    }
+    &:hover {
+      font-size: 13px !important;
+    }
   }
 }
 

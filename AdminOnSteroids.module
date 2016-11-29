@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 106,
+            'version'   => 107,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -178,6 +178,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'PageListTweaks'               => array(
                 'pListIDs',
                 'highlightRows',
+                'pListMiddleClick',
                 'pListUnselect'
             ),
             'RenoTweaks'                   => array(
@@ -2409,6 +2410,7 @@ HTML;
         $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
         $f->addOption('pListUnselect', __('Add unselect/restore buttons to PageListSelect', __FILE__));
         $f->addOption('pListIconOnly', __('Icon-only pagelist actions', __FILE__));
+        $f->addOption('pListMiddleClick', __('Use middle mouse click/ctrl+click to View/Edit page', __FILE__));
         $f->addOption('pListActiveBold', __('Make active pagelist items bold', __FILE__));
         $f->addOption('pListShowActions', __('Always show pagelist actions', __FILE__));
 

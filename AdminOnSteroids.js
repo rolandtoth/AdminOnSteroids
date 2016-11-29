@@ -842,6 +842,40 @@ $(document).ready(function () {
                 });
             }
 
+            // pListMiddleClick
+            if (AOSsettings.PageListTweaks.indexOf('pListMiddleClick') !== -1) {
+                $(document).on('mousedown', '.PageListPage, .actions_toggle', function (e) {
+
+                    if (e.which == 2 || e.button == 4) {
+
+                        var clickedElement = $(this),
+                            targetLink;
+
+                        if (e.metaKey || e.ctrlKey) {
+                            // Edit
+                            targetLink = clickedElement.parent().find('.PageListActionEdit a, .PageEdit');
+                        } else {
+                            // View
+                            targetLink = clickedElement.parent().find('.PageListActionView a, .PageView');
+                        }
+
+                        clickedElement.css("pointer-events", "none");
+
+                        if (targetLink.length > 0) {
+                            window.open(targetLink.attr('href'));
+                        }
+
+                        setTimeout(function () {
+                            if (clickedElement.length) {
+                                clickedElement.css("pointer-events", "");
+                            }
+                        }, 200);
+                        return false;
+                    }
+                    return true;
+                });
+            }
+
             if (AOSsettings.PageListTweaks.indexOf('pListUnselect') !== -1) {
 
                 $(document).on('pageSelected', function (e, obj) {
@@ -979,7 +1013,9 @@ $(document).ready(function () {
                             if ($input.attr('id') == 'Inputfield_title' && $(pageTitleSelector).length) {
                                 // $(pageTitleSelector).text(newValue);
                                 // $(pageTitleSelector).get(0).childNodes[0].nodeValue = newValue;
-                                $(pageTitleSelector).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(newValue);
+                                $(pageTitleSelector).contents().filter(function () {
+                                    return this.nodeType == 3;
+                                }).first().replaceWith(newValue);
                             }
 
                             $toggleBtn.attr('data-case', mode);
