@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 1.0.8 (2016-12-08)
+
+- PageListTweaks: ability to add markup to "List of fields to display in the admin Page List"
+- always use 48px pagelist thumbnails to avoid too many variations
+
+
+
 ### 1.0.7 (2016-11-29)
 
 - new tweak: use middle mouse click/ctrl+click to View/Edit page in pagelist (PageListTweaks)

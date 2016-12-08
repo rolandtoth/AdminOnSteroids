@@ -583,6 +583,18 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 - **Use middle mouse click/ctrl+click to View/Edit page**: if enabled, middle-mouse click on pagelist item name will open the corresponding page in a new tab (frontend). Holding down the ctrl key on middle-mouse click will open the page for editing (also in a new tab). Besides regular pagelists Lister items are also supported. Both actions fire only if the View or Edit links ar available on the item. Some browsers may ask for a permission to open a new tab.
 - **Make active pagelist items bold**: when a pagelist item is clicked (opened) then it becomes bold to make it move visible.
 - **Always show pagelist actions**: show all (non-extra) pagelist items by default (non only on hover)
+- **Allow markup tokens for "List of fields to display"**: enables adding custom markup to pagelist fields displayed. Go to "Admin -> Setup -> Templates -> Advanced (tab) -> List of fields to display in the admin Page List" to enter fields and markup tokens. Surround fields with "[tag][/tag]", and use "[tag.className]" if you need to add a CSS class (see example below). You can use any tag, however it is recommended to use "em" as it doesn't conflict with existing pagelist tags, and the module has some built-in styles for them too, including a separator dot.
+
+*Allow markup tokens for "List of fields to display":*
+
+```
+{title} [em.company][b]{company_ref.title}[/b][/em] [em][i]images: {images.count}[/i][/em]
+```
+
+*Pagelist unselect in action:*
+
+![PageListMarkup](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelistmarkup.png "PageListMarkup")
+
 
 *Pagelist unselect in action:*
 

@@ -29,7 +29,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 107,
+            'version'   => 108,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -179,6 +179,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'pListIDs',
                 'highlightRows',
                 'pListMiddleClick',
+                'pListMarkup',
                 'pListUnselect'
             ),
             'RenoTweaks'                   => array(
@@ -604,6 +605,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
             if ($this->user->isSuperUser()) {
 
+                // always add hook to remove markup if tweak is disabled
+//                if (in_array('pListMarkup', $configData[ $subModule ])) {
+                    $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListMarkup');
+//                }
+
+
                 if (in_array('pListIDs', $configData[ $subModule ])) {
                     $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListIDs');
                 }
@@ -971,10 +978,41 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
 
     public function addPageListIDs(HookEvent $event) {
+
+        $markup = $event->return;
+
         $page = $event->arguments("page");
 //        $event->return = '<span data-pid="' . $page->id . '" class="label_title">' . $event->return . '</span>';
 //        $event->return = str_replace('span', 'span data-pid="' . $page->id . '" ', $event->return);
-        $event->return = '<span data-pid="' . $page->id . '" class="label_title">' . $event->return . '</span>';
+        $event->return = '<span data-pid="' . $page->id . '" class="label_title">' . $markup . '</span>';
+    }
+
+
+    public function addPageListMarkup(HookEvent $event) {
+
+        $markup = $event->return;
+        $submodule = 'PageListTweaks';
+
+        if (isset(self::$configData[$submodule]) && in_array('pListMarkup', self::$configData[ $submodule ])) {
+            // starting tag with/without class
+            $markup = preg_replace_callback("/\[([A-Za-z]*)(\.)?([A-Za-z0-9-_]*)\]/", function ($match) {
+                $class = (isset($match[2]) && isset($match[3]) && $match[2] == '.') ? ' class="' . $match[3] . '"' : '';
+                return '<' . $match[1] . $class . '>';
+            }, $markup);
+
+            // closing tag
+            $markup = preg_replace("/\[\/([A-Za-z]*?)\]/", "</$1>", $markup);
+
+        } else {
+            // remove markup tokens
+            $markup = preg_replace("/(\[(.*)\])*/", "", $markup);
+        }
+
+        // also remove empty tags
+//        $markup = preg_replace("/(<[A-Za-z]*><\/[A-Za-z]*>)*/", "", $markup);
+        $markup = preg_replace("/<[A-Za-z]+><\/[A-Za-z]+>/", "", $markup);
+
+        $event->return = $markup;
     }
 
 
@@ -1605,7 +1643,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $classes = array();
 
-        $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('pListCompact', $this->RenoTweaks))) ? 32 : 48;
+//        $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('pListCompact', $this->RenoTweaks))) ? 32 : 48;
+
+        // always use 48px to avoid generation too much thumbs
+        // thubms are resized with CSS
+        $thumbSize = 48;
 
         if (isset($this->PageListThumbs_style) && !empty($this->PageListThumbs_style)) {
             $classes[] = $this->PageListThumbs_style;
@@ -1613,7 +1655,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         if (in_array('square', $classes)) {
 //                $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => false))->url;
-            $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true))->url;
+            $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true, 'upscaling' => true))->url;
 //                $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true, 'forceNew' => true))->url;
         } else {
             $thumbSrc = $field->height($thumbSize)->url;
@@ -2413,6 +2455,7 @@ HTML;
         $f->addOption('pListMiddleClick', __('Use middle mouse click/ctrl+click to View/Edit page', __FILE__));
         $f->addOption('pListActiveBold', __('Make active pagelist items bold', __FILE__));
         $f->addOption('pListShowActions', __('Always show pagelist actions', __FILE__));
+        $f->addOption('pListMarkup', __('Allow markup tokens for "List of fields to display"', __FILE__));
 
         if (isset($data[ $f->name ]) && $data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);
