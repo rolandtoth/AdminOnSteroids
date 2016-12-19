@@ -22,6 +22,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     protected $PageListThumbs_items;
     protected $settingsFile;
     protected $htmlClasses;
+    protected $isLocaleSet;
     protected $allRoles;
     protected $enabledSubmodules;
 
@@ -29,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 108,
+            'version'   => 110,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -603,13 +604,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $subModule = 'PageListTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
 
+            // always add hook to remove markup if tweak is disabled
+            $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListMarkup');
+
+            if ($this->languages) {
+                $this->addHookBefore("ProcessPageListRender::getPageLabel", $this, 'pageListMarkupGetLangValue');
+            }
+
+            // pListUnselect
+            if (in_array('pListUnselect', $configData[ $subModule ])) {
+                $this->addHookAfter('InputfieldPageListSelect::render', $this, 'addPageListUnselectButtons');
+            }
+
             if ($this->user->isSuperUser()) {
-
-                // always add hook to remove markup if tweak is disabled
-//                if (in_array('pListMarkup', $configData[ $subModule ])) {
-                    $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListMarkup');
-//                }
-
 
                 if (in_array('pListIDs', $configData[ $subModule ])) {
                     $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListIDs');
@@ -671,11 +678,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                         }
                     });
                 }
-            }
-
-            // pListUnselect
-            if (in_array('pListUnselect', $configData[ $subModule ])) {
-                $this->addHookAfter('InputfieldPageListSelect::render', $this, 'addPageListUnselectButtons');
             }
         }
 
@@ -990,29 +992,127 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function addPageListMarkup(HookEvent $event) {
 
-        $markup = $event->return;
+        $page    = $event->arguments[0];
+        $markup    = $event->return;
         $submodule = 'PageListTweaks';
+        $pageLabelField = $page->template->pageLabelField;
 
-        if (isset(self::$configData[$submodule]) && in_array('pListMarkup', self::$configData[ $submodule ])) {
-            // starting tag with/without class
-            $markup = preg_replace_callback("/\[([A-Za-z]*)(\.)?([A-Za-z0-9-_]*)\]/", function ($match) {
-                $class = (isset($match[2]) && isset($match[3]) && $match[2] == '.') ? ' class="' . $match[3] . '"' : '';
-                return '<' . $match[1] . $class . '>';
+        if($pageLabelField == "") {
+	        return false;
+        }
+
+		// using '//' in front temporarily disables the custom markup (return default "title")
+		if(strpos($pageLabelField, '//') === 0) {
+	        $event->return = $page->title;
+	        return false;
+        }
+
+        $markupStartRegex = "/\[([A-Za-z]*)(\.)?([A-Za-z0-9-_\.]*)\]/";
+        $markupCloseRegex = "/\[\/([A-Za-z]*?)\]/";
+        $dateRegex = "/\(([0-9]*)\|date(:([a-zA-sZ:.\%_ \-\/]*))?\)*/";
+        $emptyTagsRegex = "/(\[(.*)\])*/";
+
+        if (isset(self::$configData[ $submodule ]) && in_array('pListMarkup', self::$configData[ $submodule ])) {
+
+            // dates
+            // format: (timestamp|date:Y-m-d)
+            // (2313121|date:Y-m-d sd)
+            // (2313121|date)
+            // (|date:H:i:is)
+            // (|date)
+
+            //$markup = utf8_encode($markup);
+
+            $markup = preg_replace_callback($dateRegex, function ($match) {
+
+                // set locale in config.php
+                if (!$this->isLocaleSet) {
+                    $configLocale = $this->wire('config')->getLocale;
+
+                    if (is_object($configLocale) && ($configLocale instanceof Closure)) {
+                        setlocale(LC_ALL, $configLocale());
+                        $this->isLocaleSet = true;
+                    }
+                }
+                
+                $dateString = $match[1];
+                $format     = isset($match[2]) ? ltrim($match[2], ':') : '%Y-%m-%d';
+
+                return empty($dateString) ? '&#216;' : strftime($format, $dateString);
+                //return empty($dateString) ? "a":strftime($format, $dateString);
             }, $markup);
+            //}, utf8_encode($markup));
 
-            // closing tag
-            $markup = preg_replace("/\[\/([A-Za-z]*?)\]/", "</$1>", $markup);
 
-        } else {
+            // starting tags with/without class
+            $markup = preg_replace_callback($markupStartRegex, function ($match) {
+                $class = (isset($match[2]) && isset($match[3]) && $match[2] == '.') ? ' class="' . $match[3] . '"' : '';
+
+				// PW removes space and underscores
+                $class = str_replace('.', ' ', $class);
+                $class = str_replace('__', '-', $class);
+
+                return '<' . $match[1] . $class . ' data-pitem>';
+            }, $markup);
+            //}, utf8_encode($markup));
+
+            // closing tags
+            $markup = preg_replace($markupCloseRegex, '</$1>', $markup);
+
+        	//$event->return = utf8_decode($markup);
+
+        } else {	// tweak is disabled, cleanup markup to avoid showing tokens
+
+	        //$markup = utf8_encode($markup);
+            
+   			// remove dates
+	        $markup = preg_replace($dateRegex, '', $markup);
+
             // remove markup tokens
-            $markup = preg_replace("/(\[(.*)\])*/", "", $markup);
+            $markup         = preg_replace($markupStartRegex, '', $markup);
+            $markup         = preg_replace($markupCloseRegex, '', $markup);
         }
 
         // also remove empty tags
-//        $markup = preg_replace("/(<[A-Za-z]*><\/[A-Za-z]*>)*/", "", $markup);
-        $markup = preg_replace("/<[A-Za-z]+><\/[A-Za-z]+>/", "", $markup);
+        $markup = preg_replace("/<[A-Za-z]+><\/[A-Za-z]+>/", '', $markup);
 
+        //$event->return = utf8_decode($markup);
         $event->return = $markup;
+    }
+
+
+    public function pageListMarkupGetLangValue(HookEvent $event) {
+
+        $page           = $event->arguments('page');
+        $pageLabelField = trim($page->template->pageLabelField);
+
+        if (empty($pageLabelField)) {
+            return false;
+        }
+
+        // {title}[em.company]{company_ref.title}[/em] [em]{%date_created.label%}: ({date_created}|date:%Y. %B %d.)[/em] [em][i]{%portfolio_images.label%}: {portfolio_images.count}[/i][/em]
+
+        $multilangFieldRegex = "/%([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)%/";
+
+        $pageLabelField = utf8_encode($pageLabelField);
+
+        $pageLabelField = preg_replace_callback($multilangFieldRegex, function ($match) use ($page) {
+
+            $field    = $match[1];
+            $property = $match[2];
+
+            $langID = $this->wire('user')->language->isDefault() ? '' : $this->wire('user')->language->id;
+
+            if (strlen($page->fields->$field->{$property . $langID}) == 0) {
+                $langID = '';
+            }
+
+            return str_replace('.' . $property, '.' . $property . $langID, 'fieldgroup.' . trim($match[0], '%'));
+
+        //}, utf8_encode($pageLabelField));
+        }, $pageLabelField);
+
+        $page->template->pageLabelField = utf8_decode($pageLabelField);
     }
 
 
@@ -1024,7 +1124,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // process pagelist select items
         if ($NavItems_pages) {
-
             foreach ($this->pages->getById($NavItems_pages) as $p) {
 
                 $url         = "";
@@ -2455,6 +2554,7 @@ HTML;
         $f->addOption('pListMiddleClick', __('Use middle mouse click/ctrl+click to View/Edit page', __FILE__));
         $f->addOption('pListActiveBold', __('Make active pagelist items bold', __FILE__));
         $f->addOption('pListShowActions', __('Always show pagelist actions', __FILE__));
+        $f->addOption('pListShowExtras', __('Always show extra actions', __FILE__));
         $f->addOption('pListMarkup', __('Allow markup tokens for "List of fields to display"', __FILE__));
 
         if (isset($data[ $f->name ]) && $data[ $f->name ]) {

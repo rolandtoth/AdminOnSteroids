@@ -1,6 +1,22 @@
 #Changelog
 
 
+### 1.1.0 (2016-12-19)
+
+- unnecessary dump removal (reported by lesaff)
+
+
+
+### 1.0.9 (2016-12-14)
+
+- PageListTweaks: ability to format unix timestamps in pagelists
+- PageListTweaks: using %field.property% will output the value in the user's language (if available)
+- PageListTweaks: always show extra actions
+- fixed language translator filterbox not appearing
+- possible fix for unclickable select dropdowns in ProDevTools API Explorer (reported by Robin S.)
+
+
+
 ### 1.0.8 (2016-12-08)
 
 - PageListTweaks: ability to add markup to "List of fields to display in the admin Page List"

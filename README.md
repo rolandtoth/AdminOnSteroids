@@ -583,15 +583,53 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 - **Use middle mouse click/ctrl+click to View/Edit page**: if enabled, middle-mouse click on pagelist item name will open the corresponding page in a new tab (frontend). Holding down the ctrl key on middle-mouse click will open the page for editing (also in a new tab). Besides regular pagelists Lister items are also supported. Both actions fire only if the View or Edit links ar available on the item. Some browsers may ask for a permission to open a new tab.
 - **Make active pagelist items bold**: when a pagelist item is clicked (opened) then it becomes bold to make it move visible.
 - **Always show pagelist actions**: show all (non-extra) pagelist items by default (non only on hover)
-- **Allow markup tokens for "List of fields to display"**: enables adding custom markup to pagelist fields displayed. Go to "Admin -> Setup -> Templates -> Advanced (tab) -> List of fields to display in the admin Page List" to enter fields and markup tokens. Surround fields with "[tag][/tag]", and use "[tag.className]" if you need to add a CSS class (see example below). You can use any tag, however it is recommended to use "em" as it doesn't conflict with existing pagelist tags, and the module has some built-in styles for them too, including a separator dot.
+- **Always show extra actions**: do not hide extra actions.
+- **Allow markup tokens for "List of fields to display"**: enables adding custom markup to pagelist fields displayed. See details below.
 
-*Allow markup tokens for "List of fields to display":*
+####Allow markup tokens for "List of fields to display"####
+
+Go to "Admin -> Setup -> Templates -> Advanced (tab) -> List of fields to display in the admin Page List" to enter fields and markup tokens. Surround fields with "[tag][/tag]".
+ 
+ 
+You can use any tag, however it is recommended to use "em" as it doesn't conflict with existing pagelist tags, and the module has some built-in styles for them too, including a separator dot.
 
 ```
 {title} [em.company][b]{company_ref.title}[/b][/em] [em][i]images: {images.count}[/i][/em]
 ```
+ 
+**Using classes**
+ 
+Use "[tag.className]" if you need to add a CSS class to add your own styling. Adding multiple classes is possible using additional dots, eg. "[tag className.anotherClassName]". ProcessWire strips slashes so you have to use double underscores if you need them. For example, adding a fontawesome icon is possible like this - this will output "<i class="fa fa-plane"></i>":
+ 
+ ```
+[i.fa.fa__plane][/i]
+```
 
-*Pagelist unselect in action:*
+**Multi-language field properties**
+
+Displaying labels on multilanguage installs is possible using "%field.property%" syntax (ProcessWire by default shows property only in the default language). In this case AdminOnSteroids will try to load the property in the current language and falls back to the default language. Here is how to display the "images" field label (followed by the images count):
+
+```
+{%images.label%}: {images.count}
+```
+ 
+**Date filter**
+ 
+This tweak adds a "date" filter to output human readable dates for date fields without output format set.
+
+Using the following syntax - only "|date" is required, the date format is optional, defaults to "%Y-%m-%d". See PHP's strftime function for the available placeholders.
+
+**Empty values**
+
+To avoid empty values (eg. showing "images:" followed by no value) the module will add the "Ø" (slashed zero) character. This makes it easier to see that the field in question is empty ("images: Ø").
+ 
+```
+({date_created}|date:%Y/%m/%d)
+```
+ 
+If this tweak is disabled, the module will remove the markup tokens and date filters and show the original content.
+ 
+*Pagelist markup:*
 
 ![PageListMarkup](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-pagelistmarkup.png "PageListMarkup")
 

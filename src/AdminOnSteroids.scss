@@ -94,7 +94,7 @@ html.aos {
     overflow: visible !important;
   }
 
-  h1,
+  h1:not(.pwapi-headline),
   .PageListItem:not(.PageListSortItem) .PageListPage span[class^="label_"],
   #breadcrumbs li.title span {
     position: relative;
@@ -3067,6 +3067,13 @@ html.AdminThemeReno {
     display: none;
   }
 }
+
+// pListShowExtras: move template edit link to right
+//.PageListItem[data-extra-actions] {
+//  .PageListActionEdit ~ .PageListActionEdit a {
+//    float: right;
+//  }
+//}
 
 // icons for pagelist, ProcessListerTable
 

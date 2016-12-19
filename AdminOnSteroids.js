@@ -442,7 +442,7 @@ function setupAdminDataTableFilter() {
                 filter = target.value.toLowerCase(),
                 field = $('.AdminDataTable'),
                 items = field.find('tbody td'),
-                //count = 0,
+            //count = 0,
                 length = filter.length,
                 invertedSearch = false;
 
@@ -835,6 +835,30 @@ $(document).ready(function () {
 // PageListTweaks
         if (AOSsettings.enabledSubmodules.indexOf('PageListTweaks') !== -1) {
 
+
+            // pListShowExtras
+            if (AOSsettings.PageListTweaks.indexOf('pListShowExtras') !== -1) {
+
+                $(document).on('hover', '.PageListItem', function () {
+
+                    var $extrasToggle = $(this).find('.clickExtras'),
+                        $templateEditAction = $(this).find('.PageListActionEdit ~ .PageListActionEdit');
+
+                    if ($extrasToggle.length) {
+                        $extrasToggle.trigger('click').remove();
+
+                        if ($(this).find('.PageListActionExtras').length) {
+                            $(this).find('.PageListActionExtras').remove();
+                        }
+
+                        // move template edit link to the end
+                        if ($templateEditAction.length) {
+                            $templateEditAction.parent().append($templateEditAction);
+                        }
+                    }
+                });
+            }
+
             // pListIconOnly
             if (AOSsettings.PageListTweaks.indexOf('pListIconOnly') !== -1) {
                 $(document).on("webkitAnimationEnd oanimationend msAnimationEnd animationend", ".PageListerActions a, .PageListActions a", function () {
@@ -897,7 +921,7 @@ $(document).ready(function () {
                     var button = $(this),
                         parentEl = button.parent(),
                         input = button.parent().find('input'),
-                        //titleElem = button.parent().find('.PageListSelectName .label_title');
+                    //titleElem = button.parent().find('.PageListSelectName .label_title');
                         titleElem = button.parent().find('.PageListSelectName');
 
                     // try without .label_title (on pageSelected the span disappears)
@@ -1145,7 +1169,7 @@ $(document).ready(function () {
 
             // Translator filter box
             if (AOSsettings.Misc.indexOf('transFilter') !== -1) {
-                if ($('body').hasClass('id-1021')) {
+                if ($('form[action*="?textdomain="]').length) {
                     setupTranslatorFilter();
                 }
             }
@@ -1592,7 +1616,7 @@ $(document).ready(function () {
                             field = $('#modules_form').find('.AdminDataTable'),
                             items = field.find('td'),
                             keyCode = e.keyCode || e.charCode,
-                            //count = 0,
+                        //count = 0,
                             length = filter.length;
 
                         $('.WireTabs a').removeClass('hasMatches');
@@ -1700,7 +1724,7 @@ $(document).ready(function () {
             if (window.Ps) {
 
                 var sidebarNav = document.querySelector('#main-nav'),
-                    // mainContent = document.querySelector('#content'),
+                // mainContent = document.querySelector('#content'),
                     mainContent = document.querySelector('body:not(.modal-inline) #main'),
                     PsSettings = {
                         wheelSpeed: 2,
@@ -1797,7 +1821,7 @@ $(document).ready(function () {
         if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
 
             var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
-                $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='🔎' /><i class='fa fa-close'></i></span>"),
+                $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='đź”Ž' /><i class='fa fa-close'></i></span>"),
                 filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
                 getItemSelector = function (field) {
                     return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
@@ -1974,7 +1998,7 @@ $(document).ready(function () {
                         filter = target.value.toLowerCase(),
                         field = $(target).closest('li.Inputfield'),
                         items = field.find('[data-filter]'),
-                        //count = 0,
+                    //count = 0,
                         length = filter.length;
 
                     if (!target.value) {
