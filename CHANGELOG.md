@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.1.1 (2016-12-20)
+
+- fix for custom assets not loading if PW is in a subdirectory
+
+
+
 ### 1.1.0 (2016-12-19)
 
 - unnecessary dump removal (reported by lesaff)

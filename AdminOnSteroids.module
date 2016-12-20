@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 110,
+            'version'   => 111,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -882,26 +882,54 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $configData['aosUrl']            = $this->config->urls->AdminOnSteroids;
 //        $configData['aosModuleUrl']      = $this->config->urls->admin . 'module/edit?name=AdminOnSteroids';
 
-        $rootPath = rtrim($this->config->paths->root, '/');
-        $rootUrl  = rtrim($this->config->urls->root, '/');
+        $root = $this->config->urls->root;
+
+        $rootPath = $this->config->paths->root;
+        $rootPath  = rtrim($rootPath, $root);
+
+        $rootUrl  = $this->config->urls->httpRoot;
+        $rootUrl  = rtrim($rootUrl, $root);
+
+//        $templatesPath = $this->config->paths->templates;
+        $templatesUrl         = $this->config->urls->httpTemplates;
+        $templatesUrlRelative = $this->config->urls->templates;
 
         // do not add JS to page on login page
         if ($this->page->id != 23) {
 
             // custom CKEaddons config js and css
+//            $ckeCSS = !empty($configData['CKEStyle']) ? '/' . trim($configData['CKEStyle'], '/') : $templatesUrlRelative . 'cke.css';
+//            $ckeJS        = !empty($configData['CKEScript']) ? '/' . trim($configData['CKEScript'], '/') : $templatesUrlRelative . 'cke.js';
+//            $ckeTemplates = !empty($configData['CKEtemplates']) ? '/' . trim($configData['CKEtemplates'], '/') : $templatesUrlRelative . 'templates.js';
 
-            $ckeCSS       = !empty($configData['CKEStyle']) ? $rootUrl . '/' . ltrim($configData['CKEStyle'], '/') : $this->config->urls->templates . 'cke.css';
-            $ckeJS        = !empty($configData['CKEScript']) ? $rootUrl . '/' . ltrim($configData['CKEScript'], '/') : $this->config->urls->templates . 'cke.js';
-            $ckeTemplates = !empty($configData['CKEtemplates']) ? $rootUrl . '/' . ltrim($configData['CKEtemplates'], '/') : $this->config->urls->templates . 'templates.js';
+            $ckeCSS       = $this->getAssetPath('CKEStyle', 'cke.css', $templatesUrlRelative, $configData, $root);
+            $ckeJS        = $this->getAssetPath('CKEScript', 'cke.js', $templatesUrlRelative, $configData, $root);
+            $ckeTemplates = $this->getAssetPath('CKEtemplates', 'templates.js', $templatesUrlRelative, $configData, $root);
 
             if (file_exists($rootPath . $ckeCSS)) {
-                $configData['customCKEStyle'] = $ckeCSS;
+                $configData['customCKEStyle'] = $templatesUrl . $ckeCSS;
             }
+
+//            bd($ckeCSS);
+//            bd($rootUrl . $ckeCSS);
+//            bd($rootPath . $ckeCSS);
+//            bd(file_exists($rootPath . $ckeCSS));
+//
+//            bd($ckeJS);
+//            bd($rootUrl . $ckeJS);
+//            bd($rootPath . $ckeJS);
+//            bd(file_exists($rootPath . $ckeJS));
+//
+//            bd($ckeTemplates);
+//            bd($rootUrl . $ckeTemplates);
+//            bd($rootPath . $ckeTemplates);
+//            bd(file_exists($rootPath . $ckeTemplates));
+
             if (file_exists($rootPath . $ckeJS)) {
-                $configData['customCKEScript'] = $ckeJS;
+                $configData['customCKEScript'] = $rootUrl . $ckeJS;
             }
             if (file_exists($rootPath . $ckeTemplates)) {
-                $configData['customCKEtemplates'] = $ckeTemplates;
+                $configData['customCKEtemplates'] = $rootUrl . $ckeTemplates;
             }
 
             // add css and js files
@@ -918,15 +946,31 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // add admin.js and admin.css
         // use values set in module settings or try templates/admin.css & js
-        $adminCSS = !empty($configData['AdminStyle']) ? $rootUrl . '/' . ltrim($configData['AdminStyle'], '/') : $this->config->urls->templates . 'admin.css';
-        $adminJS  = !empty($configData['AdminScript']) ? $rootUrl . '/' . ltrim($configData['AdminScript'], '/') : $this->config->urls->templates . 'admin.js';
+//        $adminCSS = !empty($configData['AdminStyle']) ? '/' . trim($configData['AdminStyle'], '/') : $templatesUrlRelative . 'admin.css';
+//        $adminJS  = !empty($configData['AdminScript']) ? '/' . trim($configData['AdminScript'], '/') : $templatesUrlRelative . 'admin.js';
+        $adminCSS = $this->getAssetPath('AdminStyle', 'admin.css', $templatesUrlRelative, $configData, $root);
+        $adminJS  = $this->getAssetPath('AdminScript', 'admin.js', $templatesUrlRelative, $configData, $root);
 
         if (file_exists($rootPath . $adminCSS)) {
-            $styles->add($adminCSS);
+            $styles->add($rootUrl . $adminCSS);
         }
         if (file_exists($rootPath . $adminJS)) {
-            $scripts->add($adminJS);
+            $scripts->add($rootUrl . $adminJS);
         }
+
+//        bd($adminCSS);
+//        bd($rootUrl . $adminCSS);
+//        bd($rootPath . $adminCSS);
+//        bd(file_exists($rootPath . $adminCSS));
+//
+//        bd($adminJS);
+//        bd($rootUrl . $adminJS);
+//        bd($rootPath . $adminJS);
+//        bd(file_exists($rootPath . $adminJS));
+    }
+
+    public function getAssetPath($assetConfigName, $defaultName, $templatesUrlRelative, $configData, $root) {
+        return !empty($configData[ $assetConfigName ]) ? '/' . ltrim($root, '/') . trim($configData[ $assetConfigName ], '/') : $templatesUrlRelative . $defaultName;
     }
 
 
@@ -992,25 +1036,26 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function addPageListMarkup(HookEvent $event) {
 
-        $page    = $event->arguments[0];
-        $markup    = $event->return;
-        $submodule = 'PageListTweaks';
+        $page           = $event->arguments[0];
+        $markup         = $event->return;
+        $submodule      = 'PageListTweaks';
         $pageLabelField = $page->template->pageLabelField;
 
-        if($pageLabelField == "") {
-	        return false;
+        if ($pageLabelField == "") {
+            return false;
         }
 
-		// using '//' in front temporarily disables the custom markup (return default "title")
-		if(strpos($pageLabelField, '//') === 0) {
-	        $event->return = $page->title;
-	        return false;
+        // using '//' in front temporarily disables the custom markup (return default "title")
+        if (strpos($pageLabelField, '//') === 0) {
+            $event->return = $page->title;
+
+            return false;
         }
 
         $markupStartRegex = "/\[([A-Za-z]*)(\.)?([A-Za-z0-9-_\.]*)\]/";
         $markupCloseRegex = "/\[\/([A-Za-z]*?)\]/";
-        $dateRegex = "/\(([0-9]*)\|date(:([a-zA-sZ:.\%_ \-\/]*))?\)*/";
-        $emptyTagsRegex = "/(\[(.*)\])*/";
+        $dateRegex        = "/\(([0-9]*)\|date(:([a-zA-sZ:.\%_ \-\/]*))?\)*/";
+        $emptyTagsRegex   = "/(\[(.*)\])*/";
 
         if (isset(self::$configData[ $submodule ]) && in_array('pListMarkup', self::$configData[ $submodule ])) {
 
@@ -1034,12 +1079,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                         $this->isLocaleSet = true;
                     }
                 }
-                
+
                 $dateString = $match[1];
                 $format     = isset($match[2]) ? ltrim($match[2], ':') : '%Y-%m-%d';
 
                 return empty($dateString) ? '&#216;' : strftime($format, $dateString);
-                //return empty($dateString) ? "a":strftime($format, $dateString);
+                //return empty($dateString) ? "aÂ":strftime($format, $dateString);
             }, $markup);
             //}, utf8_encode($markup));
 
@@ -1048,7 +1093,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $markup = preg_replace_callback($markupStartRegex, function ($match) {
                 $class = (isset($match[2]) && isset($match[3]) && $match[2] == '.') ? ' class="' . $match[3] . '"' : '';
 
-				// PW removes space and underscores
+                // PW removes space and underscores
                 $class = str_replace('.', ' ', $class);
                 $class = str_replace('__', '-', $class);
 
@@ -1059,18 +1104,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             // closing tags
             $markup = preg_replace($markupCloseRegex, '</$1>', $markup);
 
-        	//$event->return = utf8_decode($markup);
+            //$event->return = utf8_decode($markup);
 
-        } else {	// tweak is disabled, cleanup markup to avoid showing tokens
+        } else {    // tweak is disabled, cleanup markup to avoid showing tokens
 
-	        //$markup = utf8_encode($markup);
-            
-   			// remove dates
-	        $markup = preg_replace($dateRegex, '', $markup);
+            //$markup = utf8_encode($markup);
+
+            // remove dates
+            $markup = preg_replace($dateRegex, '', $markup);
 
             // remove markup tokens
-            $markup         = preg_replace($markupStartRegex, '', $markup);
-            $markup         = preg_replace($markupCloseRegex, '', $markup);
+            $markup = preg_replace($markupStartRegex, '', $markup);
+            $markup = preg_replace($markupCloseRegex, '', $markup);
         }
 
         // also remove empty tags
@@ -1109,7 +1154,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
             return str_replace('.' . $property, '.' . $property . $langID, 'fieldgroup.' . trim($match[0], '%'));
 
-        //}, utf8_encode($pageLabelField));
+            //}, utf8_encode($pageLabelField));
         }, $pageLabelField);
 
         $page->template->pageLabelField = utf8_decode($pageLabelField);

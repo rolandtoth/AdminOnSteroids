@@ -1821,7 +1821,7 @@ $(document).ready(function () {
         if (AOSsettings.enabledSubmodules.indexOf('FileFieldTweaks') !== -1) {
 
             var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
-                $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='đź”Ž' /><i class='fa fa-close'></i></span>"),
+                $filterInput = $("<span class='InputfieldFileFieldFilter'><input placeholder='&#128269;' /><i class='fa fa-close'></i></span>"),
                 filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
                 getItemSelector = function (field) {
                     return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
