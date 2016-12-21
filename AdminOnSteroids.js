@@ -1769,8 +1769,11 @@ $(document).ready(function () {
                 $('#main-nav').find('a.current').removeClass('current');
             }
 
+            // add 'active' class if submenu has active item
+            $('.AdminThemeReno .navItem.hasSubmenu a.current').parents('.hasSubmenu').first().addClass('active');
+
             if (topNavHasItems) {
-                $('.NavItems li').each(function () {
+                $('.NavItems > li').each(function () {
                     topNavElem.append($(this));
                 });
             } else {
@@ -1778,7 +1781,7 @@ $(document).ready(function () {
 
                 firstNavItem.append('<ul>');
 
-                $('.NavItems li').each(function () {
+                $('.NavItems > li').each(function () {
                     firstNavItem.children('ul').append($(this));
                 });
             }

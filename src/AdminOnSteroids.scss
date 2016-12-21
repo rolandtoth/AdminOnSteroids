@@ -3203,7 +3203,6 @@ html.pListIconOnly {
         border-top: 1px solid rgba(#51739D, 0.2);
       }
     }
-    //  background: rgba(#51739D, 0.05);
     .page-list {
       &:hover {
         + .page-edit {
@@ -3216,11 +3215,69 @@ html.pListIconOnly {
       position: absolute !important;
       right: 0;
       top: 0;
-
       z-index: 5;
       &:hover {
         opacity: 1 !important;
         background: transparent !important;
+      }
+    }
+    &.hasSubmenu {
+      ul {
+        position: relative !important;
+        top: 0 !important;
+        bottom: auto !important;
+        left: 0 !important;
+        height: auto !important;
+        display: block !important;
+        max-height: 0;
+        transition: max-height $defaultTransition;
+        transition-delay: 0.33s !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+      &:hover,
+      &.active {
+        ul {
+          max-height: 500px !important;
+        }
+      }
+    }
+    html.AdminThemeReno & {
+      &.hasSubmenu {
+        ul {
+          background: rgba(#1C2836, 0.05) !important;
+          a:not(.current):hover {
+            background: rgba(#1C2836, 0.08) !important;
+          }
+          a {
+            padding-left: 1.5em !important;
+            &:before {
+              content: "•";
+              margin-right: 5px;
+            }
+          }
+        }
+        i {
+          vertical-align: middle;
+          font-size: 12px !important;
+        }
+      }
+    }
+    html.AdminThemeDefault & {
+      &.hasSubmenu {
+        ul {
+          left: 100% !important;
+          position: absolute !important;
+          top: 2px !important;
+        }
+        i {
+          position: absolute;
+          right: 11px;
+          top: 12px;
+          &:before {
+            content: "\f105";
+          }
+        }
       }
     }
   }
@@ -3228,15 +3285,6 @@ html.pListIconOnly {
   html.AdminThemeReno {
     li ul {
       li.navItem {
-        //.page-list {
-        //  margin-right: 32px;
-        //  &:hover {
-        //    text-decoration: underline;
-        //  }
-        //}
-        //&:hover {
-        //  background: rgba(0, 0, 0, 0.04);
-        //}
         a:not(.current) {
           font-weight: normal !important;
         }

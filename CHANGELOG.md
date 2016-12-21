@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.1.2 (2016-12-21)
+
+- Custom nav items: submenus feature
+
+
+
 ### 1.1.1 (2016-12-20)
 
 - fix for custom assets not loading if PW is in a subdirectory

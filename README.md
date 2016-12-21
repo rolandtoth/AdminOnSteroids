@@ -533,6 +533,20 @@ Some of the pages under the "Admin" page may not work correctly.
 
 ![NavItems](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-navitems.png "NavItems")
 
+**Submenus**
+
+From v1.1.2 it is possible to add submenus to custom nav items. To add one you enclose items with a start and end tag:
+
+```
+-- ! Modules: module/
+AdminOnSteroids: module/edit?name=AdminOnSteroids
+Tracy Debugger: module/edit?name=TracyDebugger
+--
+```
+
+The start tag is `--` followed by the menu title, and optionally a link. Use `--` for the end tag.
+
+The `!` character for setting access to superuser-only works here too. The only difference is that the asterisk character won't be added to the submenu title. In this case the entire submenu with its sub-items will be skipped for non-superusers.
 
 
 ### PageListThumbs

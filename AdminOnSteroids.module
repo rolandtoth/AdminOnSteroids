@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 111,
+            'version'   => 112,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1230,7 +1230,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                     if (
                         $pageId == $inputId ||
                         $pageId == $this->page->id ||
-                        //                                ($pageId == $inputId && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
                         (!in_array($inputId, $NavItems_pages) && $pageId !== 1 && $this->editedPage && $this->editedPage->parent() && $pageId == $this->editedPage->parent()->id)
                     ) {
                         $activeClass = ' current';
@@ -1256,6 +1255,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $rootUrl     = rtrim($this->config->urls->admin, '/');
             $rootUrlHttp = $this->config->urls->httpAdmin;
 
+            $superuserFlag = false;
+
             foreach ($settings as $pairs) {
 
                 if (strpos($pairs, '//') === 0) {
@@ -1265,7 +1266,51 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 // replace rootUrlHttp to avoid having ':' before explode
                 $pairs = str_replace($rootUrlHttp, '', $pairs);
 
+				// process submenus
+				// start: --SubmenuName, end: --
+                if (strpos($pairs, '--') === 0) {
+
+                    if(strlen($pairs) > 2) {
+	                    
+						$pairs = ltrim($pairs, '--');
+						$title = $pairs;
+						$url = '#';
+
+						// get submenu name and url if string contains ':'
+						if (strpos($pairs, ':') !== false) {
+		                	$setting = explode(':', $pairs);
+	                		$title = isset($setting[0]) ? trim($setting[0]) : $title;
+            				$url   = isset($setting[1]) ? trim($setting[1]) : $url;
+		                }
+
+                        // if title starts with "!" then only SuperUsers should see
+                        if ($title[0] == '!') {
+                            if (!$this->user->isSuperUser()) {
+                                $superuserFlag = true;
+                                continue;
+                            }
+                            // trim
+                            $title = ltrim($title, '!');
+                        }
+						
+	                    $items .= '<li class="navItem hasSubmenu">';
+	                    $items .= '<a href="' . $rootUrl . '/' . ltrim($url, '/') . '">' . $title . ' <i class="fa fa-caret-down"></i></a>';
+	                    $items .= '<ul>';
+
+                    } else {
+                        // end tag
+	                    $items .= '</ul>';
+	                    $items .= '</li>';
+                        $superuserFlag = false;
+                    }
+                    continue;
+                }
+
                 if (strpos($pairs, ':') === false) {
+                    continue;
+                }
+
+                if($superuserFlag) {
                     continue;
                 }
 
