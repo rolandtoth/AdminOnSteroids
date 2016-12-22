@@ -273,10 +273,12 @@ function restoreFilterBoxValue(input) {
 // default AdminDataTable filter
 function setupAdminDataTableFilter() {
 
+
     // do not add dtFilter to modules
     if ($('#modules_form').length) {
         return false;
     }
+
 
     // if ($('.dtFilter').length) return false;
 
@@ -311,7 +313,8 @@ function setupAdminDataTableFilter() {
             if (table.attr('data-dtfilter-added')) return true;
 
             // continue if table is under Module Info section
-            if (table.parents('#ModuleEditForm, #ModuleInfo').length) return true;
+            // if (table.parents('#ModuleEditForm, #ModuleInfo').length) return true;
+            if (table.parents('#ModuleInfo').length) return true;
 
             setDtTable(table);
 
@@ -327,10 +330,12 @@ function setupAdminDataTableFilter() {
                 }
 
             } else {
+
                 if (table.parents('.WireTab').length) {
                     table.before(dtFilter.clone());
 
                 } else {
+
                     if (!$('body').hasClass('dtFilterAdded')) {
                         table.parents('.Inputfields').first().prepend(dtFilter.clone());
                         $('body').addClass('dtFilterAdded');
@@ -861,9 +866,12 @@ $(document).ready(function () {
 
             // pListIconOnly
             if (AOSsettings.PageListTweaks.indexOf('pListIconOnly') !== -1) {
-                $(document).on("webkitAnimationEnd oanimationend msAnimationEnd animationend", ".PageListerActions a, .PageListActions a", function () {
-                    $(this).addClass('aos-hovered');
-                });
+                // $(document).on("webkitAnimationEnd oanimationend msAnimationEnd animationend", ".PageListerActions a, .PageListActions a", function () {
+                //     $(this).addClass('aos-hovered');
+                // });
+                $(document).on("hover", ".PageListActions a:not([title]), .PageListerActions a:not([title])", function() {
+                    $(this).attr('title', $(this).text());
+                })
             }
 
             // pListMiddleClick
@@ -1697,8 +1705,8 @@ $(document).ready(function () {
             // hide quicklinks
             var closeQuicklinksTimer;
 
-            $(document).on('mouseleave', 'ul.quicklinks', function () {
-                var speed = $('html').hasClass('sbAutoHide') ? 0 : 500;
+            $(document).on('mouseleave', 'ul.quicklinks, #main-nav > li > ul > li', function () {
+                var speed = $('html').hasClass('sbAutoHide') ? 0 : 400;
                 closeQuicklinksTimer = setTimeout(function () {
                     $('ul.quicklinks:visible').removeAttr('style');
                     $('a.quicklinks-open').removeClass('quicklinks-open').children('i').removeClass('active');

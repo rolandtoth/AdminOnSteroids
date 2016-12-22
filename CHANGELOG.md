@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 1.1.3 (2016-12-22)
+
+- Use "title" attribute instead animation for icon-only pagelist actions to show text
+- allow datatables filter on module pages
+- hide quicklinks menu when hovering other sidebar item (Reno theme)
+
+
+
 ### 1.1.2 (2016-12-21)
 
 - Custom nav items: submenus feature

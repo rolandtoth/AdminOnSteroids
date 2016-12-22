@@ -593,14 +593,14 @@ Tip: to use smaller thumbs, set "Use narrow pagelist rows" (RenoTweaks). The Def
 - **Show page IDs**: adds the page ID after each page name in a superscript (visible for superusers only)
 - **Add Delete button to delete page permanently**: adds a new extra action to pagelist items called "Delete". Clicking on this will show a confirmation link and clicking on this the page will be permanently deleted (bypassing the Trash). The feature is disabled on pages having child pages and it's visible for superusers only.
 - **Add unselect/restore buttons to PageListSelect**: a rewrite of Bernhard Baumrock's PageListSelectUnselectButton module which allows clearing of PageListSelect field value using a dedicated button. Additionally, this tweak adds a "restore" functionality too. Note that if there is no previous value to restore, the restore button will not show up. Many thanks for Bernhard for the idea and help!
-- **Icon-only pagelist actions**: hide pagelist action texts and use icons instead. The texts are visible after hovering about 1 seconds on an action (and the text remains there to avoid jumps). This setting also replaces Lister actions with icons.
+- **Icon-only pagelist actions**: hide pagelist action texts and use icons instead. The action text is shown as a title attribute. This setting also replaces Lister actions with icons.
 - **Use middle mouse click/ctrl+click to View/Edit page**: if enabled, middle-mouse click on pagelist item name will open the corresponding page in a new tab (frontend). Holding down the ctrl key on middle-mouse click will open the page for editing (also in a new tab). Besides regular pagelists Lister items are also supported. Both actions fire only if the View or Edit links ar available on the item. Some browsers may ask for a permission to open a new tab.
 - **Make active pagelist items bold**: when a pagelist item is clicked (opened) then it becomes bold to make it move visible.
 - **Always show pagelist actions**: show all (non-extra) pagelist items by default (non only on hover)
 - **Always show extra actions**: do not hide extra actions.
 - **Allow markup tokens for "List of fields to display"**: enables adding custom markup to pagelist fields displayed. See details below.
 
-####Allow markup tokens for "List of fields to display"####
+####Allow markup tokens for "List of fields to display"
 
 Go to "Admin -> Setup -> Templates -> Advanced (tab) -> List of fields to display in the admin Page List" to enter fields and markup tokens. Surround fields with "[tag][/tag]".
  

@@ -3107,12 +3107,12 @@ html.aos .pw-content .AdminDataList td a:not(.PageExtras):hover {
     }
   }
   // .aos-hovered is added by JS
-  &:not(.aos-hovered):hover {
-    animation: 0.33s showText 1.2s forwards;
-  }
-  &.aos-hovered {
-    max-width: 100px !important;
-  }
+  //&:not(.aos-hovered):hover {
+  //  animation: 0.33s showText 1.2s forwards;
+  //}
+  //&.aos-hovered {
+  //  max-width: 100px !important;
+  //}
   &:before {
     content: $icon;
     font-family: Fontawesome;
@@ -3475,6 +3475,55 @@ html.hoverDropdown {
 }
 
 //end of InputfieldURLChecker
+
+// Admin Actions
+//table.adminactionsconfig {
+//  .Inputfield[id^="wrap_"] {
+//    background: transparent !important;
+//  }
+//  .InputfieldContent, label {
+//    padding: 0.25em 0.25em 0 !important;
+//    border: none !important;
+//    background: transparent !important;
+//  }
+//  .asmList {
+//    margin-top: 0.25em !important;
+//  }
+//  .asmListItem {
+//    padding-left: 8px !important;
+//    margin-right: 8px;
+//    display: inline-block !important;
+//    width: auto !important;
+//    font-size: 14px;
+//    background: transparent !important;
+//    border-color: transparent !important;
+//    color: inherit !important;
+//    &:hover {
+//      .asmListItemLabel {
+//        text-decoration: line-through !important;
+//      }
+//    }
+//    .asmListItemRemove {
+//      left: 0 !important;
+//      right: 0 !important;
+//      bottom: 0;
+//      top: 1px;
+//      &:not(:hover) {
+//        i {
+//          &:before {
+//            content: '\f007';
+//          }
+//        }
+//      }
+//    }
+//    i {
+//      margin-left: 2px;
+//      &:not(:hover) {
+//        color: #EA2262;
+//      }
+//    }
+//  }
+//}
 
 @keyframes spinIn {
   0% {
