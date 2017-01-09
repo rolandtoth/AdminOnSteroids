@@ -3085,9 +3085,9 @@ html.AdminThemeReno {
 
 }
 
-// ListerTweaks_options listerHoverBtn
+// ListerTweaks (ListerTweaks_options) listerHoverBtn
 @media only screen and (min-width: 960px) {
-  html.ListerTweaks_options {
+  html.ListerTweaks {
     &.listerHoverBtn {
       .ProcessListerTable tr td:first-child:hover {
         .PageListerActions {
