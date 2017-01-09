@@ -869,7 +869,7 @@ $(document).ready(function () {
                 // $(document).on("webkitAnimationEnd oanimationend msAnimationEnd animationend", ".PageListerActions a, .PageListActions a", function () {
                 //     $(this).addClass('aos-hovered');
                 // });
-                $(document).on("hover", ".PageListActions a:not([title]), .PageListerActions a:not([title])", function() {
+                $(document).on("hover", ".PageListActions a:not([title]), .PageListerActions a:not([title])", function () {
                     $(this).attr('title', $(this).text());
                 })
             }
@@ -957,6 +957,9 @@ $(document).ready(function () {
                     if (parentEl.find('.PageListItemOpen').length) {
                         parentEl.find('a.PageListSelectActionToggle').trigger('click');
                     }
+
+                    // allow dependent fields to update
+                    input.trigger('change');
 
                     return false;
                 });

@@ -215,12 +215,17 @@ $(document).ready(function () {
 
             if (blur) {
                 searchBox.blur();
+                $('#search.open').removeClass('open');
                 return false;
             }
 
             if (searchBox.is(':focus')) {
                 searchBox.blur();
+
             } else {
+
+                // ensure search box visibility
+                $('#search').addClass('open');
                 searchBox.focus();
                 searchBoxValue = searchBox.val().trim();
                 // use zero-width space to trigger autocomplete dropdown

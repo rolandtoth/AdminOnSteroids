@@ -176,10 +176,15 @@ A few usability mods targetting the default admin theme.
 - **Collapse fieldset/tab items on double click**: collapse or expand children items when double-clicking on the starting or ending asmSelect fieldset/tab item.
 - **Move delete button to the left**: moves the delete icon to the beginning of the bar, making easier to delete items on wide screens.
 - **Edit field in new tab on middle click (no template context)**: when editing a template clicking on fields in the asmField opens up the field for editing in a modal, using the current template as the context. If this tweak is enabled you can use the middle mouse button to open the field edit page without the template context.
+- **Template editor: add clickable field width percentages and display divisions on width slider**: this tweak will add inputfield width percentage to the right side of asmList items. Clicking on it will bring up the field edit modal opened at the Input tab where you can edit the field's width easily. The "Column width" slider of fields will get a background SVG showing the main divisions (20,30,...,90). 
 
 *asmSelect field after enabling AsmTweaks:*
 
 ![AsmTweaks](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-asmtweaks.png "AsmTweaks")
+
+*Template editor width divisions:*
+
+![Width divisions](https://github.com/rolandtoth/adminonsteroids/raw/master/img/aos-width-divisions.png "Width divisions")
 
 
 

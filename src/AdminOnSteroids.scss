@@ -3,14 +3,11 @@
 
 // general style overrides
 html.aos {
-  //.PageListItem:hover .PageListActions {
-  //  line-height: 1;
-  //}
+  // ensure case changer positioning
+  .InputfieldPageTitle {
+    position: relative;
+  }
 
-  // prevent page list jumps on hover
-  //.pw-content .PageList .PageListItem {
-  //  line-height: 1em !important;
-  //}
   .PageListPage {
     line-height: 1.5em !important;
   }
@@ -18,7 +15,6 @@ html.aos {
     #search {
       z-index: 8;
     }
-
     .quicklinks {
       z-index: 100000 + 30000;
     }
@@ -31,6 +27,9 @@ html.aos {
         min-width: 230px !important;
       }
     }
+  }
+  #content {
+    clear: both;
   }
   &.AdminThemeDefault {
     // fix for third menu nav items
@@ -359,7 +358,7 @@ html.aos {
 
   div.filterbox {
     position: relative;
-    z-index: 10;
+    //z-index: 10;
     margin-top: 8px;
     margin-bottom: 10px;
     clear: both;
@@ -569,6 +568,56 @@ a.PageListActionDelete.cancel {
 //}
 
 // AsmTweaks
+
+html.editFieldWidth {
+
+  .asmList {
+    .asmFieldsetEnd {
+      .asmListItemStatus {
+        display: none;
+      }
+    }
+    .asmListItemStatus {
+      span.ui-priority-secondary {
+        color: inherit !important;
+      }
+      em {
+        opacity: 0.57;
+        font-size: 12px;
+        margin-left: -2px;
+        letter-spacing: -0.5px;
+      }
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+        em {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  #columnWidthSlider {
+    &:hover {
+      cursor: pointer;
+    }
+    &:before {
+      @media only screen and (min-width: 600px) {
+        content: url('/site/modules/AdminOnSteroids/src/scale-mobile.svg');
+      }
+      @media only screen and (min-width: 960px) {
+        content: url('/site/modules/AdminOnSteroids/src/scale.svg');
+      }
+      @media only screen and (min-width: 1440px) {
+        content: url('/site/modules/AdminOnSteroids/src/scale-hd.svg');
+      }
+      @media only screen and (min-width: 1800px) {
+        content: url('/site/modules/AdminOnSteroids/src/scale-uhd.svg');
+      }
+    }
+  }
+}
+
 html.asmLeftX {
   body {
     .Inputfields .asmListItem {
@@ -2325,6 +2374,9 @@ html.AdminThemeReno {
             color: inherit;
             position: relative;
             z-index: 100000 + 220;
+            &:not(:focus) {
+              color: rgba(#2A3C51, 0.42);
+            }
             &:focus {
               background: rgba(#F0F3F7, 0.5);
               max-width: 100%;
@@ -3033,18 +3085,20 @@ html.AdminThemeReno {
 
 }
 
-// ListerTweaks listerHoverBtn
+// ListerTweaks_options listerHoverBtn
 @media only screen and (min-width: 960px) {
-  html.listerHoverBtn {
-    .ProcessListerTable tr td:first-child:hover {
-      .PageListerActions {
-        display: inline-block !important;
-        .PageExtras ~ a {
-          display: none;
-        }
-        .PageExtras.extras-open,
-        .PageExtras.extras-open ~ a {
-          display: inline-block;
+  html.ListerTweaks_options {
+    &.listerHoverBtn {
+      .ProcessListerTable tr td:first-child:hover {
+        .PageListerActions {
+          display: inline-block !important;
+          .PageExtras ~ a {
+            display: none;
+          }
+          .PageExtras.extras-open,
+          .PageExtras.extras-open ~ a {
+            display: inline-block;
+          }
         }
       }
     }
@@ -3475,55 +3529,6 @@ html.hoverDropdown {
 }
 
 //end of InputfieldURLChecker
-
-// Admin Actions
-//table.adminactionsconfig {
-//  .Inputfield[id^="wrap_"] {
-//    background: transparent !important;
-//  }
-//  .InputfieldContent, label {
-//    padding: 0.25em 0.25em 0 !important;
-//    border: none !important;
-//    background: transparent !important;
-//  }
-//  .asmList {
-//    margin-top: 0.25em !important;
-//  }
-//  .asmListItem {
-//    padding-left: 8px !important;
-//    margin-right: 8px;
-//    display: inline-block !important;
-//    width: auto !important;
-//    font-size: 14px;
-//    background: transparent !important;
-//    border-color: transparent !important;
-//    color: inherit !important;
-//    &:hover {
-//      .asmListItemLabel {
-//        text-decoration: line-through !important;
-//      }
-//    }
-//    .asmListItemRemove {
-//      left: 0 !important;
-//      right: 0 !important;
-//      bottom: 0;
-//      top: 1px;
-//      &:not(:hover) {
-//        i {
-//          &:before {
-//            content: '\f007';
-//          }
-//        }
-//      }
-//    }
-//    i {
-//      margin-left: 2px;
-//      &:not(:hover) {
-//        color: #EA2262;
-//      }
-//    }
-//  }
-//}
 
 @keyframes spinIn {
   0% {

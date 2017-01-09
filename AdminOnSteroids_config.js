@@ -120,7 +120,7 @@ $(document).ready(function () {
         // config jumplinks
         if ($('.Inputfield_enabledSubmodules').length) {
 
-            var configLink = '<a class="configLink" title="Configuration"><i class="fa fa-cog"></a>';
+            var configLink = '<a class="configLink" title="Configure"><i class="fa fa-cog"></a>';
 
             $('#wrap_Inputfield_enabledSubmodules input[id^="Inputfield_enabledSubmodules_"]').each(function () {
 

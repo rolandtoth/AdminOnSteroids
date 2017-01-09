@@ -1,11 +1,44 @@
 #Changelog
 
 
+### 1.1.8 (2016-01-09)
+
+- add SVG background to show width divisions on Column width slider (asmTweaks)
+- fixed non-functional Lister show extra actions toggle (reported by gmclelland)
+
+
+
+### 1.1.7 (2016-12-29)
+
+- asmTweaks: show field width percentages in template editor fields asmList + allow clicking on them to open edit the field at the Input tab (idea by bernhard)
+- possible fix for case changer incorrect positioning (reported by gmclelland)
+
+
+
+### 1.1.6 (2016-12-28)
+
+- fix: ensure visibility of search box when focusing with alt+d (reported by gmclelland)
+
+
+
+### 1.1.5 (2016-12-24)
+
+- PageListUnselect: add trigger on unselect to allow dependent fields to update (reported by adrian)
+
+
+
+### 1.1.4 (2016-12-23)
+
+- AOS module config page UI tweaks (role asmSelect appearance, enabledSubmodules boxes)
+- ckeStyles url fix (custom asset paths)
+
+
+
 ### 1.1.3 (2016-12-22)
 
 - Use "title" attribute instead animation for icon-only pagelist actions to show text
 - allow datatables filter on module pages
-- hide quicklinks menu when hovering other sidebar item (Reno theme)
+- hide quicklinks menu when hovering other sidebar items (Reno theme)
 
 
 

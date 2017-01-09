@@ -25,6 +25,52 @@ $(document).ready(function () {
     }
 
 
+    // editFieldWidth
+    // body.id-11: template edit page
+    if (AsmTweaksSettings.indexOf('editFieldWidth') !== -1 && $('body').hasClass('id-11')) {
+
+        // add "100%" to all fields not having percentages
+        function addAsmWidths() {
+            setTimeout(function () {
+                $("#wrap_fieldgroup_fields .asmListItemStatus:not(:contains('%'))").each(function () {
+                    $(this).html($(this).text() + '<em> 100%</em>');
+                });
+            }, 100);
+        }
+
+        $(document).on('hover', '#wrap_fieldgroup_fields .asmList:not(.editFieldWidth)', function () {
+            $(this).addClass('editFieldWidth');
+        });
+
+        $(document).on('reloaded', function () {
+            addAsmWidths();
+        });
+
+        $(document).on('click', '#wrap_fieldgroup_fields .asmListItemStatus', function () {
+            var statusEl = $(this),
+                editLink = statusEl.siblings('.asmListItemEdit').first().find('a'),
+                originalUrl = editLink.attr('href');
+
+            editLink
+                .attr('href', editLink.attr('href') + '#inputfieldConfig')
+                .trigger('click');
+
+            setTimeout(function () {
+                if (editLink.length) {
+                    editLink.attr('href', originalUrl);
+                }
+            }, 250);
+        });
+
+        addAsmWidths();
+
+        // closing the modal after editing field width, force re-adding "100%" text for asmListItems
+        $(document).on('pw-modal-closed', function () {
+            $(document).trigger('reloaded');
+        });
+    }
+
+
     if (AsmTweaksSettings.indexOf('fieldMiddleEdit') !== -1) {
 
         $(document).on('mousedown', '.asmList a[href*="/field/edit?"]', function (e) {
