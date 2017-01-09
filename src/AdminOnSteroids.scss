@@ -3132,9 +3132,9 @@ html.AdminThemeReno {
 // icons for pagelist, ProcessListerTable
 
 // disable white font color when hovering on Lister actions
-html.aos .pw-content .AdminDataList td a:not(.PageExtras):hover {
-  color: inherit !important;
-}
+//html.aos .pw-content .AdminDataList td a:not(.PageExtras):hover {
+//  color: inherit !important;
+//}
 
 @mixin pageListIcon($icon) {
   max-width: 24px;
