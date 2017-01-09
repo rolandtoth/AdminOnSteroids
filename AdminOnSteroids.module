@@ -286,7 +286,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'headSticky',
             'headStickyCompact',
             'hoverDropdown',
-            'ListerTweaks_options',
+            'ListerTweaks',
             'listerHoverBtn',
             'moduleCompact',
             'moduleModal',
@@ -312,7 +312,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         );
 
         // eg. checkboxes inside fieldsets
-        // need to add it to the allowed html classes
+        // need to add its PARENT submodule name to the allowed html classes
         $itemsToTreatAsSubmodule = array('ListerTweaks_options');
 
         foreach (array_merge($this->enabledSubmodules, $itemsToTreatAsSubmodule) as $submodule) {
