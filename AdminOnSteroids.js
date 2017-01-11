@@ -1116,6 +1116,8 @@ $(document).ready(function () {
                         textCheckAll = AOSsettings.loc['check_all'],
                         textClearAll = AOSsettings.loc['clear_all'];
 
+                    if(!checkboxes.length || checkboxes.length <= 1) return false;
+
                     checkAllBtn.text(textCheckAll);
                     submitBtn.after(checkAllBtn);
 
