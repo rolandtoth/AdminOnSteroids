@@ -447,7 +447,7 @@ function setupAdminDataTableFilter() {
                 filter = target.value.toLowerCase(),
                 field = $('.AdminDataTable'),
                 items = field.find('tbody td'),
-            //count = 0,
+                //count = 0,
                 length = filter.length,
                 invertedSearch = false;
 
@@ -929,7 +929,7 @@ $(document).ready(function () {
                     var button = $(this),
                         parentEl = button.parent(),
                         input = button.parent().find('input'),
-                    //titleElem = button.parent().find('.PageListSelectName .label_title');
+                        //titleElem = button.parent().find('.PageListSelectName .label_title');
                         titleElem = button.parent().find('.PageListSelectName');
 
                     // try without .label_title (on pageSelected the span disappears)
@@ -1080,63 +1080,85 @@ $(document).ready(function () {
                 }
             }
 
-            // Add Remove All button to field deletion confirmation page
-            if (AOSsettings.Misc.indexOf('removeAllFieldsBtn') !== -1) {
+            if (AOSsettings.Misc.indexOf('addOrRemoveFieldsTweaks') !== -1) {
 
-                if ($('#Inputfield_submit_remove_fields').length) {
+                // add "Apply to all" button to set all selects to selected option (add fields to templates, "Actions" tab of Edit field page)
+                var addOrRemoveFieldSelects = $('form[action*="./send-templates-save?id="] select');
 
-                    var removeBtn = $('#Inputfield_submit_remove_fields'),
-                        removeAllBtn = removeBtn.clone(false),
-                        removeFieldsForm = $('form[action="removeFields"]'),
-                        removeFieldCheckboxes = removeFieldsForm.find('input[name="remove_fields[]"]'),
-                        removeAllBtnTextElem = removeAllBtn.find('.ui-button-text'),
-                        removeAllBtnTextRemoveAll = AOSsettings.loc['remove_all_fields'],
-                        removeAllBtnTextCheckAll = AOSsettings.loc['check_all'],
-                        removeAllBtnTextEnd = AOSsettings.loc['removing'];
+                if (addOrRemoveFieldSelects.length > 1) {   // only add if there are more than 1 dropdowns
+                    var btn = $('<a href="#" class="addOrRemoveApplyButton" title="' + AOSsettings.loc['apply_to_all'] + '"><i class="fa fa-server" aria-hidden="true"></i></a>');
+                    addOrRemoveFieldSelects.first().after(btn);
 
-                    removeAllBtn
-                        .attr('id', 'Inputfield_submit_remove_fields_all')
-                        .addClass('ui-priority-secondary');
+                    btn.on('click', function () {
+                        var selectedValue = $(this).prev('select').val();
 
-                    removeAllBtnTextElem.text(removeAllBtnTextCheckAll);
-
-                    removeBtn.after(removeAllBtn);
-
-                    // reset Check all btn if a checkbox is unchecked
-                    removeFieldsForm.on('mouseup', '.InputfieldCheckboxesStacked label', function (e) {
-
-                        if ($(this).find('input:checked').length) {
-                            // if current checkbox is checked, set btn text to Clear All
-                            removeAllBtn.removeClass('doRemove');
-                            removeAllBtnTextElem.text(removeAllBtnTextCheckAll);
-                        } else {
-                            // if all checkbox is checked, set btn text to Remove All
-                            setTimeout(function () {
-                                if (removeFieldCheckboxes.length === removeFieldCheckboxes.filter(':checked').length) {
-                                    removeAllBtn.addClass('doRemove');
-                                    removeAllBtnTextElem.text(removeAllBtnTextRemoveAll);
-                                }
-                            }, 100);
-                        }
+                        addOrRemoveFieldSelects.each(function () {
+                            if ($(this).find('option[value=' + selectedValue + ']').length) {
+                                $(this).val(selectedValue);
+                            }
+                        });
+                        return false;
                     });
 
-                    removeAllBtn.on('click', function (e) {
-
-                        e.preventDefault();
-
-                        if (removeAllBtn.hasClass('doRemove')) {
-                            removeAllBtnTextElem.text(removeAllBtnTextEnd);
-                            removeAllBtn.addClass('ui-state-disabled').css('pointer-events', 'none');
-                            removeBtn.trigger('click');
-                        } else {
-                            removeAllBtn.addClass('doRemove');
-                            removeAllBtnTextElem.text(removeAllBtnTextRemoveAll);
-                            removeFieldCheckboxes.prop('checked', true);
-                        }
-
-                        return false;
-                    })
+                    addOrRemoveFieldSelects.on('change', function () {
+                        $(this).after(btn);
+                    });
                 }
+
+                function checkOrClearCheckboxes(submitBtnSelector, checkboxSelector, formSelector) {
+
+                    if (!$(submitBtnSelector).length || !$(formSelector).length) return false;
+
+                    var submitBtn = $(submitBtnSelector),
+                        form = $(formSelector),
+                        checkAllBtn = $('<a href="#" class="checkAllFieldToRemoveBtn">'),
+                        checkboxes = form.find(checkboxSelector),
+                        textCheckAll = AOSsettings.loc['check_all'],
+                        textClearAll = AOSsettings.loc['clear_all'];
+
+                    checkAllBtn.text(textCheckAll);
+                    submitBtn.after(checkAllBtn);
+
+                    function batchupdateCheckboxes(e, updateCheckboxes) {
+
+                        if (e.which !== 1) return true; // fire on left click only
+
+                        // use delay to wait for checkbox population
+                        setTimeout(function () {
+                            var checkedNum = checkboxes.filter('input:checked').length,
+                                allNum = checkboxes.length,
+                                mode = checkedNum !== allNum;
+
+                            if (updateCheckboxes !== false) {
+                                checkboxes.each(function () {
+                                    $(this).prop('checked', mode);
+                                });
+                            }
+
+                            // do not use cached checkedNum here
+                            checkAllBtn.text((checkboxes.filter('input:checked').length === allNum) ? textClearAll : textCheckAll);
+                        }, 0);
+                    }
+
+                    form.on('mouseup', 'label', function (e) {
+                        batchupdateCheckboxes(e, false);
+                    });
+
+                    checkAllBtn.on('mouseup', function (e) {
+                        batchupdateCheckboxes(e);
+                    });
+                }
+
+                // "Check all" btn (coming from field edit page Actions tab)
+                if ($('form[action*="./send-templates-save?id="] input[type="checkbox"]').length) {
+                    checkOrClearCheckboxes('#Inputfield_submit', 'input[type="checkbox"]', 'form[action*="./send-templates-save?id="]');
+                }
+
+                // "Check all" btn (coming from template edit page)
+                if ($('#Inputfield_submit_remove_fields').length) {
+                    checkOrClearCheckboxes('#Inputfield_submit_remove_fields', 'input[name="remove_fields[]"]', 'form[action="removeFields"]');
+                }
+
             }
 
             // set Home/View site link open in new tab
@@ -1627,7 +1649,7 @@ $(document).ready(function () {
                             field = $('#modules_form').find('.AdminDataTable'),
                             items = field.find('td'),
                             keyCode = e.keyCode || e.charCode,
-                        //count = 0,
+                            //count = 0,
                             length = filter.length;
 
                         $('.WireTabs a').removeClass('hasMatches');
@@ -1735,7 +1757,7 @@ $(document).ready(function () {
             if (window.Ps) {
 
                 var sidebarNav = document.querySelector('#main-nav'),
-                // mainContent = document.querySelector('#content'),
+                    // mainContent = document.querySelector('#content'),
                     mainContent = document.querySelector('body:not(.modal-inline) #main'),
                     PsSettings = {
                         wheelSpeed: 2,
@@ -2012,7 +2034,7 @@ $(document).ready(function () {
                         filter = target.value.toLowerCase(),
                         field = $(target).closest('li.Inputfield'),
                         items = field.find('[data-filter]'),
-                    //count = 0,
+                        //count = 0,
                         length = filter.length;
 
                     if (!target.value) {

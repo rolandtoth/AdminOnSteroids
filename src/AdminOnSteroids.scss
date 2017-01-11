@@ -474,6 +474,43 @@ html.aos {
   .modules_section.hidden {
     display: none;
   }
+
+  .addOrRemoveApplyButton,
+  .checkAllFieldToRemoveBtn {
+    display: inline-block;
+    margin-left: 5px;
+    span {
+      display: none;
+    //  display: inline-block;
+    //  margin-left: 0.5em;
+    //  font-size: 0.9em;
+    //  transition: all $defaultTransition;
+    //  //transform-origin: left;
+    //  //transform: scaleX(0);
+    //  opacity: 0;
+    }
+    i {
+      //font-size: 17px !important;
+      transition: all $defaultTransition;
+      backface-visibility: hidden;
+      padding: 5px;
+      &:not(:hover) {
+        opacity: 0.5;
+        color: #2A3C51;
+      }
+    }
+    //&:not(:hover) {
+    //  color: inherit;
+    //}
+    //&:hover span {
+    //  opacity: 1;
+    //  //transform: scaleX(1);
+    //}
+  }
+  .checkAllFieldToRemoveBtn {
+    margin-left: 10px;
+    padding: 6px 8px;
+  }
 }
 
 .cke_maximized {
