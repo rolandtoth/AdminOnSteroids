@@ -1103,6 +1103,10 @@ $(document).ready(function () {
                     addOrRemoveFieldSelects.on('change', function () {
                         $(this).after(btn);
                     });
+
+                } else if (addOrRemoveFieldSelects.length === 1) {  // show all items if there's only one select
+                    var select = addOrRemoveFieldSelects.first();
+                    select.attr('size', select.find('option, optgroup').length);
                 }
 
                 function checkOrClearCheckboxes(submitBtnSelector, checkboxSelector, formSelector) {
