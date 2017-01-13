@@ -3250,7 +3250,8 @@ html.pListIconOnly {
     }
     .PageListActionCopy > a,
     .PageCopy {
-      @include pageListIcon("\f067");
+      //@include pageListIcon("\f067");
+      @include pageListIcon("\f0c5");
     }
     .PageListActionUnhide > a,
     .PageUnhide {
@@ -3258,11 +3259,13 @@ html.pListIconOnly {
     }
     .PageListActionPublish > a,
     .PagePublish {
-      @include pageListIcon("\f058");
+      //@include pageListIcon("\f058");
+      @include pageListIcon("\f05d");
     }
     .PageListActionUnpublish > a,
     .PageUnpublish {
-      @include pageListIcon("\f057");
+      //@include pageListIcon("\f057");
+      @include pageListIcon("\f05c");
     }
     .PageListActionLock > a,
     .PageLock {

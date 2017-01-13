@@ -1,6 +1,19 @@
 #Changelog
 
 
+### 1.2.0 (2016-01-13)
+
+- Hotkeys: add alt+d to open page tree panel (requested by gmclelland)
+- a few icon changes for icon-only page list actions
+
+
+
+### 1.1.9 (2016-01-12)
+
+- expand field placement select (if there's only one select)
+
+
+
 ### 1.1.8 (2016-01-09)
 
 - add SVG background to show width divisions on Column width slider (asmTweaks)

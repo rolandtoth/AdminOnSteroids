@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 119,
+            'version'   => 120,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -825,9 +825,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             if (in_array('loadCollapsedModuleInfos', $configData[ $subModule ])) {
                 // Load module info fields collapsed
                 $this->addHookAfter('InputfieldMarkup::render', function ($event) {
+//                $this->addHookBefore('Inputfield::render', function ($event) {
                     $field = $event->object;
-                    if ($field->id == 'ModuleInfo') {
-                        $field->addClass('InputfieldStateCollapsed');
+                    if ($field->id === 'ModuleInfo') {
+//                        $field->collapsed = Inputfield::collapsedYesAjax;
+//                        $field->collapsed = Inputfield::collapsedNo;
+                        $field->collapsed = Inputfield::collapsedYes;
+//                        $field->addClass('InputfieldStateCollapsed');
                     }
                 });
             }
@@ -2339,6 +2343,7 @@ HTML;
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
         $f->addOption('focusSearch', __('Focus search on alt+d', __FILE__));
         $f->addOption('removeNoticeHotkey', __('Remove notices on first ESC keypress', __FILE__));
+        $f->addOption('addPageTreeTrigger', __('Open page tree panel on alt+d', __FILE__));
 
         if ($data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);

@@ -12,6 +12,59 @@ $(document).ready(function () {
         HotkeysSettings = AOSsettings.Hotkeys,
         BreadcrumbsSettings = ProcessWire.config.AOS_breadcrumbs;
 
+    // on ESC close PW panels
+    $(document).on('keydown', function (e) {
+
+        // button is located outside the iframe
+        var panelCloseBtn = $('.pw-panel-container-open a.pw-panel-button-open', window.parent.document);
+
+        if (panelCloseBtn.length) {
+
+            var keyCode = e.keyCode || e.charCode;
+
+            if (keyCode === 27) {  // ESC
+                e.preventDefault();
+                panelCloseBtn.get(0).click();
+                return false;
+            }
+        }
+    });
+
+
+    // alt+o to open page tree panel
+    if (HotkeysSettings.indexOf('addPageTreeTrigger') !== -1) {
+
+        setupCKEpageTreeTrigger();
+
+        $(document).on('keydown', function (e) {
+
+            var keyCode = e.keyCode || e.charCode,
+                pageTreePanelSelector = 'a.pw-panel[data-tab-icon="sitemap"]',  // no better selector than data-tab-icon
+                pageTreePanelBtn = $(pageTreePanelSelector);
+
+            // if panel is focused, the trigger button is outside the iframe
+            if (pageTreePanelBtn.length === 0) {
+                pageTreePanelBtn = $(pageTreePanelSelector, window.parent.document);
+            }
+
+            if (pageTreePanelBtn.length) {
+                if (e.altKey && keyCode === 79) {   // alt+o
+                    aos_togglePageTreePanel();
+                }
+            }
+
+            function aos_togglePageTreePanel() {
+
+                // triggering the button twices toggles state
+                pageTreePanelBtn.get(0).click();
+
+                return false;
+            }
+        });
+
+
+    }
+
 
     if (HotkeysSettings.indexOf('removeNoticeHotkey')) {
 
@@ -22,7 +75,7 @@ $(document).ready(function () {
             // always remove event because only first keydown should trigger the notice removal
             $(document).off('keydown', removeNoticeHotkey);
 
-            if (keyCode == 27) {
+            if (keyCode === 27) {
                 if ($('a.notice-remove').length) {
                     $('a.notice-remove').first().trigger('click');
                     return false;
@@ -92,7 +145,7 @@ $(document).ready(function () {
                 .eq(0);
 
             // modal opened, but controls have focus (outside the iframe)
-            if (aos_saveButton.length == 0) {
+            if (aos_saveButton.length === 0) {
                 aos_saveButton = $('.ui-dialog-buttonset button[role="button"]').eq(0);
             }
         }
@@ -134,6 +187,7 @@ $(document).ready(function () {
         }
     }
 
+
     function setupCKESave() {
         if (window.CKEDITOR) {
             CKEDITOR.on('instanceReady', function (evt) {
@@ -143,16 +197,7 @@ $(document).ready(function () {
                         aos_triggerSave();
                     }
                 });
-
                 evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* s */] = 'saveCKECommand';
-
-                //evt.editor.document.on('keydown', function (e) {
-                //    // ctrl+s
-                //    if (e.data.getKeystroke() == CKEDITOR.CTRL + 83) {
-                //        e.data.$.preventDefault();
-                //        aos_triggerSave();
-                //    }
-                //});
             });
         }
     }
@@ -169,16 +214,27 @@ $(document).ready(function () {
                         }
                     });
                     evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* d */] = 'focusSearchBox';
-
-                    //evt.editor.document.on('keydown', function (evt) {
-                    //    var e = evt.data.$;
-                    //    tapFocus(e);
-                    //});
                 }
             });
         }
     }
 
+    function setupCKEpageTreeTrigger() {
+        if (window.CKEDITOR) {
+            CKEDITOR.on('instanceReady', function (evt) {
+
+                if (HotkeysSettings.indexOf('addPageTreeTrigger') !== -1) {
+
+                    evt.editor.addCommand('pageTreeTrigger', {
+                        exec: function (editor, data) {
+                            aos_togglePageTreePanel();
+                        }
+                    });
+                    evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 79 /* o */] = 'pageTreeTrigger';
+                }
+            });
+        }
+    }
 
     if (HotkeysSettings.indexOf('save') !== -1) {
 
@@ -186,7 +242,7 @@ $(document).ready(function () {
 
             var keyCode = e.keyCode || e.charCode;
 
-            if ((e.metaKey || e.ctrlKey) && keyCode == 83) {
+            if ((e.metaKey || e.ctrlKey) && keyCode === 83) {
                 aos_triggerSave();
 
                 // intentionally disable browser Save as dialog globally
@@ -242,14 +298,17 @@ $(document).ready(function () {
 
         $(document).on('keydown', function (e) {
 
-            if (e.keyCode == 27) {  // ESC
+            var keyCode = e.keyCode || e.charCode;
+
+            if (keyCode === 27) {  // ESC
                 focusSearchBox(e, true);
                 return false;
             }
 
-            if (e.altKey && e.keyCode == 68) {  // alt+d
+            if (e.altKey && keyCode === 68) {  // alt+d
                 focusSearchBox(e);
             }
         });
     }
-});
+})
+;
