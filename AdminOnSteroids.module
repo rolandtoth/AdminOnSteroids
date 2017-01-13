@@ -1358,7 +1358,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $items = '<ul class="NavItems" style="display: none;">' . $items . '</ul>';
 
-        $event->return = str_replace('</body>', $items . '</body', $event->return);
+        $event->return = str_replace('</body>', $items . '</body>', $event->return);
     }
 
     public function addTemplateEditLinkPageList(HookEvent $event) {
