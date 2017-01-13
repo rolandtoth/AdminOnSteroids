@@ -1109,13 +1109,14 @@ $(document).ready(function () {
                     select.attr('size', select.find('option, optgroup').length);
                 }
 
-                function checkOrClearCheckboxes(submitBtnSelector, checkboxSelector, formSelector) {
+                function checkOrClearCheckboxes(insertAfterSelector, checkboxSelector, formSelector) {
 
-                    if (!$(submitBtnSelector).length || !$(formSelector).length) return false;
+                    if (!$(insertAfterSelector).length || !$(formSelector).length) return false;
 
-                    var submitBtn = $(submitBtnSelector),
+                    var insertAfterElem = $(insertAfterSelector).first(),
                         form = $(formSelector),
                         checkAllBtn = $('<a href="#" class="checkAllFieldToRemoveBtn">'),
+                        checkboxSelector = (checkboxSelector === '') ? 'input[type="checkbox"]' : checkboxSelector,
                         checkboxes = form.find(checkboxSelector),
                         textCheckAll = AOSsettings.loc['check_all'],
                         textClearAll = AOSsettings.loc['clear_all'];
@@ -1123,7 +1124,10 @@ $(document).ready(function () {
                     if(!checkboxes.length || checkboxes.length <= 1) return false;
 
                     checkAllBtn.text(textCheckAll);
-                    submitBtn.after(checkAllBtn);
+                    if($('#abandoned_fieldset').length) {
+                        checkAllBtn.addClass('ui-button ui-priority-secondary');
+                    }
+                    insertAfterElem.after(checkAllBtn);
 
                     function batchupdateCheckboxes(e, updateCheckboxes) {
 
@@ -1157,12 +1161,18 @@ $(document).ready(function () {
 
                 // "Check all" btn (coming from field edit page Actions tab)
                 if ($('form[action*="./send-templates-save?id="] input[type="checkbox"]').length) {
-                    checkOrClearCheckboxes('#Inputfield_submit', 'input[type="checkbox"]', 'form[action*="./send-templates-save?id="]');
+                    checkOrClearCheckboxes('#Inputfield_submit', '', 'form[action*="./send-templates-save?id="]');
                 }
 
                 // "Check all" btn (coming from template edit page)
                 if ($('#Inputfield_submit_remove_fields').length) {
                     checkOrClearCheckboxes('#Inputfield_submit_remove_fields', 'input[name="remove_fields[]"]', 'form[action="removeFields"]');
+                }
+
+                // "Check all" btn (abandoned translations)
+                if ($('#abandoned_fieldset').length) {
+                    // checkOrClearCheckboxes('#abandoned_fieldset .InputfieldCheckbox:eq(-1)', '#abandoned_fieldset input[type="checkbox"]', 'form#InputfieldForm2');
+                    checkOrClearCheckboxes('#abandoned_fieldset .description', '#abandoned_fieldset input[type="checkbox"]', 'form#InputfieldForm2');
                 }
 
             }
