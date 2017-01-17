@@ -333,7 +333,7 @@ Settings can be configured separately for CKEditor fields.
 - **Add long-click and ctrl+click actions to breadcrumbs**: if enabled, long-click on a breadcrumb item will open the corresponding front-end page in a new tab/window, and holding the Ctrl key when clicking on them will navigate to their edit screen.
 - **Focus search on alt+d**: focuses the top search field on alt+d hotkey. Use ESC to remove focus.
 - **Remove notices on first ESC keypress**: if the very first keypress when a page loads in the admin is ESC, it will remove system notice messages (if any). This is a quick way to close them without clicking on the notice close button.
-- **Open page tree panel on alt+d**: opens/closes the page tree panel on alt+d hotkey if enabled (works from within CKEditor too).
+- **Open page tree panel on alt+o**: opens/closes the page tree panel on alt+o hotkey if enabled (works from within CKEditor too).
 
 *Overlay and flashing save icon after hitting ctrl+s:*
 
@@ -408,6 +408,7 @@ Long-clicking on Edit or View links on the Page tree opens a modal to edit/view 
 - **Add sequential tabindex to fields**: enables jumping to next input in the admin with TAB key (or backwards with shift+TAB). By default the TAB key jumps to the next input on second or third trigger only (depending on whether there are language tabs or other buttons in the field wrap), this tweak fixes it.
 - **Add toggle button to change case of Page title field**: adds a button to the right side of the title field which allows looping through cases of the text (original, sentence case, capitalize, uppercase, lowercase). Changing the default language title will change the main page title too.
 - **Add language switcher to the admin**: this tweak will add a dropdown to the main navigation that allows changing the admin language. Page names, the admin interface will be loaded in the selected language, and the page edit screen will also load the language in that language. The language switcher uses a cookie so the language will be remembered even though the user's profile is actually not saved. Note that in the Default theme it's added to the end of the top menu items while in Reno it's the first.
+- **Move empty trash confirmation checkbox above trash items**: moves the confirmation checkbox on the "Empty trash" page to the top, making it easier to check if there are many items in the trash.
 
 *Admin language switcher:*
 

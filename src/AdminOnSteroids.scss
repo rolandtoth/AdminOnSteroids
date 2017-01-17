@@ -481,13 +481,13 @@ html.aos {
     margin-left: 5px;
     span {
       display: none;
-    //  display: inline-block;
-    //  margin-left: 0.5em;
-    //  font-size: 0.9em;
-    //  transition: all $defaultTransition;
-    //  //transform-origin: left;
-    //  //transform: scaleX(0);
-    //  opacity: 0;
+      //  display: inline-block;
+      //  margin-left: 0.5em;
+      //  font-size: 0.9em;
+      //  transition: all $defaultTransition;
+      //  //transform-origin: left;
+      //  //transform: scaleX(0);
+      //  opacity: 0;
     }
     i {
       //font-size: 17px !important;
@@ -654,6 +654,24 @@ html.editFieldWidth {
       }
       @media only screen and (min-width: 1800px) {
         content: url('/site/modules/AdminOnSteroids/src/scale-uhd.svg');
+      }
+    }
+  }
+}
+
+html.emptyTrashTop {
+  body.id-301 {
+    form > ul {
+      display: flex;
+      flex-direction: column;
+      li {
+        order: 1;
+        &:nth-child(1) {
+          order: 2;
+        }
+        &:last-child {
+          margin-bottom: 1em;
+        }
       }
     }
   }

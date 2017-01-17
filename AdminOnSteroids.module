@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 120,
+            'version'   => 121,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -156,7 +156,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'centerLogin',
                 'hoverDropdown',
                 'titleCaseToggle',
-                'tabIndex'
+                'tabIndex',
+                'emptyTrashTop'
 //                'noAnim'
             ),
             'ModuleTweaks'                 => array(
@@ -280,6 +281,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'asmLeftX',
             'centerLogin',
             'editFieldWidth',
+            'emptyTrashTop',
             'filterbox',
             'flatModules',
             'headBtnToTitle',
@@ -2343,7 +2345,7 @@ HTML;
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
         $f->addOption('focusSearch', __('Focus search on alt+d', __FILE__));
         $f->addOption('removeNoticeHotkey', __('Remove notices on first ESC keypress', __FILE__));
-        $f->addOption('addPageTreeTrigger', __('Open page tree panel on alt+d', __FILE__));
+        $f->addOption('addPageTreeTrigger', __('Open page tree panel on alt+o', __FILE__));
 
         if ($data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);
@@ -2514,6 +2516,7 @@ HTML;
         $f->addOption('hoverDropdown', __('Show save dropdown on hover instead on click', __FILE__));
         $f->addOption('titleCaseToggle', __('Add toggle button to change case of Page title field', __FILE__));
         $f->addOption('tabIndex', __('Add sequential tabindex to fields', __FILE__));
+        $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
 
         if ($data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);

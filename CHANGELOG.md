@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.2.1 (2016-01-17)
+
+- Misc: option to move empty trash confirmation checkbox above trash items
+
+
+
 ### 1.2.0 (2016-01-13)
 
 - Hotkeys: add alt+d to open page tree panel (requested by gmclelland)
