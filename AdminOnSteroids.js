@@ -980,18 +980,18 @@ $(document).ready(function () {
                             'original': function (string, $btn) {
                                 return $btn.attr('data-original');
                             },
-                            'sentencecase': function (string) {
+                            'Lorem ipsum': function (string) {
                                 return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
                             },
-                            'capitalize': function (string) {
+                            'Lorem Ipsum': function (string) {
                                 return string.replace(/\w\S*/g, function (txt) {
                                     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
                                 })
                             },
-                            'uppercase': function (string) {
+                            'LOREM IPSUM': function (string) {
                                 return string.toLocaleUpperCase();
                             },
-                            'lowercase': function (string) {
+                            'lorem ipsum': function (string) {
                                 return string.toLocaleLowerCase();
                             }
                         };
@@ -1003,6 +1003,13 @@ $(document).ready(function () {
 
                         $input.on('caseChange', function (e, $toggleBtn) {
                             toggleCase($input, $toggleBtn);
+                        });
+
+                        // change the original on type
+                        $input.on('keyup', function () {
+                            if ($input.prev('a.case-toggle').length) {
+                                $input.prev('a.case-toggle').attr('data-original', $input.val());
+                            }
                         });
 
                         if ($input.val().length) {
@@ -1064,7 +1071,6 @@ $(document).ready(function () {
                         var $toggleBtn = $(this),
                             $input = $(this).parent().find('[id^="Inputfield_title"]');
 
-
                         if ($input.length) {
 
                             if (!$input.val()) {
@@ -1121,10 +1127,10 @@ $(document).ready(function () {
                         textCheckAll = AOSsettings.loc['check_all'],
                         textClearAll = AOSsettings.loc['clear_all'];
 
-                    if(!checkboxes.length || checkboxes.length <= 1) return false;
+                    if (!checkboxes.length || checkboxes.length <= 1) return false;
 
                     checkAllBtn.text(textCheckAll);
-                    if($('#abandoned_fieldset').length) {
+                    if ($('#abandoned_fieldset').length) {
                         checkAllBtn.addClass('ui-button ui-priority-secondary');
                     }
                     insertAfterElem.after(checkAllBtn);
