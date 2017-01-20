@@ -334,6 +334,7 @@ Settings can be configured separately for CKEditor fields.
 - **Focus search on alt+d**: focuses the top search field on alt+d hotkey. Use ESC to remove focus.
 - **Remove notices on first ESC keypress**: if the very first keypress when a page loads in the admin is ESC, it will remove system notice messages (if any). This is a quick way to close them without clicking on the notice close button.
 - **Open page tree panel on alt+o**: opens/closes the page tree panel on alt+o hotkey if enabled (works from within CKEditor too).
+- **Focus filterbox on alt+s**: focus filterbox on alt+s hotkey (if filterboxes are enabled in the module).
 
 *Overlay and flashing save icon after hitting ctrl+s:*
 

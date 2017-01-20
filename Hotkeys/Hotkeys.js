@@ -25,10 +25,34 @@ $(document).ready(function () {
             if (keyCode === 27) {  // ESC
                 e.preventDefault();
                 panelCloseBtn.get(0).click();
+                // put back focus to main document for other hotkeys
+                window.parent.document.body.focus();
                 return false;
             }
         }
     });
+
+
+    // focus filterbox on alt+s
+    if (HotkeysSettings.indexOf('filterboxHotkey') !== -1) {
+
+        $(document).on('keydown', function (e) {
+
+            // note: html also has class "filterbox"
+            var filterbox = $('html .filterbox');
+
+            if (filterbox.length) {
+
+                var keyCode = e.keyCode || e.charCode;
+
+                if (e.altKey && keyCode === 83) {  // S
+                    e.preventDefault();
+                    filterbox.find('input').focus();
+                    return false;
+                }
+            }
+        });
+    }
 
 
     // alt+o to open page tree panel
@@ -61,8 +85,6 @@ $(document).ready(function () {
                 return false;
             }
         });
-
-
     }
 
 

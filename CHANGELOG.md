@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.2.3 (2016-01-20)
+
+- Hotkeys: focus filterbox on alt+s
+
+
+
 ### 1.2.2 (2016-01-18)
 
 - title change case button improvements

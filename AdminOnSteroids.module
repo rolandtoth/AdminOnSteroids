@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 122,
+            'version'   => 123,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -117,6 +117,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'save',
                 'focusSearch',
                 'breadcrumbTweaks',
+                'addPageTreeTrigger',
+                'filterboxHotkey',
                 'removeNoticeHotkey'
             ),
             'IUC_mode'                     => array(
@@ -2346,6 +2348,7 @@ HTML;
         $f->addOption('focusSearch', __('Focus search on alt+d', __FILE__));
         $f->addOption('removeNoticeHotkey', __('Remove notices on first ESC keypress', __FILE__));
         $f->addOption('addPageTreeTrigger', __('Open page tree panel on alt+o', __FILE__));
+        $f->addOption('filterboxHotkey', __('Focus filterbox on alt+s', __FILE__));
 
         if ($data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);
