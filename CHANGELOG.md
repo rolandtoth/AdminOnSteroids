@@ -1,38 +1,49 @@
 #Changelog
 
 
-### 1.2.3 (2016-01-20)
+### 1.2.4 (2017-02-07)
+
+- translator filter box: show hidden translations on search
+- use "templates/admin/" folder for default admin asset paths (requested by Zeka)
+- fix IUC button not added to URL fields (InputfieldURLCheckber)
+- all submodule JS files merged to main JS
+- reduced number of module files and overall size, eg. removing CKE plugin localization files
+- documentation moved to GitHub Wiki
+
+
+
+### 1.2.3 (2017-01-20)
 
 - Hotkeys: focus filterbox on alt+s
 
 
 
-### 1.2.2 (2016-01-18)
+### 1.2.2 (2017-01-18)
 
 - title change case button improvements
 
 
 
-### 1.2.1 (2016-01-17)
+### 1.2.1 (2017-01-17)
 
 - Misc: option to move empty trash confirmation checkbox above trash items
 
 
 
-### 1.2.0 (2016-01-13)
+### 1.2.0 (2017-01-13)
 
 - Hotkeys: add alt+d to open page tree panel (requested by gmclelland)
 - a few icon changes for icon-only page list actions
 
 
 
-### 1.1.9 (2016-01-12)
+### 1.1.9 (2017-01-12)
 
 - expand field placement select (if there's only one select)
 
 
 
-### 1.1.8 (2016-01-09)
+### 1.1.8 (2017-01-09)
 
 - add SVG background to show width divisions on Column width slider (asmTweaks)
 - fixed non-functional Lister show extra actions toggle (reported by gmclelland)

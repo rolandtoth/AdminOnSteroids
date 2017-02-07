@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 123,
+            'version'   => 124,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -379,6 +379,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
 
     public function init() {
+	    
 
         // return json template edit link by template name (for pagelists)
 //        if ($this->input->get->getTemplateEditLink) {
@@ -517,7 +518,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         // login page doesn't some stuff
         if ($this->page->id != 23) {
-            $scripts->add($root . '/' . __CLASS__ . '.js?ts=' . $timestamp);
+            $scripts->add($root . '/' . __CLASS__ . '.min.js?ts=' . $timestamp);
 
             // always load modal js
             $this->modules->get('JqueryUI')->use('modal');
@@ -584,17 +585,17 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
 
         //DeselectRadios
-        $subModule = 'DeselectRadios';
-        if (in_array($subModule, $enabledSubmodules)) {
-            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
-        }
+//        $subModule = 'DeselectRadios';
+//        if (in_array($subModule, $enabledSubmodules)) {
+//            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
+//        }
 
 
         //InputfieldURLChecker
         $subModule = 'InputfieldURLChecker';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
+//            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
 //            $cssFiles[] = $root . '/' . $subModule . '/' . $subModule . '.css';
 
             $this->addHookAfter('InputfieldURL::renderValue', $this, 'addIUCLink');
@@ -603,10 +604,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         //AsmTweaks
-        $subModule = 'AsmTweaks';
-        if (in_array($subModule, $enabledSubmodules)) {
-            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
-        }
+//        $subModule = 'AsmTweaks';
+//        if (in_array($subModule, $enabledSubmodules)) {
+//            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
+//        }
 
         //PageListTweaks
         $subModule = 'PageListTweaks';
@@ -747,10 +748,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         //FocusInputOnLangTabSwitch
-        $subModule = 'FocusInputOnLangTabSwitch';
-        if (in_array($subModule, $enabledSubmodules)) {
-            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
-        }
+//        $subModule = 'FocusInputOnLangTabSwitch';
+//        if (in_array($subModule, $enabledSubmodules)) {
+//            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
+//        }
 
         //Hotkeys
         $subModule = 'Hotkeys';
@@ -759,25 +760,25 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             // add breadcrumb tweaks
             if (in_array('breadcrumbTweaks', $configData[ $subModule ])) {
 
-                $page = $this->pages->get('has_parent!=2, id=' . $this->input->get->id);
+                $editedPage = $this->editedPage;
 
-                if ($page->id) {
-                    $homepage       = $this->wire->pages->get(1);
+                if ($editedPage && $editedPage->id) {
+                    $homepage       = $this->wire('pages')->get(1);
                     $breadcrumbUrls = array();
 
-                    foreach ($this->wire->pages->get(1)->and($page->parentsUntil(1)) as $p) {
-                        $breadcrumbUrls[] = array(
-                            'url'     => $p->viewable() ? $p->httpUrl : null,
-                            'editUrl' => $p->editable() ? rtrim($homepage->httpUrl, '/') . $p->editUrl : null
-                        );
-                    }
+					foreach($editedPage->parents() as $p) {
+//						$p->of(false);	// fix breadcrumb html-encoded value issue (fixed in PW 3.05x)
+						$breadcrumbUrls[] = array(
+							'url'     => $p->viewable() ? $p->httpUrl : null,
+							'editUrl' => $p->editable() ? rtrim($homepage->httpUrl, '/') . $p->editUrl : null
+						);
+					}
 
-                    // add to js config (head)
-                    $this->config->js("AOS_breadcrumbs", $breadcrumbUrls);
+                    $this->wire('config')->js("AOS_breadcrumbs", $breadcrumbUrls);	// add to js config (head)
                 }
             }
-
-            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
+            // see main js file
+//            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
         }
 
         //LongClickDuration
@@ -811,15 +812,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             }
 
             // autosizeTextareas
-            if (in_array('autosizeTextareas', $configData[ $subModule ])) {
-                $jsFiles[] = $root . '/AutosizeTextareas/Autosize.js';
-                $jsFiles[] = $root . '/AutosizeTextareas/AutosizeTextareas.js';
-            }
+//            if (in_array('autosizeTextareas', $configData[ $subModule ])) {
+//                $jsFiles[] = $root . '/AutosizeTextareas/Autosize.js';
+//                $jsFiles[] = $root . '/AutosizeTextareas/AutosizeTextareas.js';
+//            }
 
             // langTabHotkeySwitcher
-            if (in_array('langTabHotkeySwitcher', $configData[ $subModule ])) {
-                $jsFiles[] = $root . '/LangTabHotkeySwitcher/LangTabHotkeySwitcher.js';
-            }
+//            if (in_array('langTabHotkeySwitcher', $configData[ $subModule ])) {
+//                $jsFiles[] = $root . '/LangTabHotkeySwitcher/LangTabHotkeySwitcher.js';
+//            }
         }
 
         // ModuleTweaks
@@ -916,9 +917,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 //            $ckeJS        = !empty($configData['CKEScript']) ? '/' . trim($configData['CKEScript'], '/') : $templatesUrlRelative . 'cke.js';
 //            $ckeTemplates = !empty($configData['CKEtemplates']) ? '/' . trim($configData['CKEtemplates'], '/') : $templatesUrlRelative . 'templates.js';
 
-            $ckeCSS       = $this->getAssetPath('CKEStyle', 'cke.css', $templatesUrlRelative, $configData, $root);
-            $ckeJS        = $this->getAssetPath('CKEScript', 'cke.js', $templatesUrlRelative, $configData, $root);
-            $ckeTemplates = $this->getAssetPath('CKEtemplates', 'templates.js', $templatesUrlRelative, $configData, $root);
+            $ckeCSS       = $this->getAssetPath('CKEStyle', 'admin/cke.css', $templatesUrlRelative, $configData, $root);
+            $ckeJS        = $this->getAssetPath('CKEScript', 'admin/cke.js', $templatesUrlRelative, $configData, $root);
+            $ckeTemplates = $this->getAssetPath('CKEtemplates', 'admin/templates.js', $templatesUrlRelative, $configData, $root);
 
             if (file_exists($rootPath . $ckeCSS)) {
                 $configData['customCKEStyle'] = $rootUrl . $ckeCSS;
@@ -962,8 +963,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // use values set in module settings or try templates/admin.css & js
 //        $adminCSS = !empty($configData['AdminStyle']) ? '/' . trim($configData['AdminStyle'], '/') : $templatesUrlRelative . 'admin.css';
 //        $adminJS  = !empty($configData['AdminScript']) ? '/' . trim($configData['AdminScript'], '/') : $templatesUrlRelative . 'admin.js';
-        $adminCSS = $this->getAssetPath('AdminStyle', 'admin.css', $templatesUrlRelative, $configData, $root);
-        $adminJS  = $this->getAssetPath('AdminScript', 'admin.js', $templatesUrlRelative, $configData, $root);
+        $adminCSS = $this->getAssetPath('AdminStyle', 'admin/admin.css', $templatesUrlRelative, $configData, $root);
+        $adminJS  = $this->getAssetPath('AdminScript', 'admin/admin.js', $templatesUrlRelative, $configData, $root);
 
         if (file_exists($rootPath . $adminCSS)) {
             $styles->add($rootUrl . $adminCSS);
@@ -1098,7 +1099,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 $format     = isset($match[2]) ? ltrim($match[2], ':') : '%Y-%m-%d';
 
                 return empty($dateString) ? '&#216;' : strftime($format, $dateString);
-                //return empty($dateString) ? "aÂ":strftime($format, $dateString);
+                //return empty($dateString) ? "aĂ‚Â":strftime($format, $dateString);
             }, $markup);
             //}, utf8_encode($markup));
 
@@ -1692,14 +1693,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function addIUCLink(HookEvent $event) {
 
-        // do not add to regular autocomplete field, only to edit link modal
-        if ($this->process != 'ProcessPageEditLink') {
-            return false;
-        }
-
         $inputfield = $event->object;
         $url        = $inputfield->value ? $inputfield->value : '';
 
+        // do not add to regular autocomplete field, only to edit link modal
+        if ($inputfield instanceof InputfieldPageAutocomplete) {
+            return false;
+        }
 
         // if url is an array, it's a simple pageautocomplete field (not FieldtypeAssistedURL)
         // https://github.com/rolandtoth/AdminOnSteroids/issues/13
@@ -1997,7 +1997,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $markupText = __('Detailed information on submodules', __FILE__);
 
         $f->prependMarkup = <<< HTML
-     <p>{$markupText}: <a href="https://github.com/rolandtoth/AdminOnSteroids#adminonsteroids" target="_blank">AdminOnSteroids @ GitHub</a>
+     <p>{$markupText}: <a href="https://github.com/rolandtoth/AdminOnSteroids/wiki/Documentation" target="_blank">AdminOnSteroids @ GitHub</a>
 </p>
 HTML;
 
