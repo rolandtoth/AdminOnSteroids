@@ -9,6 +9,11 @@ html.aos {
     position: relative;
   }
 
+  // fix strike-through missing on double spans
+  .PageListStatusUnpublished a.PageListPage span {
+    text-decoration: line-through;
+  }
+
   .PageListPage {
     line-height: 1.5em !important;
   }
