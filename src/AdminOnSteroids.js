@@ -10,7 +10,9 @@ if (AOSsettings) {
     var aosUrl = AOSsettings.aosUrl,
         CKEtemplatesFile = AOSsettings.customCKEtemplates;
 
-    if (_isEnabled('CKEaddons') !== -1 && ProcessWire.config.InputfieldCKEditor) {
+    // console.log(_isEnabled('CKEaddons'));
+
+    if (_isEnabled('CKEaddons') && ProcessWire.config.InputfieldCKEditor) {
 
         var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
             enabledCKEplugins = AOSsettings.CKEaddons_plugins,
@@ -141,7 +143,7 @@ if (AOSsettings) {
 
 
 // make autogrow CKEditor plugin work with tabs
-if (_isEnabled('CKEaddons') !== -1 && AOSsettings.CKEaddons_plugins.indexOf('autogrow') !== -1) {
+if (_isEnabled('CKEaddons') && AOSsettings.CKEaddons_plugins.indexOf('autogrow') !== -1) {
 
     $(document).on('wiretabclick', function (e, elem) {
         var CKEs = $(elem).find('.InputfieldCKEditor');
@@ -764,7 +766,7 @@ $(document).ready(function () {
 
 
         // FieldAndTemplateEditLinks
-        if (_isEnabled('FieldAndTemplateEditLinks') !== -1) {
+        if (_isEnabled('FieldAndTemplateEditLinks')) {
             // wrap AdminThemeDefault li.title inner in a span
             $('ul.nav li.title').wrapInner('<span>');
 
@@ -810,7 +812,7 @@ $(document).ready(function () {
         }
 
 // FocusInputOnLangTabSwitch
-        if (_isEnabled('FocusInputOnLangTabSwitch') !== -1) {
+        if (_isEnabled('FocusInputOnLangTabSwitch')) {
 
             $(document).on('ready reloaded wiretabclick', function (e) {
 
@@ -892,7 +894,7 @@ $(document).ready(function () {
         }
 
 // Hotkeys
-        if (_isEnabled('Hotkeys') !== -1) {
+        if (_isEnabled('Hotkeys')) {
 
             var HotkeysSettings = AOSsettings.Hotkeys,
                 BreadcrumbsSettings = ProcessWire.config.AOS_breadcrumbs;
@@ -1221,7 +1223,7 @@ $(document).ready(function () {
         }
 
 // AsmTweaks
-        if (_isEnabled('AsmTweaks') !== -1) {
+        if (_isEnabled('AsmTweaks')) {
             var AsmTweaksSettings = AOSsettings.AsmTweaks;
 
             if (AsmTweaksSettings.indexOf('asmCollapse') !== -1) {
@@ -1324,7 +1326,7 @@ $(document).ready(function () {
 
 
 // LongClickDuration
-        if (_isEnabled('LongClickDuration') !== -1) {
+        if (_isEnabled('LongClickDuration')) {
             // set custom long click duration
             if (jQuery && jQuery.longclick) {
                 if (AOSsettings.LongClickDuration) {
@@ -1334,7 +1336,7 @@ $(document).ready(function () {
         }
 
 // Misc
-        if (_isEnabled('Misc') !== -1) {
+        if (_isEnabled('Misc')) {
                 // pListShowExtras
                 if (AOSsettings.Misc.indexOf('autosizeTextareas') !== -1) {
 
@@ -1372,7 +1374,7 @@ $(document).ready(function () {
         }
 
 // InputfieldURLChecker
-        if (_isEnabled('InputfieldURLChecker') !== -1) {
+        if (_isEnabled('InputfieldURLChecker')) {
 
             var IUC = {
                 selector: 'a.iuc',
@@ -1542,7 +1544,7 @@ $(document).ready(function () {
 
 
 // DeselectRadios
-        if (_isEnabled('DeselectRadios') !== -1) {
+        if (_isEnabled('DeselectRadios')) {
             var ADRsettings = AOSsettings.DeselectRadios,
                 $radioButtons = $("input:radio");
 
@@ -1563,7 +1565,7 @@ $(document).ready(function () {
         }
 
 // LangTabHotkeySwitcher
-        if (_isEnabled('LangTabHotkeySwitcher') !== -1) {
+        if (_isEnabled('LangTabHotkeySwitcher')) {
 
             var languagesCount = $('.ui-tabs-nav').eq(0).children('li').length;
 
@@ -1708,14 +1710,14 @@ $(document).ready(function () {
         }
 
 // Tooltips
-        if (_isEnabled('Tooltips') !== -1) {
+        if (_isEnabled('Tooltips')) {
             $(document).on('dblclick', 'html.tooltipDesc #content p.description, html.tooltipNotes #content p.notes', function () {
                 $(this).toggleClass('tooltip-active');
             });
         }
 
 // PageListThumbs
-        if (_isEnabled('PageListThumbs') !== -1) {
+        if (_isEnabled('PageListThumbs')) {
 
             $(document).on('mousedown', 'a.aos_pageListLink', function (e) {
 
@@ -1733,7 +1735,7 @@ $(document).ready(function () {
         }
 
 // PageListTweaks
-        if (_isEnabled('PageListTweaks') !== -1) {
+        if (_isEnabled('PageListTweaks')) {
 
 
             // pListShowExtras
@@ -1863,7 +1865,7 @@ $(document).ready(function () {
 
 
         // Misc
-        if (_isEnabled('Misc') !== -1) {
+        if (_isEnabled('Misc')) {
 
             // titleCaseToggle
             if (AOSsettings.Misc.indexOf('titleCaseToggle') !== -1) {
@@ -2211,7 +2213,7 @@ $(document).ready(function () {
         });
 
 // ListerTWeaks
-        if (_isEnabled('ListerTweaks') !== -1) {
+        if (_isEnabled('ListerTweaks')) {
 
             //if (AOSsettings.ListerTweaks_options.indexOf('listerHoverBtn') !== -1) {
             if ($('html').hasClass('listerHoverBtn')) {
@@ -2223,7 +2225,7 @@ $(document).ready(function () {
 
 
 // ModuleTweaks
-        if (_isEnabled('ModuleTweaks') !== -1) {
+        if (_isEnabled('ModuleTweaks')) {
 
             if (AOSsettings.ModuleTweaks.indexOf('moduleModal') !== -1) {
 
@@ -2640,7 +2642,7 @@ $(document).ready(function () {
 
 // RenoTWeaks
 
-        if (_isEnabled('RenoTweaks') !== -1 && $('body').hasClass('AdminThemeReno')) {
+        if (_isEnabled('RenoTweaks') && $('body').hasClass('AdminThemeReno')) {
 
             var renoTweaksSettings = AOSsettings.RenoTweaks;
 
@@ -2741,7 +2743,7 @@ $(document).ready(function () {
 
 
 // PagePreviewBtn
-        if (_isEnabled('PagePreviewBtn') !== -1) {
+        if (_isEnabled('PagePreviewBtn')) {
 
             var pageTitleSelector = ($('body').hasClass('AdminThemeDefault') ? '#breadcrumbs li.title' : '#headline #title');
 
@@ -2771,7 +2773,7 @@ $(document).ready(function () {
 
 // FileFieldTweaks
 
-        if (_isEnabled('FileFieldTweaks') !== -1) {
+        if (_isEnabled('FileFieldTweaks')) {
 
             var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
                 $filterInput = $("<span class='InputfieldFileFieldFilter filterbox'><input placeholder='&#128269;' /><i class='fa fa-close'></i></span>"),

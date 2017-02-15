@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.2.5 (2017-02-15)
+
+- fix submodule state check (reported by Macrura)
+
+
+
 ### 1.2.4 (2017-02-07)
 
 - translator filter box: show hidden translations on search
