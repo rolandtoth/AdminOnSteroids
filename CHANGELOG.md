@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.2.6 (2017-02-20)
+
+- added counters to pagelist items (PageListTweaks)
+
+
+
 ### 1.2.5 (2017-02-15)
 
 - fix submodule state check (reported by Macrura)

@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 125,
+            'version'   => 126,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -184,6 +184,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'pListIDs',
                 'highlightRows',
                 'pListMiddleClick',
+                'pListCounters',
                 'pListMarkup',
                 'pListUnselect'
             ),
@@ -302,6 +303,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'pListFullRowHover',
             'pListIconOnly',
             'pListShowActions',
+            'pListCounters',
             'PageListThumbs',
             'highlightRows',
             'sbAutoHide',
@@ -2665,6 +2667,7 @@ HTML;
         $f->addOption('pListShowActions', __('Always show pagelist actions', __FILE__));
         $f->addOption('pListShowExtras', __('Always show extra actions', __FILE__));
         $f->addOption('pListMarkup', __('Allow markup tokens for "List of fields to display"', __FILE__));
+        $f->addOption('pListCounters', __('Add counters to pagelist items', __FILE__));
 
         if (isset($data[ $f->name ]) && $data[ $f->name ]) {
             $f->attr('value', $data[ $f->name ]);

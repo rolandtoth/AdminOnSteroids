@@ -5,3 +5,118 @@
     clear: both;
   }
 }
+
+@mixin pListNum($listName) {
+  counter-reset: #{$listName};
+  > .PageListItem {
+    &:before {
+      content: counter(#{$listName}, decimal-leading-zero);
+      counter-increment: #{$listName};
+    }
+  }
+}
+
+
+@mixin aos_tooltip($bgcolor: #1C2836, $margin: 0) {
+  visibility: hidden;
+  transform: scale(0);
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  font-weight: normal !important;
+  background: $bgcolor;
+  color: rgba(#fff, 0.84) !important;
+  margin: $margin;
+  font-size: 13px;
+  padding: 5px 10px 4px !important;
+  line-height: 1.5;
+  z-index: 100000 + 10000;
+  backface-visibility: hidden;
+  transition: 0.2s opacity;
+  white-space: nowrap;
+  &:hover {
+    transition-delay: 0s !important;
+    background: lighten($bgcolor, 7%) !important;
+    color: #fff !important;;
+    text-decoration: underline;
+    i {
+      opacity: 1;
+    }
+    &:before {
+      border-top-color: lighten($bgcolor, 7%);
+    }
+  }
+  i {
+    margin-left: 8px;
+    font-size: 12px !important;
+    opacity: 0.84;
+  }
+  &:before {
+    $size: 6px;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 10px;
+    border: $size solid transparent;
+    border-top-color: $bgcolor;
+  }
+  // placeholder to keep hover state
+  &:after {
+    content: "";
+    height: 12px;
+    background: transparent;
+    width: 133%;
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+}
+
+
+@mixin pageListIcon($icon) {
+  max-width: 24px;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: middle;
+  backface-visibility: hidden;
+  //transition: color 0.1s, transform 0.5s, max-width 0.3s;
+  transition: max-width 0.3s;
+  margin-bottom: 0 !important;
+  position: relative;
+  z-index: 2;
+  font-size: 13px;
+  &:not(.PageExtras) {
+    background: transparent !important;
+    //color: inherit !important;
+    color: #7ea0ab !important;
+    &:hover {
+      color: #2F4248 !important;
+      z-index: 20;
+      &:before {
+        transform: scale(1.1428);
+      }
+    }
+  }
+  // .aos-hovered is added by JS
+  //&:not(.aos-hovered):hover {
+  //  animation: 0.33s showText 1.2s forwards;
+  //}
+  //&.aos-hovered {
+  //  max-width: 100px !important;
+  //}
+  &:before {
+    content: $icon;
+    font-family: Fontawesome;
+    padding: 0 4px;
+    text-align: center;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 0;
+  }
+  tr.open & {
+    display: inline-block !important;
+  }
+}
