@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.2.7 (2017-02-22)
+
+- removed localization references from CKE plugin.js files to avoid JS errors
+
+
+
 ### 1.2.6 (2017-02-20)
 
 - added counters to pagelist items (PageListTweaks)

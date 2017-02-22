@@ -303,6 +303,10 @@ html.aos {
   //  width: auto;
   //}
 
+  .cke_screen_reader_only { // causes html to overflow
+    height: 0;
+  }
+
   .CodeMirror-lines {
     font-size: 13px;
   }
