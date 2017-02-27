@@ -60,9 +60,19 @@ var ckeSrcTimeout,
                     editor.execCommand('numberedlist');
                 }
             });
+            editor.addCommand('ns', {
+                exec: function (editor) {
+                    editor.execCommand('numberedListStyle');
+                }
+            });
             editor.addCommand('b', {
                 exec: function (editor) {
                     editor.execCommand('bulletedlist');
+                }
+            });
+            editor.addCommand('bs', {
+                exec: function (editor) {
+                    editor.execCommand('bulletedListStyle');
                 }
             });
             editor.addCommand('u', {
@@ -82,8 +92,13 @@ var ckeSrcTimeout,
             editor.setKeystroke(CKEDITOR.ALT + 53, 'h5'); // ALT + 5
             editor.setKeystroke(CKEDITOR.ALT + 54, 'h6'); // ALT + 6
             editor.setKeystroke(CKEDITOR.ALT + 55, 'p'); // ALT + 7
+
             editor.setKeystroke(CKEDITOR.ALT + 78, 'n'); // ALT + n
+            editor.setKeystroke(CKEDITOR.ALT + CKEDITOR.SHIFT + 78, 'ns'); // ALT + n
+
             editor.setKeystroke(CKEDITOR.ALT + 66, 'b'); // ALT + b
+            editor.setKeystroke(CKEDITOR.ALT + CKEDITOR.SHIFT + 66, 'bs'); // ALT + b
+
             editor.setKeystroke(CKEDITOR.CTRL + CKEDITOR.SHIFT + 85, 'u'); // CTRL + SHIFT + u
         }
     });

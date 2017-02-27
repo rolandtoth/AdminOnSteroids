@@ -22,9 +22,9 @@ if (AOSsettings) {
             oEmbedPluginDependencies = 'widget,lineutils',
             autosavePluginDependencies = 'notification',
             CKEtoolbars = {
-                justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
                 div: ["CreateDiv"],
                 find: ["Find", "Replace"],
+                justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
                 maximize: ["Maximize"],
                 oembed: ["oembed"],
                 showblocks: ["ShowBlocks"],

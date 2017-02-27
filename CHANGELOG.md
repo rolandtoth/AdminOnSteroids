@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.2.8 (2017-02-27)
+
+- added alt+shiftb, alt+shift+n for bulleted/numbered list properties dialog (Hotkeys)
+
+
+
 ### 1.2.7 (2017-02-22)
 
 - removed localization references from CKE plugin.js files to avoid JS errors
