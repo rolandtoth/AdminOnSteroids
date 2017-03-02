@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 128,
+            'version'   => 129,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1356,7 +1356,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 $linkUrl = '<a href="' . $rootUrl . '/' . $url . '" class="page-list' . $activeClass . '">' . $title . '</a>';
                 $items   .= '<li class="navItem">' . $linkUrl . '</li>';
             }
-
         }
 
         if ($items == "") {
@@ -1365,7 +1364,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
         $items = '<ul class="NavItems" style="display: none;">' . $items . '</ul>';
 
-        $event->return = str_replace('</body>', $items . '</body>', $event->return);
+//        $event->return = str_replace('</body>', $items . '</body>', $event->return);
+        $event->return = str_replace('<body', '<body data-navitems="' . htmlspecialchars($items,ENT_QUOTES) . '"', $event->return);
     }
 
     public function addTemplateEditLinkPageList(HookEvent $event) {

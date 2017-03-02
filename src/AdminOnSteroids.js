@@ -1337,40 +1337,40 @@ $(document).ready(function () {
 
 // Misc
         if (_isEnabled('Misc')) {
-                // pListShowExtras
-                if (AOSsettings.Misc.indexOf('autosizeTextareas') !== -1) {
+            // pListShowExtras
+            if (AOSsettings.Misc.indexOf('autosizeTextareas') !== -1) {
 
-                    $(document).on('ready reloaded wiretabclick', function (e) {
+                $(document).on('ready reloaded wiretabclick', function (e) {
 
-                        var target = e.target || e.srcElement,
-                            autosizeTextareas = target.querySelectorAll('textarea');
+                    var target = e.target || e.srcElement,
+                        autosizeTextareas = target.querySelectorAll('textarea');
 
-                        if (window.autosize && autosizeTextareas.length) {
+                    if (window.autosize && autosizeTextareas.length) {
 
-                            // try update first (init doesn't work if already initialized)
-                            autosize.update(autosizeTextareas);
-                            autosize(autosizeTextareas);
+                        // try update first (init doesn't work if already initialized)
+                        autosize.update(autosizeTextareas);
+                        autosize(autosizeTextareas);
 
-                            // force autosize
-                            // Array.prototype.forEach.call(autosizeTextareas, function (el, i) {
-                            //     el.addEventListener('focus', function () {
-                            //         // autosize(el);
-                            //         autosize.update(el);
-                            //     });
-                            // });
-                        }
-                    });
+                        // force autosize
+                        // Array.prototype.forEach.call(autosizeTextareas, function (el, i) {
+                        //     el.addEventListener('focus', function () {
+                        //         // autosize(el);
+                        //         autosize.update(el);
+                        //     });
+                        // });
+                    }
+                });
 
 // update textareas when clicking on language tabs
-                    $(document).on('tabsactivate', '.langTabs', function (e, ui) {
+                $(document).on('tabsactivate', '.langTabs', function (e, ui) {
 
-                        var textareas = ui.newPanel.get(0).querySelectorAll('textarea');
+                    var textareas = ui.newPanel.get(0).querySelectorAll('textarea');
 
-                        if (textareas.length && window.autosize && window.autosize.update) {
-                            autosize.update(textareas);
-                        }
-                    });
-                }
+                    if (textareas.length && window.autosize && window.autosize.update) {
+                        autosize.update(textareas);
+                    }
+                });
+            }
         }
 
 // InputfieldURLChecker
@@ -2696,9 +2696,10 @@ $(document).ready(function () {
         }
 
         // NavItems
-        if ($('.NavItems').length) {
+        if ($('body[data-navitems]').length) {
 
             var topNavElem,
+                $NavItems = $($('body').attr('data-navitems')),
                 topNavHasItems = true;
 
             if ($('body').hasClass('AdminThemeReno')) {
@@ -2725,20 +2726,23 @@ $(document).ready(function () {
             $('.AdminThemeReno .navItem.hasSubmenu a.current').parents('.hasSubmenu').first().addClass('active');
 
             if (topNavHasItems) {
-                $('.NavItems > li').each(function () {
-                    topNavElem.append($(this));
-                });
+                // if ($('.NavItems > li').length) {
+                    $NavItems.children('li').each(function () {
+                        topNavElem.append($(this));
+                    });
+                // }
             } else {
                 var firstNavItem = topNavElem.children('li').first();
 
                 firstNavItem.append('<ul>');
 
-                $('.NavItems > li').each(function () {
+                $NavItems.each(function () {
                     firstNavItem.children('ul').append($(this));
                 });
             }
 
-            $('.NavItems').remove();
+            $('body').removeAttr('data-navitems');
+            // $('.NavItems').remove();
         }
 
 
@@ -3155,34 +3159,34 @@ function setColWidths(tableSelector) {
     'use strict';
 
     var map = typeof Map === "function" ? new Map() : (function () {
-            var keys = [];
-            var values = [];
+        var keys = [];
+        var values = [];
 
-            return {
-                has: function has(key) {
-                    return keys.indexOf(key) > -1;
-                },
-                get: function get(key) {
-                    return values[keys.indexOf(key)];
-                },
-                set: function set(key, value) {
-                    if (keys.indexOf(key) === -1) {
-                        keys.push(key);
-                        values.push(value);
-                    }
-                },
-                'delete': function _delete(key) {
-                    var index = keys.indexOf(key);
-                    if (index > -1) {
-                        keys.splice(index, 1);
-                        values.splice(index, 1);
-                    }
+        return {
+            has: function has(key) {
+                return keys.indexOf(key) > -1;
+            },
+            get: function get(key) {
+                return values[keys.indexOf(key)];
+            },
+            set: function set(key, value) {
+                if (keys.indexOf(key) === -1) {
+                    keys.push(key);
+                    values.push(value);
                 }
-            };
-        })();
+            },
+            'delete': function _delete(key) {
+                var index = keys.indexOf(key);
+                if (index > -1) {
+                    keys.splice(index, 1);
+                    values.splice(index, 1);
+                }
+            }
+        };
+    })();
 
     var createEvent = function createEvent(name) {
-        return new Event(name, { bubbles: true });
+        return new Event(name, {bubbles: true});
     };
     try {
         new Event('test');

@@ -1,9 +1,16 @@
 #Changelog
 
 
+### 1.2.9 (2017-03-02)
+
+- NavItems: modified to fix JS error when used with Tracy Debugger
+- Module settings page: fix scroll to target (reported by Robin S)
+
+
+
 ### 1.2.8 (2017-02-27)
 
-- added alt+shiftb, alt+shift+n for bulleted/numbered list properties dialog (Hotkeys)
+- added alt+shift+b, alt+shift+n for bulleted/numbered list properties dialog (Hotkeys)
 
 
 
