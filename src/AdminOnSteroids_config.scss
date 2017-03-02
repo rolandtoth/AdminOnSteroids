@@ -35,6 +35,10 @@
   //  transform-origin: top;
 }
 
+li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Tooltips are disabled)
+  position: relative;
+}
+
 .aos_disabled {
   pointer-events: none;
   opacity: 0.5;
@@ -43,7 +47,7 @@
 }
 
 #Inputfield_tweaks {
-
+  
   //.asmListItem {
   //ol.ui-sortable > li:not(.itemTemplate) {
   //  @media only screen and (min-width: 960px) {
