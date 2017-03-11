@@ -3,6 +3,18 @@
 
 // general style overrides
 html.aos {
+
+  // on pagelist item hover underline only the first span (added by the module)
+  .pw-content .PageList .PageListItem > a.PageListPage {
+    &:hover {
+      text-decoration: none;
+      > span {
+        position: relative; // make sure data-pid (pagelist IDs) are correctly positioned
+        text-decoration: underline;
+      }
+    }
+  }
+
   // ensure case changer positioning
   .InputfieldPageTitle {
     position: relative;
@@ -72,19 +84,33 @@ html.aos {
 
   //.PageListPage .pageId {
   //.PageListRoot span.label_title:after {
-  .PageListRoot [data-pid]:after {
+  //.PageListRoot [data-pid]:after {
+  [data-pid]:after {
     content: attr(data-pid);
     text-decoration: none !important;
     font-weight: normal !important;
-    font-size: 10px;
+    font-size: 9px;
     display: inline-block;
     padding: 0 !important;
     margin-left: 2px;
-    transform: translateY(-10px);
-    margin-right: 4px;
+    transform: translateY(-9px);
+    margin-right: 3px;
     line-height: 1;
-    color: rgba(28, 40, 54, .5);
+    color: rgba(28, 40, 54, .57);
   }
+  .AdminThemeDefault {
+    .ui-menu {
+      [data-pid]:after {
+        margin-left: 1px;
+        margin-right: 0;
+        font-size: 9px;
+        color: inherit;
+        opacity: 0.5;
+        transform: translateY(-6px);
+      }
+    }
+  }
+
 
   // allow template edit links to appear
   //.PageList:not(.PageListSortingList) {
@@ -2957,8 +2983,12 @@ html.AdminThemeReno {
 
   html.AdminThemeDefault {
 
-    body:not(.modal) {
+    &.leftTopnav #masthead #topnav {
+      float: left;
+      margin-left: 32px;
+    }
 
+    body:not(.modal) {
       // topnav flicker fix until better solution
       #masthead #topnav {
         margin-top: 8px;

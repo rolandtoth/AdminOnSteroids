@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 1.3.0 (2017-03-11)
+
+- AdminTweaks: added an option to align the top menu to left (idea & request by Robin S)
+- PagelistIDs: fixed issues with latest PW versions (reported by adrian)
+
+
+
 ### 1.2.9 (2017-03-02)
 
 - NavItems: modified to fix JS error when used with Tracy Debugger
