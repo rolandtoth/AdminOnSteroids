@@ -1047,6 +1047,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $markup = $event->return;
         $page = $event->arguments("page");
 
+        // uncomment to disable in Tree menu
+//        $options = $event->arguments('options');
+//        if(!empty($options['noTags'])) return;
+
         // append an empty span with data-id after pagelist item text content
         if (strpos($markup, '<span') === false) {
 
@@ -1812,9 +1816,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
 
     public function addPageListThumb(HookEvent $event) {
 
-        // disable in Tree menu
+        // disable in Tree menu (wide items may go blank because the ellipsis added by PW)
         if ($this->wire('config')->ajax) return false;
-
 
         $page = $event->arguments('page');
         $field = null;
