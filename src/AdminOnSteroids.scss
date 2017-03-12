@@ -111,7 +111,6 @@ html.aos {
     }
   }
 
-
   // allow template edit links to appear
   //.PageList:not(.PageListSortingList) {
   .PageListItem > .PageList,
@@ -3099,6 +3098,51 @@ html.AdminThemeReno {
           }
         }
       }
+    }
+  }
+}
+
+.aos_moveAssets {
+  position: relative;
+  z-index: 99;
+  float: right;
+  color: white;
+  margin-right: 8px;
+  i {
+    padding: 8px 4px;
+    margin: 0 1px;
+    &::before {
+      font-size: 16px;
+    }
+    &:hover {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+  }
+  .InputfieldImage & {
+    i {
+      float: right;
+      transform: rotate(-90deg);
+    }
+  }
+  .InputfieldImageEditAll & { // Image field, full-width row
+    opacity: 0.5;
+    margin-right: 30px;
+    color: inherit;
+    i {
+      transform: none;
+    }
+  }
+}
+
+.InputfieldFileList,
+.InputfieldImage {
+  li {
+    &:first-child [data-up],
+    &:last-of-type [data-down] {
+      opacity: 0.33;
+      pointer-events: none !important;
+      cursor: default;
     }
   }
 }

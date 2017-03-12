@@ -3,6 +3,12 @@
 
 ### 1.3.0 (2017-03-11)
 
+- Add move to first/last buttons (FileFieldTweaks, requested by matjazp)
+
+
+
+### 1.3.0 (2017-03-11)
+
 - AdminTweaks: added an option to align the top menu to left (idea & request by Robin S)
 - PagelistIDs: fixed issues with latest PW versions (reported by adrian)
 

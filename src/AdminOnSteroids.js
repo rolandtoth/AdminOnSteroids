@@ -2727,9 +2727,9 @@ $(document).ready(function () {
 
             if (topNavHasItems) {
                 // if ($('.NavItems > li').length) {
-                    $NavItems.children('li').each(function () {
-                        topNavElem.append($(this));
-                    });
+                $NavItems.children('li').each(function () {
+                    topNavElem.append($(this));
+                });
                 // }
             } else {
                 var firstNavItem = topNavElem.children('li').first();
@@ -2785,6 +2785,33 @@ $(document).ready(function () {
                 getItemSelector = function (field) {
                     return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
                 };
+
+
+            if (FileFieldTweaksSettings.indexOf('moveAssetButtons') !== -1) {
+
+                $(document).on('click', '.aos_moveAssets i', function () {
+
+                    var parent = $(this).parents('.ui-sortable').first(),
+                        button = $(this),
+                        currentItem = $(this).parents('li').first(),
+                        speed = 500;
+
+                    currentItem.fadeOut(speed, function () {
+                        if (button.is('[data-up]')) {
+                            currentItem.prependTo(parent);
+                        } else {
+                            currentItem.appendTo(parent);
+                        }
+                        setTimeout(function() {
+                            // manually set order (taken from InputfieldFile.js)
+                            parent.children("li").each(function (n) {
+                                $(this).find(".InputfieldFileSort").val(n);
+                            });
+                        }, 0);
+                        currentItem.fadeIn(speed);
+                    });
+                })
+            }
 
             if (FileFieldTweaksSettings.indexOf('filterbox') !== -1) {
 
