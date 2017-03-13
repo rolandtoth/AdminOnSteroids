@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 131,
+            'version'   => 132,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1595,8 +1595,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     public function addMoveAssetButtons(HookEvent $event) {
 
         $markup = '<span class="aos_moveAssets">';
-        $markup .= '<i title="' . __('Move to last', __FILE__) . '" class="fa fa-angle-down" data-down></i>';
-        $markup .= '<i title="' . __('Move to first', __FILE__) . '" class="fa fa-angle-up" data-up></i>';
+        $markup .= '<i title="' . __('Move to last', __FILE__) . '" class="fa fa-step-backward" data-down></i>';
+        $markup .= '<i title="' . __('Move to first', __FILE__) . '" class="fa fa-step-forward" data-up></i>';
         $markup .= '</span>';
 
         $event->return = $markup . $event->return;

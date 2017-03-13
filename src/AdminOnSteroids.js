@@ -2794,20 +2794,17 @@ $(document).ready(function () {
                     var parent = $(this).parents('.ui-sortable').first(),
                         button = $(this),
                         currentItem = $(this).parents('li').first(),
-                        speed = 500;
+                        speed = 300;
 
                     currentItem.fadeOut(speed, function () {
-                        if (button.is('[data-up]')) {
-                            currentItem.prependTo(parent);
-                        } else {
-                            currentItem.appendTo(parent);
-                        }
-                        setTimeout(function() {
-                            // manually set order (taken from InputfieldFile.js)
-                            parent.children("li").each(function (n) {
-                                $(this).find(".InputfieldFileSort").val(n);
-                            });
-                        }, 0);
+
+                        button.is('[data-up]') ? currentItem.prependTo(parent) : currentItem.appendTo(parent);
+                        // manually set order (taken from InputfieldFile.js)
+                        parent.children("li").each(function (n) {
+                            $(this).find(".InputfieldFileSort").val(n);
+                        });
+                        // trigger form change to trigger confirmation dialog on leave
+                        parent.parent().find('input[type="file"]').first().trigger('change');
                         currentItem.fadeIn(speed);
                     });
                 })

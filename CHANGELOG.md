@@ -1,7 +1,13 @@
 #Changelog
 
 
-### 1.3.0 (2017-03-11)
+### 1.3.2 (2017-03-12)
+
+- Changed icons for the move to first/last buttons (FileFileTweaks) and now they trigger the leave confirmation dialog after re-order
+
+
+
+### 1.3.1 (2017-03-11)
 
 - Add move to first/last buttons (FileFieldTweaks, requested by matjazp)
 

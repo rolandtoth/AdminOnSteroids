@@ -3107,12 +3107,13 @@ html.AdminThemeReno {
   z-index: 99;
   float: right;
   color: white;
-  margin-right: 8px;
+  margin-right: 4px;
   i {
-    padding: 8px 4px;
-    margin: 0 1px;
+    padding: 9px 7px 8px;
+    margin-right: 1px;
     &::before {
-      font-size: 16px;
+      transform: rotate(-90deg);
+      display: inline-block;
     }
     &:hover {
       cursor: pointer;
@@ -3122,7 +3123,10 @@ html.AdminThemeReno {
   .InputfieldImage & {
     i {
       float: right;
-      transform: rotate(-90deg);
+      padding: 8px 5px;
+      &:before {
+        transform: rotate(180deg);
+      }
     }
   }
   .InputfieldImageEditAll & { // Image field, full-width row
@@ -3130,7 +3134,10 @@ html.AdminThemeReno {
     margin-right: 30px;
     color: inherit;
     i {
-      transform: none;
+      padding: 9px 7px 8px;
+      &:before {
+        transform: rotate(-90deg);
+      }
     }
   }
 }
