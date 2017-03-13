@@ -240,7 +240,11 @@ function setDtTable(table) {
             var text = ((el.innerText || el.textContent) || $(el).find('input').val());
 
             if (text) searchStrings.push(text.trim());
-            ;
+
+            // // also add title
+            // if (el.find('a[title]'))
+            //     searchStrings.push(el.find('a[title]').attr('title'));
+
         });
 
         $tr.attr('data-filter', searchStrings.join(" "));
@@ -2877,6 +2881,7 @@ $(document).ready(function () {
                     field.find(getItemSelector(field)).each(function () {
 
                         var listItem = $(this),
+                            listItemName,
                             searchStrings = [];
 
                         if (listItem.find('.InputfieldImageEdit__name').text() !== '') {
@@ -2884,7 +2889,9 @@ $(document).ready(function () {
                         }
 
                         if (listItem.find('.InputfieldFileName').length) {
-                            searchStrings.push(listItem.find('.InputfieldFileName').text());
+                            listItemName = listItem.find('.InputfieldFileName');
+                            searchStrings.push(listItemName.text());
+                            searchStrings.push(listItemName.attr('title'));
                         }
 
                         searchStrings.push(listItem.find('img').attr('src'));
