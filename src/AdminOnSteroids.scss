@@ -85,29 +85,31 @@ html.aos {
   //.PageListPage .pageId {
   //.PageListRoot span.label_title:after {
   //.PageListRoot [data-pid]:after {
-  [data-pid]:after {
-    content: attr(data-pid);
-    text-decoration: none !important;
-    font-weight: normal !important;
-    font-size: 9px;
-    display: inline-block;
-    padding: 0 !important;
-    margin-left: 2px;
-    transform: translateY(-9px);
-    margin-right: 3px;
-    line-height: 1;
-    color: rgba(28, 40, 54, .57);
+  .quicklinks,
+  .PageListRoot,
+  .ui-menu {  // restrict to given parents to avoid appear elsewehere (eg Users list)
+    [data-pid]:after {
+      content: attr(data-pid);
+      text-decoration: none !important;
+      font-weight: normal !important;
+      font-size: 9px;
+      display: inline-block;
+      padding: 0 !important;
+      margin-left: 2px;
+      transform: translateY(-9px);
+      margin-right: 3px;
+      line-height: 1;
+      color: rgba(28, 40, 54, .57);
+    }
   }
-  .AdminThemeDefault {
-    .ui-menu {
-      [data-pid]:after {
-        margin-left: 1px;
-        margin-right: 0;
-        font-size: 9px;
-        color: inherit;
-        opacity: 0.5;
-        transform: translateY(-6px);
-      }
+  .ui-menu {  // AdminThemeDefault menu item overrides
+    [data-pid]:after {
+      margin-left: 1px;
+      margin-right: 0;
+      font-size: 9px;
+      color: inherit;
+      opacity: 0.5;
+      transform: translateY(-6px);
     }
   }
 
