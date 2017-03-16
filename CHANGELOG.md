@@ -1,10 +1,16 @@
 #Changelog
 
 
+### 1.3.3 (2017-03-16)
+
+- Added "Code Snippet" plugin to CKEaddons
+
+
+
 ### 1.3.2 (2017-03-12)
 
 - Changed icons for the move to first/last buttons (FileFileTweaks) and now they trigger the leave confirmation dialog after re-order
-- Filelist filterbox also searches in filename titles (usefu if displayed filename is truncated)
+- Filelist filterbox also searches in filename titles (useful if displayed filename is truncated)
 
 
 

@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 132,
+            'version'   => 133,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -2125,6 +2125,7 @@ HTML;
         $f->addOption('autolink', 'Auto Link');
         $f->addOption('autosave', 'Auto Save');
         $f->addOption('codemirror', 'CodeMirror');
+        $f->addOption('codesnippet', 'Code Snippet');
         $f->addOption('templates', 'Content Templates');
         $f->addOption('div', 'Div' . $addsToolbarButtonText);
         $f->addOption('find', 'Find' . $addsToolbarButtonText);

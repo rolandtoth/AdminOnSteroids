@@ -20,8 +20,10 @@ if (AOSsettings) {
             CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
             CKEpluginCount = enabledCKEplugins.length,
             oEmbedPluginDependencies = 'widget,lineutils',
+            codesnippetPluginDependencies = 'widget,dialog,lineutils',
             autosavePluginDependencies = 'notification',
             CKEtoolbars = {
+                codesnippet: ["CodeSnippet"],
                 div: ["CreateDiv"],
                 find: ["Find", "Replace"],
                 justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
@@ -50,6 +52,13 @@ if (AOSsettings) {
 
                 if (pluginName == 'autosave') {
                     var dependencies = autosavePluginDependencies.split(',');
+                    for (var k in dependencies) {
+                        CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                    }
+                }
+
+                if (pluginName == 'codesnippet') {
+                    var dependencies = codesnippetPluginDependencies.split(',');
                     for (var k in dependencies) {
                         CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
                     }
