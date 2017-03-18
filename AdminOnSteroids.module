@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 133,
+            'version'   => 134,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -107,6 +107,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 'filterbox',
                 'downloadAssetButton',
                 'moveAssetButtons',
+                'noFilenameTruncate',
                 'imgSelectTitle'
             ),
             'FocusInputOnLangTabSwitch'    => array(
@@ -299,6 +300,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             'moduleCompact',
             'moduleModal',
             'noAnim',
+            'noFilenameTruncate',
             'noticeLeftX',
             'openSearch',
             'pListActiveBold',
@@ -881,6 +883,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                     $event->return .= "<script>if($('ul#select_images').length && window.addImageSelectLabels) addImageSelectLabels($('ul#select_images'));</script>";
                 });
             }
+            if (in_array('noFilenameTruncate', $configData[$subModule])) {
+                $this->addHookBefore("InputfieldFile::render", $this, "disableFilenameTruncate");
+            }
         }
 
         // add translations
@@ -1067,6 +1072,23 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $markup = str_replace('<span', '<span data-pid=' . $page->id . ' ', $markup);
 
         $event->return = $markup;
+    }
+
+
+    /**
+     * Disable filename truncation for InputfieldFile
+     * https://github.com/processwire/processwire-requests/issues/83
+     * https://github.com/rolandtoth/AdminOnSteroids/issues/39
+     *
+     * @param HookEvent $event
+     */
+    public function disableFilenameTruncate(HookEvent $event) {
+
+        // do not process Image (and other) fields
+        if ($event->object->class !== 'FieldtypeFile') return;
+
+        // noShortName is used by InputfieldFile but not available as a config option
+        $event->object->noShortName = 1;
     }
 
 
@@ -2319,6 +2341,7 @@ HTML;
         $f->addOption('downloadAssetButton', __('Add asset download button', __FILE__));
         $f->addOption('imgSelectTitle', __('Add image titles to image select dialog', __FILE__));
         $f->addOption('moveAssetButtons', __('Add move to first/last buttons', __FILE__));
+        $f->addOption('noFilenameTruncate', __('Disable filename truncation for File fields', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

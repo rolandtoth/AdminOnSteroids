@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.3.4 (2017-03-18)
+
+- FileFieldTweaks: new option to disable filename truncation for File fields
+
+
+
 ### 1.3.3 (2017-03-16)
 
 - Added "Code Snippet" plugin to CKEaddons

@@ -1320,6 +1320,23 @@ body.aos_saving {
 
 // FileFieldTweaks
 
+// noFilenameTruncate
+html.noFilenameTruncate {
+  p.InputfieldFileInfo.InputfieldItemHeader {
+    padding-left: 25px;
+  }
+  i.fa-file-image-o {
+    left: -21px !important;
+  }
+  a.InputfieldFileName {
+    line-height: 1.33;
+    margin-left: -22px;
+  }
+  label.InputfieldFileDelete {
+    float: none !important;
+  }
+}
+
 // FileFieldTweaks filterbox
 html.filterbox {
 
