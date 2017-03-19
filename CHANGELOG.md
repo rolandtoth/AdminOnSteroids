@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.3.5 (2017-03-19)
+
+- FieldAndTemplateEditLinks: added edit button after page edit Settings tab "Template" dropdown (requested by gmclelland)
+
+
+
 ### 1.3.4 (2017-03-18)
 
 - FileFieldTweaks: new option to disable filename truncation for File fields

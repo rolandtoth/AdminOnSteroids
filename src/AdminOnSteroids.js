@@ -780,6 +780,19 @@ $(document).ready(function () {
 
         // FieldAndTemplateEditLinks
         if (_isEnabled('FieldAndTemplateEditLinks')) {
+
+
+            // template edit link on ProcessPageEdit template select field (Settings tab)
+
+            $('#ProcessPageEdit select#template').after('<a href="#" class="pw-modal aos-template-edit-settings"><i class="fa fa-pencil-square-o"></i></a>');
+
+            $(document).on('hover', '.aos-template-edit-settings', function () {
+                var editLink = $(this);
+
+                editLink.attr('href', ProcessWire.config.urls.admin + 'setup/template/edit?id=' + editLink.prev('select').val());
+            });
+
+
             // wrap AdminThemeDefault li.title inner in a span
             $('ul.nav li.title').wrapInner('<span>');
 

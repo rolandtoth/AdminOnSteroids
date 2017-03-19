@@ -1320,6 +1320,12 @@ body.aos_saving {
 
 // FileFieldTweaks
 
+// template edit link on ProcessPageEdit template select field (Settings tab)
+.aos-template-edit-settings {
+  padding: 6px;
+  margin-left: 4px;
+}
+
 // noFilenameTruncate
 html.noFilenameTruncate {
   p.InputfieldFileInfo.InputfieldItemHeader {
