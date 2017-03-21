@@ -1072,9 +1072,8 @@ $(document).ready(function () {
                 // if CKEditor is maximized (via plugin), return to normal state
                 $('.cke_button__maximize.cke_button_on').trigger('click');
 
-                if (window.frameElement) {
+                if (window.frameElement && !$('body').hasClass('modal')) {  // in iframe but not in a modal (eg. with FEEL)
 
-                    // in iframe
                     aos_saveButton = $('.ui-dialog-buttonset button[role="button"]', window.parent.document).eq(0);
 
                 } else {
