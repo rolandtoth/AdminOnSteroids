@@ -1,6 +1,14 @@
 #Changelog
 
 
+### 1.3.6 (2017-03-21)
+
+- add workaround for ctrl+s in maximized CKEditor (Maximize plugin, Hotkeys)
+- better support for ctrl+s in modals
+- add pagelist ID to the end of the page title even if a template icon is present
+
+
+
 ### 1.3.5 (2017-03-19)
 
 - FieldAndTemplateEditLinks: added edit button after page edit Settings tab "Template" dropdown (requested by gmclelland)

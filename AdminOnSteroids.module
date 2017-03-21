@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 135,
+            'version'   => 136,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1064,9 +1064,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         // append an empty span with data-id after pagelist item text content
         if (strpos($markup, '<span') === false) {
 
+            // check if there's a template icon
+            // if found, save it to $icon, add the span, then prepend
+
+            $icon = '';
+
+            if (strpos($markup, '</i>') !== false) {
+                $icon_with_markup = explode('</i>', $markup, 2);
+                $icon = $icon_with_markup[0] . '</i>';
+                $markup = $icon_with_markup[1];
+            }
+
             $label_with_markup = explode('<', $markup, 2);
 
-            $markup = trim($label_with_markup[0]) . '<span></span>' . (isset($label_with_markup[1]) ? ' <' . $label_with_markup[1] : '');
+            $markup = $icon . trim($label_with_markup[0]) . '<span></span>' . (isset($label_with_markup[1]) ? ' <' . $label_with_markup[1] : '');
         }
 
         $markup = str_replace('<span', '<span data-pid=' . $page->id . ' ', $markup);
