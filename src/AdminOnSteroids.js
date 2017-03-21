@@ -1069,6 +1069,9 @@ $(document).ready(function () {
 
                 var aos_saveButton = false;
 
+                // if CKEditor is maximized (via plugin), return to normal state
+                $('.cke_button__maximize.cke_button_on').trigger('click');
+
                 if (window.frameElement) {
 
                     // in iframe
