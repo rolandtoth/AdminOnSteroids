@@ -1331,7 +1331,8 @@ html.noFilenameTruncate {
   p.InputfieldFileInfo.InputfieldItemHeader {
     padding-left: 25px;
   }
-  i.fa-file-image-o {
+  i.fa-file-image-o,
+  .InputfieldFileInfo i {
     left: -21px !important;
   }
   a.InputfieldFileName {
