@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 1.3.7 (2017-03-23)
+
+- make CKEditor plugins work in ajax-loaded fields and repeaters (reported by Zeka)
+- added draggable splitter to adminColumns using Split.js
+
+
+
 ### 1.3.6 (2017-03-21)
 
 - add workaround for ctrl+s in maximized CKEditor (Maximize plugin, Hotkeys)

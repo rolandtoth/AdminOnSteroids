@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 136,
+            'version'   => 137,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -743,7 +743,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             });
         }
 
-
         //RenoTweaks
         $subModule = 'RenoTweaks';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -812,7 +811,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
                 // make sure field is available
                 $this->_installColumnBreakField();
                 $this->addHookAfter('ProcessPageEdit::buildFormContent', $this, 'setupAdminColumns');
+                $jsFiles[] = $root . '/lib/split.js/split.min.js';
             }
+
             // adminLangSwitcher
             if (in_array('adminLangSwitcher', $configData[$subModule])) {
                 $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAdminLangSwitcher');
@@ -1517,8 +1518,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
-    public
-    function setupAdminColumns(HookEvent $event) {
+    public function setupAdminColumns(HookEvent $event) {
 
         $form = $event->return;
         $fields = $form->children();
@@ -1530,9 +1530,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $this->setupAdminColumnsTabs($tabOpenFields, $form);
         }
 
-        if (!$colBreakField) {
-            return false;
-        }
+        if (!$colBreakField) return;
 
         // stop if colBreakField is inside a tab
         $tabSeen = false;

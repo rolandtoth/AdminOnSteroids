@@ -1,8 +1,150 @@
 var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
 
+
 function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
 }
+
+
+function initCKE() {
+
+    var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
+        enabledCKEplugins = AOSsettings.CKEaddons_plugins,
+        CKEskin = AOSsettings.CKEaddons_skin,
+        CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
+        CKEpluginCount = enabledCKEplugins.length,
+        oEmbedPluginDependencies = 'widget,lineutils',
+        codesnippetPluginDependencies = 'widget,dialog,lineutils',
+        autosavePluginDependencies = 'notification',
+        CKEtoolbars = {
+            codesnippet: ["CodeSnippet"],
+            div: ["CreateDiv"],
+            find: ["Find", "Replace"],
+            justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
+            maximize: ["Maximize"],
+            oembed: ["oembed"],
+            showblocks: ["ShowBlocks"],
+            templates: ["Templates"]
+        };
+
+    // keep the plugin order from admin
+    if (enabledCKEplugins) enabledCKEplugins.reverse();
+
+    // set each plugin path to AOS dir
+    if (CKEpluginCount > 0) {
+
+        for (var i = 0; i < CKEpluginCount; i++) {
+
+            var pluginName = enabledCKEplugins[i];
+
+            // Note: html purifier needs to be disabled for oEmbed to work
+            if (pluginName == 'oembed') {
+                var dependencies = oEmbedPluginDependencies.split(',');
+                for (var k in dependencies) {
+                    CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                }
+            }
+
+            if (pluginName == 'autosave') {
+                var dependencies = autosavePluginDependencies.split(',');
+                for (var k in dependencies) {
+                    CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                }
+            }
+
+            if (pluginName == 'codesnippet') {
+                var dependencies = codesnippetPluginDependencies.split(',');
+                for (var k in dependencies) {
+                    CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                }
+            }
+
+            CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
+        }
+    }
+
+    function addCKEtoolbars(instance) {
+
+        var plugins = instance.extraPlugins.split(',');
+
+        for (i = 0; i < plugins.length; i++) {
+            var toolbarName = plugins[i];
+            if (CKEtoolbars.hasOwnProperty(toolbarName) && enabledCKEplugins.indexOf(toolbarName) !== -1) {
+                instance.toolbar.unshift(CKEtoolbars[toolbarName]);
+            }
+        }
+    }
+
+
+    $(document).ready(function () {
+
+        // LightWire skin (global)
+        if (aosUrl && CKEskin && CKEskin !== 'default') {
+            CKEDITOR.config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
+        }
+
+        // Content Templates templates.js
+        if (CKEtemplatesFile) {
+            CKEDITOR.config.templates_files = [CKEtemplatesFile];
+            CKEDITOR.config.templates = 'default';
+            CKEDITOR.config.templates_replaceContent = false;
+        }
+
+        // set some plugin defaults
+        CKEDITOR.config.autoGrow_onStartup = true;
+        CKEDITOR.config.autoGrow_bottomSpace = 20;
+        CKEDITOR.config.autoGrow_maxHeight = 700;
+        CKEDITOR.config.codemirror = {
+            theme: 'material',
+            autofocus: true
+        };
+
+        $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
+
+            var CKEname = $(this).attr('data-configname'),
+                CKEfield = ProcessWire.config[CKEname];
+
+            // only add once
+            if (!CKEfield || CKEfield.aos) return true;
+
+            // load custom config if exists
+            if (AOSsettings.customCKEScript) {
+                CKEfield.customConfig = AOSsettings.customCKEScript;
+            }
+
+            // load custom css file (only if there's no field custom css set)
+            // by default contents.css is loaded from /wire/... directory
+            if (CKEfield.contentsCss.indexOf('/wire/') !== -1 && AOSsettings.customCKEStyle) {
+                CKEfield.contentsCss = AOSsettings.customCKEStyle;
+            }
+
+            // process enabled fields
+            if (CKEenabledFields.length) {
+                if (CKEenabledFields.indexOf(CKEname.replace('InputfieldCKEditor_', '')) === -1) {
+                    return true;
+                }
+            }
+
+            var extraPlugins = enabledCKEplugins.join(',');
+
+            // remove magicline from Removed plugins (PW by default)
+            if (extraPlugins.indexOf('magicline') !== -1) {
+                var removedPluginsArr = CKEfield.removePlugins.split(','),
+                    index = removedPluginsArr.indexOf('magicline');
+
+                if (index > -1) removedPluginsArr.splice(index, 1);
+
+                CKEfield.removePlugins = removedPluginsArr.join(',');
+            }
+
+            CKEfield.extraPlugins += ',' + extraPlugins;
+            addCKEtoolbars(CKEfield);
+
+            CKEfield.aos = true;
+        })
+    });
+}
+
 
 
 if (AOSsettings) {
@@ -10,143 +152,10 @@ if (AOSsettings) {
     var aosUrl = AOSsettings.aosUrl,
         CKEtemplatesFile = AOSsettings.customCKEtemplates;
 
-    // console.log(_isEnabled('CKEaddons'));
-
     if (_isEnabled('CKEaddons') && ProcessWire.config.InputfieldCKEditor) {
-
-        var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
-            enabledCKEplugins = AOSsettings.CKEaddons_plugins,
-            CKEskin = AOSsettings.CKEaddons_skin,
-            CKEenabledFields = AOSsettings.CKEaddons_enabledFields,
-            CKEpluginCount = enabledCKEplugins.length,
-            oEmbedPluginDependencies = 'widget,lineutils',
-            codesnippetPluginDependencies = 'widget,dialog,lineutils',
-            autosavePluginDependencies = 'notification',
-            CKEtoolbars = {
-                codesnippet: ["CodeSnippet"],
-                div: ["CreateDiv"],
-                find: ["Find", "Replace"],
-                justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
-                maximize: ["Maximize"],
-                oembed: ["oembed"],
-                showblocks: ["ShowBlocks"],
-                templates: ["Templates"]
-            };
-
-        // keep the plugin order from admin
-        if (enabledCKEplugins) enabledCKEplugins.reverse();
-
-        // set each plugin path to AOS dir
-        if (CKEpluginCount > 0) {
-            for (var i = 0; i < CKEpluginCount; i++) {
-
-                var pluginName = enabledCKEplugins[i];
-
-                // Note: html purifier needs to be disabled for oEmbed to work
-                if (pluginName == 'oembed') {
-                    var dependencies = oEmbedPluginDependencies.split(',');
-                    for (var k in dependencies) {
-                        CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
-                    }
-                }
-
-                if (pluginName == 'autosave') {
-                    var dependencies = autosavePluginDependencies.split(',');
-                    for (var k in dependencies) {
-                        CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
-                    }
-                }
-
-                if (pluginName == 'codesnippet') {
-                    var dependencies = codesnippetPluginDependencies.split(',');
-                    for (var k in dependencies) {
-                        CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
-                    }
-                }
-
-                CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
-            }
-        }
-
-        function addCKEtoolbars(instance) {
-
-            var plugins = instance.extraPlugins.split(',');
-
-            for (i = 0; i < plugins.length; i++) {
-                var toolbarName = plugins[i];
-                if (CKEtoolbars.hasOwnProperty(toolbarName) && enabledCKEplugins.indexOf(toolbarName) !== -1) {
-                    instance.toolbar.unshift(CKEtoolbars[toolbarName]);
-                }
-            }
-        }
-
-        $(document).ready(function () {
-
-            // LightWire skin (global)
-            if (aosUrl && CKEskin && CKEskin !== 'default') {
-                CKEDITOR.config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
-            }
-
-            // Content Templates templates.js
-            if (CKEtemplatesFile) {
-                CKEDITOR.config.templates_files = [CKEtemplatesFile];
-                CKEDITOR.config.templates = 'default';
-                CKEDITOR.config.templates_replaceContent = false;
-            }
-
-            // set some plugin defaults
-            CKEDITOR.config.autoGrow_onStartup = true;
-            CKEDITOR.config.autoGrow_bottomSpace = 20;
-            CKEDITOR.config.autoGrow_maxHeight = 700;
-            CKEDITOR.config.codemirror = {
-                theme: 'material',
-                autofocus: true
-            };
-
-            $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
-
-                var CKEname = $(this).attr('data-configname'),
-                    CKEfield = ProcessWire.config[CKEname];
-
-                // only add once
-                if (!CKEfield || CKEfield.aos) return true;
-
-                // load custom config if exists
-                if (AOSsettings.customCKEScript) {
-                    CKEfield.customConfig = AOSsettings.customCKEScript;
-                }
-
-                // load custom css file (only if there's no field custom css set)
-                // by default contents.css is loaded from /wire/... directory
-                if (CKEfield.contentsCss.indexOf('/wire/') !== -1 && AOSsettings.customCKEStyle) {
-                    CKEfield.contentsCss = AOSsettings.customCKEStyle;
-                }
-
-                // process enabled fields
-                if (CKEenabledFields.length) {
-                    if (CKEenabledFields.indexOf(CKEname.replace('InputfieldCKEditor_', '')) === -1) {
-                        return true;
-                    }
-                }
-
-                var extraPlugins = enabledCKEplugins.join(',');
-
-                // remove magicline from Removed plugins (PW by default)
-                if (extraPlugins.indexOf('magicline') !== -1) {
-                    var removedPluginsArr = CKEfield.removePlugins.split(','),
-                        index = removedPluginsArr.indexOf('magicline');
-
-                    if (index > -1) removedPluginsArr.splice(index, 1);
-
-                    CKEfield.removePlugins = removedPluginsArr.join(',');
-                }
-
-                CKEfield.extraPlugins += ',' + extraPlugins;
-                addCKEtoolbars(CKEfield);
-
-                CKEfield.aos = true;
-            })
-        });
+        // $(document).on('ready wiretabclick', initCKE);
+        $(document).on('reloaded', '.InputfieldRepeaterItem, .InputfieldCKEditor', initCKE);
+        initCKE();
     }
 }
 
@@ -156,19 +165,31 @@ if (_isEnabled('CKEaddons') && AOSsettings.CKEaddons_plugins.indexOf('autogrow')
 
     $(document).on('wiretabclick', function (e, elem) {
         var CKEs = $(elem).find('.InputfieldCKEditor');
-        if (CKEs.length) {
-            updateAutoGrowCKE(CKEs);
-        }
+        if (CKEs.length) updateAutoGrowCKE(CKEs);
     });
 
-    // 'revealfield' is only a PR
     // https://github.com/processwire/processwire/pull/16
-    // $(document).on('revealfield', function (e, elem) {
-    //     if ($(elem).hasClass('InputfieldCKEditor')) {
-    //         updateAutoGrowCKE($(elem));
-    //     }
-    // });
+    $(document).on('showInputfield', function (e, elem) {
+        if ($(elem).hasClass('InputfieldCKEditor')) updateAutoGrowCKE($(elem));
+    });
 }
+
+
+function updateAutoGrowCKE(CKEs) {
+    if (CKEs.length) {
+        CKEs.each(function (i, el) {
+
+            var CKEid = $(el).attr('id').replace('wrap_', ''),
+                editor = CKEDITOR.instances[CKEid];
+
+            if (editor && !editor.autogrowFired) {
+                editor.autogrowFired = true;
+                editor.execCommand('autogrow');
+            }
+        })
+    }
+}
+
 
 function updateAutoGrowCKE(CKEs) {
     if (CKEs.length) {
@@ -715,9 +736,7 @@ function setupTranslatorFilter() {
 
 $(document).ready(function () {
 
-        if (AOSsettings == null) {
-            return false;
-        }
+        if (AOSsettings == null) return;
 
         // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle)
         if ($('html.AdminThemeReno.headStickyCompact:not(.headBtnToTitle):not(.modal)').length) {
@@ -726,41 +745,6 @@ $(document).ready(function () {
                 $('#search').attr('style', 'right: ' + (saveBtnWidth + 120 + 24) + 'px !important');
             }
         }
-
-        // check for AdminColumns in tabs
-        if ($('#ProcessPageEdit li[data-column-break]').length) {
-
-            $(document).on('wiretabclick', function (e, elem) {
-
-                var tabName = elem.attr('id').replace('Inputfield_', ''),
-                    tabSelector = '#Inputfield_' + tabName,
-                    tabColumnBreaks = $('#ProcessPageEdit li[data-column-break]').attr('data-column-break');
-
-                if ($(tabSelector).hasClass('aos-columns-ready')) return false;
-
-                if (tabColumnBreaks) {
-                    tabColumnBreaks = JSON.parse(tabColumnBreaks);
-                }
-
-                if (tabColumnBreaks[tabName]) {
-
-                    if (!tabColumnBreaks[tabName][0]) return false;
-
-                    var breakField = $('#wrap_Inputfield_' + tabColumnBreaks[tabName][0]),
-                        colWidth = tabColumnBreaks[tabName][1] ? tabColumnBreaks[tabName][1] : 67;
-
-                    if (!breakField.length) return false;
-
-                    var aosColBreakIndex = breakField.index() + 1;
-
-                    $(tabSelector + ' > .Inputfields > li:lt(' + aosColBreakIndex + ')').wrapAll('<li class="InputfieldFieldsetOpen aos_col_left" style="width: ' + colWidth + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
-                    $(tabSelector + ' > .Inputfields > .aos_col_left ~ li').wrapAll('<li class="InputfieldFieldsetOpen aos_col_right" style="width: ' + (100 - colWidth) + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
-
-                    $(tabSelector).addClass('aos-columns-ready');
-                }
-            });
-        }
-
 
         // add "title" to h1
         if ($('h1#title').length) {
@@ -780,7 +764,6 @@ $(document).ready(function () {
 
         // FieldAndTemplateEditLinks
         if (_isEnabled('FieldAndTemplateEditLinks')) {
-
 
             // template edit link on ProcessPageEdit template select field (Settings tab)
 
@@ -1365,7 +1348,58 @@ $(document).ready(function () {
 
 // Misc
         if (_isEnabled('Misc')) {
-            // pListShowExtras
+
+            if (AOSsettings.Misc.indexOf('adminColumns') !== -1) {
+
+                // Split.js
+                if(window.Split && document.querySelectorAll('.aos_col_left,.aos_col_right').length) {
+
+                    var sizes = localStorage.getItem('split-sizes') || [67, 33];
+
+                    var aos_column_split = Split(['.aos_col_left', '.aos_col_right'], {
+                        sizes: JSON.parse(sizes),
+                        gutterSize: 10,
+                        minSize: 250,
+                        onDragEnd: function () {
+                            localStorage.setItem('split-sizes', JSON.stringify(aos_column_split.getSizes()));
+                        }
+                    });
+                }
+
+                // check for AdminColumns in tabs
+                if ($('#ProcessPageEdit li[data-column-break]').length) {
+
+                    $(document).on('wiretabclick', function (e, elem) {
+
+                        var tabName = elem.attr('id').replace('Inputfield_', ''),
+                            tabSelector = '#Inputfield_' + tabName,
+                            tabColumnBreaks = $('#ProcessPageEdit li[data-column-break]').attr('data-column-break');
+
+                        if ($(tabSelector).hasClass('aos-columns-ready')) return false;
+
+                        if (tabColumnBreaks)  tabColumnBreaks = JSON.parse(tabColumnBreaks);
+
+                        if (tabColumnBreaks[tabName]) {
+
+                            if (!tabColumnBreaks[tabName][0]) return false;
+
+                            var breakField = $('#wrap_Inputfield_' + tabColumnBreaks[tabName][0]),
+                                colWidth = tabColumnBreaks[tabName][1] ? tabColumnBreaks[tabName][1] : 67;
+
+                            if (!breakField.length) return false;
+
+                            var aosColBreakIndex = breakField.index() + 1;
+
+                            $(tabSelector + ' > .Inputfields > li:lt(' + aosColBreakIndex + ')').wrapAll('<li class="InputfieldFieldsetOpen aos_col_left" style="width: ' + colWidth + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
+                            $(tabSelector + ' > .Inputfields > .aos_col_left ~ li').wrapAll('<li class="InputfieldFieldsetOpen aos_col_right" style="width: ' + (100 - colWidth) + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
+
+                            $(tabSelector).addClass('aos-columns-ready');
+                        }
+                    });
+                }
+            }
+
+            // AutosizeTextareas
             if (AOSsettings.Misc.indexOf('autosizeTextareas') !== -1) {
 
                 $(document).on('ready reloaded wiretabclick', function (e) {
@@ -3179,19 +3213,6 @@ function setColWidths(tableSelector) {
     }, 200);
 }
 
-// $(window).load(function() {
-//     if ($('li.Inputfield_aos_column_break').length) {
-//
-//         var aosColBreak = $('#wrap_Inputfield_aos_column_break'),
-//             aosColBreakIndex = aosColBreak.index(),
-//             colWidth = aosColBreak.attr('data-original-width') ? aosColBreak.attr('data-original-width') : 66;
-//
-//             $('#ProcessPageEditContent > .Inputfields > li:lt(' + aosColBreakIndex + ')').wrapAll('<li class="InputfieldFieldsetOpen aos-left" style="width: ' + colWidth + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
-//         $('#ProcessPageEditContent > .Inputfields > .aos-left ~ li').wrapAll('<li class="InputfieldFieldsetOpen aos-right" style="width: ' + (100 - colWidth) + '%;"><div class="InputfieldContent"><ul class="Inputfields">');
-//
-//         $('#wrap_Inputfield_aos_column_break').remove();
-//     }
-// });
 
 /*!
  Autosize 3.0.20

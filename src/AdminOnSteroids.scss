@@ -87,7 +87,7 @@ html.aos {
   //.PageListRoot [data-pid]:after {
   .quicklinks,
   .PageListRoot,
-  .ui-menu {  // restrict to given parents to avoid appear elsewehere (eg Users list)
+  .ui-menu { // restrict to given parents to avoid appear elsewehere (eg Users list)
     [data-pid]:after {
       content: attr(data-pid);
       text-decoration: none !important;
@@ -102,7 +102,7 @@ html.aos {
       color: rgba(28, 40, 54, .57);
     }
   }
-  .ui-menu {  // AdminThemeDefault menu item overrides
+  .ui-menu { // AdminThemeDefault menu item overrides
     [data-pid]:after {
       margin-left: 1px;
       margin-right: 0;
@@ -254,6 +254,7 @@ html.aos {
 
   .aos_col_right {
     width: 33%;
+    //float: right;
     margin-left: -1px !important;
   }
 
@@ -1747,6 +1748,31 @@ body.AdminThemeDefault {
   }
   #ProcessPageSearchForm {
     width: auto;
+  }
+}
+
+// adminColumns (Split.js)
+html.adminColumns {
+  .gutter {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    float: left;
+    min-height: 100vh;
+    position: relative;
+    z-index: 300;
+    &:active:before {
+      content: "";
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background: transparent;
+    }
+    &.gutter-horizontal {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+      cursor: ew-resize;
+    }
   }
 }
 
