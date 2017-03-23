@@ -1753,13 +1753,34 @@ body.AdminThemeDefault {
 
 // adminColumns (Split.js)
 html.adminColumns {
+  .Inputfields {
+    @include clearfix;
+  //  position: relative;
+  //  overflow: hidden;
+  }
   .gutter {
-    background-repeat: no-repeat;
-    background-position: 50%;
+    //background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==') no-repeat 47% 180px;
+    cursor: ew-resize;
     float: left;
-    min-height: 100vh;
+    min-height: 200px;
     position: relative;
     z-index: 300;
+    //&:hover:after {
+    //  content: "";
+    ////  left: 3px;
+    //  background: #f8f8f8;
+    //  position: absolute;
+    //  top: 0;
+    //  bottom: 0;
+    //  left: 0;
+    //  right: 0;
+    //  display: block;
+    //  transition: background 0.7s;
+
+    //}
+    //&:active:after {
+    //  border-right: 5px double rgba(#d9e1ea, 0.4);
+    //}
     &:active:before {
       content: "";
       position: fixed;
@@ -1768,10 +1789,6 @@ html.adminColumns {
       bottom: 0;
       right: 0;
       background: transparent;
-    }
-    &.gutter-horizontal {
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-      cursor: ew-resize;
     }
   }
 }

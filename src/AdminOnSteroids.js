@@ -146,7 +146,6 @@ function initCKE() {
 }
 
 
-
 if (AOSsettings) {
 
     var aosUrl = AOSsettings.aosUrl,
@@ -1353,19 +1352,41 @@ $(document).ready(function () {
             if (AOSsettings.Misc.indexOf('adminColumns') !== -1) {
 
                 // Split.js
-                if(window.Split && document.querySelectorAll('.aos_col_left,.aos_col_right').length) {
+                if (window.Split && $('.aos_col_left ~ .aos_col_right').length) {
 
-                    var sizes = localStorage.getItem('split-sizes') || [67, 33];
+                    var storageName = $('.aos_col_right').attr('data-splitter-storagekey'),
+                        defaultLeft = parseFloat($('.aos_col_left').attr('data-splitter-default')),
+                        defaultRight = parseFloat($('.aos_col_right').attr('data-splitter-default')),
+                        sizes = localStorage.getItem(storageName) || [defaultLeft, defaultRight];
 
-                    var aos_column_split = Split(['.aos_col_left', '.aos_col_right'], {
+                    var aos_splitter = Split(['.aos_col_left', '.aos_col_right'], {
                         sizes: typeof sizes === 'string' ? JSON.parse(sizes) : sizes,
-                        gutterSize: 10,
+                        gutterSize: 12,
                         minSize: 250,
                         onDragEnd: function () {
-                            localStorage.setItem('split-sizes', JSON.stringify(aos_column_split.getSizes()));
+                            localStorage.setItem(storageName, JSON.stringify(aos_splitter.getSizes()));
+                            setSplitterHeight();
                         }
                     });
                 }
+
+                function setSplitterHeight() {
+                    // set height to 0 before checking parent height
+                    $('.gutter').css('height', 0).css('height', $('.gutter').parent().outerHeight());
+                }
+
+                setTimeout(function () {
+                    setSplitterHeight();
+                }, 100);
+
+
+                // restore default splitter position on double-click on splitter
+                $(document).on('dblclick', '.aos_col_left + .gutter', function (e) {
+                    if (!aos_splitter) return true;
+                    aos_splitter.setSizes([defaultLeft, defaultRight]);
+                    localStorage.removeItem(storageName);
+                });
+
 
                 // check for AdminColumns in tabs
                 if ($('#ProcessPageEdit li[data-column-break]').length) {
@@ -1378,7 +1399,7 @@ $(document).ready(function () {
 
                         if ($(tabSelector).hasClass('aos-columns-ready')) return false;
 
-                        if (tabColumnBreaks)  tabColumnBreaks = JSON.parse(tabColumnBreaks);
+                        if (tabColumnBreaks) tabColumnBreaks = JSON.parse(tabColumnBreaks);
 
                         if (tabColumnBreaks[tabName]) {
 

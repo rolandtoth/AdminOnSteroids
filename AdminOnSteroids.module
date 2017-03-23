@@ -30,7 +30,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 138,
+            'version'   => 139,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1409,8 +1409,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $event->return = str_replace('<body', '<body data-navitems="' . htmlspecialchars($items, ENT_QUOTES) . '"', $event->return);
     }
 
-    public
-    function addTemplateEditLinkPageList(HookEvent $event) {
+    public function addTemplateEditLinkPageList(HookEvent $event) {
 
         if (!isset(self::$configData['ListerTweaks_options'])) {
             return false;
@@ -1452,13 +1451,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
-    public
-    function getFormattedOptionName($obj) {
+    public function getFormattedOptionName($obj) {
         return !empty($obj->label) ? $obj->label . ' (' . $obj->name . ')' : $obj->name;
     }
 
-    public
-    function setupAdminColumnsTabs($fields, $form) {
+
+    public function setupAdminColumnsTabs($fields, $form) {
 
         $dataColumnBreaks = array();
 
@@ -1497,8 +1495,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
     }
 
 
-    public
-    function addAdminClasses(HookEvent $event) {
+    public function addAdminClasses(HookEvent $event) {
 
         $theme = $event->object;
         $user = $this->user;
@@ -1530,7 +1527,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
             $this->setupAdminColumnsTabs($tabOpenFields, $form);
         }
 
-        if (!$colBreakField) return;
+        if (!$colBreakField) return false;
 
         // stop if colBreakField is inside a tab
         $tabSeen = false;
@@ -1563,10 +1560,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetLeft = $this->modules->get("InputfieldFieldset");
         $fsetLeft->attr('class', $fsetLeft->attr('class') . ' aos_col_left');
         $fsetLeft->wrapAttr('style', 'width: ' . $colWidths[0] . '%');
+        $fsetLeft->wrapAttr('data-splitter-default', $colWidths[0]);
 
         $fsetRight = $this->modules->get("InputfieldFieldset");
         $fsetRight->attr('class', $fsetRight->attr('class') . ' aos_col_right');
         $fsetRight->wrapAttr('style', 'width: ' . $colWidths[1] . '%');
+        $fsetRight->wrapAttr('data-splitter-default', $colWidths[1]);
+
+        // also add template name for Split.js
+        $fsetRight->wrapAttr('data-splitter-storagekey', 'splitter_size_' . $this->editedPage->template->name);
+
 
         $this->modules->get('FieldtypeFieldsetClose');
         if (class_exists('\ProcessWire\InputfieldFieldsetClose')) {
