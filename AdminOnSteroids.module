@@ -1567,8 +1567,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         $fsetRight->wrapAttr('style', 'width: ' . $colWidths[1] . '%');
         $fsetRight->wrapAttr('data-splitter-default', $colWidths[1]);
 
-        // also add template name for Split.js
-        $fsetRight->wrapAttr('data-splitter-storagekey', 'splitter_size_' . $this->editedPage->template->name);
+        // add template name and user id for Split.js
+        $fsetRight->wrapAttr('data-splitter-storagekey', 'splitter_' . $this->editedPage->template->name . '_' . $this->wire('user')->id);
 
 
         $this->modules->get('FieldtypeFieldsetClose');
