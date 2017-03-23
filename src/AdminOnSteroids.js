@@ -1346,6 +1346,7 @@ $(document).ready(function () {
             }
         }
 
+
 // Misc
         if (_isEnabled('Misc')) {
 
@@ -1357,7 +1358,7 @@ $(document).ready(function () {
                     var sizes = localStorage.getItem('split-sizes') || [67, 33];
 
                     var aos_column_split = Split(['.aos_col_left', '.aos_col_right'], {
-                        sizes: JSON.parse(sizes),
+                        sizes: typeof sizes === 'string' ? JSON.parse(sizes) : sizes,
                         gutterSize: 10,
                         minSize: 250,
                         onDragEnd: function () {

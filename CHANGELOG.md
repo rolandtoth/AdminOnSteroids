@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.3.8 (2017-03-23)
+
+- fix JS error caused by adminColumns (reported by adrian)
+
+
+
 ### 1.3.7 (2017-03-23)
 
 - make CKEditor plugins work in ajax-loaded fields and repeaters (reported by Zeka)
