@@ -1700,6 +1700,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule {
         }
 
         if ($field = $this->fields->get($inputfield->name)) {
+        
+            if (!is_object($field)) {
+                return;
+            }
 
             // add class to wrapper to be able to use :hover even if label is unavailable (eg. checkbox field)
             $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' aos_hasTooltip');
