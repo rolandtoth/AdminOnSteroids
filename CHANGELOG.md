@@ -1,6 +1,21 @@
 #Changelog
 
 
+### 1.4.1 (2017-03-31)
+
+- new: links to edit translations for current textdomain file in other languages (Misc)
+- added 'Indent Block' CKEditor plugin
+- recalculate splitter height on window resize
+- active sidebar menu item fix for NavItems
+
+
+
+### 1.4.0 (2017-03-29)
+
+- merge PR #41 from tobaco
+
+
+
 ### 1.3.9 (2017-03-23)
 
 - tweaks to adminColumns splitter

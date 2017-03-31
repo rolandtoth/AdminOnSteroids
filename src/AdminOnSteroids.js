@@ -1,6 +1,5 @@
 var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
 
-
 function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
 }
@@ -15,12 +14,14 @@ function initCKE() {
         CKEpluginCount = enabledCKEplugins.length,
         oEmbedPluginDependencies = 'widget,lineutils',
         codesnippetPluginDependencies = 'widget,dialog,lineutils',
+        indentblockPluginDependencies = 'indent',
         autosavePluginDependencies = 'notification',
         CKEtoolbars = {
             codesnippet: ["CodeSnippet"],
             div: ["CreateDiv"],
             find: ["Find", "Replace"],
             justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
+            indentblock: ["Indent", "Outdent"],
             maximize: ["Maximize"],
             oembed: ["oembed"],
             showblocks: ["ShowBlocks"],
@@ -47,6 +48,13 @@ function initCKE() {
 
             if (pluginName == 'autosave') {
                 var dependencies = autosavePluginDependencies.split(',');
+                for (var k in dependencies) {
+                    CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                }
+            }
+
+            if (pluginName == 'indentblock') {
+                var dependencies = indentblockPluginDependencies.split(',');
                 for (var k in dependencies) {
                     CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
                 }
@@ -1372,19 +1380,25 @@ $(document).ready(function () {
 
                 function setSplitterHeight() {
                     // set height to 0 before checking parent height
-                    $('.gutter').css('height', 0).css('height', $('.gutter').parent().outerHeight());
+                    !$('.gutter').length || $('.gutter').css('height', 0).css('height', $('.gutter').parent().outerHeight());
                 }
 
-                setTimeout(function () {
-                    setSplitterHeight();
-                }, 100);
-
+                $(window).on('load', function () {
+                    setTimeout(function () {
+                        setSplitterHeight();
+                    }, 2000);
+                });
 
                 // restore default splitter position on double-click on splitter
                 $(document).on('dblclick', '.aos_col_left + .gutter', function (e) {
                     if (!aos_splitter) return true;
                     aos_splitter.setSizes([defaultLeft, defaultRight]);
                     localStorage.removeItem(storageName);
+                });
+
+                // recalculate splitter height on window resize
+                $(window).on('resize', function () {
+                    setSplitterHeight();
                 });
 
 
@@ -2801,7 +2815,9 @@ $(document).ready(function () {
             }
 
             // remove active submenu highlight from Tree
-            if ($('.AdminThemeReno .navItem > a.current').length) {
+            // if ($('.AdminThemeReno .navItem > a.current').length) {
+            // if ($('body').attr('data-navitems')) {
+            if ($('.AdminThemeReno').length) {
                 $('#main-nav').find('a[data-icon="sitemap"]').find('i.fa-sitemap').remove();
                 $('#main-nav').find('a.current').removeClass('current');
             }

@@ -764,6 +764,35 @@ html.asmLeftX {
   text-overflow: ellipsis;
 }
 
+// translator links
+.aos-language-translator-links {
+  @include clearfix;
+  margin-left: -8px;
+  li {
+    float: left;
+    line-height: 1;
+    &:not(:last-child) {
+      margin-right: 0.5em;
+      padding-right: 0.5em;
+      border-right: 1px solid #7EA0AB;
+    }
+  }
+  a {
+    font-size: 0.9em;
+    display: inline-block;
+    padding: 0.16em 10px;
+    vertical-align: middle;
+    &:not(:hover) {
+      color: inherit;
+    }
+    span {
+      opacity: 0.66;
+      font-size: 0.9em;
+      text-transform: uppercase;
+    }
+  }
+}
+
 // Tooltips
 @media only screen and (min-width: 960px) {
 
@@ -1755,8 +1784,8 @@ body.AdminThemeDefault {
 html.adminColumns {
   .Inputfields {
     @include clearfix;
-  //  position: relative;
-  //  overflow: hidden;
+    //  position: relative;
+    //  overflow: hidden;
   }
   .gutter {
     //background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==') no-repeat 47% 180px;
