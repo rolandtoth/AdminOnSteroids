@@ -4,7 +4,6 @@ function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
 }
 
-
 function initCKE() {
 
     var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
@@ -25,6 +24,7 @@ function initCKE() {
             maximize: ["Maximize"],
             oembed: ["oembed"],
             showblocks: ["ShowBlocks"],
+            // token: ["CreateToken"],
             templates: ["Templates"]
         };
 
@@ -774,14 +774,31 @@ $(document).ready(function () {
 
             // template edit link on ProcessPageEdit template select field (Settings tab)
 
-            $('#ProcessPageEdit select#template').after('<a href="#" class="pw-modal aos-template-edit-settings"><i class="fa fa-pencil-square-o"></i></a>');
+            var templateEditSettingsElem = $('#ProcessPageEdit select#template'),
+                templateEditSettingsLink = '<a href="#" class="pw-modal aos-template-edit-settings"><i class="fa fa-pencil-square-o"></i></a>';
+
+            if (templateEditSettingsElem.length) {
+                templateEditSettingsElem.after(templateEditSettingsLink);
+            } else {
+                templateEditSettingsElem = $('#wrap_parent_id').prev('li').find('.InputfieldContent p');
+                templateEditSettingsElem.append(templateEditSettingsLink);
+            }
+
 
             $(document).on('hover', '.aos-template-edit-settings', function () {
+
                 var editLink = $(this);
 
-                editLink.attr('href', ProcessWire.config.urls.admin + 'setup/template/edit?id=' + editLink.prev('select').val());
+                if (editLink.prev('select').length) {
+                    editLink.attr('href', ProcessWire.config.urls.admin + 'setup/template/edit?id=' + editLink.prev('select').val());
+                } else {
+                    // changing template is disabled at the Advanced tab (Don't allow pages to change their template?)
+                    // get href from the templateEditLink from the main page title
+                    if ($('.aos_EditTemplate').length) {
+                        editLink.attr('href', $('.aos_EditTemplate').attr('href'));
+                    }
+                }
             });
-
 
             // wrap AdminThemeDefault li.title inner in a span
             $('ul.nav li.title').wrapInner('<span>');
@@ -2872,6 +2889,20 @@ $(document).ready(function () {
                     $(this).prev('.aos_EditTemplate').removeAttr('style');
                 }
             );
+        }
+
+
+// RestrictTreeDropdown
+
+        if (_isEnabled('RestrictTreeDropdown')) {
+
+            var RestrictTreeDropdownSettings = AOSsettings.RestrictTreeDropdown;
+
+            if (RestrictTreeDropdownSettings === true) {
+                $('a[href$="/page/list/"]').parent('li').remove();  // Default theme
+                $('a[href$="/page/"]').children('i.quicklink-open').remove();   // Reno
+            }
+
         }
 
 

@@ -1,6 +1,17 @@
 #Changelog
 
 
+### 1.4.2 (2017-05-01)
+
+- new submodule: RestrictTreeDropdown (merging module of Robin S)
+- new submodule: PageListIcons
+- added "Force showing system templates" tweak to Misc (snippets and suggestion by Robin S)
+- word-wrap issue fix for non-truncated file field names (suggested by Robin S)
+- fix for templateEditLink on Page template selector if changing page template is disabled (see #40)
+- fix for PageListThumbs not appearing if tree was initially collapsed
+
+
+
 ### 1.4.1 (2017-03-31)
 
 - new: links to edit translations for current textdomain file in other languages (Misc)

@@ -1364,13 +1364,19 @@ html.noFilenameTruncate {
   i.fa-file-image-o,
   .InputfieldFileInfo i {
     left: -21px !important;
+    float: left;
   }
   a.InputfieldFileName {
     line-height: 1.33;
     margin-left: -22px;
+    word-wrap: break-word;
   }
   label.InputfieldFileDelete {
     float: none !important;
+    display: inline-block !important;
+    vertical-align: text-bottom;
+    position: relative;
+    top: -1px;
   }
 }
 
