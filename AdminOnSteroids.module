@@ -2014,9 +2014,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         foreach ($settings as $pairs) {
 
-            if (strpos($pairs, '//') === 0) {
-                continue;
-            }
+            if (strpos($pairs, '//') === 0) continue;
 
             $setting = explode(':', $pairs);
 
@@ -2031,11 +2029,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $this->wire('session')->set($sessionIconName, $currentIcon);
             }
 
+            // if only a string is supplied without "=" in it, consider it as a template
+            // eg. cirle-o: basic-page matches other items too - use template=basic-page (maybe because common fieldgroup?)
+            if (is_string($selector) && strpos($selector, '=') === 0) {
+                $selector = "template=" . $selector;
+            }
+
             if ($page->is($selector) || $page->matches($selector)) {
                 $template->setIcon($customIcon);
-                break;  // must break to avoid overwritting with default icon
-            } else {
-                $template->setIcon($this->wire('session')->get($sessionIconName));
             }
         }
     }
