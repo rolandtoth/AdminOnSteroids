@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 142,
+            'version'   => 143,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -927,6 +927,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if (in_array($subModule, $enabledSubmodules)) {
             // use addHookBefore to add icon early (otherwise skips first!)
             $this->addHookBefore("ProcessPageListRender::getPageLabel", $this, 'addPageListIcon');
+            $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'replacePageListIconUnderscores');
         }
 
         $subModule = 'PageListThumbs';
@@ -1994,6 +1995,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . '<i class="fa fa-pencil"></i></a>';
 
         $event->return = str_replace('</span>', $templateEditLink . '</span>', $event->return);
+    }
+
+
+    function replacePageListIconUnderscores(HookEvent $event)
+    {
+        $event->return = str_replace('___', ' ', $event->return);
     }
 
 

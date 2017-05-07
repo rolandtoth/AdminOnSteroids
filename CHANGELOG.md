@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.4.3 (2017-05-07)
+
+- pageListIcons: allow adding additional classes to icons and minor updates
+
+
+
 ### 1.4.2 (2017-05-01)
 
 - new submodule: RestrictTreeDropdown (merging module of Robin S)
