@@ -4,6 +4,7 @@ function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
 }
 
+
 function initCKE() {
 
     var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
@@ -24,7 +25,6 @@ function initCKE() {
             maximize: ["Maximize"],
             oembed: ["oembed"],
             showblocks: ["ShowBlocks"],
-            // token: ["CreateToken"],
             templates: ["Templates"]
         };
 
@@ -332,8 +332,22 @@ function setupAdminDataTableFilter() {
 
     if ($('.AdminDataTable:not(.InputfieldTable)').length) {
 
-        var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '',
-            dtFilter = $('<div class="dtFilter filterbox"><input type="text"' + autofocus + '><i class="fa fa-close"></i><span class="counter"></span></div>');
+        var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '';
+        if ($('body.AdminThemeUikit').length == 0) {
+            var dtFilter = $('<div class="Inputfield InputfieldMarkup"><label class="InputfieldHeader uk-form-label InputfieldStateToggle" for=""><i class="fa fa-fw fa-filter"></i> Quickfilter tables below</label><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter table below"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+        }
+        else {
+            var dtFilter = $('<div class=\'uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup\'>' +
+                '<label class="InputfieldHeader uk-form-label InputfieldStateToggle" for=""><i class="fa fa-fw fa-filter"></i> Quickfilter tables below</label>' +
+                '<div class="dtFilter filterbox InputfieldContent ">' +
+                // '<span class="uk-form-icon">' +
+                // '<i class="fa fa-search"></i>' +
+                // '</span>' +
+                '<input type="text"' + autofocus + ' class=\'uk-input uk-form-width-medium\'>' +
+                '<i class="fa fa-close"></i>' +
+                '<span class="counter"></span></div></div>');
+
+        }
 
         function updateDtFilterCounter(num, input, total) {
 
@@ -774,31 +788,14 @@ $(document).ready(function () {
 
             // template edit link on ProcessPageEdit template select field (Settings tab)
 
-            var templateEditSettingsElem = $('#ProcessPageEdit select#template'),
-                templateEditSettingsLink = '<a href="#" class="pw-modal aos-template-edit-settings"><i class="fa fa-pencil-square-o"></i></a>';
-
-            if (templateEditSettingsElem.length) {
-                templateEditSettingsElem.after(templateEditSettingsLink);
-            } else {
-                templateEditSettingsElem = $('#wrap_parent_id').prev('li').find('.InputfieldContent p');
-                templateEditSettingsElem.append(templateEditSettingsLink);
-            }
-
+            $('#ProcessPageEdit select#template').after('<a href="#" class="pw-modal aos-template-edit-settings"><i class="fa fa-pencil-square-o"></i></a>');
 
             $(document).on('hover', '.aos-template-edit-settings', function () {
-
                 var editLink = $(this);
 
-                if (editLink.prev('select').length) {
-                    editLink.attr('href', ProcessWire.config.urls.admin + 'setup/template/edit?id=' + editLink.prev('select').val());
-                } else {
-                    // changing template is disabled at the Advanced tab (Don't allow pages to change their template?)
-                    // get href from the templateEditLink from the main page title
-                    if ($('.aos_EditTemplate').length) {
-                        editLink.attr('href', $('.aos_EditTemplate').attr('href'));
-                    }
-                }
+                editLink.attr('href', ProcessWire.config.urls.admin + 'setup/template/edit?id=' + editLink.prev('select').val());
             });
+
 
             // wrap AdminThemeDefault li.title inner in a span
             $('ul.nav li.title').wrapInner('<span>');
@@ -2889,20 +2886,6 @@ $(document).ready(function () {
                     $(this).prev('.aos_EditTemplate').removeAttr('style');
                 }
             );
-        }
-
-
-// RestrictTreeDropdown
-
-        if (_isEnabled('RestrictTreeDropdown')) {
-
-            var RestrictTreeDropdownSettings = AOSsettings.RestrictTreeDropdown;
-
-            if (RestrictTreeDropdownSettings === true) {
-                $('a[href$="/page/list/"]').parent('li').remove();  // Default theme
-                $('a[href$="/page/"]').children('i.quicklink-open').remove();   // Reno
-            }
-
         }
 
 

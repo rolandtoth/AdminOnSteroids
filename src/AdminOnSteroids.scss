@@ -396,7 +396,32 @@ html.aos {
     top: -2.7em;
   }
 
-  div.filterbox {
+  body.AdminThemeUikit .filterbox-wrapper {
+    margin-bottom: 20px;
+    .fa-close {
+      margin-left: 5px;
+    }
+    .counter {
+      //opacity: 0;
+      //visibility: hidden;
+      margin-left: 12px;
+      em, strong {
+        display: inline-block;
+      }
+      em {
+        font-style: normal;
+        opacity: 0.66;
+        font-size: 12px;
+        //word-spacing: -1px;
+      }
+      strong {
+        font-size: 16px;
+        margin-right: 2px;
+      }
+    }
+  }
+
+  &:not(body.AdminThemeUikit) div.filterbox {
     position: relative;
     //z-index: 10;
     margin-top: 8px;
@@ -1364,19 +1389,13 @@ html.noFilenameTruncate {
   i.fa-file-image-o,
   .InputfieldFileInfo i {
     left: -21px !important;
-    float: left;
   }
   a.InputfieldFileName {
     line-height: 1.33;
     margin-left: -22px;
-    word-wrap: break-word;
   }
   label.InputfieldFileDelete {
     float: none !important;
-    display: inline-block !important;
-    vertical-align: text-bottom;
-    position: relative;
-    top: -1px;
   }
 }
 
