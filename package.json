@@ -1,0 +1,30 @@
+{
+  "name": "adminonsteroids",
+  "version": "1.4.3",
+  "description": "Various ProcessWire admin tweaks to boost productivity",
+  "main": "index.js",
+  "devDependencies": {
+    "node-minify": "^2.0.5",
+    "node-sass": "^4.5.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "node-sass src/AdminOnSteroids.scss AdminOnSteroids.css",
+    "minify": "node minify.js",
+    "start": "npm run sass && npm run minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolandtoth/AdminOnSteroids.git"
+  },
+  "keywords": [
+    "processwire",
+    "module"
+  ],
+  "author": "Roland Toth",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rolandtoth/AdminOnSteroids/issues"
+  },
+  "homepage": "https://github.com/rolandtoth/AdminOnSteroids#readme"
+}
