@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.4.4 (2017-05-14)
+
+- added package.json with npm tasks (jmartsch PR #44)
+
+
+
 ### 1.4.3 (2017-05-07)
 
 - pageListIcons: allow adding additional classes to icons and minor updates
