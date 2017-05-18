@@ -1009,6 +1009,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function addAsset($assetName, &$configData)
     {
 
+        if(!isset($configData[$assetName])) return false;
+
         $asset = trim($configData[$assetName], '/ ');
 
         if (strlen($asset)) {
