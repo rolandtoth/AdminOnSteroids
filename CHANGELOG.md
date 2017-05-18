@@ -1,6 +1,12 @@
 #Changelog
 
 
+### 1.4.5 (2017-05-18)
+
+- no longer use file_exists() for assetPaths
+
+
+
 ### 1.4.4 (2017-05-14)
 
 - added package.json with npm tasks (jmartsch PR #44)
