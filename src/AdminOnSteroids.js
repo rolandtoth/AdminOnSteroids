@@ -769,6 +769,83 @@ $(document).ready(function () {
         }
 
 
+        // assetPaths: add buttons to check 404 response
+
+    if($('#Inputfield_AssetPaths').length) {
+
+        var assetCheckBtnText = 'Check',
+            $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
+
+
+        $('#Inputfield_AssetPaths').on('focus', 'input', function () {
+            $assetCheckBtn.html(assetCheckBtnText);
+            $assetCheckBtn.removeClass();
+            $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
+        });
+
+
+        // add button to the first visible opened inputfield
+        var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
+        if($visibleAssetInput.length) {
+            $visibleAssetInput.first().find('label').append($assetCheckBtn);
+        }
+
+        function UrlExists(url, cb) {
+            $.ajax({
+                url: url,
+                // dataType: 'text',
+                type: 'HEAD',
+                cache: false,
+                complete: function (xhr) {
+                    if (typeof cb === 'function')
+                        cb.apply(this, [xhr.status]);
+                }
+            });
+        }
+
+        function showResult(result) {
+
+            var icon = result ? 'check' : 'exclamation-triangle',
+                className = result ? 'success' : 'error';
+
+            $assetCheckBtn.html(assetCheckBtnText);
+            $assetCheckBtn.addClass(className);
+
+            $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
+        }
+
+        $assetCheckBtn.on('click', function () {
+            var $input = $(this).parents('.Inputfield').first().find('input'),
+                url = $input.val();
+
+            if (!url || url.length === 0) {
+                $input.focus();
+                return false;
+            };
+
+            $assetCheckBtn.html(assetCheckBtnText);
+            $assetCheckBtn.removeClass();
+
+            var rootUrl = window.location.origin + ProcessWire.config.urls.root,
+                baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
+
+            url = (url[0] === '/') ? url.substr(1) : url;
+            url = (baseUrl + url).trim();
+
+            UrlExists(url, function (status) {
+                if (status === 200) {
+                    showResult(true);
+                }
+                else if (status === 404) {
+                    showResult(false);
+                }
+            });
+
+            return false;
+        });
+
+    }
+
         // FieldAndTemplateEditLinks
         if (_isEnabled('FieldAndTemplateEditLinks')) {
 

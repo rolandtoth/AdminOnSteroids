@@ -1380,6 +1380,44 @@ html.noFilenameTruncate {
   }
 }
 
+#asset-check-button {
+  .InputfieldStateCollapsed & {
+    display: none;
+  }
+  position: absolute;
+  margin-left: 14px;
+  border: 1px solid #c4c4c4;
+  background: transparent;
+  border-radius: 2px;
+  padding: 3px 6px 3px 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  i {
+    font-size: 11px !important;
+    margin-left: 4px;
+    top: -1px;
+    position: relative;
+  }
+  &:hover {
+    background: #f8f8f8;
+  }
+  &.success,
+  &.error {
+    color: white;
+    i::before {
+      color: white;
+    }
+  }
+  &.success {
+    background: #3EB998;
+    border-color: #3EB998;
+  }
+  &.error {
+    background: #cf3a3a;
+    border-color: #cf3a3a;
+  }
+}
+
 // FileFieldTweaks filterbox
 html.filterbox {
 
@@ -3777,4 +3815,3 @@ html.hoverDropdown {
     //overflow: visible;
   }
 }
-

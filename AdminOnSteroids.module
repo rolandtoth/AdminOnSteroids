@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 144,
+            'version'   => 145,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -978,99 +978,52 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configData['aosUrl'] = $this->config->urls->AdminOnSteroids;
 //        $configData['aosModuleUrl']      = $this->config->urls->admin . 'module/edit?name=AdminOnSteroids';
 
-        $root = $this->config->urls->root;
-
-        $rootPath = $this->config->paths->root;
-        $rootPath = rtrim($rootPath, $root);
-
-        $rootUrl = $this->config->urls->httpRoot;
-        $rootUrl = rtrim($rootUrl, $root);
-
-//        $templatesPath = $this->config->paths->templates;
-        $templatesUrl = $this->config->urls->httpTemplates;
-        $templatesUrlRelative = $this->config->urls->templates;
-
         // do not add JS to page on login page
         if ($this->page->id != 23) {
 
             // custom CKEaddons config js and css
-//            $ckeCSS = !empty($configData['CKEStyle']) ? '/' . trim($configData['CKEStyle'], '/') : $templatesUrlRelative . 'cke.css';
-//            $ckeJS        = !empty($configData['CKEScript']) ? '/' . trim($configData['CKEScript'], '/') : $templatesUrlRelative . 'cke.js';
-//            $ckeTemplates = !empty($configData['CKEtemplates']) ? '/' . trim($configData['CKEtemplates'], '/') : $templatesUrlRelative . 'templates.js';
 
-            $ckeCSS = $this->getAssetPath('CKEStyle', 'admin/cke.css', $templatesUrlRelative, $configData, $root);
-            $ckeJS = $this->getAssetPath('CKEScript', 'admin/cke.js', $templatesUrlRelative, $configData, $root);
-            $ckeTemplates = $this->getAssetPath('CKEtemplates', 'admin/templates.js', $templatesUrlRelative,
-                $configData, $root);
-
-            if (file_exists($rootPath . $ckeCSS)) {
-                $configData['customCKEStyle'] = $rootUrl . $ckeCSS;
-            }
-
-//            bd($ckeCSS);
-//            bd($rootUrl . $ckeCSS);
-//            bd($rootPath . $ckeCSS);
-//            bd(file_exists($rootPath . $ckeCSS));
-//
-//            bd($ckeJS);
-//            bd($rootUrl . $ckeJS);
-//            bd($rootPath . $ckeJS);
-//            bd(file_exists($rootPath . $ckeJS));
-//
-//            bd($ckeTemplates);
-//            bd($rootUrl . $ckeTemplates);
-//            bd($rootPath . $ckeTemplates);
-//            bd(file_exists($rootPath . $ckeTemplates));
-
-            if (file_exists($rootPath . $ckeJS)) {
-                $configData['customCKEScript'] = $rootUrl . $ckeJS;
-            }
-            if (file_exists($rootPath . $ckeTemplates)) {
-                $configData['customCKEtemplates'] = $rootUrl . $ckeTemplates;
-            }
+            $this->addAsset('CKEStyle', $configData);
+            $this->addAsset('CKEScript', $configData);
+            $this->addAsset('CKEtemplates', $configData);
 
             // add css and js files
-            foreach ($jsFiles as $jsFile) {
-                $scripts->add($jsFile);
-            }
             foreach ($cssFiles as $cssFile) {
                 $styles->add($cssFile);
             }
 
+            foreach ($jsFiles as $jsFile) {
+                $scripts->add($jsFile);
+            }
 
             // write module js config to page
             $this->config->js("AdminOnSteroids", json_encode($configData));
         }
 
-        // add admin.js and admin.css
-        // use values set in module settings or try templates/admin.css & js
-//        $adminCSS = !empty($configData['AdminStyle']) ? '/' . trim($configData['AdminStyle'], '/') : $templatesUrlRelative . 'admin.css';
-//        $adminJS  = !empty($configData['AdminScript']) ? '/' . trim($configData['AdminScript'], '/') : $templatesUrlRelative . 'admin.js';
-        $adminCSS = $this->getAssetPath('AdminStyle', 'admin/admin.css', $templatesUrlRelative, $configData, $root);
-        $adminJS = $this->getAssetPath('AdminScript', 'admin/admin.js', $templatesUrlRelative, $configData, $root);
-
-        if (file_exists($rootPath . $adminCSS)) {
-            $styles->add($rootUrl . $adminCSS);
-        }
-        if (file_exists($rootPath . $adminJS)) {
-            $scripts->add($rootUrl . $adminJS);
-        }
-
-//        bd($adminCSS);
-//        bd($rootUrl . $adminCSS);
-//        bd($rootPath . $adminCSS);
-//        bd(file_exists($rootPath . $adminCSS));
-//
-//        bd($adminJS);
-//        bd($rootUrl . $adminJS);
-//        bd($rootPath . $adminJS);
-//        bd(file_exists($rootPath . $adminJS));
+        // add admin CSS/JS
+        $this->addAsset('AdminStyle', $configData);
+        $this->addAsset('AdminScript', $configData);
     }
 
-    public function getAssetPath($assetConfigName, $defaultName, $templatesUrlRelative, $configData, $root)
+
+    public function addAsset($assetName, &$configData)
     {
-        return !empty($configData[$assetConfigName]) ? '/' . ltrim($root, '/') . trim($configData[$assetConfigName],
-                '/') : $templatesUrlRelative . $defaultName;
+
+        $asset = trim($configData[$assetName], '/ ');
+
+        if (strlen($asset)) {
+
+            // allow absolute or relative url
+            $baseUrl = strpos($asset, 'http') !== false ? '' : $this->config->urls->httpRoot;
+
+            if (strpos($assetName, 'CKE') !== false) {
+                $configData['custom' . $assetName] = $baseUrl . $asset;
+            } elseif ($assetName === 'AdminStyle') {
+                $this->config->styles->add($baseUrl . $asset);
+            } elseif ($assetName === 'AdminScript') {
+                $this->config->scripts->add($baseUrl . $asset);
+            }
+        }
     }
 
 
@@ -2021,7 +1974,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         foreach ($settings as $pairs) {
 
-            if (strpos($pairs, '//') === 0) continue;
+            if (strpos($pairs, '//') === 0) {
+                continue;
+            }
 
             $setting = explode(':', $pairs);
 
@@ -3089,7 +3044,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'AdminStyle';
         $f->label = __('Admin CSS', __FILE__);
-        $f->description = __('Path to a CSS file to be loaded in the admin (relative to site root)', __FILE__);
+        $f->description = __('URL to a CSS file to be loaded in the admin, eg.',
+                __FILE__) . ' "/site/templates/admin/admin.css"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3102,7 +3058,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'AdminScript';
         $f->label = __('Admin JavaScript', __FILE__);
-        $f->description = __('Path to a JavaScript file to be loaded in the admin (relative to site root)', __FILE__);
+        $f->description = __('URL to a JavaScript file to be loaded in the admin, eg.',
+                __FILE__) . ' "/site/templates/admin/admin.js"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3115,7 +3072,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'CKEStyle';
         $f->label = __('CKEditor custom CSS', __FILE__);
-        $f->description = __('Path to a CSS file to be loaded for CKEditors (relative to site root)', __FILE__);
+        $f->description = __('URL to a CSS file to be loaded for CKEditors, eg.',
+                __FILE__) . ' "/site/templates/admin/cke.css"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3127,7 +3085,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'CKEScript';
         $f->label = __('CKEditor custom configuration script', __FILE__);
-        $f->description = __('Path to a JavaScript file to be loaded for CKEditors (relative to site root)', __FILE__);
+        $f->description = __('URL to a JavaScript file to be loaded for CKEditors, eg.',
+                __FILE__) . ' "/site/templates/admin/cke.js"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3139,7 +3098,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'CKEtemplates';
         $f->label = __('CKEditor templates directory', __FILE__);
-        $f->description = __('Path for Content Templates CKEditor plugin templates directory', __FILE__);
+        $f->description = __('URL to Content Templates CKEditor plugin templates directory, eg',
+                __FILE__) . ' "/site/templates/admin/cke-templates.js"';
         $f->collapsed = Inputfield::collapsedBlank;
 
         if ($data[$f->name]) {
