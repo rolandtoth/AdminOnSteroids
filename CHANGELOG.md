@@ -1,6 +1,13 @@
 #Changelog
 
 
+### 1.4.6 (2017-05-23)
+
+- show template edit link even if page is not allowed to be moved (reported by gmclelland #40)
+- add pageListIDs only once per page (suggested by horst #45)
+
+
+
 ### 1.4.5 (2017-05-18)
 
 - no longer use file_exists() for assetPaths

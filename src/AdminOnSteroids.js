@@ -857,7 +857,8 @@ $(document).ready(function () {
             if (templateEditSettingsElem.length) {
                 templateEditSettingsElem.after(templateEditSettingsLink);
             } else {
-                templateEditSettingsElem = $('#wrap_parent_id').prev('li').find('.InputfieldContent p');
+                // workaround for: Don't allow pages to be moved + Don't allow pages to change their template (Advanced tab)
+                templateEditSettingsElem = $('#wrap_Inputfield__pw_page_name').next('li').find('.InputfieldContent p');
                 templateEditSettingsElem.append(templateEditSettingsLink);
             }
 

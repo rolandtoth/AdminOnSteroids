@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 145,
+            'version'   => 146,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1109,7 +1109,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $markup = $icon . trim($label_with_markup[0]) . '<span></span>' . (isset($label_with_markup[1]) ? ' <' . $label_with_markup[1] : '');
         }
 
-        $markup = str_replace('<span', '<span data-pid=' . $page->id . ' ', $markup);
+//        $markup = str_replace('<span', '<span data-pid=' . $page->id . ' ', $markup);
+        $markup = str_replace("<span class='label_title'", "<span class='label_title' data-pid=" . $page->id . ' ', $markup);
 
         $event->return = $markup;
     }
