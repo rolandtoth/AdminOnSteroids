@@ -2351,7 +2351,8 @@ $(document).ready(function () {
                 $('.InputfieldIconAll').before('<input id="icons-filter" class="hidden" placeholder="&#128269">');
 
                 var $filterIcons,
-                    hasParentSpan;
+                    hasParentSpan,
+                    prev_value;
 
                 $('a.InputfieldIconShowAll').click(function () {
                     $filterIcons = false;   // InputfieldIcons.js currently re-inits on each open
@@ -2359,11 +2360,10 @@ $(document).ready(function () {
                 });
 
 
-                $('#icons-filter').on('keydown', function (e) {
+                $('#icons-filter').on('input keydown', function (e) {
 
                     var filter_value = $(this).val().trim().toLowerCase().replace(' ', ''),
                         keyCode = e.keyCode || e.charCode || e.which;
-
 
                     if (!$filterIcons) {
                         $filterIcons = $('.InputfieldIconAll').children();
@@ -2384,6 +2384,9 @@ $(document).ready(function () {
 
                         return false;
                     }
+
+                    if(filter_value === prev_value) return;
+                    prev_value = filter_value;
 
                     $filterIcons.removeClass('hidden');
 
