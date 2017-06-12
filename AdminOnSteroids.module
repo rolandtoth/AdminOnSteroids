@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 146,
+            'version'   => 147,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -168,7 +168,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 'hoverDropdown',
                 'titleCaseToggle',
                 'tabIndex',
-                'emptyTrashTop'
+                'emptyTrashTop',
+                'iconsFilter'
 //                'noAnim'
             ),
             'ModuleTweaks'                 => array(
@@ -404,22 +405,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function init()
     {
 
-
-        $editedPageId = $this->sanitizer->int($this->config->input->get->id);
-
-        if (!empty($editedPageId) && is_numeric($editedPageId) && $this->pages->get($editedPageId)) {
-            $this->editedPage = $this->pages->get($editedPageId);
-        } else {
-            $this->editedPage = null;
-        }
-
-        $configData = $this->modifyConfigData(
-            $this->modules->getModuleConfigData($this),
-            $this->editedPage ? $this->editedPage : false
-        );
-
-//        $configData['tokens'] = $this->wire('config')->tokens;
-
+        // populate self::$configData
+        $configData = $this->modules->getModuleConfigData($this);
         self::$configData = $configData;
 
         if ($this->user->isSuperUser()) {
@@ -516,6 +503,21 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return false;
         }
 
+        // set $this->editedPage
+        // excluded repeater pages, minor refactoring
+        $this->editedPage = false;
+        $editedPageId = $this->sanitizer->int($this->config->input->get->id);
+        $editedPage = $this->pages->get($editedPageId);
+
+        if ($editedPage->id && !($editedPage instanceof RepeaterPage)) {
+            $this->editedPage = $editedPage;
+        }
+
+        self::$configData = $this->modifyConfigData(
+            $this->modules->getModuleConfigData($this),
+            $this->editedPage
+        );
+
         $styles->prepend($root . '/' . __CLASS__ . '.css?ts=' . $timestamp);
 
         // login page doesn't some stuff
@@ -564,7 +566,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 // add template edit link (page action) to pagelist
                 $this->addHookAfter("ProcessPageListActions::getActions", $this, 'addTemplateEditLinkPageList');
 
-                if (!is_null($this->editedPage)) {
+                if ($this->editedPage) {
 
                     // add edit field link only if the edited page is not a special page (eg. admin)
                     if ($this->process == 'ProcessPageView' && $this->editedPage->template && $this->editedPage->template->flags === 0) {
@@ -634,6 +636,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListIDs');
                 }
 
+
                 // add delete button to pagelist items (bypass trash)
                 if (in_array('deleteBtn', $configData[$subModule])) {
                     $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
@@ -691,6 +694,56 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     });
                 }
             }
+
+
+            if (in_array('refreshBtn', $configData[$subModule])) {
+                $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
+
+                    $page = $event->arguments('page');
+
+                    $actions = array();
+                    $adminUrl = $this->wire('config')->urls->admin . 'page/';
+
+                    $actions['refresh'] = array(
+                        'cn'   => 'Refresh',
+                        'name' => 'Refresh',
+                        'url'  => $adminUrl . '?action=refresh&id=' . $page->id,
+                        'ajax' => true
+                    );
+
+                    $event->return += $actions;
+                });
+
+                $this->addHookAfter('ProcessPageListActions::processAction', function (HookEvent $event) {
+
+                    $page = $event->arguments(0);
+                    $action = $event->arguments(1);
+
+                    if ($action == 'refresh') {
+
+                        $remove = false;
+                        $refreshChildren = $page->id;
+
+                        // remove item if there's no ID or it's in the Trash
+                        if (!$page->id || ($page->parent && $page->parent->id == 7)) {
+                            $remove = true;
+                            $refreshChildren = 0;
+                        }
+
+                        $event->return = array(
+                            'action'          => $action,
+                            'success'         => true,
+                            'page'            => $page->id,
+                            'updateItem'      => $page->id,
+                            'message'         => 'Page refreshed.',
+                            'remove'          => $remove,
+                            'refreshChildren' => $refreshChildren
+                        );
+                    }
+                });
+            }
+
+
         }
 
 
@@ -1006,10 +1059,25 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     }
 
 
+    /**
+     * Helper function for fields in a repeater
+     */
+//    public function getEditedPage($page)
+//    {
+//        if ($page instanceof RepeaterPage) {
+//            return $this->getEditedPage($page->getForPage());
+//        } else {
+//            return $page;
+//        }
+//    }
+
+
     public function addAsset($assetName, &$configData)
     {
 
-        if(!isset($configData[$assetName])) return false;
+        if (!isset($configData[$assetName])) {
+            return false;
+        }
 
         $asset = trim($configData[$assetName], '/ ');
 
@@ -1109,8 +1177,21 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $markup = $icon . trim($label_with_markup[0]) . '<span></span>' . (isset($label_with_markup[1]) ? ' <' . $label_with_markup[1] : '');
         }
 
-//        $markup = str_replace('<span', '<span data-pid=' . $page->id . ' ', $markup);
-        $markup = str_replace("<span class='label_title'", "<span class='label_title' data-pid=" . $page->id . ' ', $markup);
+        // check for label_title first and if not found, do a general str_replace.
+        if (strpos($markup, 'label_title') !== false) {
+            $markup = str_replace("<span class='label_title'", "<span class='label_title' data-pid='" . $page->id . "' ",
+                $markup);
+
+        } else {
+
+            // limit the replacement to the first match
+            $needle = '<span';
+            $pos = strpos($markup, $needle);
+
+            if ($pos !== false) {
+                $markup = substr_replace($markup, "<span data-pid='" . $page->id . "' ", $pos, strlen($needle));
+            }
+        }
 
         $event->return = $markup;
     }
@@ -2772,6 +2853,7 @@ HTML;
         $f->addOption('tabIndex', __('Add sequential tabindex to fields', __FILE__));
         $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
         $f->addOption('showSystemTemplates', __('Force showing system templates', __FILE__));
+        $f->addOption('iconsFilter', __('Add filter box to template icon picker', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -2923,6 +3005,7 @@ HTML;
 
         $f->addOption('highlightRows', __('Highlight rows on hover', __FILE__));
         $f->addOption('pListIDs', __('Show page IDs (SuperUser only)', __FILE__));
+        $f->addOption('refreshBtn', __('Add Refresh button to refresh page details displayed', __FILE__));
         $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
         $f->addOption('pListUnselect', __('Add unselect/restore buttons to PageListSelect', __FILE__));
         $f->addOption('pListIconOnly', __('Icon-only pagelist actions', __FILE__));

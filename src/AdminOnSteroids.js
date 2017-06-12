@@ -771,80 +771,81 @@ $(document).ready(function () {
 
         // assetPaths: add buttons to check 404 response
 
-    if($('#Inputfield_AssetPaths').length) {
+        if ($('#Inputfield_AssetPaths').length) {
 
-        var assetCheckBtnText = 'Check',
-            $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
-
-
-        $('#Inputfield_AssetPaths').on('focus', 'input', function () {
-            $assetCheckBtn.html(assetCheckBtnText);
-            $assetCheckBtn.removeClass();
-            $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
-        });
+            var assetCheckBtnText = 'Check',
+                $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
 
 
-        // add button to the first visible opened inputfield
-        var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
-        if($visibleAssetInput.length) {
-            $visibleAssetInput.first().find('label').append($assetCheckBtn);
-        }
-
-        function UrlExists(url, cb) {
-            $.ajax({
-                url: url,
-                // dataType: 'text',
-                type: 'HEAD',
-                cache: false,
-                complete: function (xhr) {
-                    if (typeof cb === 'function')
-                        cb.apply(this, [xhr.status]);
-                }
+            $('#Inputfield_AssetPaths').on('focus', 'input', function () {
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.removeClass();
+                $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
             });
-        }
 
-        function showResult(result) {
 
-            var icon = result ? 'check' : 'exclamation-triangle',
-                className = result ? 'success' : 'error';
+            // add button to the first visible opened inputfield
+            var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
+            if ($visibleAssetInput.length) {
+                $visibleAssetInput.first().find('label').append($assetCheckBtn);
+            }
 
-            $assetCheckBtn.html(assetCheckBtnText);
-            $assetCheckBtn.addClass(className);
+            function UrlExists(url, cb) {
+                $.ajax({
+                    url: url,
+                    // dataType: 'text',
+                    type: 'HEAD',
+                    cache: false,
+                    complete: function (xhr) {
+                        if (typeof cb === 'function')
+                            cb.apply(this, [xhr.status]);
+                    }
+                });
+            }
 
-            $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
-        }
+            function showResult(result) {
 
-        $assetCheckBtn.on('click', function () {
-            var $input = $(this).parents('.Inputfield').first().find('input'),
-                url = $input.val();
+                var icon = result ? 'check' : 'exclamation-triangle',
+                    className = result ? 'success' : 'error';
 
-            if (!url || url.length === 0) {
-                $input.focus();
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.addClass(className);
+
+                $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
+            }
+
+            $assetCheckBtn.on('click', function () {
+                var $input = $(this).parents('.Inputfield').first().find('input'),
+                    url = $input.val();
+
+                if (!url || url.length === 0) {
+                    $input.focus();
+                    return false;
+                }
+                ;
+
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.removeClass();
+
+                var rootUrl = window.location.origin + ProcessWire.config.urls.root,
+                    baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
+
+                url = (url[0] === '/') ? url.substr(1) : url;
+                url = (baseUrl + url).trim();
+
+                UrlExists(url, function (status) {
+                    if (status === 200) {
+                        showResult(true);
+                    }
+                    else if (status === 404) {
+                        showResult(false);
+                    }
+                });
+
                 return false;
-            };
-
-            $assetCheckBtn.html(assetCheckBtnText);
-            $assetCheckBtn.removeClass();
-
-            var rootUrl = window.location.origin + ProcessWire.config.urls.root,
-                baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
-
-            url = (url[0] === '/') ? url.substr(1) : url;
-            url = (baseUrl + url).trim();
-
-            UrlExists(url, function (status) {
-                if (status === 200) {
-                    showResult(true);
-                }
-                else if (status === 404) {
-                    showResult(false);
-                }
             });
 
-            return false;
-        });
-
-    }
+        }
 
         // FieldAndTemplateEditLinks
         if (_isEnabled('FieldAndTemplateEditLinks')) {
@@ -908,19 +909,29 @@ $(document).ready(function () {
                 var field = $(this),
                     label = field.find('label');
 
-                if (!label.length) return false;
+                if (!label.length) return;
 
-                if (label.find('span').length == 0) {
+                if (label.find('span').length === 0) {
                     field.addClass('aos_hasTooltip');
                     var fieldName = label.parent().find('.InputfieldContent .aos_EditFieldLink').attr('data-field-name');
 
-                    if (!fieldName) return false;
+                    if (!fieldName) return;
 
                     label.contents().eq(0).wrap('<span class="title">');
                     field.find('span.title').append('<em class="aos_EditField">' + fieldName + ' <i class="fa fa-pencil"></i></em>');
                 }
             });
         }
+
+
+        // var $allIcons = $('.InputfieldIconAll > span');
+        //
+        // if($allIcons.length) {
+        //     for(var ii = 0; ii < $allIcons.length; ii++) {
+        //         $allIcons[ii].style = '';
+        //     }
+        // }
+
 
 // FocusInputOnLangTabSwitch
         if (_isEnabled('FocusInputOnLangTabSwitch')) {
@@ -2333,6 +2344,51 @@ $(document).ready(function () {
                 $('.pw-button-dropdown.pw-dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
                 $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
             }
+
+            // iconsFilter (by Robin S)
+            if (AOSsettings.Misc.indexOf('iconsFilter') !== -1) {
+                $('.InputfieldIconAll').before('<input id="icons-filter" class="hidden" placeholder="&#128269">');
+
+                $('a.InputfieldIconShowAll').click(function () {
+                    $('#icons-filter').toggleClass('hidden').val('').focus();
+                });
+
+                $('#icons-filter').on('input keydown', function (e) {
+
+                    var filter_value = $(this).val().trim().toLowerCase().replace(' ', ''),
+                        $icons = $('.InputfieldIconAll i'),
+                        keyCode = e.keyCode || e.charCode || e.which,
+                        hasParentSpan = $icons.parent('span').length;
+
+                    // Enter
+                    if (keyCode === 13) {
+                        e.preventDefault();
+                        console.log(1);
+                        var $iconsVisible = $icons.not('.hidden');
+
+                        if ($iconsVisible.length) {
+                            $iconsVisible.first().trigger('click');
+                        }
+
+                        return false;
+                    }
+
+                    if (hasParentSpan) {
+                        $icons.parent('span').removeClass('hidden');
+                    } else {
+                        $icons.removeClass('hidden');
+                    }
+
+                    if (filter_value) {
+                        if (hasParentSpan) {
+                            $icons.not('[title*=' + filter_value + ']').parent('span').addClass('hidden');
+                        } else {
+                            $icons.not('[title*=' + filter_value + ']').addClass('hidden');
+                        }
+                    }
+                });
+            }
+
 
             // tabIndex
             if (AOSsettings.Misc.indexOf('tabIndex') !== -1) {

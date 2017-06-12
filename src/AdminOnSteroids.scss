@@ -986,18 +986,13 @@ html {
 }
 
 .aos_pagelist_unselect {
-  float: left;
   margin-top: 1px !important;
-  //width: 22px;
   padding: 0 !important;
-  //height: 21px;
-  //line-height: 21px;
   text-align: center;
   border: none !important;
-  //border-radius: 2px !important;
   transition-duration: 0.1s !important;
+  max-width: 48px;
   i {
-    //font-size: 12px !important;
     padding: 3px 5px !important;
     display: inline-block;
   }
@@ -1009,13 +1004,13 @@ html {
     pointer-events: none;
     opacity: 0.33;
     filter: saturate(0);
-    //box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.25) !important;
     border-color: inherit;
   }
   &.clear {
     background-color: transparent !important;
     margin-left: -3px;
     margin-right: 5px;
+    float: left;
     color: #8d939e !important;
     &:hover {
       color: $colorDelete !important;
@@ -1028,19 +1023,14 @@ html {
         text-decoration: line-through;
       }
     }
+    ~ .PageListRoot {
+      float: left;
+      width: calc(100% - 48px);
+    }
   }
   &.restore {
-    // entirely hide if there's nothing to restore
-    //&[data-value-original=""] {
-    //  display: none;
-    //}
-    position: absolute;
-    float: none;
-    right: 12px;
-    transform: translateX(-100%);
-    //&:not(:hover) {
-    //  background: #8d939e;
-    //}
+    position: relative;
+    top: -1px;
   }
 }
 
@@ -2913,6 +2903,19 @@ html.AdminThemeReno {
     }
   }
 
+  // iconsFilter
+  .InputfieldIcon .hidden {
+    display: none;
+  }
+  #icons-filter {
+    display: inline-block;
+    padding: 2px 5px;
+    margin-left: 30px;
+    &.hidden {
+      display: none;
+    }
+  }
+
   // headBtnToTitle
   &.headBtnToTitle {
     @media only screen and (min-width: 960px) {
@@ -3471,6 +3474,10 @@ html.pListIconOnly {
     .PageListActionUnlock > a,
     .PageUnlock {
       @include pageListIcon("\f13e");
+    }
+    .PageListActionRefresh > a,
+    .PageRefresh {
+      @include pageListIcon("\f021");
     }
     .PageListActionTrash > a,
     .PageTrash {

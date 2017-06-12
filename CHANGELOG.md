@@ -1,6 +1,16 @@
 # Changelog
 
 
+### 1.4.7 (2017-06-12)
+
+- fix for editedPage bug causing issues in repeater fields (thanks to Robin S)
+- added iconsFilter (merging module of Robin S)
+- new "Refresh" page list action (PageListTweaks)
+- better CSS positioning of pagelist unselect restore button
+- more foolproof pageListID replacement
+
+
+
 ### 1.4.6 (2017-05-23)
 
 - show template edit link even if page is not allowed to be moved (reported by gmclelland #40)
