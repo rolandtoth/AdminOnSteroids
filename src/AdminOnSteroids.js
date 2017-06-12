@@ -2346,43 +2346,48 @@ $(document).ready(function () {
             }
 
             // iconsFilter (by Robin S)
-            if (AOSsettings.Misc.indexOf('iconsFilter') !== -1) {
+            if (AOSsettings.Misc.indexOf('iconsFilter') !== -1 && $('.InputfieldIconAll').length) {
+
                 $('.InputfieldIconAll').before('<input id="icons-filter" class="hidden" placeholder="&#128269">');
 
+                var $filterIcons,
+                    hasParentSpan;
+
                 $('a.InputfieldIconShowAll').click(function () {
+                    $filterIcons = false;   // InputfieldIcons.js currently re-inits on each open
                     $('#icons-filter').toggleClass('hidden').val('').focus();
                 });
 
-                $('#icons-filter').on('input keydown', function (e) {
+                $('#icons-filter').on('keydown', function (e) {
 
                     var filter_value = $(this).val().trim().toLowerCase().replace(' ', ''),
-                        keyCode = e.keyCode || e.charCode || e.which,
-                        hasParentSpan = $('.InputfieldIconAll span').length,
-                        $icons = hasParentSpan ? $('.InputfieldIconAll span') : $('.InputfieldIconAll i');
+                        keyCode = e.keyCode || e.charCode || e.which;
+
+
+                    if (!$filterIcons) {
+                        $filterIcons = $('.InputfieldIconAll').children();
+                        hasParentSpan = $filterIcons.first().is('span');
+                    }
 
                     // Enter
                     if (keyCode === 13) {
                         e.preventDefault();
-                        var $iconsVisible = $icons.not('.hidden');
+                        var $filterIconsVisible = $filterIcons.not('.hidden');
 
-                        if ($iconsVisible.length) {
-                            $iconsVisible.first().trigger('click');
+                        if ($filterIconsVisible.length) {
+                            $filterIconsVisible.first().trigger('click');
                         }
 
                         return false;
                     }
 
-                    if (hasParentSpan) {
-                        $icons.parent('span').removeClass('hidden');
-                    } else {
-                        $icons.removeClass('hidden');
-                    }
+                    $filterIcons.removeClass('hidden');
 
                     if (filter_value) {
                         if (hasParentSpan) {
-                            $icons.not('[title*=' + filter_value + ']').parent('span').addClass('hidden');
+                            $filterIcons.not(':has([title*=' + filter_value + '])').addClass('hidden');
                         } else {
-                            $icons.not('[title*=' + filter_value + ']').addClass('hidden');
+                            $filterIcons.not('[title*=' + filter_value + ']').addClass('hidden');
                         }
                     }
                 });
