@@ -2378,6 +2378,9 @@ $(document).ready(function () {
                             $filterIconsVisible.first().trigger('click');
                         }
 
+                        // re-set focus
+                        $('#icons-filter').focus();
+
                         return false;
                     }
 
