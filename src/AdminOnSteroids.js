@@ -2358,7 +2358,7 @@ $(document).ready(function () {
                     $('#icons-filter').toggleClass('hidden').val('').focus();
                 });
 
-                $('#icons-filter').on('keydown', function (e) {
+                $('#icons-filter').on('keydown', debounce(function (e) {
 
                     var filter_value = $(this).val().trim().toLowerCase().replace(' ', ''),
                         keyCode = e.keyCode || e.charCode || e.which;
@@ -2390,7 +2390,7 @@ $(document).ready(function () {
                             $filterIcons.not('[title*=' + filter_value + ']').addClass('hidden');
                         }
                     }
-                });
+                }, 200));
             }
 
 
