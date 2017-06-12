@@ -2356,14 +2356,13 @@ $(document).ready(function () {
                 $('#icons-filter').on('input keydown', function (e) {
 
                     var filter_value = $(this).val().trim().toLowerCase().replace(' ', ''),
-                        $icons = $('.InputfieldIconAll i'),
                         keyCode = e.keyCode || e.charCode || e.which,
-                        hasParentSpan = $icons.parent('span').length;
+                        hasParentSpan = $('.InputfieldIconAll span').length,
+                        $icons = hasParentSpan ? $('.InputfieldIconAll span') : $('.InputfieldIconAll i');
 
                     // Enter
                     if (keyCode === 13) {
                         e.preventDefault();
-                        console.log(1);
                         var $iconsVisible = $icons.not('.hidden');
 
                         if ($iconsVisible.length) {
