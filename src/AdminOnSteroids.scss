@@ -2028,6 +2028,20 @@ html.PageListThumbs {
   }
 }
 
+
+// iconsFilter
+.InputfieldIcon .hidden {
+  display: none;
+}
+#icons-filter {
+  display: inline-block;
+  padding: 2px 5px;
+  margin-left: 30px;
+  &.hidden {
+    display: none;
+  }
+}
+
 html.noAnim {
   *, *:after, *:before {
     transition-duration: 0s !important;
@@ -2900,19 +2914,6 @@ html.AdminThemeReno {
           transition: transform $defaultTransition;
         }
       }
-    }
-  }
-
-  // iconsFilter
-  .InputfieldIcon .hidden {
-    display: none;
-  }
-  #icons-filter {
-    display: inline-block;
-    padding: 2px 5px;
-    margin-left: 30px;
-    &.hidden {
-      display: none;
     }
   }
 
