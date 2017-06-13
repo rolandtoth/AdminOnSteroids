@@ -3152,7 +3152,7 @@ html.AdminThemeReno {
         ul.WireTabs {
           overflow: hidden !important;
           // override default -2.6em (allows active tab having no border & works with PrevNextTabs fix)
-          margin-bottom: -2.7em;
+          margin-bottom: calc(-2.6em - 1px);
         }
       }
     }
