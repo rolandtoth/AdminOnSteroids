@@ -858,11 +858,10 @@ $(document).ready(function () {
             if (templateEditSettingsElem.length) {
                 templateEditSettingsElem.after(templateEditSettingsLink);
             } else {
-                // workaround for: Don't allow pages to be moved + Don't allow pages to change their template (Advanced tab)
-                templateEditSettingsElem = $('#wrap_Inputfield__pw_page_name').next('li').find('.InputfieldContent p');
+                // workaround for scenario: Don't allow pages to be moved + Don't allow pages to change their template (Advanced tab)
+                templateEditSettingsElem = $('#wrap_Inputfield__pw_page_name').next('li.Inputfield_template').find('.InputfieldContent p');
                 templateEditSettingsElem.append(templateEditSettingsLink);
             }
-
 
             $(document).on('hover', '.aos-template-edit-settings', function () {
 

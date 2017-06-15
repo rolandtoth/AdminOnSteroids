@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.4.8 (2017-06-15)
+
+- fix for template edit links appearing next to Set Password fields (reported by Robin S)
+
+
+
 ### 1.4.7 (2017-06-12)
 
 - fix for editedPage bug causing issues in repeater fields (thanks to Robin S)
