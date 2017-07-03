@@ -352,6 +352,9 @@ html.aos {
   .cke_top .cke_button_icon.cke_button__codesnippet_icon {
     background-image: url('CKE/plugins/codesnippet/icons/codesnippet.png') !important;
   }
+  .cke_top .cke_button_icon.cke_button__token_icon {
+    background-image: url('CKE/plugins/token/icons/token.png') !important;
+  }
 
   .cke_combo_text {
     white-space: nowrap;
@@ -1350,11 +1353,13 @@ body.aos_saving {
 // noFilenameTruncate
 html.noFilenameTruncate {
   p.InputfieldFileInfo.InputfieldItemHeader {
-    padding-left: 25px;
+    padding: 6px 34px 6px 25px;
+    position: relative;
   }
   i.fa-file-image-o,
   .InputfieldFileInfo i {
     left: -21px !important;
+    top: 3px;
     float: left;
   }
   a.InputfieldFileName {
@@ -1363,11 +1368,9 @@ html.noFilenameTruncate {
     word-wrap: break-word;
   }
   label.InputfieldFileDelete {
-    float: none !important;
-    display: inline-block !important;
-    vertical-align: text-bottom;
-    position: relative;
-    top: -1px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
   }
 }
 
@@ -2028,14 +2031,15 @@ html.PageListThumbs {
   }
 }
 
-
 // iconsFilter
 .InputfieldIconAll {
   overflow: visible !important;
 }
+
 .InputfieldIcon .hidden {
   display: none;
 }
+
 #icons-filter {
   display: inline-block;
   padding: 2px 5px;
@@ -3310,24 +3314,28 @@ html.AdminThemeReno {
 .aos_downloadAsset {
   position: relative;
   z-index: 99;
-  float: right;
-  margin-left: 2px;
-  .gridImage & {
+  top: 1px;
+  .InputfieldImageEdit__buttons & {
     display: none;
   }
-  i {
-    padding: 10px 12px 8px;
-    display: inline-block;
-    .InputfieldImageEdit__buttons & {
-      font-size: 18px !important;
-      margin-right: -8px;
-    }
-    .InputfieldFileItem & {
+  .InputfieldFileItem & {
+    float: right;
+    margin-left: 2px;
+    left: auto;
+    top: auto;
+    i {
       color: #fff;
     }
   }
+  i {
+    padding: 10px 8px;
+    display: inline-block;
+
+  }
   &:hover {
     opacity: 0.7;
+    color: inherit !important;
+    background: transparent !important;
   }
 
 }

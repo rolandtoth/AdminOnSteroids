@@ -1,6 +1,16 @@
 # Changelog
 
 
+### 1.4.9 (2017-07-03)
+
+- fixed issue with edit link for fieldsets (reported by Robin S)
+- fixed missing download link for SVGs (reported by Karl_T)
+- noFilenameTruncate improvements (thanks to Robin S)
+- removed Table Cells Celection CKEditor plugin (latest stock CKEditor has similar feature)
+- added Token Replacement CKEditor plugin
+
+
+
 ### 1.4.8 (2017-06-15)
 
 - fix for template edit links appearing next to Set Password fields (reported by Robin S)

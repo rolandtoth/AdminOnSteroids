@@ -15,6 +15,7 @@ function initCKE() {
         codesnippetPluginDependencies = 'widget,dialog,lineutils',
         indentblockPluginDependencies = 'indent',
         autosavePluginDependencies = 'notification',
+        tokenPluginDependencies = 'widget,dialog,lineutils',
         CKEtoolbars = {
             codesnippet: ["CodeSnippet"],
             div: ["CreateDiv"],
@@ -24,7 +25,7 @@ function initCKE() {
             maximize: ["Maximize"],
             oembed: ["oembed"],
             showblocks: ["ShowBlocks"],
-            // token: ["CreateToken"],
+            token: ["CreateToken"],
             templates: ["Templates"]
         };
 
@@ -62,6 +63,13 @@ function initCKE() {
 
             if (pluginName == 'codesnippet') {
                 var dependencies = codesnippetPluginDependencies.split(',');
+                for (var k in dependencies) {
+                    CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                }
+            }
+
+            if (pluginName == 'token') {
+                var dependencies = tokenPluginDependencies.split(',');
                 for (var k in dependencies) {
                     CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
                 }
