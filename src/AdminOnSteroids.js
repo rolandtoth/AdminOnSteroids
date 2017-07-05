@@ -867,7 +867,7 @@ $(document).ready(function () {
                 templateEditSettingsElem.after(templateEditSettingsLink);
             } else {
                 // workaround for scenario: Don't allow pages to be moved + Don't allow pages to change their template (Advanced tab)
-                templateEditSettingsElem = $('#wrap_Inputfield__pw_page_name').next('li.Inputfield_template').find('.InputfieldContent p');
+                templateEditSettingsElem = $('body[class*="ProcessPageEdit-template-"] #wrap_Inputfield__pw_page_name').next('li.Inputfield').find('i.fa-cubes').parent().parent().find('.InputfieldContent p');
                 templateEditSettingsElem.append(templateEditSettingsLink);
             }
 
