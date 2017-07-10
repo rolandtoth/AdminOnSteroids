@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.5.0 (2017-07-10)
+
+- Misc: add new page: uncheck `Active?` for non-default language names (thanks to Tomka)
+- Misc: hide the `Add new` dropdown button from above the main pagelist
+
+
+
 ### 1.4.9 (2017-07-03)
 
 - fixed issue with edit link for fieldsets (reported by Robin S)

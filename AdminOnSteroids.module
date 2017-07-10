@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 149,
+            'version'   => 150,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -900,12 +900,24 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAdminLangSwitcher');
             }
 
+            // uncheckAddnewActive
+            if (in_array('uncheckAddnewActive', $configData[$subModule])) {
+                $this->addHookAfter('InputfieldPageName::render', $this, 'uncheckAddnewActive');
+            }
+
             // addTranslatorLinks
             if (in_array('addTranslatorLinks', $configData[$subModule])) {
                 if ($this->page->process == "ProcessLanguageTranslator" && $this->wire('languages')->count() > 1) {
                     $this->addHookAfter('ProcessLanguageTranslator::executeEdit', $this, 'addTranslatorLinks');
                 }
             }
+
+
+            // hideAddNewDropdown
+            if (in_array('hideAddNewDropdown', $configData[$subModule])) {
+                $this->addHookAfter('Page::render', $this, 'hideAddNewDropdown');
+            }
+
 
             // showSystemTemplates
             if (in_array('showSystemTemplates', $configData[$subModule])) {
@@ -1070,6 +1082,33 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //            return $page;
 //        }
 //    }
+
+
+    // hide "Add new" dropdown button from the main Pagelist
+    public function hideAddNewDropdown(HookEvent $event)
+    {
+        $page = $event->object;
+
+        if ($page->process == 'ProcessPageList') {
+            $event->return = str_replace('pw-dropdown-toggle', 'pw-dropdown-toggle aos-hidden', $event->return);
+        }
+    }
+
+
+    // uncheck "Active?" checkbox next to language names when adding a new page
+    public function uncheckAddnewActive(HookEvent $event)
+    {
+        $page = $this->wire('page');
+
+        // AOS is only available in the admin
+//        if ($page->template != 'admin') {
+//            return;
+//        }
+
+        if ($page->process == 'ProcessPageAdd' || ($page->process == 'ProcessPageEdit' && $this->wire('input')->get('new') == 1)) {
+            $event->return = str_replace("checked='checked'", "", $event->return);
+        }
+    }
 
 
     public function addAsset($assetName, &$configData)
@@ -1805,8 +1844,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addTemplateEditLink(HookEvent $event)
     {
-
-
         if (!$this->editedPage || $this->editedPage->template == 'admin') {
             return;
         }
@@ -1884,1362 +1921,1352 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     }
 
 
-public
-function addTranslatorLinks(HookEvent $event)
-{
+    public function addTranslatorLinks(HookEvent $event)
+    {
+        $form = $event->return;
+        $textdomain = $this->wire('input')->get('textdomain');
+        $currentLangID = $this->wire('input')->get('language_id');
+        $links = '';
+        $adminUrl = $this->wire('urls')->admin;
 
-    $form = $event->return;
-    $textdomain = $this->wire('input')->get('textdomain');
-    $currentLangID = $this->wire('input')->get('language_id');
-    $links = '';
-    $adminUrl = $this->wire('urls')->admin;
-
-    foreach ($this->wire('languages') as $lang) {
-        $lang_id = $lang->id;
-        if ($lang_id == $currentLangID) {
-            continue;
-        }
-        $links .= '<li><a href="' . $adminUrl . 'setup/language-translator/edit/?textdomain=' . $textdomain . '&language_id=' . $lang_id . '">' . $lang->title . ' <span>' . $lang->name . '<span></a></li>';
-    }
-
-    $links = '<ul class="aos-language-translator-links">' . $links . '</ul>';
-    $event->return = str_replace('</h2>', '</h2>' . $links, $form);
-}
-
-
-public
-function addPageListUnselectButtons(HookEvent $event)
-{
-
-    $field = $event->object;
-
-    $originalID = '';
-    $originalTitle = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->title : '';
-
-    if (isset($this->PageListTweaks) && in_array('pListIDs', $this->PageListTweaks) && $this->user->isSuperUser()) {
-        $originalID = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->id : '';
-    }
-
-    $restoreTitleTag = strlen($originalTitle) ? 'title="' . __('Restore',
-            __FILE__) . ' &quot;' . $originalTitle . '&quot;"' : '';
-
-    $clearButton = '<button class="aos_pagelist_unselect clear ui-button ' . ($field->value ? '' : 'empty') . '" title="' . __('Clear',
-            __FILE__) . '"><i class="fa fa-times-circle"></i></button>';
-
-    $restoreButton = $field->value ? '<button class="aos_pagelist_unselect restore ui-button initial" ' . $restoreTitleTag . ' data-title-original="' . $originalTitle . '" data-pid="' . $originalID . '" data-value-original="' . $field->value . '" ><i class="fa fa-undo"></i></button>' : '';
-
-    $event->return = $restoreButton . $clearButton . $event->return;
-}
-
-
-public
-function addIUCLink(HookEvent $event)
-{
-
-    $inputfield = $event->object;
-    $url = $inputfield->value ? $inputfield->value : '';
-
-    // do not add to regular autocomplete field, only to edit link modal
-    if ($inputfield instanceof InputfieldPageAutocomplete) {
-        return false;
-    }
-
-    // if url is an array, it's a simple pageautocomplete field (not FieldtypeAssistedURL)
-    // https://github.com/rolandtoth/AdminOnSteroids/issues/13
-    if (is_array($url)) {
-        return false;
-    }
-
-    $configData = self::$configData;
-    $editedPage = $this->editedPage;
-    $editLinkAttrsArray = array();
-    $editLinkAttrs = '';
-
-    if (!empty($configData['IUC_enabledTemplates']) && !in_array($editedPage->template->name,
-            $configData['IUC_enabledTemplates'])
-    ) {
-        return false;
-    }
-
-    if (!empty($configData['IUC_enabledFields']) && !in_array($inputfield->name,
-            $configData['IUC_enabledFields'])
-    ) {
-        return false;
-    }
-
-
-    // process locked fields
-    if (in_array($inputfield->collapsed, array(7, 8))) {
-        $target = isset($configData['IUC_target']) ? $configData['IUC_target'] : '';
-        $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
-        $event->return = '<a href="' . $event->return . '" target="_blank" class="iuc iuc-locked-link ' . $target . '">' . $event->return . '</a>';
-
-        return true;
-    }
-
-
-    if (isset($configData['IUC_mode'])) {
-
-        $mode = implode(',', $configData['IUC_mode']);
-
-        $editLinkAttrsArray['data-iuc-mode'][] = $mode;
-
-        if (in_array('button', $configData['IUC_mode'])) {
-            $buttonPosition = isset($configData['IUC_buttonPosition']) ? $configData['IUC_buttonPosition'] : '';
-            $editLinkAttrsArray['class'][] = 'iuc iuc-button ' . $buttonPosition;
-        } else {
-            $editLinkAttrsArray['class'][] = 'iuc iuc-hidden';
-        }
-    }
-
-    if (isset($configData['IUC_target'])) {
-
-        // add wrap class for repeaters (only if mode is pw-panel)
-
-        if ($configData['IUC_target'] === 'pw-panel' && strpos($inputfield->attr('id'), '_repeater') !== false) {
-            $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' pw-panel-items');
+        foreach ($this->wire('languages') as $lang) {
+            $lang_id = $lang->id;
+            if ($lang_id == $currentLangID) {
+                continue;
+            }
+            $links .= '<li><a href="' . $adminUrl . 'setup/language-translator/edit/?textdomain=' . $textdomain . '&language_id=' . $lang_id . '">' . $lang->title . ' <span>' . $lang->name . '<span></a></li>';
         }
 
-        $editLinkAttrsArray['class'][] = $configData['IUC_target'];
+        $links = '<ul class="aos-language-translator-links">' . $links . '</ul>';
+        $event->return = str_replace('</h2>', '</h2>' . $links, $form);
+    }
 
-        if ($configData['IUC_target'] === 'pw-panel') {
-            // disable load on hover
-            $editLinkAttrsArray['class'][] = 'pw-panel-reload';
+
+    public function addPageListUnselectButtons(HookEvent $event)
+    {
+        $field = $event->object;
+
+        $originalID = '';
+        $originalTitle = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->title : '';
+
+        if (isset($this->PageListTweaks) && in_array('pListIDs', $this->PageListTweaks) && $this->user->isSuperUser()) {
+            $originalID = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->id : '';
         }
+
+        $restoreTitleTag = strlen($originalTitle) ? 'title="' . __('Restore',
+                __FILE__) . ' &quot;' . $originalTitle . '&quot;"' : '';
+
+        $clearButton = '<button class="aos_pagelist_unselect clear ui-button ' . ($field->value ? '' : 'empty') . '" title="' . __('Clear',
+                __FILE__) . '"><i class="fa fa-times-circle"></i></button>';
+
+        $restoreButton = $field->value ? '<button class="aos_pagelist_unselect restore ui-button initial" ' . $restoreTitleTag . ' data-title-original="' . $originalTitle . '" data-pid="' . $originalID . '" data-value-original="' . $field->value . '" ><i class="fa fa-undo"></i></button>' : '';
+
+        $event->return = $restoreButton . $clearButton . $event->return;
     }
 
-    if (isset($configData['IUC_forceHttp']) && $configData['IUC_forceHttp'] == 1) {
-        $editLinkAttrsArray['data-iuc-force-http'][] = 1;
+
+    public function addIUCLink(HookEvent $event)
+    {
+
+        $inputfield = $event->object;
+        $url = $inputfield->value ? $inputfield->value : '';
+
+        // do not add to regular autocomplete field, only to edit link modal
+        if ($inputfield instanceof InputfieldPageAutocomplete) {
+            return false;
+        }
+
+        // if url is an array, it's a simple pageautocomplete field (not FieldtypeAssistedURL)
+        // https://github.com/rolandtoth/AdminOnSteroids/issues/13
+        if (is_array($url)) {
+            return false;
+        }
+
+        $configData = self::$configData;
+        $editedPage = $this->editedPage;
+        $editLinkAttrsArray = array();
+        $editLinkAttrs = '';
+
+        if (!empty($configData['IUC_enabledTemplates']) && !in_array($editedPage->template->name,
+                $configData['IUC_enabledTemplates'])
+        ) {
+            return false;
+        }
+
+        if (!empty($configData['IUC_enabledFields']) && !in_array($inputfield->name,
+                $configData['IUC_enabledFields'])
+        ) {
+            return false;
+        }
+
+
+        // process locked fields
+        if (in_array($inputfield->collapsed, array(7, 8))) {
+            $target = isset($configData['IUC_target']) ? $configData['IUC_target'] : '';
+            $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+            $event->return = '<a href="' . $event->return . '" target="_blank" class="iuc iuc-locked-link ' . $target . '">' . $event->return . '</a>';
+
+            return true;
+        }
+
+
+        if (isset($configData['IUC_mode'])) {
+
+            $mode = implode(',', $configData['IUC_mode']);
+
+            $editLinkAttrsArray['data-iuc-mode'][] = $mode;
+
+            if (in_array('button', $configData['IUC_mode'])) {
+                $buttonPosition = isset($configData['IUC_buttonPosition']) ? $configData['IUC_buttonPosition'] : '';
+                $editLinkAttrsArray['class'][] = 'iuc iuc-button ' . $buttonPosition;
+            } else {
+                $editLinkAttrsArray['class'][] = 'iuc iuc-hidden';
+            }
+        }
+
+        if (isset($configData['IUC_target'])) {
+
+            // add wrap class for repeaters (only if mode is pw-panel)
+
+            if ($configData['IUC_target'] === 'pw-panel' && strpos($inputfield->attr('id'), '_repeater') !== false) {
+                $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' pw-panel-items');
+            }
+
+            $editLinkAttrsArray['class'][] = $configData['IUC_target'];
+
+            if ($configData['IUC_target'] === 'pw-panel') {
+                // disable load on hover
+                $editLinkAttrsArray['class'][] = 'pw-panel-reload';
+            }
+        }
+
+        if (isset($configData['IUC_forceHttp']) && $configData['IUC_forceHttp'] == 1) {
+            $editLinkAttrsArray['data-iuc-force-http'][] = 1;
+        }
+
+        foreach ($editLinkAttrsArray as $attr_name => $values) {
+            $editLinkAttrs .= $attr_name . '="' . implode(' ', $values) . '" ';
+        }
+
+        // add CSS class for easier selection
+        $inputfield->addClass('iuc-input');
+
+        $editLinkMarkup = '<a href="' . $url . '"' . $editLinkAttrs . ' target="_blank"><i class="fa fa-arrow-right"></i></a>';
+
+        $event->return = $editLinkMarkup . $event->return;
+
+        return false;
     }
-
-    foreach ($editLinkAttrsArray as $attr_name => $values) {
-        $editLinkAttrs .= $attr_name . '="' . implode(' ', $values) . '" ';
-    }
-
-    // add CSS class for easier selection
-    $inputfield->addClass('iuc-input');
-
-    $editLinkMarkup = '<a href="' . $url . '"' . $editLinkAttrs . ' target="_blank"><i class="fa fa-arrow-right"></i></a>';
-
-    $event->return = $editLinkMarkup . $event->return;
-
-    return false;
-}
 
 
 // add template name to title
-public
-function addTemplateLinkPageList(HookEvent $event)
-{
+    public function addTemplateLinkPageList(HookEvent $event)
+    {
 
-    $page = $event->arguments('page');
+        $page = $event->arguments('page');
 
-    $template = $page->template;
+        $template = $page->template;
 
-    $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
+        $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
 
-    $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+        $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
-    $templateEditUrl = $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
-    $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . '<i class="fa fa-pencil"></i></a>';
+        $templateEditUrl = $this->config->urls->admin . 'setup/template/edit?id=' . $template->id;
+        $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . '<i class="fa fa-pencil"></i></a>';
 
-    $event->return = str_replace('</span>', $templateEditLink . '</span>', $event->return);
-}
-
-
-function replacePageListIconUnderscores(HookEvent $event)
-{
-    $event->return = str_replace('___', ' ', $event->return);
-}
-
-
-function addPageListIcon(HookEvent $event)
-{
-
-    $page = $event->arguments[0];
-    $template = $page->template;
-
-    // intentional "="
-    if (!($settings = $this->getTextareaPairs('PageListIcons'))) {
-        return false;
+        $event->return = str_replace('</span>', $templateEditLink . '</span>', $event->return);
     }
 
-    if (!is_array($settings)) {
-        return false;
+
+    function replacePageListIconUnderscores(HookEvent $event)
+    {
+        $event->return = str_replace('___', ' ', $event->return);
     }
 
-    foreach ($settings as $pairs) {
 
-        if (strpos($pairs, '//') === 0) {
-            continue;
+    function addPageListIcon(HookEvent $event)
+    {
+
+        $page = $event->arguments[0];
+        $template = $page->template;
+
+        // intentional "="
+        if (!($settings = $this->getTextareaPairs('PageListIcons'))) {
+            return false;
         }
 
-        $setting = explode(':', $pairs);
-
-        $customIcon = isset($setting[0]) ? trim($setting[0]) : null;
-        $selector = isset($setting[1]) ? trim($setting[1]) : null;
-
-        // save original icon to session
-        $sessionIconName = 'icon_orig_' . $template->id;
-        $currentIcon = $template->getIcon();
-
-        if (strpos($currentIcon, 'icon_orig_') === 0) {
-            $this->wire('session')->set($sessionIconName, $currentIcon);
+        if (!is_array($settings)) {
+            return false;
         }
 
-        // if only a string is supplied without "=" in it, consider it as a template
-        // eg. cirle-o: basic-page matches other items too - use template=basic-page (maybe because common fieldgroup?)
-        if (is_string($selector) && strpos($selector, '=') === 0) {
-            $selector = "template=" . $selector;
-        }
+        foreach ($settings as $pairs) {
 
-        if ($page->is($selector) || $page->matches($selector)) {
-            $template->setIcon($customIcon);
+            if (strpos($pairs, '//') === 0) {
+                continue;
+            }
+
+            $setting = explode(':', $pairs);
+
+            $customIcon = isset($setting[0]) ? trim($setting[0]) : null;
+            $selector = isset($setting[1]) ? trim($setting[1]) : null;
+
+            // save original icon to session
+            $sessionIconName = 'icon_orig_' . $template->id;
+            $currentIcon = $template->getIcon();
+
+            if (strpos($currentIcon, 'icon_orig_') === 0) {
+                $this->wire('session')->set($sessionIconName, $currentIcon);
+            }
+
+            // if only a string is supplied without "=" in it, consider it as a template
+            // eg. cirle-o: basic-page matches other items too - use template=basic-page (maybe because common fieldgroup?)
+            if (is_string($selector) && strpos($selector, '=') === 0) {
+                $selector = "template=" . $selector;
+            }
+
+            if ($page->is($selector) || $page->matches($selector)) {
+                $template->setIcon($customIcon);
+            }
         }
     }
-}
 
 
-public
-function addPageListThumb(HookEvent $event)
-{
-
-    // disable in Tree menu (wide items may go blank because the ellipsis added by PW)
-    // bug: causes thumbs not loaded if tree was initially collapsed
+    public function addPageListThumb(HookEvent $event)
+    {
+        // disable in Tree menu (wide items may go blank because the ellipsis added by PW)
+        // bug: causes thumbs not loaded if tree was initially collapsed
 //        if ($this->wire('config')->ajax) return false;
-    // this works fine:
-    $options = $event->arguments('options');
-    if (!empty($options['noTags'])) {
-        return;
-    }
+        // this works fine:
+        $options = $event->arguments('options');
+        if (!empty($options['noTags'])) {
+            return;
+        }
 
 
-    $page = $event->arguments('page');
-    $field = null;
+        $page = $event->arguments('page');
+        $field = null;
 
-    // intentional "="
+        // intentional "="
 //        if (!($settings = $this->getTextareaPairs('PageListThumbs_options', 'PageListThumbs_items'))) return false;
 
-    if (!($settings = $this->getTextareaPairs('PageListThumbs_items'))) {
-        return false;
-    }
-
-    if (!is_array($settings)) {
-        return false;
-    }
-
-    foreach ($settings as $pairs) {
-
-        if (strpos($pairs, '//') === 0) {
-            continue;
+        if (!($settings = $this->getTextareaPairs('PageListThumbs_items'))) {
+            return false;
         }
 
-        $setting = explode(':', $pairs);
-
-        $f = isset($setting[0]) ? trim($setting[0]) : null;
-        $selector = isset($setting[1]) ? trim($setting[1]) : null;
-
-        if (is_null($f) || !$page->$f || (!$page->$f instanceof Pageimage && !$page->$f instanceof Pageimages) || count($page->$f) == 0) {
-            continue;
+        if (!is_array($settings)) {
+            return false;
         }
 
-        if (is_null($selector)) {
-            // break if there's no selector (any page will match)
-            $field = $f;
-            break;
+        foreach ($settings as $pairs) {
 
-        } elseif ($page->is($selector)) {
-            // break if page matches
-            $field = $f;
-            break;
+            if (strpos($pairs, '//') === 0) {
+                continue;
+            }
+
+            $setting = explode(':', $pairs);
+
+            $f = isset($setting[0]) ? trim($setting[0]) : null;
+            $selector = isset($setting[1]) ? trim($setting[1]) : null;
+
+            if (is_null($f) || !$page->$f || (!$page->$f instanceof Pageimage && !$page->$f instanceof Pageimages) || count($page->$f) == 0) {
+                continue;
+            }
+
+            if (is_null($selector)) {
+                // break if there's no selector (any page will match)
+                $field = $f;
+                break;
+
+            } elseif ($page->is($selector)) {
+                // break if page matches
+                $field = $f;
+                break;
+            }
         }
-    }
 
 
-    if (is_null($field)) {
-        return false;
-    }
+        if (is_null($field)) {
+            return false;
+        }
 
-    $field = ($page->$field instanceof Pageimages) ? $page->$field->first() : $page->$field;
+        $field = ($page->$field instanceof Pageimages) ? $page->$field->first() : $page->$field;
 
-    $classes = array();
+        $classes = array();
 
 //        $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('pListCompact', $this->RenoTweaks))) ? 32 : 48;
 
-    // always use 48px to avoid generation too much thumbs
-    // thubms are resized with CSS
-    $thumbSize = 48;
+        // always use 48px to avoid generation too much thumbs
+        // thubms are resized with CSS
+        $thumbSize = 48;
 
-    if (isset($this->PageListThumbs_style) && !empty($this->PageListThumbs_style)) {
-        $classes[] = $this->PageListThumbs_style;
-    }
+        if (isset($this->PageListThumbs_style) && !empty($this->PageListThumbs_style)) {
+            $classes[] = $this->PageListThumbs_style;
+        }
 
-    if (in_array('square', $classes)) {
+        if (in_array('square', $classes)) {
 //                $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => false))->url;
-        $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true, 'upscaling' => true))->url;
+            $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true, 'upscaling' => true))->url;
 //                $thumbSrc = $field->size($thumbSize, $thumbSize, array('cropping' => true, 'forceNew' => true))->url;
-    } else {
-        $thumbSrc = $field->height($thumbSize)->url;
-    }
-
-    $PageListThumbs_options = isset($this->PageListThumbs_options) ? $this->PageListThumbs_options : null;
-
-    $img = '<img src="' . $thumbSrc . '" />';
-
-    if (!is_null($PageListThumbs_options)) {
-
-        if (in_array('alignright', $PageListThumbs_options)) {
-            $classes[] = 'alignright';
+        } else {
+            $thumbSrc = $field->height($thumbSize)->url;
         }
 
-        if (in_array('addlink', $PageListThumbs_options)) {
+        $PageListThumbs_options = isset($this->PageListThumbs_options) ? $this->PageListThumbs_options : null;
 
-            $classes[] = 'addlink';
+        $img = '<img src="' . $thumbSrc . '" />';
 
-            $img = '<a href="' . rtrim($this->config->urls->httpRoot,
-                    '/') . $page->editUrl() . '" class="aos_pageListLink">' . $img . '</a>';
+        if (!is_null($PageListThumbs_options)) {
+
+            if (in_array('alignright', $PageListThumbs_options)) {
+                $classes[] = 'alignright';
+            }
+
+            if (in_array('addlink', $PageListThumbs_options)) {
+
+                $classes[] = 'addlink';
+
+                $img = '<a href="' . rtrim($this->config->urls->httpRoot,
+                        '/') . $page->editUrl() . '" class="aos_pageListLink">' . $img . '</a>';
+            }
         }
+
+        if (!empty($classes)) {
+            $classes = implode(' ', $classes);
+        }
+
+        $event->return = '<figure class="' . $classes . '">' . $img . '</figure>' . $event->return;
     }
 
-    if (!empty($classes)) {
-        $classes = implode(' ', $classes);
-    }
 
-    $event->return = '<figure class="' . $classes . '">' . $img . '</figure>' . $event->return;
-}
+    public function getTextareaPairs($propertyName)
+    {
 
+        if ($this->{$propertyName}) {
+            return $this->{$propertyName};
+        }
 
-public
-function getTextareaPairs($propertyName)
-{
+        $data = isset($this->data[$propertyName]) ? $this->data[$propertyName] : null;
 
-    if ($this->{$propertyName}) {
-        return $this->{$propertyName};
-    }
+        if (is_null($data)) {
+            return false;
+        }
 
-    $data = isset($this->data[$propertyName]) ? $this->data[$propertyName] : null;
-
-    if (is_null($data)) {
-        return false;
-    }
-
-    // build settings array
-    $settings = trim($data);
-    $settings = explode("\n", $settings);
+        // build settings array
+        $settings = trim($data);
+        $settings = explode("\n", $settings);
 //        $settings = array_filter($settings, 'trim');
-    $settings = array_map('trim', $settings); //trim whitespace
-    $settings = array_filter($settings, 'trim');  // remove empty lines
+        $settings = array_map('trim', $settings); //trim whitespace
+        $settings = array_filter($settings, 'trim');  // remove empty lines
 
-    $this->{$propertyName} = $settings;
+        $this->{$propertyName} = $settings;
 
-    return $settings;
-}
+        return $settings;
+    }
 
-public
-function addAdminLangSwitcher(HookEvent $event)
-{
+    public function addAdminLangSwitcher(HookEvent $event)
+    {
 
-    if ($this->languages && $this->pages->find('template=language, check_access=0')->count() > 1) {
+        if ($this->languages && $this->pages->find('template=language, check_access=0')->count() > 1) {
 
-        $parts = $event->return;
+            $parts = $event->return;
 
-        $lang_items = '';
-        $userLangId = $this->user->language->id;
+            $lang_items = '';
+            $userLangId = $this->user->language->id;
 
-        foreach ($this->languages as $lang) {
-            $activeClass = $lang->id == $userLangId ? ' class="active"' : '';
-            $lang_items .= '<li' . $activeClass . '><a href="' . $_SERVER['REQUEST_URI'] . '" data-lang-id="' . $lang->id . '"><span class="lang-title">' . $lang->title . '</span> <span class="lang-name">' . $lang->name . '</span></a></li>';
+            foreach ($this->languages as $lang) {
+                $activeClass = $lang->id == $userLangId ? ' class="active"' : '';
+                $lang_items .= '<li' . $activeClass . '><a href="' . $_SERVER['REQUEST_URI'] . '" data-lang-id="' . $lang->id . '"><span class="lang-title">' . $lang->title . '</span> <span class="lang-name">' . $lang->name . '</span></a></li>';
+            }
+
+            $parts['masthead'] .= '<li class="aos_adminLangSwitcher" style="display: none;"><a href="#">' . $this->user->language->title . '</a><ul>' . $lang_items . '</ul></li>';
+
+            $event->return = $parts;
+        }
+    }
+
+
+    public function addRoleFields($submoduleName, $data, $parent)
+    {
+        $f = wire('modules')->get("InputfieldAsmSelect");
+        $f->attr('name', $submoduleName . 'Roles');
+        $f->label = __($submoduleName . ' roles', __FILE__);
+        $f->skipLabel = Inputfield::skipLabelHeader;
+        $f->attr('data-asm-placeholder', __('ROLES', __FILE__));
+        $f->showIf = 'enabledSubmodules=' . $submoduleName;
+        $f->setAsmSelectOption('sortable', false);
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOptions($this->allRoles);
+
+        if (isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
         }
 
-        $parts['masthead'] .= '<li class="aos_adminLangSwitcher" style="display: none;"><a href="#">' . $this->user->language->title . '</a><ul>' . $lang_items . '</ul></li>';
-
-        $event->return = $parts;
+        $parent->add($f);
     }
-}
 
 
-public
-function addRoleFields($submoduleName, $data, $parent)
-{
+    public function getModuleConfigInputfields(array $data)
+    {
 
-    $f = wire('modules')->get("InputfieldAsmSelect");
-    $f->attr('name', $submoduleName . 'Roles');
-    $f->label = __($submoduleName . ' roles', __FILE__);
-    $f->skipLabel = Inputfield::skipLabelHeader;
-    $f->attr('data-asm-placeholder', __('ROLES', __FILE__));
-    $f->showIf = 'enabledSubmodules=' . $submoduleName;
-    $f->setAsmSelectOption('sortable', false);
-    $f->collapsed = Inputfield::collapsedNever;
+        $defaultData = self::getDefaultData();
+        $data = array_merge(self::getDefaultData(), $data);
 
-    $f->addOptions($this->allRoles);
+        // remove  "Force showing system templates" tweak if it's unchecked when saving AOS
+        $this->wire('modules')->addHookBefore('saveModuleConfigData', function () use ($data) {
+            if (in_array('showSystemTemplates', $data['Misc'])) {
+                $this->wire('session')->remove('ProcessTemplateFilterSystem');
+            }
+        });
 
-    if (isset($data[$f->name])) {
+        // exception to ListerTweaks: use "[DEFAULTS]" if empty
+        if (empty($data['ListerTweaks_find'])) {
+            $data['ListerTweaks_find'] = array('[DEFAULTS]');
+        }
+        if (empty($data['ListerTweaks_users'])) {
+            $data['ListerTweaks_users'] = array('[DEFAULTS]');
+        }
+
+        $wrapper = new InputfieldWrapper();
+
+        // Enable module ----------------------------------------------- //
+
+        $f = wire('modules')->get('InputfieldCheckbox');
+        $f->name = 'enabled';
+        $f->label = __('Enable module', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
         $f->attr('value', $data[$f->name]);
-    }
 
-    $parent->add($f);
-}
+        $f->checked = ($f->value == 1) ? 'checked' : '';
 
-public
-function getModuleConfigInputfields(array $data)
-{
-
-    $defaultData = self::getDefaultData();
-    $data = array_merge(self::getDefaultData(), $data);
-
-    // remove  "Force showing system templates" tweak if it's unchecked when saving AOS
-    $this->wire('modules')->addHookBefore('saveModuleConfigData', function () use ($data) {
-        if (in_array('showSystemTemplates', $data['Misc'])) {
-            $this->wire('session')->remove('ProcessTemplateFilterSystem');
-        }
-    });
-
-    // exception to ListerTweaks: use "[DEFAULTS]" if empty
-    if (empty($data['ListerTweaks_find'])) {
-        $data['ListerTweaks_find'] = array('[DEFAULTS]');
-    }
-    if (empty($data['ListerTweaks_users'])) {
-        $data['ListerTweaks_users'] = array('[DEFAULTS]');
-    }
-
-    $wrapper = new InputfieldWrapper();
-
-    // Enable module ----------------------------------------------- //
-
-    $f = wire('modules')->get('InputfieldCheckbox');
-    $f->name = 'enabled';
-    $f->label = __('Enable module', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->attr('value', $data[$f->name]);
-
-    $f->checked = ($f->value == 1) ? 'checked' : '';
-
-    $wrapper->add($f);
+        $wrapper->add($f);
 
 
-    // Submodules ----------------------------------------------- //
+        // Submodules ----------------------------------------------- //
 
 
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'enabledSubmodules');
-    $f->label = __('Submodules', __FILE__);
-    $f->description = __('Enable or disable submodules here.', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'enabledSubmodules');
+        $f->label = __('Submodules', __FILE__);
+        $f->description = __('Enable or disable submodules here.', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
 
-    $markupText = __('Detailed information on submodules', __FILE__);
+        $markupText = __('Detailed information on submodules', __FILE__);
 
-    $f->prependMarkup = <<< HTML
+        $f->prependMarkup = <<< HTML
      <p>{$markupText}: <a href="https://github.com/rolandtoth/AdminOnSteroids/wiki" target="_blank">AdminOnSteroids @ GitHub</a>
 </p>
 HTML;
 
-    $f->addOption('AdminTweaks', '**AdminTweaks**' . __('Default admin theme tweaks', __FILE__));
-    $f->addOption('AsmTweaks', '**AsmTweaks**' . __('asmSelect tweaks', __FILE__));
-    $f->addOption('CKEaddons', '**CKEaddons**' . __('Autoload CKEditor plugins and skins', __FILE__));
-    $f->addOption('DeselectRadios', '**DeselectRadios**' . __('Enable clearing checked radio buttons', __FILE__));
-    $f->addOption('FieldAndTemplateEditLinks',
-        '**FieldAndTemplateEditLinks**' . __('Shortcuts to templates and fields (SuperUser only)', __FILE__));
-    $f->addOption('FileFieldTweaks', '**FileFieldTweaks**' . __('File and image field enhancements', __FILE__));
-    $f->addOption('FocusInputOnLangTabSwitch',
-        '**FocusInputOnLangTabSwitch**' . __('Focus input on switching language tabs', __FILE__));
-    $f->addOption('Hotkeys', '**Hotkeys**' . __('Hotkey tweaks', __FILE__));
-    $f->addOption('InputfieldURLChecker',
-        '**InputfieldURLChecker**' . __('Add button or hotkey to check URL', __FILE__));
-    $f->addOption('LongClickDuration', '**LongClickDuration**' . __('Custom long-click action duration', __FILE__));
-    $f->addOption('ListerTweaks', '**ListerTweaks**' . __('Lister enhancements', __FILE__));
-    $f->addOption('Misc', '**Misc**' . __('Miscellaneous tweaks', __FILE__));
-    $f->addOption('ModuleTweaks', '**ModuleTweaks**' . __('Module related tweaks (SuperUser only)', __FILE__));
-    $f->addOption('NavItems', '**NavItems**' . __('Add pages to navigation', __FILE__));
-    $f->addOption('PageListIcons', '**PageListIcons**' . __('Add pagelist icons', __FILE__));
-    $f->addOption('PageListThumbs', '**PageListThumbs**' . __('Add pagelist thumbnails', __FILE__));
-    $f->addOption('PageListTweaks', '**PageListTweaks**' . __('Pagelist related tweaks', __FILE__));
-    $f->addOption('PagePreviewBtn', '**PagePreviewBtn**' . __('Add preview link next to page title', __FILE__));
-    $f->addOption('RenoTweaks', '**RenoTweaks**' . __('Reno admin theme tweaks', __FILE__));
-    $f->addOption('RestrictTreeDropdown', '**RestrictTreeDropdown**' . __('Hide tree dropdown by role', __FILE__));
-    $f->addOption('Tooltips', '**Tooltips**' . __('Move field descriptions and notes to tooltips', __FILE__));
+        $f->addOption('AdminTweaks', '**AdminTweaks**' . __('Default admin theme tweaks', __FILE__));
+        $f->addOption('AsmTweaks', '**AsmTweaks**' . __('asmSelect tweaks', __FILE__));
+        $f->addOption('CKEaddons', '**CKEaddons**' . __('Autoload CKEditor plugins and skins', __FILE__));
+        $f->addOption('DeselectRadios', '**DeselectRadios**' . __('Enable clearing checked radio buttons', __FILE__));
+        $f->addOption('FieldAndTemplateEditLinks',
+            '**FieldAndTemplateEditLinks**' . __('Shortcuts to templates and fields (SuperUser only)', __FILE__));
+        $f->addOption('FileFieldTweaks', '**FileFieldTweaks**' . __('File and image field enhancements', __FILE__));
+        $f->addOption('FocusInputOnLangTabSwitch',
+            '**FocusInputOnLangTabSwitch**' . __('Focus input on switching language tabs', __FILE__));
+        $f->addOption('Hotkeys', '**Hotkeys**' . __('Hotkey tweaks', __FILE__));
+        $f->addOption('InputfieldURLChecker',
+            '**InputfieldURLChecker**' . __('Add button or hotkey to check URL', __FILE__));
+        $f->addOption('LongClickDuration', '**LongClickDuration**' . __('Custom long-click action duration', __FILE__));
+        $f->addOption('ListerTweaks', '**ListerTweaks**' . __('Lister enhancements', __FILE__));
+        $f->addOption('Misc', '**Misc**' . __('Miscellaneous tweaks', __FILE__));
+        $f->addOption('ModuleTweaks', '**ModuleTweaks**' . __('Module related tweaks (SuperUser only)', __FILE__));
+        $f->addOption('NavItems', '**NavItems**' . __('Add pages to navigation', __FILE__));
+        $f->addOption('PageListIcons', '**PageListIcons**' . __('Add pagelist icons', __FILE__));
+        $f->addOption('PageListThumbs', '**PageListThumbs**' . __('Add pagelist thumbnails', __FILE__));
+        $f->addOption('PageListTweaks', '**PageListTweaks**' . __('Pagelist related tweaks', __FILE__));
+        $f->addOption('PagePreviewBtn', '**PagePreviewBtn**' . __('Add preview link next to page title', __FILE__));
+        $f->addOption('RenoTweaks', '**RenoTweaks**' . __('Reno admin theme tweaks', __FILE__));
+        $f->addOption('RestrictTreeDropdown', '**RestrictTreeDropdown**' . __('Hide tree dropdown by role', __FILE__));
+        $f->addOption('Tooltips', '**Tooltips**' . __('Move field descriptions and notes to tooltips', __FILE__));
 
-    $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
+        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
-    $wrapper->add($f);
+        $wrapper->add($f);
 
 
-    // Tweaks Fieldset ----------------------------------------------- //
+        // Tweaks Fieldset ----------------------------------------------- //
 
-    $fset = wire('modules')->get("InputfieldFieldset");
-    $fset->attr('name', 'tweaks');
+        $fset = wire('modules')->get("InputfieldFieldset");
+        $fset->attr('name', 'tweaks');
 //        $fset->showIf    = 'enabled=1';
-    $fset->label = __('Submodule options', __FILE__);
-    $fset->collapsed = Inputfield::collapsedNever;
+        $fset->label = __('Submodule options', __FILE__);
+        $fset->collapsed = Inputfield::collapsedNever;
 
 
-    // AdminTweaks ----------------------------------------------- //
+        // AdminTweaks ----------------------------------------------- //
 
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'AdminTweaks');
-    $f->label = __('AdminTweaks', __FILE__);
-    $f->showIf = 'enabledSubmodules=AdminTweaks';
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $f->addOption('headSticky', __('Sticky header', __FILE__));
-    $f->addOption('wide', __('Set wider main content', __FILE__));
-    $f->addOption('pListFullRowHover', __('Show pagelist actions on full row hover', __FILE__));
-    $f->addOption('leftTopnav', __('Align top menu to the left', __FILE__));
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-
-    // AsmTweaks ----------------------------------------------- //
-
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'AsmTweaks');
-    $f->showIf = 'enabledSubmodules=AsmTweaks';
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $f->addOption('asmCollapse', __('Collapse fieldset/tab items on double click', __FILE__));
-    $f->addOption('asmLeftX', __('Move delete button to the left', __FILE__));
-    $f->addOption('fieldMiddleEdit', __('Edit field in new tab on middle click (no template context)', __FILE__));
-    $f->addOption('editFieldWidth',
-        __('Template editor: add clickable field width percentages and display divisions on width slider',
-            __FILE__));
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-
-    // CKEaddons ----------------------------------------------- //
-
-    $fsetCKE = wire('modules')->get("InputfieldFieldset");
-    $fsetCKE->attr('name', 'CKEaddons');
-    $fsetCKE->label = __('CKEaddons', __FILE__);
-    $fsetCKE->showIf = 'enabledSubmodules=CKEaddons';
-//        $fsetCKE->collapsed = Inputfield::collapsedNever;
-
-    // Plugins
-    $f = wire('modules')->get('InputfieldAsmSelect');
-    $f->name = 'CKEaddons_plugins';
-    $f->label = __('Plugins', __FILE__);
-    $f->description = __('Plugins marked with asterisk add toolbar items.', __FILE__);
-
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $addsToolbarButtonText = '*';
-
-    $f->addOption('autogrow', 'Auto Grow');
-    $f->addOption('autolink', 'Auto Link');
-    $f->addOption('autosave', 'Auto Save');
-    $f->addOption('codemirror', 'CodeMirror');
-    $f->addOption('codesnippet', 'Code Snippet');
-    $f->addOption('templates', 'Content Templates');
-    $f->addOption('div', 'Div' . $addsToolbarButtonText);
-    $f->addOption('find', 'Find' . $addsToolbarButtonText);
-    $f->addOption('indentblock', 'Indent Block' . $addsToolbarButtonText);
-    $f->addOption('justify', 'Justify' . $addsToolbarButtonText);
-    $f->addOption('textselection', 'Keep TextSelection');
-    $f->addOption('keystrokes', 'Keystrokes');
-    $f->addOption('magicline', 'Magic Line');
-    $f->addOption('maximize', 'Maximize' . $addsToolbarButtonText);
-    $f->addOption('oembed', 'Media (oEmbed)' . $addsToolbarButtonText);
-    $f->addOption('showblocks', 'Show Blocks' . $addsToolbarButtonText);
-    $f->addOption('token', 'Token' . $addsToolbarButtonText);
-
-    if (isset($data[$f->name]) && $data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetCKE->add($f);
-
-    // Enabled fields
-    $cke_fields = $this->fields->find('inputfieldClass=InputfieldCKEditor');
-
-    $f = wire('modules')->get('InputfieldAsmSelect');
-    $f->name = 'CKEaddons_enabledFields';
-    $f->label = __('Enabled fields (for plugins only)', __FILE__);
-//        $f->description = __('Note: selected fields will restrict plugins only and not the skin.', __FILE__);
-    $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->columnWidth = 66;
-
-    foreach ($cke_fields as $cke_field) {
-        $f->addOption($cke_field->name, self::getFormattedOptionName($cke_field));
-    }
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetCKE->add($f);
-
-    // Skin
-    $f = wire('modules')->get('InputfieldRadios');
-    $f->name = 'CKEaddons_skin';
-    $f->label = __('CKEditor skin', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->optionColumns = 3;
-
-    $f->addOption('default', 'default');
-    $f->addOption('lightwire', 'LightWire');
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetCKE->add($f);
-
-    $fset->add($fsetCKE);
-
-
-    // ListerTweaks ----------------------------------------------- //
-
-    // system labels + id, path
-    $extraFieldNames = array(
-        'id',
-        'name',
-        'path',
-        'status',
-        'template',
-        'templates_id',
-        'modified',
-        'created',
-        'published',
-        'modified_users_id',
-        'created_users_id',
-        'parent',
-        'num_children',
-    );
-
-    $fsetLT = wire('modules')->get("InputfieldFieldset");
-    $fsetLT->attr('name', 'ListerTweaks');
-    $fsetLT->label = __('ListerTweaks', __FILE__);
-    $fsetLT->showIf = 'enabledSubmodules=ListerTweaks';
-
-    // Find lister
-
-    $f = wire('modules')->get('InputfieldAsmSelect');
-    $f->name = 'ListerTweaks_find';
-    $f->label = __('Find lister columns', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $lister_fieldnames = $this->wire('fields')->find('type!=FieldtypeFieldsetOpen|FieldtypeFieldsetClose|FieldtypeFieldsetTabOpen|FieldtypeFieldsetTabClose, sort=label')->name();
-    $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
-    natcasesort($lister_fieldnames);
-
-    array_unshift($lister_fieldnames, '[DEFAULTS]');
-
-    foreach ($lister_fieldnames as $fieldname) {
-        $f->addOption($fieldname);
-    }
-
-    if (isset($data[$f->name]) && $data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetLT->add($f);
-
-    $fset->add($fsetLT);
-
-    // User lister
-
-    $f = wire('modules')->get('InputfieldAsmSelect');
-    $f->name = 'ListerTweaks_users';
-    $f->label = __('Users lister columns', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $lister_fieldnames = $this->wire('templates')->get('user')->fields->find('name!=pass, sort=label')->name();
-    $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
-    natcasesort($lister_fieldnames);
-
-    array_unshift($lister_fieldnames, '[DEFAULTS]');
-
-    foreach ($lister_fieldnames as $fieldname) {
-        $f->addOption($fieldname);
-    }
-
-    if (isset($data[$f->name]) && $data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetLT->add($f);
-
-    // hoverActions
-
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'ListerTweaks_options');
-    $f->label = __('Lister options', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $f->addOption('listerHoverBtn', __('Show action buttons on hover', __FILE__));
-    $f->addOption('hideTemplateEditAction', __('Hide template edit action', __FILE__));
-
-    $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
-
-    $fsetLT->add($f);
-
-
-    $fset->add($fsetLT);
-
-    // DeselectRadios ----------------------------------------------- //
-
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'DeselectRadios');
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->description = __('', __FILE__);
-    $f->notes = __('', __FILE__);
-    $f->showIf = 'enabledSubmodules=DeselectRadios';
-
-    $f->addOption('allowRequired', __('Enable for required fields (not recommended)', __FILE__));
-
-    $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
-
-    $fset->add($f);
-
-    // FieldAndTemplateEditLinks ----------------------------------------------- //
-
-    $f = wire('modules')->get("InputfieldRadios");
-    $f->attr('name', 'FieldAndTemplateEditLinks');
-    $f->showIf = 'enabledSubmodules=FieldAndTemplateEditLinks';
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->optionColumns = 3;
-
-    $f->addOption('pw-blank', __('Open in new tab', __FILE__));
-    $f->addOption('pw-panel', __('Open in panel', __FILE__));
-    $f->addOption('pw-modal', __('Open in modal', __FILE__));
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-    // FileFieldTweaks ----------------------------------------------- //
-
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'FileFieldTweaks');
-    $f->showIf = 'enabledSubmodules=FileFieldTweaks';
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->description = __('', __FILE__);
-    $f->notes = __('', __FILE__);
-
-    $f->addOption('filterbox', __('Filter box', __FILE__));
-    $f->addOption('downloadAssetButton', __('Add asset download button', __FILE__));
-    $f->addOption('imgSelectTitle', __('Add image titles to image select dialog', __FILE__));
-    $f->addOption('moveAssetButtons', __('Add move to first/last buttons', __FILE__));
-    $f->addOption('noFilenameTruncate', __('Disable filename truncation for File fields', __FILE__));
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-    // FocusInputOnLangTabSwitch ----------------------------------------------- //
-
-    $f = wire('modules')->get("InputfieldRadios");
-    $f->attr('name', 'FocusInputOnLangTabSwitch');
-    $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->description = __('', __FILE__);
-    $f->notes = __('', __FILE__);
-
-    $f->addOption('focus', __('Focus', __FILE__));
-    $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
-    $f->addOption('selectAll', __('Select all', __FILE__));
-    $f->addOption('nothing', __('Do nothing', __FILE__));
-    $f->optionColumns = 4;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-    $f = wire('modules')->get("InputfieldRadios");
-    $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
-    $f->label = __('FocusInputOnLangTabSwitch CKE', __FILE__);
-    $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->description = __('', __FILE__);
-    $f->notes = __('', __FILE__);
-
-    $f->addOption('focus', __('Focus', __FILE__));
-    $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
-    $f->addOption('selectAll', __('Select all', __FILE__));
-    $f->addOption('nothing', __('Do nothing', __FILE__));
-    $f->optionColumns = 4;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-    // Hotkeys ----------------------------------------------- //
-
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'Hotkeys');
-    $f->showIf = 'enabledSubmodules=Hotkeys';
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $f->addOption('save', __('Save on ctrl+s', __FILE__));
-    $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
-    $f->addOption('focusSearch', __('Focus search on alt+d', __FILE__));
-    $f->addOption('removeNoticeHotkey', __('Remove notices on first ESC keypress', __FILE__));
-    $f->addOption('addPageTreeTrigger', __('Open page tree panel on alt+o', __FILE__));
-    $f->addOption('filterboxHotkey', __('Focus filterbox on alt+s', __FILE__));
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-    // InputfieldURLChecker ----------------------------------------------- //
-
-    $fsetIUC = wire('modules')->get("InputfieldFieldset");
-    $fsetIUC->attr('name', 'InputfieldURLChecker');
-    $fsetIUC->label = __('InputfieldURLChecker', __FILE__);
-    $fsetIUC->showIf = 'enabledSubmodules=InputfieldURLChecker';
-//        $fsetIUC->collapsed = Inputfield::collapsedNever;
-
-    // Mode
-    $f = wire('modules')->get('InputfieldCheckboxes');
-    $f->name = 'IUC_mode';
-    $f->label = __('Mode', __FILE__);
-    $f->columnWidth = 50;
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->addOption('button', __('Button', 'IUC'));
-    $f->addOption('ctrl-shift-click', __('Ctrl + Shift + Click', 'IUC'));
-    $f->addOption('ctrl-shift-enter', __('Ctrl + Shift + Enter', 'IUC'));
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetIUC->add($f);
-
-    // Mode - button
-    $f = wire('modules')->get('InputfieldRadios');
-    $f->name = 'IUC_buttonPosition';
-    $f->label = __('Button position', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->columnWidth = 50;
-    $f->addOption('button-left', __('Left side of the field', 'IUC'));
-    $f->addOption('button-right', __('Right side of the field', 'IUC'));
-    $f->showIf = 'IUC_mode=button';
-    $f->requiredIf = 'IUC_mode=button';
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetIUC->add($f);
-
-    // Target
-    $f = wire('modules')->get('InputfieldRadios');
-    $f->name = 'IUC_target';
-    $f->label = __('Open URL in...', __FILE__);
-//        $f->notes     = __('Iframe mode fails if the target website does not allow iframe embed.', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->addOption('pw-blank', __('new tab', __FILE__));
-    $f->addOption('pw-modal', __('modal', __FILE__));
-//        $f->addOption('pw-panel', __('panel', __FILE__));
-    $f->optionColumns = 3;
-
-//        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetIUC->add($f);
-
-    $f = wire('modules')->get('InputfieldCheckbox');
-    $f->name = 'IUC_forceHttp';
-    $f->label = __('Force HTTP prefix', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $f->attr('value', $data[$f->name]);
-
-    $f->checked = ($f->value == 1) ? 'checked' : '';
-
-    $fsetIUC->add($f);
-
-    // Enabled templates
-    $f = wire('modules')->get('InputfieldAsmSelect');
-    $f->name = 'IUC_enabledTemplates';
-    $f->label = __('Enabled templates', __FILE__);
-    $f->attr('data-asm-placeholder', __('Add templates...', __FILE__));
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->columnWidth = 50;
-
-    foreach (wire('templates') as $t) {
-        $f->addOption($t->name, self::getFormattedOptionName($t));
-    }
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetIUC->add($f);
-
-
-    // Enabled fields asmSelect
-    $url_fields = wire('fields')->find('type=FieldtypeURL');
-
-    // add asm select only if there is any URL type field
-
-    if (count($url_fields) > 0) {
-
-        $f = wire('modules')->get('InputfieldAsmSelect');
-        $f->name = 'IUC_enabledFields';
-        $f->label = __('Enabled fields', __FILE__);
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'AdminTweaks');
+        $f->label = __('AdminTweaks', __FILE__);
+        $f->showIf = 'enabledSubmodules=AdminTweaks';
         $f->collapsed = Inputfield::collapsedNever;
-        $f->columnWidth = 50;
 
-        foreach ($url_fields as $url_field) {
-            $f->addOption($url_field->name, self::getFormattedOptionName($url_field));
-        }
+        $f->addOption('headSticky', __('Sticky header', __FILE__));
+        $f->addOption('wide', __('Set wider main content', __FILE__));
+        $f->addOption('pListFullRowHover', __('Show pagelist actions on full row hover', __FILE__));
+        $f->addOption('leftTopnav', __('Align top menu to the left', __FILE__));
 
-        $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
-
-//            $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
         }
 
-    } else {
+        $fset->add($f);
 
-        // add info that no URL type fields are available
-        $f = wire('modules')->get('InputfieldMarkup');
-        $f->name = 'no_url_fields';
-        $f->label = __('Enabled fields', __FILE__);
-        // doesn't work
-        // $f->collapsed = Inputfield::collapsedNever;
-        $f->markupText = __('There is no URL field available', __FILE__);
-    }
 
-    $fsetIUC->add($f);
+        // AsmTweaks ----------------------------------------------- //
 
-    $fset->add($fsetIUC);
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'AsmTweaks');
+        $f->showIf = 'enabledSubmodules=AsmTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
 
-    // LongClickDuration ----------------------------------------------- //
+        $f->addOption('asmCollapse', __('Collapse fieldset/tab items on double click', __FILE__));
+        $f->addOption('asmLeftX', __('Move delete button to the left', __FILE__));
+        $f->addOption('fieldMiddleEdit', __('Edit field in new tab on middle click (no template context)', __FILE__));
+        $f->addOption('editFieldWidth',
+            __('Template editor: add clickable field width percentages and display divisions on width slider',
+                __FILE__));
 
-    $f = wire('modules')->get("InputfieldText");
-    $f->attr('name', 'LongClickDuration');
-    $f->description = __('', __FILE__);
-    $f->notes = __('', __FILE__);
-    $f->showIf = 'enabledSubmodules=LongClickDuration';
-    $f->attr('style', 'width: 100px; display: none !important;');
-    $f->collapsed = Inputfield::collapsedNever;
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
-    $f->attr('value',
-        (isset($data[$f->name]) && (int)$data[$f->name] >= $defaultData[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
+        $fset->add($f);
 
-    $fset->add($f);
 
-    // Misc ----------------------------------------------- //
+        // CKEaddons ----------------------------------------------- //
 
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'Misc');
-    $f->showIf = 'enabledSubmodules=Misc';
-    $f->collapsed = Inputfield::collapsedNever;
+        $fsetCKE = wire('modules')->get("InputfieldFieldset");
+        $fsetCKE->attr('name', 'CKEaddons');
+        $fsetCKE->label = __('CKEaddons', __FILE__);
+        $fsetCKE->showIf = 'enabledSubmodules=CKEaddons';
+//        $fsetCKE->collapsed = Inputfield::collapsedNever;
 
-    $f->addOption('adminColumns', __('Add `aos_column_break` field to create admin columns', __FILE__));
-    $f->addOption('adminLangSwitcher', __('Add language switcher to the admin', __FILE__));
-    $f->addOption('addTranslatorLinks',
-        __('Add links to Language Translator to edit current textdomain file in other languages', __FILE__));
-    $f->addOption('autosizeTextareas', __('Autosize textareas according to content', __FILE__));
-    $f->addOption('addOrRemoveFieldsTweaks',
-        __('Add helper buttons to batch field add/remove confirmation pages ("Clear all", "Apply to all")',
-            __FILE__));
-    $f->addOption('centerLogin', __('Center login form', __FILE__));
-    $f->addOption('homeOpenNewTab', __('Open Home/View site in new tab (topnav)', __FILE__));
-    $f->addOption('dataTableFilter', __('Add filter box to AdminDataTables', __FILE__));
-    $f->addOption('transFilter', __('Add filter box to Language Translator', __FILE__));
-    $f->addOption('langTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
-    $f->addOption('noAnim', __('Disable all admin animations', __FILE__));
-    $f->addOption('hoverDropdown', __('Show save dropdown on hover instead on click', __FILE__));
-    $f->addOption('titleCaseToggle', __('Add toggle button to change case of Page title field', __FILE__));
-    $f->addOption('tabIndex', __('Add sequential tabindex to fields', __FILE__));
-    $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
-    $f->addOption('showSystemTemplates', __('Force showing system templates', __FILE__));
-    $f->addOption('iconsFilter', __('Add filter box to template icon picker', __FILE__));
+        // Plugins
+        $f = wire('modules')->get('InputfieldAsmSelect');
+        $f->name = 'CKEaddons_plugins';
+        $f->label = __('Plugins', __FILE__);
+        $f->description = __('Plugins marked with asterisk add toolbar items.', __FILE__);
 
-    if ($data[$f->name]) {
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $addsToolbarButtonText = '*';
+
+        $f->addOption('autogrow', 'Auto Grow');
+        $f->addOption('autolink', 'Auto Link');
+        $f->addOption('autosave', 'Auto Save');
+        $f->addOption('codemirror', 'CodeMirror');
+        $f->addOption('codesnippet', 'Code Snippet');
+        $f->addOption('templates', 'Content Templates');
+        $f->addOption('div', 'Div' . $addsToolbarButtonText);
+        $f->addOption('find', 'Find' . $addsToolbarButtonText);
+        $f->addOption('indentblock', 'Indent Block' . $addsToolbarButtonText);
+        $f->addOption('justify', 'Justify' . $addsToolbarButtonText);
+        $f->addOption('textselection', 'Keep TextSelection');
+        $f->addOption('keystrokes', 'Keystrokes');
+        $f->addOption('magicline', 'Magic Line');
+        $f->addOption('maximize', 'Maximize' . $addsToolbarButtonText);
+        $f->addOption('oembed', 'Media (oEmbed)' . $addsToolbarButtonText);
+        $f->addOption('showblocks', 'Show Blocks' . $addsToolbarButtonText);
+        $f->addOption('token', 'Token' . $addsToolbarButtonText);
+
+        if (isset($data[$f->name]) && $data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetCKE->add($f);
+
+        // Enabled fields
+        $cke_fields = $this->fields->find('inputfieldClass=InputfieldCKEditor');
+
+        $f = wire('modules')->get('InputfieldAsmSelect');
+        $f->name = 'CKEaddons_enabledFields';
+        $f->label = __('Enabled fields (for plugins only)', __FILE__);
+//        $f->description = __('Note: selected fields will restrict plugins only and not the skin.', __FILE__);
+        $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->columnWidth = 66;
+
+        foreach ($cke_fields as $cke_field) {
+            $f->addOption($cke_field->name, self::getFormattedOptionName($cke_field));
+        }
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetCKE->add($f);
+
+        // Skin
+        $f = wire('modules')->get('InputfieldRadios');
+        $f->name = 'CKEaddons_skin';
+        $f->label = __('CKEditor skin', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->optionColumns = 3;
+
+        $f->addOption('default', 'default');
+        $f->addOption('lightwire', 'LightWire');
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetCKE->add($f);
+
+        $fset->add($fsetCKE);
+
+
+        // ListerTweaks ----------------------------------------------- //
+
+        // system labels + id, path
+        $extraFieldNames = array(
+            'id',
+            'name',
+            'path',
+            'status',
+            'template',
+            'templates_id',
+            'modified',
+            'created',
+            'published',
+            'modified_users_id',
+            'created_users_id',
+            'parent',
+            'num_children',
+        );
+
+        $fsetLT = wire('modules')->get("InputfieldFieldset");
+        $fsetLT->attr('name', 'ListerTweaks');
+        $fsetLT->label = __('ListerTweaks', __FILE__);
+        $fsetLT->showIf = 'enabledSubmodules=ListerTweaks';
+
+        // Find lister
+
+        $f = wire('modules')->get('InputfieldAsmSelect');
+        $f->name = 'ListerTweaks_find';
+        $f->label = __('Find lister columns', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $lister_fieldnames = $this->wire('fields')->find('type!=FieldtypeFieldsetOpen|FieldtypeFieldsetClose|FieldtypeFieldsetTabOpen|FieldtypeFieldsetTabClose, sort=label')->name();
+        $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
+        natcasesort($lister_fieldnames);
+
+        array_unshift($lister_fieldnames, '[DEFAULTS]');
+
+        foreach ($lister_fieldnames as $fieldname) {
+            $f->addOption($fieldname);
+        }
+
+        if (isset($data[$f->name]) && $data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetLT->add($f);
+
+        $fset->add($fsetLT);
+
+        // User lister
+
+        $f = wire('modules')->get('InputfieldAsmSelect');
+        $f->name = 'ListerTweaks_users';
+        $f->label = __('Users lister columns', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $lister_fieldnames = $this->wire('templates')->get('user')->fields->find('name!=pass, sort=label')->name();
+        $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
+        natcasesort($lister_fieldnames);
+
+        array_unshift($lister_fieldnames, '[DEFAULTS]');
+
+        foreach ($lister_fieldnames as $fieldname) {
+            $f->addOption($fieldname);
+        }
+
+        if (isset($data[$f->name]) && $data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetLT->add($f);
+
+        // hoverActions
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'ListerTweaks_options');
+        $f->label = __('Lister options', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOption('listerHoverBtn', __('Show action buttons on hover', __FILE__));
+        $f->addOption('hideTemplateEditAction', __('Hide template edit action', __FILE__));
+
+        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
+
+        $fsetLT->add($f);
+
+
+        $fset->add($fsetLT);
+
+        // DeselectRadios ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'DeselectRadios');
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+        $f->showIf = 'enabledSubmodules=DeselectRadios';
+
+        $f->addOption('allowRequired', __('Enable for required fields (not recommended)', __FILE__));
+
+        $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
+
+        $fset->add($f);
+
+        // FieldAndTemplateEditLinks ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'FieldAndTemplateEditLinks');
+        $f->showIf = 'enabledSubmodules=FieldAndTemplateEditLinks';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->optionColumns = 3;
+
+        $f->addOption('pw-blank', __('Open in new tab', __FILE__));
+        $f->addOption('pw-panel', __('Open in panel', __FILE__));
+        $f->addOption('pw-modal', __('Open in modal', __FILE__));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // FileFieldTweaks ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'FileFieldTweaks');
+        $f->showIf = 'enabledSubmodules=FileFieldTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('filterbox', __('Filter box', __FILE__));
+        $f->addOption('downloadAssetButton', __('Add asset download button', __FILE__));
+        $f->addOption('imgSelectTitle', __('Add image titles to image select dialog', __FILE__));
+        $f->addOption('moveAssetButtons', __('Add move to first/last buttons', __FILE__));
+        $f->addOption('noFilenameTruncate', __('Disable filename truncation for File fields', __FILE__));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // FocusInputOnLangTabSwitch ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'FocusInputOnLangTabSwitch');
+        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('focus', __('Focus', __FILE__));
+        $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
+        $f->addOption('selectAll', __('Select all', __FILE__));
+        $f->addOption('nothing', __('Do nothing', __FILE__));
+        $f->optionColumns = 4;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
+        $f->label = __('FocusInputOnLangTabSwitch CKE', __FILE__);
+        $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('focus', __('Focus', __FILE__));
+        $f->addOption('moveEnd', __('Move cursor to the end', __FILE__));
+        $f->addOption('selectAll', __('Select all', __FILE__));
+        $f->addOption('nothing', __('Do nothing', __FILE__));
+        $f->optionColumns = 4;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // Hotkeys ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'Hotkeys');
+        $f->showIf = 'enabledSubmodules=Hotkeys';
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOption('save', __('Save on ctrl+s', __FILE__));
+        $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
+        $f->addOption('focusSearch', __('Focus search on alt+d', __FILE__));
+        $f->addOption('removeNoticeHotkey', __('Remove notices on first ESC keypress', __FILE__));
+        $f->addOption('addPageTreeTrigger', __('Open page tree panel on alt+o', __FILE__));
+        $f->addOption('filterboxHotkey', __('Focus filterbox on alt+s', __FILE__));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // InputfieldURLChecker ----------------------------------------------- //
+
+        $fsetIUC = wire('modules')->get("InputfieldFieldset");
+        $fsetIUC->attr('name', 'InputfieldURLChecker');
+        $fsetIUC->label = __('InputfieldURLChecker', __FILE__);
+        $fsetIUC->showIf = 'enabledSubmodules=InputfieldURLChecker';
+//        $fsetIUC->collapsed = Inputfield::collapsedNever;
+
+        // Mode
+        $f = wire('modules')->get('InputfieldCheckboxes');
+        $f->name = 'IUC_mode';
+        $f->label = __('Mode', __FILE__);
+        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->addOption('button', __('Button', 'IUC'));
+        $f->addOption('ctrl-shift-click', __('Ctrl + Shift + Click', 'IUC'));
+        $f->addOption('ctrl-shift-enter', __('Ctrl + Shift + Enter', 'IUC'));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetIUC->add($f);
+
+        // Mode - button
+        $f = wire('modules')->get('InputfieldRadios');
+        $f->name = 'IUC_buttonPosition';
+        $f->label = __('Button position', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->columnWidth = 50;
+        $f->addOption('button-left', __('Left side of the field', 'IUC'));
+        $f->addOption('button-right', __('Right side of the field', 'IUC'));
+        $f->showIf = 'IUC_mode=button';
+        $f->requiredIf = 'IUC_mode=button';
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetIUC->add($f);
+
+        // Target
+        $f = wire('modules')->get('InputfieldRadios');
+        $f->name = 'IUC_target';
+        $f->label = __('Open URL in...', __FILE__);
+//        $f->notes     = __('Iframe mode fails if the target website does not allow iframe embed.', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->addOption('pw-blank', __('new tab', __FILE__));
+        $f->addOption('pw-modal', __('modal', __FILE__));
+//        $f->addOption('pw-panel', __('panel', __FILE__));
+        $f->optionColumns = 3;
+
+//        $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetIUC->add($f);
+
+        $f = wire('modules')->get('InputfieldCheckbox');
+        $f->name = 'IUC_forceHttp';
+        $f->label = __('Force HTTP prefix', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+
         $f->attr('value', $data[$f->name]);
-    }
 
-    $fset->add($f);
+        $f->checked = ($f->value == 1) ? 'checked' : '';
 
-    // ModuleTweaks ----------------------------------------------- //
+        $fsetIUC->add($f);
 
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'ModuleTweaks');
-    $f->showIf = 'enabledSubmodules=ModuleTweaks';
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->description = __('', __FILE__);
-    $f->notes = __('', __FILE__);
+        // Enabled templates
+        $f = wire('modules')->get('InputfieldAsmSelect');
+        $f->name = 'IUC_enabledTemplates';
+        $f->label = __('Enabled templates', __FILE__);
+        $f->attr('data-asm-placeholder', __('Add templates...', __FILE__));
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->columnWidth = 50;
 
-    $f->addOption('moduleCompact', __('Compact module list', __FILE__));
-    $f->addOption('flatModules', __('Do not distribute modules into tabs', __FILE__));
-    $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
-    $f->addOption('moduleModal', __('Edit modules in modal on long-click', __FILE__));
-    $f->addOption('moduleFilter', __('Add filter box to module list', __FILE__));
-    $f->addOption('moduleBrowserTitle', __('Set browser title to module name', __FILE__));
+        foreach (wire('templates') as $t) {
+            $f->addOption($t->name, self::getFormattedOptionName($t));
+        }
 
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
-    $fset->add($f);
+        $fsetIUC->add($f);
 
-    // NavItems ----------------------------------------------- //
 
-    $fsetCNI = wire('modules')->get("InputfieldFieldset");
-    $fsetCNI->attr('name', 'NavItems');
-    $fsetCNI->label = __('NavItems', __FILE__);
-    $fsetCNI->showIf = 'enabledSubmodules=NavItems';
+        // Enabled fields asmSelect
+        $url_fields = wire('fields')->find('type=FieldtypeURL');
+
+        // add asm select only if there is any URL type field
+
+        if (count($url_fields) > 0) {
+
+            $f = wire('modules')->get('InputfieldAsmSelect');
+            $f->name = 'IUC_enabledFields';
+            $f->label = __('Enabled fields', __FILE__);
+            $f->collapsed = Inputfield::collapsedNever;
+            $f->columnWidth = 50;
+
+            foreach ($url_fields as $url_field) {
+                $f->addOption($url_field->name, self::getFormattedOptionName($url_field));
+            }
+
+            $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
+
+//            $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
+            if ($data[$f->name]) {
+                $f->attr('value', $data[$f->name]);
+            }
+
+        } else {
+
+            // add info that no URL type fields are available
+            $f = wire('modules')->get('InputfieldMarkup');
+            $f->name = 'no_url_fields';
+            $f->label = __('Enabled fields', __FILE__);
+            // doesn't work
+            // $f->collapsed = Inputfield::collapsedNever;
+            $f->markupText = __('There is no URL field available', __FILE__);
+        }
+
+        $fsetIUC->add($f);
+
+        $fset->add($fsetIUC);
+
+        // LongClickDuration ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldText");
+        $f->attr('name', 'LongClickDuration');
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+        $f->showIf = 'enabledSubmodules=LongClickDuration';
+        $f->attr('style', 'width: 100px; display: none !important;');
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->attr('value',
+            (isset($data[$f->name]) && (int)$data[$f->name] >= $defaultData[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
+
+        $fset->add($f);
+
+        // Misc ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'Misc');
+        $f->showIf = 'enabledSubmodules=Misc';
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOption('adminColumns', __('Add `aos_column_break` field to create admin columns', __FILE__));
+        $f->addOption('adminLangSwitcher', __('Add language switcher to the admin', __FILE__));
+        $f->addOption('addTranslatorLinks',
+            __('Add links to Language Translator to edit current textdomain file in other languages', __FILE__));
+        $f->addOption('autosizeTextareas', __('Autosize textareas according to content', __FILE__));
+        $f->addOption('addOrRemoveFieldsTweaks',
+            __('Add helper buttons to batch field add/remove confirmation pages ("Clear all", "Apply to all")',
+                __FILE__));
+        $f->addOption('centerLogin', __('Center login form', __FILE__));
+        $f->addOption('homeOpenNewTab', __('Open Home/View site in new tab (topnav)', __FILE__));
+        $f->addOption('dataTableFilter', __('Add filter box to AdminDataTables', __FILE__));
+        $f->addOption('transFilter', __('Add filter box to Language Translator', __FILE__));
+        $f->addOption('langTabHotkeySwitcher', __('Switch language tabs on ctrl+arrow keys', __FILE__));
+        $f->addOption('noAnim', __('Disable all admin animations', __FILE__));
+        $f->addOption('hoverDropdown', __('Show save dropdown on hover instead on click', __FILE__));
+        $f->addOption('titleCaseToggle', __('Add toggle button to change case of Page title field', __FILE__));
+        $f->addOption('tabIndex', __('Add sequential tabindex to fields', __FILE__));
+        $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
+        $f->addOption('showSystemTemplates', __('Force showing system templates', __FILE__));
+        $f->addOption('iconsFilter', __('Add filter box to template icon picker', __FILE__));
+        $f->addOption('uncheckAddnewActive', __('Add new page: uncheck `Active?` for non-default language names', __FILE__));
+        $f->addOption('hideAddNewDropdown', __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // ModuleTweaks ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'ModuleTweaks');
+        $f->showIf = 'enabledSubmodules=ModuleTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
+
+        $f->addOption('moduleCompact', __('Compact module list', __FILE__));
+        $f->addOption('flatModules', __('Do not distribute modules into tabs', __FILE__));
+        $f->addOption('loadCollapsedModuleInfos', __('Load module info fields collapsed', __FILE__));
+        $f->addOption('moduleModal', __('Edit modules in modal on long-click', __FILE__));
+        $f->addOption('moduleFilter', __('Add filter box to module list', __FILE__));
+        $f->addOption('moduleBrowserTitle', __('Set browser title to module name', __FILE__));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // NavItems ----------------------------------------------- //
+
+        $fsetCNI = wire('modules')->get("InputfieldFieldset");
+        $fsetCNI->attr('name', 'NavItems');
+        $fsetCNI->label = __('NavItems', __FILE__);
+        $fsetCNI->showIf = 'enabledSubmodules=NavItems';
 //        $fsetCNI->collapsed = Inputfield::collapsedNever;
 
-    $f = wire('modules')->get('InputfieldPageListSelectMultiple');
-    $f->name = 'NavItems_pages';
-    $f->label = __('Select pages', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
+        $f = wire('modules')->get('InputfieldPageListSelectMultiple');
+        $f->name = 'NavItems_pages';
+        $f->label = __('Select pages', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
 
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
-    $fsetCNI->add($f);
-
-
-    $f = wire('modules')->get("InputfieldTextarea");
-    $f->attr('name', 'NavItems_custom');
-    $f->label = __('Custom items', __FILE__);
-    $f->attr('placeholder', '// ! AdminOnSteroids: /module/edit?name=AdminOnSteroids');
-    $f->rows = 3;
-    $f->collapsed = Inputfield::collapsedNever;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetCNI->add($f);
+        $fsetCNI->add($f);
 
 
-    $fset->add($fsetCNI);
+        $f = wire('modules')->get("InputfieldTextarea");
+        $f->attr('name', 'NavItems_custom');
+        $f->label = __('Custom items', __FILE__);
+        $f->attr('placeholder', '// ! AdminOnSteroids: /module/edit?name=AdminOnSteroids');
+        $f->rows = 3;
+        $f->collapsed = Inputfield::collapsedNever;
 
-    // PageListIcons ----------------------------------------------- //
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
-    $f = wire('modules')->get("InputfieldTextarea");
-    $f->attr('name', 'PageListIcons');
-    $f->label = __('PageList icons', __FILE__);
-    $f->showIf = 'enabledSubmodules=PageListIcons';
+        $fsetCNI->add($f);
 
-    $f->collapsed = Inputfield::collapsedNever;
 
-    if (isset($data[$f->name]) && $data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
+        $fset->add($fsetCNI);
 
-    $fset->add($f);
+        // PageListIcons ----------------------------------------------- //
 
-    // PageListThumbs ----------------------------------------------- //
+        $f = wire('modules')->get("InputfieldTextarea");
+        $f->attr('name', 'PageListIcons');
+        $f->label = __('PageList icons', __FILE__);
+        $f->showIf = 'enabledSubmodules=PageListIcons';
 
-    $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
-    $fsetPageListThumbs->attr('name', 'PageListThumbs');
-    $fsetPageListThumbs->label = __('PageListThumbs', __FILE__);
-    $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
+        $f->collapsed = Inputfield::collapsedNever;
+
+        if (isset($data[$f->name]) && $data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // PageListThumbs ----------------------------------------------- //
+
+        $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
+        $fsetPageListThumbs->attr('name', 'PageListThumbs');
+        $fsetPageListThumbs->label = __('PageListThumbs', __FILE__);
+        $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
 //        $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
 
-    $f = wire('modules')->get("InputfieldRadios");
-    $f->attr('name', 'PageListThumbs_style');
-    $f->label = __('Style', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'PageListThumbs_style');
+        $f->label = __('Style', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
 
-    $f->addOption('circle', __('circle', __FILE__));
-    $f->addOption('square', __('square', __FILE__));
-    $f->addOption('default', __('default', __FILE__));
-    $f->optionColumns = 4;
+        $f->addOption('circle', __('circle', __FILE__));
+        $f->addOption('square', __('square', __FILE__));
+        $f->addOption('default', __('default', __FILE__));
+        $f->optionColumns = 4;
 
-    if (isset($data[$f->name])) {
-        $f->attr('value', $data[$f->name]);
-    } else {
-        $f->attr('value', $data['PageListThumbs'][$f->name]);
-    }
+        if (isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
+        } else {
+            $f->attr('value', $data['PageListThumbs'][$f->name]);
+        }
 
-    $fsetPageListThumbs->add($f);
-
-
-    $f = wire('modules')->get("InputfieldTextarea");
-    $f->attr('name', 'PageListThumbs_items');
-    $f->label = __('Source', __FILE__);
-    $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
-    $f->rows = 3;
-    $f->collapsed = Inputfield::collapsedNever;
-
-    if (isset($data[$f->name])) {
-        $f->attr('value', $data[$f->name]);
-    } else {
-        $f->attr('value', $data['PageListThumbs'][$f->name]);
-    }
-
-    $fsetPageListThumbs->add($f);
+        $fsetPageListThumbs->add($f);
 
 
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'PageListThumbs_options');
-    $f->label = __('Settings', __FILE__); // Thumb settings
-    $f->collapsed = Inputfield::collapsedNever;
+        $f = wire('modules')->get("InputfieldTextarea");
+        $f->attr('name', 'PageListThumbs_items');
+        $f->label = __('Source', __FILE__);
+        $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
+        $f->rows = 3;
+        $f->collapsed = Inputfield::collapsedNever;
 
-    $f->addOption('alignright', __('Align thumbs to right', __FILE__));
-    $f->addOption('addlink', __('Edit page on thumb click', __FILE__));
+        if (isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
+        } else {
+            $f->attr('value', $data['PageListThumbs'][$f->name]);
+        }
 
-    if (isset($data[$f->name])) {
-        $f->attr('value', $data[$f->name]);
-    } else {
-        $f->attr('value', $data['PageListThumbs'][$f->name]);
-    }
-
-    $fsetPageListThumbs->add($f);
-
-    $fset->add($fsetPageListThumbs);
-
-    // PageListTweaks ----------------------------------------------- //
-
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'PageListTweaks');
-    $f->label = __('PageListTweaks', __FILE__);
-    $f->showIf = 'enabledSubmodules=PageListTweaks';
-    $f->collapsed = Inputfield::collapsedNever;
-
-    $f->addOption('highlightRows', __('Highlight rows on hover', __FILE__));
-    $f->addOption('pListIDs', __('Show page IDs (SuperUser only)', __FILE__));
-    $f->addOption('refreshBtn', __('Add Refresh button to refresh page details displayed', __FILE__));
-    $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
-    $f->addOption('pListUnselect', __('Add unselect/restore buttons to PageListSelect', __FILE__));
-    $f->addOption('pListIconOnly', __('Icon-only pagelist actions', __FILE__));
-    $f->addOption('pListMiddleClick', __('Use middle mouse click/ctrl+click to View/Edit page', __FILE__));
-    $f->addOption('pListActiveBold', __('Make active pagelist items bold', __FILE__));
-    $f->addOption('pListShowActions', __('Always show pagelist actions', __FILE__));
-    $f->addOption('pListShowExtras', __('Always show extra actions', __FILE__));
-    $f->addOption('pListMarkup', __('Allow markup tokens for "List of fields to display"', __FILE__));
-    $f->addOption('pListCounters', __('Add counters to pagelist items', __FILE__));
-
-    if (isset($data[$f->name]) && $data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
+        $fsetPageListThumbs->add($f);
 
 
-    // PagePreviewBtn ----------------------------------------------- //
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'PageListThumbs_options');
+        $f->label = __('Settings', __FILE__); // Thumb settings
+        $f->collapsed = Inputfield::collapsedNever;
 
-    $f = wire('modules')->get("InputfieldRadios");
-    $f->attr('name', 'PagePreviewBtn');
-    $f->label = __('PagePreviewButton', __FILE__);
-    $f->showIf = 'enabledSubmodules=PagePreviewBtn';
-    $f->collapsed = Inputfield::collapsedNever;
+        $f->addOption('alignright', __('Align thumbs to right', __FILE__));
+        $f->addOption('addlink', __('Edit page on thumb click', __FILE__));
 
-    $f->addOption('pw-blank', __('Preview in new tab', __FILE__));
-    $f->addOption('pw-panel', __('Preview in panel', __FILE__));
-    $f->addOption('pw-modal', __('Preview in modal', __FILE__));
-    $f->optionColumns = 3;
+        if (isset($data[$f->name])) {
+            $f->attr('value', $data[$f->name]);
+        } else {
+            $f->attr('value', $data['PageListThumbs'][$f->name]);
+        }
 
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
+        $fsetPageListThumbs->add($f);
 
-    $fset->add($f);
+        $fset->add($fsetPageListThumbs);
 
+        // PageListTweaks ----------------------------------------------- //
 
-    // RenoTweaks ----------------------------------------------- //
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'PageListTweaks');
+        $f->label = __('PageListTweaks', __FILE__);
+        $f->showIf = 'enabledSubmodules=PageListTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
 
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'RenoTweaks');
-    $f->label = __('RenoTweaks', __FILE__);
-    $f->showIf = 'enabledSubmodules=RenoTweaks';
-    $f->collapsed = Inputfield::collapsedNever;
+        $f->addOption('highlightRows', __('Highlight rows on hover', __FILE__));
+        $f->addOption('pListIDs', __('Show page IDs (SuperUser only)', __FILE__));
+        $f->addOption('refreshBtn', __('Add Refresh button to refresh page details displayed', __FILE__));
+        $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
+        $f->addOption('pListUnselect', __('Add unselect/restore buttons to PageListSelect', __FILE__));
+        $f->addOption('pListIconOnly', __('Icon-only pagelist actions', __FILE__));
+        $f->addOption('pListMiddleClick', __('Use middle mouse click/ctrl+click to View/Edit page', __FILE__));
+        $f->addOption('pListActiveBold', __('Make active pagelist items bold', __FILE__));
+        $f->addOption('pListShowActions', __('Always show pagelist actions', __FILE__));
+        $f->addOption('pListShowExtras', __('Always show extra actions', __FILE__));
+        $f->addOption('pListMarkup', __('Allow markup tokens for "List of fields to display"', __FILE__));
+        $f->addOption('pListCounters', __('Add counters to pagelist items', __FILE__));
 
-    $f->addOption('headSticky', __('Sticky header', __FILE__));
-    $f->addOption('headStickyCompact', __('Compact header', __FILE__));
-    $f->addOption('stickyCKEBar', __('Sticky CKEditor toolbar', __FILE__));
-    $f->addOption('miniScrollSb', __('Use mini scrollbar for sidebar', __FILE__));
-    $f->addOption('miniScrollMain', __('Use mini scrollbar for main content', __FILE__));
-    $f->addOption('sbSticky', __('Sticky sidebar', __FILE__));
-    $f->addOption('sbItemsVisible', __('Always show sidebar items (disable accordion)', __FILE__));
-    $f->addOption('sbSingleClickHeads', __('Single click navigation of sidebar headers', __FILE__));
-    $f->addOption('sbItemsInline', __('Inline sidebar items', __FILE__));
-    $f->addOption('sbQuickLinksHide', __('Hide sidebar quick links (flash icons)', __FILE__));
-    $f->addOption('sbAutoHide', __('Autohide sidebar', __FILE__));
-    $f->addOption('pListCompact', __('Use narrow pagelist rows', __FILE__));
-    $f->addOption('openSearch', __('Always show search field', __FILE__));
-    $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
-    $f->addOption('hoverTopSubmenus', __('Show topnav submenus on hover instead click', __FILE__));
-    $f->addOption('noticeLeftX', __('Move notice close buttons to the left', __FILE__));
+        if (isset($data[$f->name]) && $data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
+        $fset->add($f);
 
 
-    // RestrictTreeDropdown ----------------------------------------------- //
+        // PagePreviewBtn ----------------------------------------------- //
 
-    $f = wire('modules')->get("InputfieldAsmSelect");
-    $f->attr('name', 'RestrictTreeDropdown');
-    $f->label = __('RestrictTreeDropdown', __FILE__);
-    $f->description = __('Hide tree dropdown for the following roles:', __FILE__);
-    $f->showIf = 'enabledSubmodules=RestrictTreeDropdown';
-    $f->collapsed = Inputfield::collapsedNever;
+        $f = wire('modules')->get("InputfieldRadios");
+        $f->attr('name', 'PagePreviewBtn');
+        $f->label = __('PagePreviewButton', __FILE__);
+        $f->showIf = 'enabledSubmodules=PagePreviewBtn';
+        $f->collapsed = Inputfield::collapsedNever;
 
-    $roles = $this->wire('roles')->find("name!=guest");
-    $f->addOption('all-roles', $this->_('all'));
-    $f->addOption('nonsuperuser', $this->_('all non-superuser'));
-    foreach ($roles as $select_option) {
-        $f->addOption($select_option->name);
-    }
+        $f->addOption('pw-blank', __('Preview in new tab', __FILE__));
+        $f->addOption('pw-panel', __('Preview in panel', __FILE__));
+        $f->addOption('pw-modal', __('Preview in modal', __FILE__));
+        $f->optionColumns = 3;
 
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
 
-    $fset->add($f);
+        $fset->add($f);
 
-    // Tooltips ----------------------------------------------- //
 
-    $f = wire('modules')->get("InputfieldCheckboxes");
-    $f->attr('name', 'Tooltips');
-    $f->label = __('Tooltips', __FILE__);
-    $f->showIf = 'enabledSubmodules=Tooltips';
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->description = __('', __FILE__);
-    $f->notes = __('', __FILE__);
+        // RenoTweaks ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'RenoTweaks');
+        $f->label = __('RenoTweaks', __FILE__);
+        $f->showIf = 'enabledSubmodules=RenoTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOption('headSticky', __('Sticky header', __FILE__));
+        $f->addOption('headStickyCompact', __('Compact header', __FILE__));
+        $f->addOption('stickyCKEBar', __('Sticky CKEditor toolbar', __FILE__));
+        $f->addOption('miniScrollSb', __('Use mini scrollbar for sidebar', __FILE__));
+        $f->addOption('miniScrollMain', __('Use mini scrollbar for main content', __FILE__));
+        $f->addOption('sbSticky', __('Sticky sidebar', __FILE__));
+        $f->addOption('sbItemsVisible', __('Always show sidebar items (disable accordion)', __FILE__));
+        $f->addOption('sbSingleClickHeads', __('Single click navigation of sidebar headers', __FILE__));
+        $f->addOption('sbItemsInline', __('Inline sidebar items', __FILE__));
+        $f->addOption('sbQuickLinksHide', __('Hide sidebar quick links (flash icons)', __FILE__));
+        $f->addOption('sbAutoHide', __('Autohide sidebar', __FILE__));
+        $f->addOption('pListCompact', __('Use narrow pagelist rows', __FILE__));
+        $f->addOption('openSearch', __('Always show search field', __FILE__));
+        $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
+        $f->addOption('hoverTopSubmenus', __('Show topnav submenus on hover instead click', __FILE__));
+        $f->addOption('noticeLeftX', __('Move notice close buttons to the left', __FILE__));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+
+        // RestrictTreeDropdown ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldAsmSelect");
+        $f->attr('name', 'RestrictTreeDropdown');
+        $f->label = __('RestrictTreeDropdown', __FILE__);
+        $f->description = __('Hide tree dropdown for the following roles:', __FILE__);
+        $f->showIf = 'enabledSubmodules=RestrictTreeDropdown';
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $roles = $this->wire('roles')->find("name!=guest");
+        $f->addOption('all-roles', $this->_('all'));
+        $f->addOption('nonsuperuser', $this->_('all non-superuser'));
+        foreach ($roles as $select_option) {
+            $f->addOption($select_option->name);
+        }
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+        // Tooltips ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'Tooltips');
+        $f->label = __('Tooltips', __FILE__);
+        $f->showIf = 'enabledSubmodules=Tooltips';
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->description = __('', __FILE__);
+        $f->notes = __('', __FILE__);
 
 //        $f->addOption('superuseronly', __('Only for SuperUsers', __FILE__));
-    $f->addOption('tooltipDesc', __('Enable for field descriptions', __FILE__));
-    $f->addOption('tooltipNotes', __('Enable for field notes', __FILE__));
-    $f->addOption('tooltipOverlay', __('Use overlay style', __FILE__));
+        $f->addOption('tooltipDesc', __('Enable for field descriptions', __FILE__));
+        $f->addOption('tooltipNotes', __('Enable for field notes', __FILE__));
+        $f->addOption('tooltipOverlay', __('Use overlay style', __FILE__));
 
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fset->add($f);
-
-    $wrapper->add($fset);
-
-
-    // Assets paths
-
-    $fsetPaths = wire('modules')->get("InputfieldFieldset");
-    $fsetPaths->attr('name', 'AssetPaths');
-    $fsetPaths->label = __('Asset Paths', __FILE__);
-
-    $f = wire('modules')->get('InputfieldText');
-    $f->name = 'AdminStyle';
-    $f->label = __('Admin CSS', __FILE__);
-    $f->description = __('URL to a CSS file to be loaded in the admin, eg.',
-            __FILE__) . ' "/site/templates/admin/admin.css"';
-//        $f->columnWidth = 50;
-    $f->collapsed = Inputfield::collapsedBlank;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetPaths->add($f);
-
-    $f = wire('modules')->get('InputfieldText');
-    $f->name = 'AdminScript';
-    $f->label = __('Admin JavaScript', __FILE__);
-    $f->description = __('URL to a JavaScript file to be loaded in the admin, eg.',
-            __FILE__) . ' "/site/templates/admin/admin.js"';
-//        $f->columnWidth = 50;
-    $f->collapsed = Inputfield::collapsedBlank;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-
-    $fsetPaths->add($f);
-
-    $f = wire('modules')->get('InputfieldText');
-    $f->name = 'CKEStyle';
-    $f->label = __('CKEditor custom CSS', __FILE__);
-    $f->description = __('URL to a CSS file to be loaded for CKEditors, eg.',
-            __FILE__) . ' "/site/templates/admin/cke.css"';
-//        $f->columnWidth = 50;
-    $f->collapsed = Inputfield::collapsedBlank;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-    $fsetPaths->add($f);
-
-    $f = wire('modules')->get('InputfieldText');
-    $f->name = 'CKEScript';
-    $f->label = __('CKEditor custom configuration script', __FILE__);
-    $f->description = __('URL to a JavaScript file to be loaded for CKEditors, eg.',
-            __FILE__) . ' "/site/templates/admin/cke.js"';
-//        $f->columnWidth = 50;
-    $f->collapsed = Inputfield::collapsedBlank;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-    $fsetPaths->add($f);
-
-    $f = wire('modules')->get('InputfieldText');
-    $f->name = 'CKEtemplates';
-    $f->label = __('CKEditor templates directory', __FILE__);
-    $f->description = __('URL to Content Templates CKEditor plugin templates directory, eg',
-            __FILE__) . ' "/site/templates/admin/cke-templates.js"';
-    $f->collapsed = Inputfield::collapsedBlank;
-
-    if ($data[$f->name]) {
-        $f->attr('value', $data[$f->name]);
-    }
-    $fsetPaths->add($f);
-
-    $wrapper->add($fsetPaths);
-
-
-    // Restore settings checkbox
-
-    $f = wire('modules')->get('InputfieldCheckbox');
-    $f->name = 'restore';
-    $f->label = __('Restore settings on next install', __FILE__);
-//        $f->description = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__);
-    $f->notes = __('Enable saving module configuration data to file on uninstall to import it on next install.',
-            __FILE__) . ' ' . __('Make sure to save the module first when changing this value.', __FILE__);
-    $f->collapsed = Inputfield::collapsedNever;
-    $f->value = $data[$f->name];
-
-    $f->checked = ($f->value == 1) ? 'checked' : '';
-
-    $wrapper->add($f);
-
-
-    // add roles asmSelects
-
-    // no need to add if module is disabled
-    if ($this->enabled) {
-        foreach ($defaultData['enabledSubmodules'] as $submodule) {
-            if (in_array($submodule, array('FieldAndTemplateEditLinks', 'ModuleTweaks', 'RestrictTreeDropdown'))) {
-                continue;
-            }
-            $this->addRoleFields($submodule, $data, $wrapper);
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
         }
-    }
 
-    return $wrapper;
-}
+        $fset->add($f);
+
+        $wrapper->add($fset);
+
+
+        // Assets paths
+
+        $fsetPaths = wire('modules')->get("InputfieldFieldset");
+        $fsetPaths->attr('name', 'AssetPaths');
+        $fsetPaths->label = __('Asset Paths', __FILE__);
+
+        $f = wire('modules')->get('InputfieldText');
+        $f->name = 'AdminStyle';
+        $f->label = __('Admin CSS', __FILE__);
+        $f->description = __('URL to a CSS file to be loaded in the admin, eg.',
+                __FILE__) . ' "/site/templates/admin/admin.css"';
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetPaths->add($f);
+
+        $f = wire('modules')->get('InputfieldText');
+        $f->name = 'AdminScript';
+        $f->label = __('Admin JavaScript', __FILE__);
+        $f->description = __('URL to a JavaScript file to be loaded in the admin, eg.',
+                __FILE__) . ' "/site/templates/admin/admin.js"';
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetPaths->add($f);
+
+        $f = wire('modules')->get('InputfieldText');
+        $f->name = 'CKEStyle';
+        $f->label = __('CKEditor custom CSS', __FILE__);
+        $f->description = __('URL to a CSS file to be loaded for CKEditors, eg.',
+                __FILE__) . ' "/site/templates/admin/cke.css"';
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+        $fsetPaths->add($f);
+
+        $f = wire('modules')->get('InputfieldText');
+        $f->name = 'CKEScript';
+        $f->label = __('CKEditor custom configuration script', __FILE__);
+        $f->description = __('URL to a JavaScript file to be loaded for CKEditors, eg.',
+                __FILE__) . ' "/site/templates/admin/cke.js"';
+//        $f->columnWidth = 50;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+        $fsetPaths->add($f);
+
+        $f = wire('modules')->get('InputfieldText');
+        $f->name = 'CKEtemplates';
+        $f->label = __('CKEditor templates directory', __FILE__);
+        $f->description = __('URL to Content Templates CKEditor plugin templates directory, eg',
+                __FILE__) . ' "/site/templates/admin/cke-templates.js"';
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+        $fsetPaths->add($f);
+
+        $wrapper->add($fsetPaths);
+
+
+        // Restore settings checkbox
+
+        $f = wire('modules')->get('InputfieldCheckbox');
+        $f->name = 'restore';
+        $f->label = __('Restore settings on next install', __FILE__);
+//        $f->description = __('Enable saving module configuration data to file on uninstall to import it on next install.', __FILE__);
+        $f->notes = __('Enable saving module configuration data to file on uninstall to import it on next install.',
+                __FILE__) . ' ' . __('Make sure to save the module first when changing this value.', __FILE__);
+        $f->collapsed = Inputfield::collapsedNever;
+        $f->value = $data[$f->name];
+
+        $f->checked = ($f->value == 1) ? 'checked' : '';
+
+        $wrapper->add($f);
+
+
+        // add roles asmSelects
+
+        // no need to add if module is disabled
+        if ($this->enabled) {
+            foreach ($defaultData['enabledSubmodules'] as $submodule) {
+                if (in_array($submodule, array('FieldAndTemplateEditLinks', 'ModuleTweaks', 'RestrictTreeDropdown'))) {
+                    continue;
+                }
+                $this->addRoleFields($submodule, $data, $wrapper);
+            }
+        }
+
+        return $wrapper;
+    }
 }

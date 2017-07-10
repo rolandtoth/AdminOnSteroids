@@ -561,6 +561,10 @@ html.aos {
   }
 }
 
+.aos-hidden {
+  display: none !important;
+}
+
 .cke_maximized {
   z-index: 100000 + 900 !important;
 }
