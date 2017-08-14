@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.5.1 (2017-08-15)
+
+- fixed move up/down and delete icon overlap on File fields (reported by bernhard, lesaff, szabesz)
+- CodeMirror CKE plugin update and word wrap fix
+
+
+
 ### 1.5.0 (2017-07-10)
 
 - Misc: add new page: uncheck `Active?` for non-default language names (thanks to Tomka)

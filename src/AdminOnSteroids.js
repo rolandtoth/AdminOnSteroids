@@ -112,7 +112,16 @@ function initCKE() {
         CKEDITOR.config.autoGrow_maxHeight = 700;
         CKEDITOR.config.codemirror = {
             theme: 'material',
-            autofocus: true
+            lineNumbers: true,
+            indentAuto: true,
+            lineWrapping: true,
+            // extraKeys: {
+            //     "Tab": function (cm) {
+            //         CodeMirror.commands[cm.getSelection().length ?
+            //             "indentMore" : "insertTab"](cm);
+            //     },
+            //     "Shift-Tab": "indentLess"
+            // }
         };
 
         $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
@@ -2392,7 +2401,7 @@ $(document).ready(function () {
                         return false;
                     }
 
-                    if(filter_value === prev_value) return;
+                    if (filter_value === prev_value) return;
                     prev_value = filter_value;
 
                     $filterIcons.removeClass('hidden');

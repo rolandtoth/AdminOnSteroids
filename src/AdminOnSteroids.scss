@@ -346,6 +346,12 @@ html.aos {
   //  }
   //}
 
+  .cke_reset_all .CodeMirror-scroll * {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: normal;
+  }
+
   .cke_top .cke_button_icon.cke_button__oembed_icon {
     background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
   }
@@ -3268,7 +3274,7 @@ html.AdminThemeReno {
   z-index: 99;
   float: right;
   color: white;
-  margin-right: 4px;
+  margin-right: 30px;
   i {
     padding: 9px 7px 8px;
     margin-right: 1px;
