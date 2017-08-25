@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 143,
+            'version'   => 151,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -168,7 +168,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 'hoverDropdown',
                 'titleCaseToggle',
                 'tabIndex',
-                'emptyTrashTop'
+                'emptyTrashTop',
+                'iconsFilter'
 //                'noAnim'
             ),
             'ModuleTweaks'                 => array(
@@ -404,22 +405,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function init()
     {
 
-
-        $editedPageId = $this->sanitizer->int($this->config->input->get->id);
-
-        if (!empty($editedPageId) && is_numeric($editedPageId) && $this->pages->get($editedPageId)) {
-            $this->editedPage = $this->pages->get($editedPageId);
-        } else {
-            $this->editedPage = null;
-        }
-
-        $configData = $this->modifyConfigData(
-            $this->modules->getModuleConfigData($this),
-            $this->editedPage ? $this->editedPage : false
-        );
-
-//        $configData['tokens'] = $this->wire('config')->tokens;
-
+        // populate self::$configData
+        $configData = $this->modules->getModuleConfigData($this);
         self::$configData = $configData;
 
         if ($this->user->isSuperUser()) {
@@ -516,6 +503,21 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return false;
         }
 
+        // set $this->editedPage
+        // excluded repeater pages, minor refactoring
+        $this->editedPage = false;
+        $editedPageId = $this->sanitizer->int($this->config->input->get->id);
+        $editedPage = $this->pages->get($editedPageId);
+
+        if ($editedPage->id && !($editedPage instanceof RepeaterPage)) {
+            $this->editedPage = $editedPage;
+        }
+
+        self::$configData = $this->modifyConfigData(
+            $this->modules->getModuleConfigData($this),
+            $this->editedPage
+        );
+
         $styles->prepend($root . '/' . __CLASS__ . '.css?ts=' . $timestamp);
 
         // login page doesn't some stuff
@@ -564,7 +566,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 // add template edit link (page action) to pagelist
                 $this->addHookAfter("ProcessPageListActions::getActions", $this, 'addTemplateEditLinkPageList');
 
-                if (!is_null($this->editedPage)) {
+                if ($this->editedPage) {
 
                     // add edit field link only if the edited page is not a special page (eg. admin)
                     if ($this->process == 'ProcessPageView' && $this->editedPage->template && $this->editedPage->template->flags === 0) {
@@ -634,6 +636,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListIDs');
                 }
 
+
                 // add delete button to pagelist items (bypass trash)
                 if (in_array('deleteBtn', $configData[$subModule])) {
                     $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
@@ -691,6 +694,56 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     });
                 }
             }
+
+
+            if (in_array('refreshBtn', $configData[$subModule])) {
+                $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
+
+                    $page = $event->arguments('page');
+
+                    $actions = array();
+                    $adminUrl = $this->wire('config')->urls->admin . 'page/';
+
+                    $actions['refresh'] = array(
+                        'cn'   => 'Refresh',
+                        'name' => 'Refresh',
+                        'url'  => $adminUrl . '?action=refresh&id=' . $page->id,
+                        'ajax' => true
+                    );
+
+                    $event->return += $actions;
+                });
+
+                $this->addHookAfter('ProcessPageListActions::processAction', function (HookEvent $event) {
+
+                    $page = $event->arguments(0);
+                    $action = $event->arguments(1);
+
+                    if ($action == 'refresh') {
+
+                        $remove = false;
+                        $refreshChildren = $page->id;
+
+                        // remove item if there's no ID or it's in the Trash
+                        if (!$page->id || ($page->parent && $page->parent->id == 7)) {
+                            $remove = true;
+                            $refreshChildren = 0;
+                        }
+
+                        $event->return = array(
+                            'action'          => $action,
+                            'success'         => true,
+                            'page'            => $page->id,
+                            'updateItem'      => $page->id,
+                            'message'         => 'Page refreshed.',
+                            'remove'          => $remove,
+                            'refreshChildren' => $refreshChildren
+                        );
+                    }
+                });
+            }
+
+
         }
 
 
@@ -847,12 +900,24 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAdminLangSwitcher');
             }
 
+            // uncheckAddnewActive
+            if (in_array('uncheckAddnewActive', $configData[$subModule])) {
+                $this->addHookAfter('InputfieldPageName::render', $this, 'uncheckAddnewActive');
+            }
+
             // addTranslatorLinks
             if (in_array('addTranslatorLinks', $configData[$subModule])) {
                 if ($this->page->process == "ProcessLanguageTranslator" && $this->wire('languages')->count() > 1) {
                     $this->addHookAfter('ProcessLanguageTranslator::executeEdit', $this, 'addTranslatorLinks');
                 }
             }
+
+
+            // hideAddNewDropdown
+            if (in_array('hideAddNewDropdown', $configData[$subModule])) {
+                $this->addHookAfter('Page::render', $this, 'hideAddNewDropdown');
+            }
+
 
             // showSystemTemplates
             if (in_array('showSystemTemplates', $configData[$subModule])) {
@@ -978,99 +1043,96 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configData['aosUrl'] = $this->config->urls->AdminOnSteroids;
 //        $configData['aosModuleUrl']      = $this->config->urls->admin . 'module/edit?name=AdminOnSteroids';
 
-        $root = $this->config->urls->root;
-
-        $rootPath = $this->config->paths->root;
-        $rootPath = rtrim($rootPath, $root);
-
-        $rootUrl = $this->config->urls->httpRoot;
-        $rootUrl = rtrim($rootUrl, $root);
-
-//        $templatesPath = $this->config->paths->templates;
-        $templatesUrl = $this->config->urls->httpTemplates;
-        $templatesUrlRelative = $this->config->urls->templates;
-
         // do not add JS to page on login page
         if ($this->page->id != 23) {
 
             // custom CKEaddons config js and css
-//            $ckeCSS = !empty($configData['CKEStyle']) ? '/' . trim($configData['CKEStyle'], '/') : $templatesUrlRelative . 'cke.css';
-//            $ckeJS        = !empty($configData['CKEScript']) ? '/' . trim($configData['CKEScript'], '/') : $templatesUrlRelative . 'cke.js';
-//            $ckeTemplates = !empty($configData['CKEtemplates']) ? '/' . trim($configData['CKEtemplates'], '/') : $templatesUrlRelative . 'templates.js';
 
-            $ckeCSS = $this->getAssetPath('CKEStyle', 'admin/cke.css', $templatesUrlRelative, $configData, $root);
-            $ckeJS = $this->getAssetPath('CKEScript', 'admin/cke.js', $templatesUrlRelative, $configData, $root);
-            $ckeTemplates = $this->getAssetPath('CKEtemplates', 'admin/templates.js', $templatesUrlRelative,
-                $configData, $root);
-
-            if (file_exists($rootPath . $ckeCSS)) {
-                $configData['customCKEStyle'] = $rootUrl . $ckeCSS;
-            }
-
-//            bd($ckeCSS);
-//            bd($rootUrl . $ckeCSS);
-//            bd($rootPath . $ckeCSS);
-//            bd(file_exists($rootPath . $ckeCSS));
-//
-//            bd($ckeJS);
-//            bd($rootUrl . $ckeJS);
-//            bd($rootPath . $ckeJS);
-//            bd(file_exists($rootPath . $ckeJS));
-//
-//            bd($ckeTemplates);
-//            bd($rootUrl . $ckeTemplates);
-//            bd($rootPath . $ckeTemplates);
-//            bd(file_exists($rootPath . $ckeTemplates));
-
-            if (file_exists($rootPath . $ckeJS)) {
-                $configData['customCKEScript'] = $rootUrl . $ckeJS;
-            }
-            if (file_exists($rootPath . $ckeTemplates)) {
-                $configData['customCKEtemplates'] = $rootUrl . $ckeTemplates;
-            }
+            $this->addAsset('CKEStyle', $configData);
+            $this->addAsset('CKEScript', $configData);
+            $this->addAsset('CKEtemplates', $configData);
 
             // add css and js files
-            foreach ($jsFiles as $jsFile) {
-                $scripts->add($jsFile);
-            }
             foreach ($cssFiles as $cssFile) {
                 $styles->add($cssFile);
             }
 
+            foreach ($jsFiles as $jsFile) {
+                $scripts->add($jsFile);
+            }
 
             // write module js config to page
             $this->config->js("AdminOnSteroids", json_encode($configData));
         }
 
-        // add admin.js and admin.css
-        // use values set in module settings or try templates/admin.css & js
-//        $adminCSS = !empty($configData['AdminStyle']) ? '/' . trim($configData['AdminStyle'], '/') : $templatesUrlRelative . 'admin.css';
-//        $adminJS  = !empty($configData['AdminScript']) ? '/' . trim($configData['AdminScript'], '/') : $templatesUrlRelative . 'admin.js';
-        $adminCSS = $this->getAssetPath('AdminStyle', 'admin/admin.css', $templatesUrlRelative, $configData, $root);
-        $adminJS = $this->getAssetPath('AdminScript', 'admin/admin.js', $templatesUrlRelative, $configData, $root);
-
-        if (file_exists($rootPath . $adminCSS)) {
-            $styles->add($rootUrl . $adminCSS);
-        }
-        if (file_exists($rootPath . $adminJS)) {
-            $scripts->add($rootUrl . $adminJS);
-        }
-
-//        bd($adminCSS);
-//        bd($rootUrl . $adminCSS);
-//        bd($rootPath . $adminCSS);
-//        bd(file_exists($rootPath . $adminCSS));
-//
-//        bd($adminJS);
-//        bd($rootUrl . $adminJS);
-//        bd($rootPath . $adminJS);
-//        bd(file_exists($rootPath . $adminJS));
+        // add admin CSS/JS
+        $this->addAsset('AdminStyle', $configData);
+        $this->addAsset('AdminScript', $configData);
     }
 
-    public function getAssetPath($assetConfigName, $defaultName, $templatesUrlRelative, $configData, $root)
+
+    /**
+     * Helper function for fields in a repeater
+     */
+//    public function getEditedPage($page)
+//    {
+//        if ($page instanceof RepeaterPage) {
+//            return $this->getEditedPage($page->getForPage());
+//        } else {
+//            return $page;
+//        }
+//    }
+
+
+    // hide "Add new" dropdown button from the main Pagelist
+    public function hideAddNewDropdown(HookEvent $event)
     {
-        return !empty($configData[$assetConfigName]) ? '/' . ltrim($root, '/') . trim($configData[$assetConfigName],
-                '/') : $templatesUrlRelative . $defaultName;
+        $page = $event->object;
+
+        if ($page->process == 'ProcessPageList') {
+            $event->return = str_replace('pw-dropdown-toggle', 'pw-dropdown-toggle aos-hidden', $event->return);
+        }
+    }
+
+
+    // uncheck "Active?" checkbox next to language names when adding a new page
+    public function uncheckAddnewActive(HookEvent $event)
+    {
+        $page = $this->wire('page');
+
+        // AOS is only available in the admin
+//        if ($page->template != 'admin') {
+//            return;
+//        }
+
+        if ($page->process == 'ProcessPageAdd' || ($page->process == 'ProcessPageEdit' && $this->wire('input')->get('new') == 1)) {
+            $event->return = str_replace("checked='checked'", "", $event->return);
+        }
+    }
+
+
+    public function addAsset($assetName, &$configData)
+    {
+
+        if (!isset($configData[$assetName])) {
+            return false;
+        }
+
+        $asset = trim($configData[$assetName], '/ ');
+
+        if (strlen($asset)) {
+
+            // allow absolute or relative url
+            $baseUrl = strpos($asset, 'http') !== false ? '' : $this->config->urls->httpRoot;
+
+            if (strpos($assetName, 'CKE') !== false) {
+                $configData['custom' . $assetName] = $baseUrl . $asset;
+            } elseif ($assetName === 'AdminStyle') {
+                $this->config->styles->add($baseUrl . $asset);
+            } elseif ($assetName === 'AdminScript') {
+                $this->config->scripts->add($baseUrl . $asset);
+            }
+        }
     }
 
 
@@ -1154,7 +1216,22 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $markup = $icon . trim($label_with_markup[0]) . '<span></span>' . (isset($label_with_markup[1]) ? ' <' . $label_with_markup[1] : '');
         }
 
-        $markup = str_replace('<span', '<span data-pid=' . $page->id . ' ', $markup);
+        // check for label_title first and if not found, do a general str_replace.
+        if (strpos($markup, 'label_title') !== false) {
+            $markup = str_replace("<span class='label_title'",
+                "<span class='label_title' data-pid='" . $page->id . "' ",
+                $markup);
+
+        } else {
+
+            // limit the replacement to the first match
+            $needle = '<span';
+            $pos = strpos($markup, $needle);
+
+            if ($pos !== false) {
+                $markup = substr_replace($markup, "<span data-pid='" . $page->id . "' ", $pos, strlen($needle));
+            }
+        }
 
         $event->return = $markup;
     }
@@ -1720,7 +1797,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $downloadLink = '<a href="' . $url . '" target="_blank" class="aos_downloadAsset" download title="' . __('Download',
                 __FILE__) . '"><i class="fa fa-download"></i></a>';
 
-        $markup = $downloadLink . $markup;
+        if (strpos($markup, 'InputfieldImageEdit') !== false) {
+            // for image fields
+            $markup = str_replace('</h2>', $downloadLink . '</h2>', $markup);
+        } else {
+            // for file fields
+            $markup = $downloadLink . $markup;
+        }
 
         $event->return = $markup;
     }
@@ -1761,8 +1844,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addTemplateEditLink(HookEvent $event)
     {
-
-
         if (!$this->editedPage || $this->editedPage->template == 'admin') {
             return;
         }
@@ -1833,15 +1914,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $event->return = str_replace('</label>', $editFieldTooltip . '</label>', $event->return);
             }
 
-//            $inputfield->prependMarkup = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" target="_blank" style="display: none !important;">Edit</a>';
-            $event->return .= '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" data-field-name="' . $inputfield->name . '" target="_blank" style="display: none !important;">Edit</a>';
+            $link = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" data-field-name="' . $inputfield->name . '" target="_blank" style="display: none !important;">Edit</a>';
+
+            $event->return = $link . $event->return;
         }
     }
 
 
     public function addTranslatorLinks(HookEvent $event)
     {
-
         $form = $event->return;
         $textdomain = $this->wire('input')->get('textdomain');
         $currentLangID = $this->wire('input')->get('language_id');
@@ -1863,7 +1944,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addPageListUnselectButtons(HookEvent $event)
     {
-
         $field = $event->object;
 
         $originalID = '';
@@ -2021,7 +2101,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         foreach ($settings as $pairs) {
 
-            if (strpos($pairs, '//') === 0) continue;
+            if (strpos($pairs, '//') === 0) {
+                continue;
+            }
 
             $setting = explode(':', $pairs);
 
@@ -2051,7 +2133,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addPageListThumb(HookEvent $event)
     {
-
         // disable in Tree menu (wide items may go blank because the ellipsis added by PW)
         // bug: causes thumbs not loaded if tree was initially collapsed
 //        if ($this->wire('config')->ajax) return false;
@@ -2206,7 +2287,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addRoleFields($submoduleName, $data, $parent)
     {
-
         $f = wire('modules')->get("InputfieldAsmSelect");
         $f->attr('name', $submoduleName . 'Roles');
         $f->label = __($submoduleName . ' roles', __FILE__);
@@ -2224,6 +2304,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $parent->add($f);
     }
+
 
     public function getModuleConfigInputfields(array $data)
     {
@@ -2391,8 +2472,7 @@ HTML;
         $f->addOption('maximize', 'Maximize' . $addsToolbarButtonText);
         $f->addOption('oembed', 'Media (oEmbed)' . $addsToolbarButtonText);
         $f->addOption('showblocks', 'Show Blocks' . $addsToolbarButtonText);
-//        $f->addOption('token', 'Token' . $addsToolbarButtonText);
-        $f->addOption('ckeditortablecellsselection', 'Table Cells Selection');
+        $f->addOption('token', 'Token' . $addsToolbarButtonText);
 
         if (isset($data[$f->name]) && $data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -2814,6 +2894,9 @@ HTML;
         $f->addOption('tabIndex', __('Add sequential tabindex to fields', __FILE__));
         $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
         $f->addOption('showSystemTemplates', __('Force showing system templates', __FILE__));
+        $f->addOption('iconsFilter', __('Add filter box to template icon picker', __FILE__));
+        $f->addOption('uncheckAddnewActive', __('Add new page: uncheck `Active?` for non-default language names', __FILE__));
+        $f->addOption('hideAddNewDropdown', __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -2965,6 +3048,7 @@ HTML;
 
         $f->addOption('highlightRows', __('Highlight rows on hover', __FILE__));
         $f->addOption('pListIDs', __('Show page IDs (SuperUser only)', __FILE__));
+        $f->addOption('refreshBtn', __('Add Refresh button to refresh page details displayed', __FILE__));
         $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
         $f->addOption('pListUnselect', __('Add unselect/restore buttons to PageListSelect', __FILE__));
         $f->addOption('pListIconOnly', __('Icon-only pagelist actions', __FILE__));
@@ -3089,7 +3173,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'AdminStyle';
         $f->label = __('Admin CSS', __FILE__);
-        $f->description = __('Path to a CSS file to be loaded in the admin (relative to site root)', __FILE__);
+        $f->description = __('URL to a CSS file to be loaded in the admin, eg.',
+                __FILE__) . ' "/site/templates/admin/admin.css"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3102,7 +3187,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'AdminScript';
         $f->label = __('Admin JavaScript', __FILE__);
-        $f->description = __('Path to a JavaScript file to be loaded in the admin (relative to site root)', __FILE__);
+        $f->description = __('URL to a JavaScript file to be loaded in the admin, eg.',
+                __FILE__) . ' "/site/templates/admin/admin.js"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3115,7 +3201,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'CKEStyle';
         $f->label = __('CKEditor custom CSS', __FILE__);
-        $f->description = __('Path to a CSS file to be loaded for CKEditors (relative to site root)', __FILE__);
+        $f->description = __('URL to a CSS file to be loaded for CKEditors, eg.',
+                __FILE__) . ' "/site/templates/admin/cke.css"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3127,7 +3214,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'CKEScript';
         $f->label = __('CKEditor custom configuration script', __FILE__);
-        $f->description = __('Path to a JavaScript file to be loaded for CKEditors (relative to site root)', __FILE__);
+        $f->description = __('URL to a JavaScript file to be loaded for CKEditors, eg.',
+                __FILE__) . ' "/site/templates/admin/cke.js"';
 //        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
@@ -3139,7 +3227,8 @@ HTML;
         $f = wire('modules')->get('InputfieldText');
         $f->name = 'CKEtemplates';
         $f->label = __('CKEditor templates directory', __FILE__);
-        $f->description = __('Path for Content Templates CKEditor plugin templates directory', __FILE__);
+        $f->description = __('URL to Content Templates CKEditor plugin templates directory, eg',
+                __FILE__) . ' "/site/templates/admin/cke-templates.js"';
         $f->collapsed = Inputfield::collapsedBlank;
 
         if ($data[$f->name]) {

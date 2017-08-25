@@ -346,11 +346,20 @@ html.aos {
   //  }
   //}
 
+  .cke_reset_all .CodeMirror-scroll * {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: normal;
+  }
+
   .cke_top .cke_button_icon.cke_button__oembed_icon {
     background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
   }
   .cke_top .cke_button_icon.cke_button__codesnippet_icon {
     background-image: url('CKE/plugins/codesnippet/icons/codesnippet.png') !important;
+  }
+  .cke_top .cke_button_icon.cke_button__token_icon {
+    background-image: url('CKE/plugins/token/icons/token.png') !important;
   }
 
   .cke_combo_text {
@@ -581,6 +590,10 @@ html.aos {
     margin-left: 0;
     margin-bottom: 10px;
   }
+}
+
+.aos-hidden {
+  display: none !important;
 }
 
 .cke_maximized {
@@ -1011,18 +1024,13 @@ html {
 }
 
 .aos_pagelist_unselect {
-  float: left;
   margin-top: 1px !important;
-  //width: 22px;
   padding: 0 !important;
-  //height: 21px;
-  //line-height: 21px;
   text-align: center;
   border: none !important;
-  //border-radius: 2px !important;
   transition-duration: 0.1s !important;
+  max-width: 48px;
   i {
-    //font-size: 12px !important;
     padding: 3px 5px !important;
     display: inline-block;
   }
@@ -1034,13 +1042,13 @@ html {
     pointer-events: none;
     opacity: 0.33;
     filter: saturate(0);
-    //box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.25) !important;
     border-color: inherit;
   }
   &.clear {
     background-color: transparent !important;
     margin-left: -3px;
     margin-right: 5px;
+    float: left;
     color: #8d939e !important;
     &:hover {
       color: $colorDelete !important;
@@ -1053,18 +1061,14 @@ html {
         text-decoration: line-through;
       }
     }
+    ~ .PageListRoot {
+      float: left;
+      width: calc(100% - 48px);
+    }
   }
   &.restore {
-    // entirely hide if there's nothing to restore
-    //&[data-value-original=""] {
-    //  display: none;
-    //}
-    position: absolute;
-    float: none;
-    right: 12px;
-    //&:not(:hover) {
-    //  background: #8d939e;
-    //}
+    position: relative;
+    top: -1px;
   }
 }
 
@@ -1384,18 +1388,62 @@ body.aos_saving {
 // noFilenameTruncate
 html.noFilenameTruncate {
   p.InputfieldFileInfo.InputfieldItemHeader {
-    padding-left: 25px;
+    padding: 6px 34px 6px 25px;
+    position: relative;
   }
   i.fa-file-image-o,
   .InputfieldFileInfo i {
     left: -21px !important;
+    top: 3px;
+    float: left;
   }
   a.InputfieldFileName {
     line-height: 1.33;
     margin-left: -22px;
+    word-wrap: break-word;
   }
   label.InputfieldFileDelete {
-    float: none !important;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+}
+
+#asset-check-button {
+  .InputfieldStateCollapsed & {
+    display: none;
+  }
+  position: absolute;
+  margin-left: 14px;
+  border: 1px solid #c4c4c4;
+  background: transparent;
+  border-radius: 2px;
+  padding: 3px 6px 3px 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  i {
+    font-size: 11px !important;
+    margin-left: 4px;
+    top: -1px;
+    position: relative;
+  }
+  &:hover {
+    background: #f8f8f8;
+  }
+  &.success,
+  &.error {
+    color: white;
+    i::before {
+      color: white;
+    }
+  }
+  &.success {
+    background: #3EB998;
+    border-color: #3EB998;
+  }
+  &.error {
+    background: #cf3a3a;
+    border-color: #cf3a3a;
   }
 }
 
@@ -2015,6 +2063,24 @@ html.PageListThumbs {
         pointer-events: none !important;
       }
     }
+  }
+}
+
+// iconsFilter
+.InputfieldIconAll {
+  overflow: visible !important;
+}
+
+.InputfieldIcon .hidden {
+  display: none;
+}
+
+#icons-filter {
+  display: inline-block;
+  padding: 2px 5px;
+  margin-left: 30px;
+  &.hidden {
+    display: none;
   }
 }
 
@@ -3125,7 +3191,7 @@ html.AdminThemeReno {
         ul.WireTabs {
           overflow: hidden !important;
           // override default -2.6em (allows active tab having no border & works with PrevNextTabs fix)
-          margin-bottom: -2.7em;
+          margin-bottom: calc(-2.6em - 1px);
         }
       }
     }
@@ -3233,7 +3299,7 @@ html.AdminThemeReno {
   z-index: 99;
   float: right;
   color: white;
-  margin-right: 4px;
+  margin-right: 30px;
   i {
     padding: 9px 7px 8px;
     margin-right: 1px;
@@ -3283,24 +3349,28 @@ html.AdminThemeReno {
 .aos_downloadAsset {
   position: relative;
   z-index: 99;
-  float: right;
-  margin-left: 2px;
-  .gridImage & {
+  top: 1px;
+  .InputfieldImageEdit__buttons & {
     display: none;
   }
-  i {
-    padding: 10px 12px 8px;
-    display: inline-block;
-    .InputfieldImageEdit__buttons & {
-      font-size: 18px !important;
-      margin-right: -8px;
-    }
-    .InputfieldFileItem & {
+  .InputfieldFileItem & {
+    float: right;
+    margin-left: 2px;
+    left: auto;
+    top: auto;
+    i {
       color: #fff;
     }
   }
+  i {
+    padding: 10px 8px;
+    display: inline-block;
+
+  }
   &:hover {
     opacity: 0.7;
+    color: inherit !important;
+    background: transparent !important;
   }
 
 }
@@ -3451,6 +3521,10 @@ html.pListIconOnly {
     .PageListActionUnlock > a,
     .PageUnlock {
       @include pageListIcon("\f13e");
+    }
+    .PageListActionRefresh > a,
+    .PageRefresh {
+      @include pageListIcon("\f021");
     }
     .PageListActionTrash > a,
     .PageTrash {
@@ -3796,4 +3870,3 @@ html.hoverDropdown {
     //overflow: visible;
   }
 }
-

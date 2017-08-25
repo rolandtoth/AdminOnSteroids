@@ -4,7 +4,6 @@ function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
 }
 
-
 function initCKE() {
 
     var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
@@ -16,6 +15,7 @@ function initCKE() {
         codesnippetPluginDependencies = 'widget,dialog,lineutils',
         indentblockPluginDependencies = 'indent',
         autosavePluginDependencies = 'notification',
+        tokenPluginDependencies = 'widget,dialog,lineutils',
         CKEtoolbars = {
             codesnippet: ["CodeSnippet"],
             div: ["CreateDiv"],
@@ -25,6 +25,7 @@ function initCKE() {
             maximize: ["Maximize"],
             oembed: ["oembed"],
             showblocks: ["ShowBlocks"],
+            token: ["CreateToken"],
             templates: ["Templates"]
         };
 
@@ -67,6 +68,13 @@ function initCKE() {
                 }
             }
 
+            if (pluginName == 'token') {
+                var dependencies = tokenPluginDependencies.split(',');
+                for (var k in dependencies) {
+                    CKEplugins[dependencies[k]] = aosUrl + 'CKE/plugins/' + dependencies[k] + '/plugin.js';
+                }
+            }
+
             CKEplugins[pluginName] = aosUrl + 'CKE/plugins/' + pluginName + '/plugin.js';
         }
     }
@@ -104,7 +112,16 @@ function initCKE() {
         CKEDITOR.config.autoGrow_maxHeight = 700;
         CKEDITOR.config.codemirror = {
             theme: 'material',
-            autofocus: true
+            lineNumbers: true,
+            indentAuto: true,
+            lineWrapping: true,
+            // extraKeys: {
+            //     "Tab": function (cm) {
+            //         CodeMirror.commands[cm.getSelection().length ?
+            //             "indentMore" : "insertTab"](cm);
+            //     },
+            //     "Shift-Tab": "indentLess"
+            // }
         };
 
         $('.InputfieldCKEditorNormal, .InputfieldCKEditorInline').each(function () {
@@ -783,19 +800,114 @@ $(document).ready(function () {
         }
 
 
+        // assetPaths: add buttons to check 404 response
+
+        if ($('#Inputfield_AssetPaths').length) {
+
+            var assetCheckBtnText = 'Check',
+                $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
+
+
+            $('#Inputfield_AssetPaths').on('focus', 'input', function () {
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.removeClass();
+                $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
+            });
+
+
+            // add button to the first visible opened inputfield
+            var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
+            if ($visibleAssetInput.length) {
+                $visibleAssetInput.first().find('label').append($assetCheckBtn);
+            }
+
+            function UrlExists(url, cb) {
+                $.ajax({
+                    url: url,
+                    // dataType: 'text',
+                    type: 'HEAD',
+                    cache: false,
+                    complete: function (xhr) {
+                        if (typeof cb === 'function')
+                            cb.apply(this, [xhr.status]);
+                    }
+                });
+            }
+
+            function showResult(result) {
+
+                var icon = result ? 'check' : 'exclamation-triangle',
+                    className = result ? 'success' : 'error';
+
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.addClass(className);
+
+                $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
+            }
+
+            $assetCheckBtn.on('click', function () {
+                var $input = $(this).parents('.Inputfield').first().find('input'),
+                    url = $input.val();
+
+                if (!url || url.length === 0) {
+                    $input.focus();
+                    return false;
+                }
+                ;
+
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.removeClass();
+
+                var rootUrl = window.location.origin + ProcessWire.config.urls.root,
+                    baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
+
+                url = (url[0] === '/') ? url.substr(1) : url;
+                url = (baseUrl + url).trim();
+
+                UrlExists(url, function (status) {
+                    if (status === 200) {
+                        showResult(true);
+                    }
+                    else if (status === 404) {
+                        showResult(false);
+                    }
+                });
+
+                return false;
+            });
+
+        }
+
         // FieldAndTemplateEditLinks
         if (_isEnabled('FieldAndTemplateEditLinks')) {
 
             // template edit link on ProcessPageEdit template select field (Settings tab)
 
-            $('#ProcessPageEdit select#template').after('<a href="#" class="pw-modal aos-template-edit-settings"><i class="fa fa-pencil-square-o"></i></a>');
+            var templateEditSettingsElem = $('#ProcessPageEdit select#template'),
+                templateEditSettingsLink = '<a href="#" class="pw-modal aos-template-edit-settings"><i class="fa fa-pencil-square-o"></i></a>';
+
+            if (templateEditSettingsElem.length) {
+                templateEditSettingsElem.after(templateEditSettingsLink);
+            } else {
+                // workaround for scenario: Don't allow pages to be moved + Don't allow pages to change their template (Advanced tab)
+                templateEditSettingsElem = $('body[class*="ProcessPageEdit-template-"] #wrap_Inputfield__pw_page_name').next('li.Inputfield').find('i.fa-cubes').parent().parent().find('.InputfieldContent p');
+                templateEditSettingsElem.append(templateEditSettingsLink);
+            }
 
             $(document).on('hover', '.aos-template-edit-settings', function () {
+
                 var editLink = $(this);
 
-                editLink.attr('href', ProcessWire.config.urls.admin + 'setup/template/edit?id=' + editLink.prev('select').val());
+                if (editLink.prev('select').length) {
+                    editLink.attr('href', ProcessWire.config.urls.admin + 'setup/template/edit?id=' + editLink.prev('select').val());
+                } else {
+                    // changing template is disabled at the Advanced tab (Don't allow pages to change their template?)
+                    // get href from the templateEditLink from the main page title
+                    if ($('.aos_EditTemplate').length) {
+                        editLink.attr('href', $('.aos_EditTemplate').attr('href'));
+                    }
+                }
             });
-
 
             // wrap AdminThemeDefault li.title inner in a span
             $('ul.nav li.title').wrapInner('<span>');
@@ -827,19 +939,29 @@ $(document).ready(function () {
                 var field = $(this),
                     label = field.find('label');
 
-                if (!label.length) return false;
+                if (!label.length) return;
 
-                if (label.find('span').length == 0) {
+                if (label.find('span').length === 0) {
                     field.addClass('aos_hasTooltip');
                     var fieldName = label.parent().find('.InputfieldContent .aos_EditFieldLink').attr('data-field-name');
 
-                    if (!fieldName) return false;
+                    if (!fieldName) return;
 
                     label.contents().eq(0).wrap('<span class="title">');
                     field.find('span.title').append('<em class="aos_EditField">' + fieldName + ' <i class="fa fa-pencil"></i></em>');
                 }
             });
         }
+
+
+        // var $allIcons = $('.InputfieldIconAll > span');
+        //
+        // if($allIcons.length) {
+        //     for(var ii = 0; ii < $allIcons.length; ii++) {
+        //         $allIcons[ii].style = '';
+        //     }
+        // }
+
 
 // FocusInputOnLangTabSwitch
         if (_isEnabled('FocusInputOnLangTabSwitch')) {
@@ -2253,6 +2375,62 @@ $(document).ready(function () {
                 $('.pw-button-dropdown.dropdown-menu').attr('data-my', 'right top').attr('data-at', 'right bottom+1');
             }
 
+            // iconsFilter (by Robin S)
+            if (AOSsettings.Misc.indexOf('iconsFilter') !== -1 && $('.InputfieldIconAll').length) {
+
+                $('.InputfieldIconAll').before('<input id="icons-filter" class="hidden" placeholder="&#128269">');
+
+                var $filterIcons,
+                    hasParentSpan,
+                    prev_value;
+
+                $('a.InputfieldIconShowAll').click(function () {
+                    $filterIcons = false;   // InputfieldIcons.js currently re-inits on each open
+                    $('#icons-filter').toggleClass('hidden').val('').focus();
+                });
+
+
+                $('#icons-filter').on('input keydown', function (e) {
+
+                    var filter_value = $(this).val().trim().toLowerCase().replace(' ', ''),
+                        keyCode = e.keyCode || e.charCode || e.which;
+
+                    if (!$filterIcons) {
+                        $filterIcons = $('.InputfieldIconAll').children();
+                        hasParentSpan = $filterIcons.first().is('span');
+                    }
+
+                    // Enter
+                    if (keyCode === 13) {
+                        e.preventDefault();
+                        var $filterIconsVisible = $filterIcons.not('.hidden');
+
+                        if ($filterIconsVisible.length) {
+                            $filterIconsVisible.first().trigger('click');
+                        }
+
+                        // re-set focus
+                        $('#icons-filter').focus();
+
+                        return false;
+                    }
+
+                    if (filter_value === prev_value) return;
+                    prev_value = filter_value;
+
+                    $filterIcons.removeClass('hidden');
+
+                    if (filter_value) {
+                        if (hasParentSpan) {
+                            $filterIcons.not(':has([title*=' + filter_value + '])').addClass('hidden');
+                        } else {
+                            $filterIcons.not('[title*=' + filter_value + ']').addClass('hidden');
+                        }
+                    }
+                });
+            }
+
+
             // tabIndex
             if (AOSsettings.Misc.indexOf('tabIndex') !== -1) {
                 function aos_updateTabIndices() {
@@ -2886,6 +3064,20 @@ $(document).ready(function () {
                     $(this).prev('.aos_EditTemplate').removeAttr('style');
                 }
             );
+        }
+
+
+// RestrictTreeDropdown
+
+        if (_isEnabled('RestrictTreeDropdown')) {
+
+            var RestrictTreeDropdownSettings = AOSsettings.RestrictTreeDropdown;
+
+            if (RestrictTreeDropdownSettings === true) {
+                $('a[href$="/page/list/"]').parent('li').remove();  // Default theme
+                $('a[href$="/page/"]').children('i.quicklink-open').remove();   // Reno
+            }
+
         }
 
 

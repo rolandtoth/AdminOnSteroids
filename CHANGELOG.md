@@ -1,4 +1,63 @@
-#Changelog
+# Changelog
+
+
+### 1.5.1 (2017-08-15)
+
+- fixed move up/down and delete icon overlap on File fields (reported by bernhard, lesaff, szabesz)
+- CodeMirror CKE plugin update and word wrap fix
+
+
+
+### 1.5.0 (2017-07-10)
+
+- Misc: add new page: uncheck `Active?` for non-default language names (thanks to Tomka)
+- Misc: hide the `Add new` dropdown button from above the main pagelist
+
+
+
+### 1.4.9 (2017-07-03)
+
+- fixed issue with edit link for fieldsets (reported by Robin S)
+- fixed missing download link for SVGs (reported by Karl_T)
+- noFilenameTruncate improvements (thanks to Robin S)
+- removed Table Cells Celection CKEditor plugin (latest stock CKEditor has similar feature)
+- added Token Replacement CKEditor plugin
+
+
+
+### 1.4.8 (2017-06-15)
+
+- fix for template edit links appearing next to Set Password fields (reported by Robin S)
+
+
+
+### 1.4.7 (2017-06-12)
+
+- fix for editedPage bug causing issues in repeater fields (thanks to Robin S)
+- added iconsFilter (merging module of Robin S)
+- new "Refresh" page list action (PageListTweaks)
+- better CSS positioning of pagelist unselect restore button
+- more foolproof pageListID replacement
+
+
+
+### 1.4.6 (2017-05-23)
+
+- show template edit link even if page is not allowed to be moved (reported by gmclelland #40)
+- add pageListIDs only once per page (suggested by horst #45)
+
+
+
+### 1.4.5 (2017-05-18)
+
+- no longer use file_exists() for assetPaths
+
+
+
+### 1.4.4 (2017-05-14)
+
+- added package.json with npm tasks (jmartsch PR #44)
+
 
 
 ### 1.4.3 (2017-05-07)
