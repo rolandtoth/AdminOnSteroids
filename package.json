@@ -4,14 +4,16 @@
   "description": "Various ProcessWire admin tweaks to boost productivity",
   "main": "index.js",
   "devDependencies": {
-    "node-minify": "^2.0.5",
-    "node-sass": "^4.5.2"
+    "node-minify": "^2.3.0",
+    "node-sass": "^4.5.3",
+    "nodemon": "^1.11.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sass": "node-sass src/AdminOnSteroids.scss AdminOnSteroids.css",
     "minify": "node minify.js",
-    "start": "npm run sass && npm run minify"
+    "start": "npm run sass && npm run minify",
+    "watch-css": "nodemon -e scss -x \"npm run sass\""
   },
   "repository": {
     "type": "git",
