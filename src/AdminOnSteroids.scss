@@ -406,7 +406,7 @@ html.aos {
   }
 
   body.AdminThemeUikit .filterbox-wrapper {
-    margin-bottom: 20px;
+    margin-bottom: 1em;
     .fa-close {
       margin-left: 5px;
     }
@@ -1611,7 +1611,7 @@ html.flatModules body.id-21 {
     .InputfieldContent > p:first-child {
       display: none;
     }
-    > .Inputfields > .Inputfield:not(.InputfieldFieldset) .InputfieldHeader {
+    > .Inputfields > .Inputfield:not(.InputfieldFieldset) .InputfieldHeader:not(.uk-form-label) {
       height: 0;
       overflow: hidden;
       position: relative;
@@ -3820,6 +3820,11 @@ html.hoverDropdown {
 }
 
 //end of InputfieldURLChecker
+
+.AdminThemeUikit form[action*=AdminOnSteroids] #Inputfield_tweaks #Inputfield_CKEaddons .Inputfields label{
+  padding-top: 40px;
+}
+
 
 @keyframes spinIn {
   0% {
