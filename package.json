@@ -13,7 +13,7 @@
     "sass": "node-sass src/AdminOnSteroids.scss AdminOnSteroids.css",
     "minify": "node minify.js",
     "start": "npm run sass && npm run minify",
-    "watch-css": "nodemon -e scss -x \"npm run sass\""
+    "watch": "nodemon --watch src -e scss,js js -x \"npm run sass && npm run minify\""
   },
   "repository": {
     "type": "git",
