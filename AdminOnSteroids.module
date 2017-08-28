@@ -2409,13 +2409,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 </p>
 HTML;
 
-        $f->addOption('AddNewChildFirst', '**AddNewChildFirst**' . __('Add new page as first child instead last', __FILE__));
+        $f->addOption('AddNewChildFirst', '**AddNewChildFirst**' . __('Add new page as first child instead of last', __FILE__));
         $f->addOption('AdminTweaks', '**AdminTweaks**' . __('Default admin theme tweaks', __FILE__));
         $f->addOption('AsmTweaks', '**AsmTweaks**' . __('asmSelect tweaks', __FILE__));
         $f->addOption('CKEaddons', '**CKEaddons**' . __('Autoload CKEditor plugins and skins', __FILE__));
         $f->addOption('DeselectRadios', '**DeselectRadios**' . __('Enable clearing checked radio buttons', __FILE__));
         $f->addOption('FieldAndTemplateEditLinks',
-            '**FieldAndTemplateEditLinks**' . __('Shortcuts to templates and fields (SuperUser only)', __FILE__));
+            '**FieldAndTemplateEditLinks**' . __('Shortcuts to templates and fields&nbsp;(SuperUser only)', __FILE__));
         $f->addOption('FileFieldTweaks', '**FileFieldTweaks**' . __('File and image field enhancements', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch',
             '**FocusInputOnLangTabSwitch**' . __('Focus input on switching language tabs', __FILE__));
