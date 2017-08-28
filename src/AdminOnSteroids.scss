@@ -405,7 +405,32 @@ html.aos {
     top: -2.7em;
   }
 
-  div.filterbox {
+  body.AdminThemeUikit .filterbox-wrapper {
+    margin-bottom: 1em;
+    .fa-close {
+      margin-left: 5px;
+    }
+    .counter {
+      //opacity: 0;
+      //visibility: hidden;
+      margin-left: 12px;
+      em, strong {
+        display: inline-block;
+      }
+      em {
+        font-style: normal;
+        opacity: 0.66;
+        font-size: 12px;
+        //word-spacing: -1px;
+      }
+      strong {
+        font-size: 16px;
+        margin-right: 2px;
+      }
+    }
+  }
+
+  &:not(body.AdminThemeUikit) div.filterbox {
     position: relative;
     //z-index: 10;
     margin-top: 8px;
@@ -1586,7 +1611,7 @@ html.flatModules body.id-21 {
     .InputfieldContent > p:first-child {
       display: none;
     }
-    > .Inputfields > .Inputfield:not(.InputfieldFieldset) .InputfieldHeader {
+    > .Inputfields > .Inputfield:not(.InputfieldFieldset) .InputfieldHeader:not(.uk-form-label) {
       height: 0;
       overflow: hidden;
       position: relative;
@@ -3795,6 +3820,11 @@ html.hoverDropdown {
 }
 
 //end of InputfieldURLChecker
+
+.AdminThemeUikit form[action*=AdminOnSteroids] #Inputfield_tweaks #Inputfield_CKEaddons .Inputfields label{
+  padding-top: 40px;
+}
+
 
 @keyframes spinIn {
   0% {
