@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.5.2 (2017-08-28)
+
+- new submodule: AddNewChildFirst based on Add New Child Reverse module by horst (mod by adrian and others)
+- merged PR #49 "Consistent UI and AdminThemeUikit compatibility" by jmartsch
+- added: asmSelect NavItems can also be grouped into a submenu
+- fix for missing submodule role selectors
+
+
+
 ### 1.5.1 (2017-08-15)
 
 - fixed move up/down and delete icon overlap on File fields (reported by bernhard, lesaff, szabesz)

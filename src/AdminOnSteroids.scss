@@ -3575,7 +3575,7 @@ html.pListIconOnly {
         height: auto !important;
         display: block !important;
         max-height: 0;
-        transition: max-height $defaultTransition;
+        transition: max-height 0.25s;
         transition-delay: 0.33s !important;
         padding: 0 !important;
         overflow: hidden !important;
@@ -3583,7 +3583,7 @@ html.pListIconOnly {
       &:hover,
       &.active {
         ul {
-          max-height: 500px !important;
+          max-height: 150vh !important;
         }
       }
     }
@@ -3591,14 +3591,27 @@ html.pListIconOnly {
       &.hasSubmenu {
         ul {
           background: rgba(#1C2836, 0.05) !important;
+          li {
+            position: relative;
+          }
           a:not(.current):hover {
             background: rgba(#1C2836, 0.08) !important;
           }
           a {
-            padding-left: 1.5em !important;
-            &:before {
+            padding-left: 2.4em !important;
+            position: relative;
+            &:first-child:before {
               content: "•";
-              margin-right: 5px;
+              position: absolute;
+              left: 1.5em;
+            }
+            &.page-edit {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              &:hover {
+                background: transparent !important;
+              }
             }
           }
         }
@@ -3824,7 +3837,6 @@ html.hoverDropdown {
 .AdminThemeUikit form[action*=AdminOnSteroids] #Inputfield_tweaks #Inputfield_CKEaddons .Inputfields label{
   padding-top: 40px;
 }
-
 
 @keyframes spinIn {
   0% {
