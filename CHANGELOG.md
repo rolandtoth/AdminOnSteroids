@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.5.3 (2017-08-29)
+
+- fix for a few file compiler issues and typos (thanks to adrian)
+- filterbox broken layout regression fix
+
+
+
 ### 1.5.2 (2017-08-28)
 
 - new submodule: AddNewChildFirst based on Add New Child Reverse module by horst (re-thought by abdus/adrian)

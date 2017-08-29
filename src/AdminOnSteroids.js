@@ -351,11 +351,10 @@ function setupAdminDataTableFilter() {
 
     var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '';
     if ($('body.AdminThemeUikit').length == 0) {
-      var dtFilter = $('<div class="Inputfield InputfieldMarkup"><label class="InputfieldHeader InputfieldStateToggle" for=""><i class="fa fa-fw fa-filter"></i> Quickfilter tables below</label><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter table below" class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+      var dtFilter = $('<div class="Inputfield InputfieldMarkup"><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter items..." class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
     }
     else {
       var dtFilter = $('<div class=\'uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup\'>' +
-        '<label class="InputfieldHeader uk-form-label InputfieldStateToggle" for=""><i class="fa fa-fw fa-filter"></i> Quickfilter tables below</label>' +
         '<div class="dtFilter filterbox InputfieldContent ">' +
         // '<span class="uk-form-icon">' +
         // '<i class="fa fa-search"></i>' +
@@ -2727,7 +2726,7 @@ $(document).ready(function () {
 
                 var hiddenStyle = window.location.href.indexOf('module/?new') !== -1 ? ' style="display: none"' : '';
         if ($('body.AdminThemeUikit').length != 0) {
-          var moduleFilter = $('<div class="filterbox-wrapper Inputfield"><label class="InputfieldHeader uk-form-label InputfieldStateToggle" for=""><i class="fa fa-fw fa-filter"></i> Quickfilter modules below</label><div class="moduleFilter filterbox InputfieldContent "\' + hiddenStyle + \'><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+          var moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "\' + hiddenStyle + \'><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
         }
         else {
 

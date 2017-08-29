@@ -430,7 +430,7 @@ html.aos {
     }
   }
 
-  &:not(body.AdminThemeUikit) div.filterbox {
+  &:not(.AdminThemeUikit) div.filterbox {
     position: relative;
     //z-index: 10;
     margin-top: 8px;

@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 152,
+            'version'   => 153,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -2566,7 +2566,7 @@ HTML;
 
         $f = wire('modules')->get('InputfieldAsmSelect');
         $f->name = 'CKEaddons_enabledFields';
-        $f->label = __('Enabled fields (for plugins only)', __FILE__);
+        $f->label = __('Enabled fields&nbsp;(for plugins only)', __FILE__);
 //        $f->description = __('Note: selected fields will restrict plugins only and not the skin.', __FILE__);
         $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
         $f->collapsed = Inputfield::collapsedNever;
@@ -2699,7 +2699,7 @@ HTML;
         $f->notes = __('', __FILE__);
         $f->showIf = 'enabledSubmodules=DeselectRadios';
 
-        $f->addOption('allowRequired', __('Enable for required fields (not recommended)', __FILE__));
+        $f->addOption('allowRequired', __('Enable for required fields&nbsp;(not recommended)', __FILE__));
 
         $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
@@ -2962,7 +2962,7 @@ HTML;
             __('Add links to Language Translator to edit current textdomain file in other languages', __FILE__));
         $f->addOption('autosizeTextareas', __('Autosize textareas according to content', __FILE__));
         $f->addOption('addOrRemoveFieldsTweaks',
-            __('Add helper buttons to batch field add/remove confirmation pages ("Clear all", "Apply to all")',
+            __('Add helper buttons to batch field add/remove confirmation pages&nbsp;("Clear all", "Apply to all")',
                 __FILE__));
         $f->addOption('centerLogin', __('Center login form', __FILE__));
         $f->addOption('homeOpenNewTab', __('Open Home/View site in new tab (topnav)', __FILE__));
