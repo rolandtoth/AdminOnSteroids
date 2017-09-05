@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 153,
+            'version'   => 154,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -170,7 +170,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 'titleCaseToggle',
                 'tabIndex',
                 'emptyTrashTop',
-                'iconsFilter'
+                'iconsFilter',
+                'stickyCKE'
+
 //                'noAnim'
             ),
             'ModuleTweaks'                      => array(
@@ -208,7 +210,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 'miniScrollSb',
 //                'miniScrollMain',
                 'sbSticky',
-                'stickyCKEBar',
 //                'sbAutoHide',
                 'sbItemsVisible',
 //                'sbQuickLinksHide',
@@ -310,11 +311,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'headSticky',
             'headStickyCompact',
             'hoverDropdown',
+            'stickyCKE',
             'leftTopnav',
             'ListerTweaks',
             'listerHoverBtn',
             'moduleCompact',
             'moduleModal',
+            'moveAssetButtons',
             'noAnim',
             'noFilenameTruncate',
             'noticeLeftX',
@@ -1409,6 +1412,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if ($NavItems_pages) {
 
             $isFirst = true;
+            $superuserFlag = false;
 
             foreach ($this->pages->getById($NavItems_pages) as $p) {
 
@@ -1465,8 +1469,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $pageId = $p->id;
 
                     /**
-                     *  add active class only if:
-                     *
+                     * add active class only if:
                      * navItem id == GET id
                      * navItem id == current page id
                      * navItem id !== GET id and edited page is child page of the page
@@ -1495,23 +1498,38 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                 // start a submenu
                 if ($isFirst && $NavItems_pages_submenu) {
-                    $items .= '<a href="javascript:">' . $NavItems_pages_submenu . ' <i class="fa fa-caret-down"></i></a>';
-                    $items .= '<ul>';
-                    $items .= '<li>';
+
+                    // if title starts with "!" then only SuperUsers should see
+                    if ($NavItems_pages_submenu[0] == '!') {
+                        if (!$this->wire('user')->isSuperUser()) {
+                            $superuserFlag = true;
+                        }
+                        // trim
+                        $NavItems_pages_submenu = ltrim($NavItems_pages_submenu, '! ');
+                    }
+
+                    if (!$superuserFlag) {
+                        $items .= '<a href="javascript:">' . $NavItems_pages_submenu . ' <i class="fa fa-caret-down"></i></a>';
+                        $items .= '<ul>';
+                        $items .= '<li>';
+                    }
+
+                    $isFirst = false;
                 }
 
-                $items .= $listUrl . ' ' . $editUrl;
-
-                $items .= '</li>';
-                $isFirst = false;
+                if (!$superuserFlag) {
+                    $items .= $listUrl . ' ' . $editUrl;
+                    $items .= '</li>';
+                }
             }
 
             // close the subenu
-            if ($NavItems_pages_submenu) {
+            if (!$superuserFlag && $NavItems_pages_submenu) {
                 $items .= '</ul>';
             }
-        }
 
+            $superuserFlag = false;
+        }
 
         if ($NavItems_custom) {
 
@@ -1557,7 +1575,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                                 continue;
                             }
                             // trim
-                            $title = ltrim($title, '!');
+                            $title = ltrim($title, '! ');
                         }
 
                         $items .= '<li class="navItem hasSubmenu">';
@@ -2409,7 +2427,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 </p>
 HTML;
 
-        $f->addOption('AddNewChildFirst', '**AddNewChildFirst**' . __('Add new page as first child instead of last', __FILE__));
+        $f->addOption('AddNewChildFirst',
+            '**AddNewChildFirst**' . __('Add new page as first child instead of last', __FILE__));
         $f->addOption('AdminTweaks', '**AdminTweaks**' . __('Default admin theme tweaks', __FILE__));
         $f->addOption('AsmTweaks', '**AsmTweaks**' . __('asmSelect tweaks', __FILE__));
         $f->addOption('CKEaddons', '**CKEaddons**' . __('Autoload CKEditor plugins and skins', __FILE__));
@@ -2976,10 +2995,10 @@ HTML;
         $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
         $f->addOption('showSystemTemplates', __('Force showing system templates', __FILE__));
         $f->addOption('iconsFilter', __('Add filter box to template icon picker', __FILE__));
-        $f->addOption('uncheckAddnewActive',
-            __('Add new page: uncheck `Active?` for non-default language names', __FILE__));
-        $f->addOption('hideAddNewDropdown',
-            __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
+        $f->addOption('uncheckAddnewActive',__('Add new page: uncheck `Active?` for non-default language names', __FILE__));
+        $f->addOption('hideAddNewDropdown', __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
+        $f->addOption('stickyCKE', __('Sticky CKEditor toolbar', __FILE__));
+
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -3191,7 +3210,6 @@ HTML;
 
         $f->addOption('headSticky', __('Sticky header', __FILE__));
         $f->addOption('headStickyCompact', __('Compact header', __FILE__));
-        $f->addOption('stickyCKEBar', __('Sticky CKEditor toolbar', __FILE__));
         $f->addOption('miniScrollSb', __('Use mini scrollbar for sidebar', __FILE__));
         $f->addOption('miniScrollMain', __('Use mini scrollbar for main content', __FILE__));
         $f->addOption('sbSticky', __('Sticky sidebar', __FILE__));

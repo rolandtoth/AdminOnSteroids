@@ -349,20 +349,20 @@ function setupAdminDataTableFilter() {
 
     if ($('.AdminDataTable:not(.InputfieldTable)').length) {
 
-    var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '';
-    if ($('body.AdminThemeUikit').length == 0) {
-      var dtFilter = $('<div class="Inputfield InputfieldMarkup"><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter items..." class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
-    }
-    else {
-      var dtFilter = $('<div class=\'uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup\'>' +
-        '<div class="dtFilter filterbox InputfieldContent ">' +
-        // '<span class="uk-form-icon">' +
-        // '<i class="fa fa-search"></i>' +
-        // '</span>' +
-        '<input type="text"' + autofocus + ' class=\'uk-input uk-form-width-medium\'>' +
-        '<i class="fa fa-close"></i>' +
-        '<span class="counter"></span></div></div>');
-    }
+        var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '';
+        if ($('body.AdminThemeUikit').length == 0) {
+            var dtFilter = $('<div class="Inputfield InputfieldMarkup"><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter items..." class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+        }
+        else {
+            var dtFilter = $('<div class=\'uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup\'>' +
+                '<div class="dtFilter filterbox InputfieldContent ">' +
+                // '<span class="uk-form-icon">' +
+                // '<i class="fa fa-search"></i>' +
+                // '</span>' +
+                '<input type="text"' + autofocus + ' class=\'uk-input uk-form-width-medium\'>' +
+                '<i class="fa fa-close"></i>' +
+                '<span class="counter"></span></div></div>');
+        }
 
         function updateDtFilterCounter(num, input, total) {
 
@@ -1796,151 +1796,6 @@ $(document).ready(function () {
             });
         }
 
-// LangTabHotkeySwitcher
-        if (_isEnabled('LangTabHotkeySwitcher')) {
-
-            var languagesCount = $('.ui-tabs-nav').eq(0).children('li').length;
-
-            setLangTabSwicherHotkeys();
-
-            // add custom class because .hasLangTabs is removed on expanding lang tabs
-            // needs to be re-added on ctrl+up/right because of ajax loaded fields
-            $('.hasLangTabs').addClass('hasLangTabs_');
-
-            function setLangTabSwicherHotkeys() {
-
-                var getIndex = function (index, direction) {
-                    if (direction == 'down') {
-                        return index < 0 ? languagesCount - 1 : index;
-                    } else {
-                        return index > languagesCount - 1 ? 0 : index;
-                    }
-                };
-
-                function switchLangCKE(ckeID) {
-
-                    var ckeInstance = CKEDITOR.instances[ckeID];
-
-                    ckeInstance.on('contentDom', function () {
-
-                        var editable = this.editable();
-
-                        editable.attachListener(editable, 'keydown', function (e) {
-
-                            var langTabs = $('#' + ckeID).closest('.langTabs'),
-                                index;
-
-                            // left
-                            if (e.data.getKeystroke() == CKEDITOR.CTRL + 37) {
-                                index = langTabs.find('ul .ui-tabs-active').index() - 1;
-                                index = getIndex(index, 'down');
-                                return activateLangTab(index);
-                            }
-
-                            // right
-                            if (e.data.getKeystroke() == CKEDITOR.CTRL + 39) {
-                                index = langTabs.find('ul .ui-tabs-active').index() + 1;
-                                index = getIndex(index, 'up');
-                                return activateLangTab(index);
-                            }
-
-                            function activateLangTab(index) {
-
-                                langTabs.tabs('option', 'active', index);
-                                langTabs.find('input, textarea').eq(index).focus();
-
-                                var currentCKEinsanceId = langTabs.find('li').eq(index).find('a').attr('href').replace('#langTab_', '');
-
-                                setTimeout(function () {
-                                    CKEDITOR.instances[currentCKEinsanceId].focus();
-                                }, 200);
-
-                                switchLangCKE(currentCKEinsanceId);
-                            }
-                        });
-                    });
-                }
-
-                if ($('.InputfieldCKEditor.hasLangTabs').length) {
-
-                    $('.InputfieldCKEditor.hasLangTabs').each(function () {
-                        var ckeInstanceId = $(this).find('textarea.FieldtypeTextareaLanguage.InputfieldCKEditorLoaded').eq(0).attr('id');
-
-                        if (ckeInstanceId) {
-                            switchLangCKE(ckeInstanceId);
-                        }
-                    })
-                }
-
-                $(document).on('keydown', '.LanguageSupport input, .LanguageSupport textarea', function (e) {
-
-                    e = e || window.event;
-
-                    var keyCode = e.keyCode || e.which,
-                        arrow = {left: 37, up: 38, right: 39, down: 40},
-                        langTabs = $(this).closest('.langTabs'),
-                        inputs = langTabs.find('input, textarea'),
-                        index;
-
-                    function activateLangTab(index) {
-                        langTabs.tabs('option', 'active', index);
-                        inputs.eq(index).focus();
-                    }
-
-                    if (e.metaKey || e.ctrlKey) {
-
-                        switch (keyCode) {
-
-                            case arrow.left:
-                                // prevent moving cursor
-                                e.preventDefault();
-
-                                // if ui tabs were destroyed (ctrl-up/down), don't try switching tab
-                                if (!langTabs.hasClass('ui-tabs')) {
-                                    index = getIndex(inputs.index($(this)) - 1, 'down');
-                                    return inputs.eq(index).focus();
-                                }
-                                index = langTabs.find('ul .ui-tabs-active').index() - 1;
-                                index = getIndex(index, 'down');
-                                return activateLangTab(index);
-                                break;
-
-                            case arrow.right:
-                                e.preventDefault();
-
-                                // if ui tabs were destroyed (ctrl-up/down), don't try switching tab
-                                if (!langTabs.hasClass('ui-tabs')) {
-                                    index = getIndex(inputs.index($(this)) + 1, 'up');
-                                    return inputs.eq(index).focus();
-                                }
-                                index = langTabs.find('ul .ui-tabs-active').index() + 1;
-                                index = getIndex(index, 'up');
-                                return activateLangTab(index);
-                                break;
-
-                            case arrow.up:
-                            case arrow.down:
-                                e.preventDefault();
-
-                                // add custom class because .hasLangTabs is removed on expanding lang tabs
-                                langTabs.parents('.hasLangTabs').addClass('hasLangTabs_');
-
-                                langTabs.parents('.hasLangTabs_').find('.langTabsToggle').trigger('click');
-
-                                if (langTabs.hasClass('ui-tabs')) {
-                                    index = langTabs.find('input, textarea').index($(this));
-                                    return activateLangTab(index);
-
-                                } else {
-                                    return this.focus();
-                                }
-                                break;
-                        }
-                    }
-                });
-            }
-        }
-
 // Tooltips
         if (_isEnabled('Tooltips')) {
             $(document).on('dblclick', 'html.tooltipDesc #content p.description, html.tooltipNotes #content p.notes', function () {
@@ -2096,8 +1951,153 @@ $(document).ready(function () {
         }
 
 
-        // Misc
+// Misc
         if (_isEnabled('Misc')) {
+
+            // LangTabHotkeySwitcher
+            if (AOSsettings.Misc.indexOf('langTabHotkeySwitcher') !== -1) {
+
+                var languagesCount = $('.ui-tabs-nav').eq(0).children('li').length;
+
+                setLangTabSwitcherHotkeys();
+
+                // add custom class because .hasLangTabs is removed on expanding lang tabs
+                // needs to be re-added on ctrl+up/right because of ajax loaded fields
+                $('.hasLangTabs').addClass('hasLangTabs_');
+
+                function setLangTabSwitcherHotkeys() {
+
+                    var getIndex = function (index, direction) {
+                        if (direction === 'down') {
+                            return index < 0 ? languagesCount - 1 : index;
+                        } else {
+                            return index > languagesCount - 1 ? 0 : index;
+                        }
+                    };
+
+                    function switchLangCKE(ckeID) {
+
+                        var ckeInstance = CKEDITOR.instances[ckeID];
+
+                        ckeInstance.on('contentDom', function () {
+
+                            var editable = this.editable();
+
+                            editable.attachListener(editable, 'keydown', function (e) {
+
+                                var langTabs = $('#' + ckeID).closest('.langTabs'),
+                                    index;
+
+                                // left
+                                if (e.data.getKeystroke() == CKEDITOR.CTRL + 37) {
+                                    index = langTabs.find('ul .ui-tabs-active').index() - 1;
+                                    index = getIndex(index, 'down');
+                                    return activateLangTab(index);
+                                }
+
+                                // right
+                                if (e.data.getKeystroke() == CKEDITOR.CTRL + 39) {
+                                    index = langTabs.find('ul .ui-tabs-active').index() + 1;
+                                    index = getIndex(index, 'up');
+                                    return activateLangTab(index);
+                                }
+
+                                function activateLangTab(index) {
+
+                                    langTabs.tabs('option', 'active', index);
+                                    langTabs.find('input, textarea').eq(index).focus();
+
+                                    var currentCKEinsanceId = langTabs.find('li').eq(index).find('a').attr('href').replace('#langTab_', '');
+
+                                    setTimeout(function () {
+                                        CKEDITOR.instances[currentCKEinsanceId].focus();
+                                    }, 200);
+
+                                    switchLangCKE(currentCKEinsanceId);
+                                }
+                            });
+                        });
+                    }
+
+                    if ($('.InputfieldCKEditor.hasLangTabs').length) {
+
+                        $('.InputfieldCKEditor.hasLangTabs').each(function () {
+                            var ckeInstanceId = $(this).find('textarea.FieldtypeTextareaLanguage.InputfieldCKEditorLoaded').eq(0).attr('id');
+
+                            if (ckeInstanceId) {
+                                switchLangCKE(ckeInstanceId);
+                            }
+                        })
+                    }
+
+                    $(document).on('keydown', '.LanguageSupport input, .LanguageSupport textarea', function (e) {
+
+                        e = e || window.event;
+
+                        var keyCode = e.keyCode || e.which,
+                            arrow = {left: 37, up: 38, right: 39, down: 40},
+                            langTabs = $(this).closest('.langTabs'),
+                            inputs = langTabs.find('input, textarea'),
+                            index;
+
+                        function activateLangTab(index) {
+                            langTabs.tabs('option', 'active', index);
+                            inputs.eq(index).focus();
+                        }
+
+                        if (e.metaKey || e.ctrlKey) {
+
+                            switch (keyCode) {
+
+                                case arrow.left:
+                                    // prevent moving cursor
+                                    e.preventDefault();
+
+                                    // if ui tabs were destroyed (ctrl-up/down), don't try switching tab
+                                    if (!langTabs.hasClass('ui-tabs')) {
+                                        index = getIndex(inputs.index($(this)) - 1, 'down');
+                                        return inputs.eq(index).focus();
+                                    }
+                                    index = langTabs.find('ul .ui-tabs-active').index() - 1;
+                                    index = getIndex(index, 'down');
+                                    return activateLangTab(index);
+                                    break;
+
+                                case arrow.right:
+                                    e.preventDefault();
+
+                                    // if ui tabs were destroyed (ctrl-up/down), don't try switching tab
+                                    if (!langTabs.hasClass('ui-tabs')) {
+                                        index = getIndex(inputs.index($(this)) + 1, 'up');
+                                        return inputs.eq(index).focus();
+                                    }
+                                    index = langTabs.find('ul .ui-tabs-active').index() + 1;
+                                    index = getIndex(index, 'up');
+                                    return activateLangTab(index);
+                                    break;
+
+                                case arrow.up:
+                                case arrow.down:
+                                    e.preventDefault();
+
+                                    // add custom class because .hasLangTabs is removed on expanding lang tabs
+                                    langTabs.parents('.hasLangTabs').addClass('hasLangTabs_');
+
+                                    langTabs.parents('.hasLangTabs_').find('.langTabsToggle').trigger('click');
+
+                                    if (langTabs.hasClass('ui-tabs')) {
+                                        index = langTabs.find('input, textarea').index($(this));
+                                        return activateLangTab(index);
+
+                                    } else {
+                                        return this.focus();
+                                    }
+                                    break;
+                            }
+                        }
+                    });
+                }
+            }
 
             // titleCaseToggle
             if (AOSsettings.Misc.indexOf('titleCaseToggle') !== -1) {
@@ -2725,13 +2725,13 @@ $(document).ready(function () {
                 // Module Filter
 
                 var hiddenStyle = window.location.href.indexOf('module/?new') !== -1 ? ' style="display: none"' : '';
-        if ($('body.AdminThemeUikit').length != 0) {
-          var moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "\' + hiddenStyle + \'><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
-        }
-        else {
+                if ($('body.AdminThemeUikit').length != 0) {
+                    var moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "\' + hiddenStyle + \'><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+                }
+                else {
 
-                var moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');
-        }
+                    var moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');
+                }
 
                 if ($('#modules_form').length) {
 
@@ -3347,77 +3347,6 @@ $(document).ready(function () {
                         return false;
                     }
                 }, 200));
-            }
-        }
-
-
-        if (renoTweaksSettings && renoTweaksSettings.indexOf('stickyCKEBar') !== -1) {
-
-            var editor_cke_height;
-
-            if ($('.InputfieldCKEditor').length) {
-
-                var $firstCKEditor = $('.InputfieldCKEditor').eq(0);
-
-                var checkStickyCKEBar = debounce(function () {
-
-                    if (!$('html').hasClass('stickyCKEBar')) {
-                        return false;
-                    }
-
-                    if ($(document).width() < 960 || !$firstCKEditor) {
-                        return false;
-                    }
-
-                    var cke_toolbar = $firstCKEditor.find('.cke_top'),
-                        cke_contents = $firstCKEditor.find('.cke_contents');
-
-                    if (!cke_toolbar.length) {
-                        return false;
-                    }
-
-                    var topOffset = $firstCKEditor.offset().top - posTop();
-                    var bottomOffset = $firstCKEditor.offset().top + $firstCKEditor.height() - posTop();
-
-                    if (topOffset < 70 && bottomOffset > 200) {
-                        cke_toolbar.addClass('cke_top_fixed');
-                        cke_contents.css('padding-top', editor_cke_height + "px");
-                        $('html').addClass('stickyCKEBar');
-                    } else {
-                        cke_toolbar.removeClass('cke_top_fixed');
-                        $('html').removeClass('stickyCKEBar');
-                        cke_contents.css('padding-top', "0px");
-                    }
-
-                }, 0);
-
-                $(window).on('scroll addStickyCKEBar', function () {
-                    checkStickyCKEBar();
-                });
-
-                CKEDITOR.on('instanceReady', function (evt) {
-
-                    var editor = evt.editor;
-
-                    editor_cke_height = $firstCKEditor.find('.cke_top').outerHeight();
-
-                    editor.on('selectionChange', function (e) {
-                        // allow multlang editor toolbar support
-                        if ('wrap_' + e.editor.name.indexOf($firstCKEditor.attr('id')) !== -1) {
-                            $('html').addClass('stickyCKEBar');
-                            checkStickyCKEBar();
-                        }
-                    });
-
-                    editor.on('blur', function (e) {
-                        if ('wrap_' + e.editor.name.indexOf($firstCKEditor.attr('id')) !== -1) {
-                            // isCKEfocused = false;
-                            $firstCKEditor.find('.cke_top').removeClass('cke_top_fixed');
-                            $firstCKEditor.find('.cke_contents').css('padding-top', "0px");
-                            $('html').removeClass('stickyCKEBar');
-                        }
-                    });
-                });
             }
         }
     }

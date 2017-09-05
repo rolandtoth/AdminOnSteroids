@@ -2170,6 +2170,9 @@ a.case-toggle {
   .LanguageSupport & {
     right: 0;
   }
+  .langTabsOff & {
+    right: 16px;
+  }
   padding: 5px 8px;
   html.AdminThemeDefault & {
     padding: 1px 6px;
@@ -2412,31 +2415,6 @@ html.AdminThemeReno {
         }
       }
 
-      .cke_top_fixed.cke_top {
-        //animation: fadeIn ease-in 0.1s;
-        //transform-origin: center top;
-        //animation: slideDown ease-in 0.12s;
-        //z-index: 100000 + 222;
-        z-index: 100000 + 30;
-        height: auto;
-        -webkit-user-select: none;
-        top: 154px;
-        left: 0;
-        padding-left: 232px;
-        right: 0;
-        box-shadow: $defaultBoxShadow;
-        box-sizing: border-box;
-        border-top: 1px solid rgba(0, 0, 0, 0.1);
-        position: fixed;
-        backface-visibility: hidden;
-        width: 100%;
-      }
-      #main.closed {
-        .cke_top_fixed.cke_top {
-          padding-left: 24px;
-        }
-      }
-
       #sidebar {
         z-index: 100000 + 40;
       }
@@ -2458,9 +2436,6 @@ html.AdminThemeReno {
         &:not(.closed) #headline {
           padding-left: 252px;
         }
-      }
-      .cke_top_fixed.cke_top {
-        padding-left: 252px;
       }
     }
 
@@ -2524,10 +2499,6 @@ html.AdminThemeReno {
       .NotificationMenu {
         left: 210px;
         top: 100px;
-      }
-
-      .cke_top_fixed.cke_top {
-        top: 137px;
       }
 
       #branding,
@@ -3294,12 +3265,49 @@ html.AdminThemeReno {
   }
 }
 
+html.stickyCKE {
+  .cke_top {
+    top: 0;
+    position: sticky;
+    z-index: 5;
+  }
+  .cke_top, .cke_contents, .cke_bottom {
+    float: none;
+    @include clearfix();
+  }
+  .cke_bottom {
+    position: sticky;
+    bottom: 0;
+    line-height: 1;
+    z-index:  2;
+  }
+  // default theme tweaks for sticky cke
+  &.AdminThemeDefault {
+    .cke_top {
+      top: 102px;
+    }
+  }
+}
+
+html.moveAssetButtons {
+  .ImageData {
+    margin-right: -6%; // fix for inline css 78% width
+    h2 {
+      white-space: pre-wrap;
+      margin-top: 4px !important;
+      max-width: calc(100% - 70px) !important;
+      + span {
+        display: block;
+      }
+    }
+  }
+}
+
 .aos_moveAssets {
-  position: relative;
+  position: absolute;
   z-index: 99;
-  float: right;
+  right: 6px;
   color: white;
-  margin-right: 30px;
   i {
     padding: 9px 7px 8px;
     margin-right: 1px;
@@ -3350,6 +3358,7 @@ html.AdminThemeReno {
   position: relative;
   z-index: 99;
   top: 1px;
+  .gridImage--delete &,
   .InputfieldImageEdit__buttons & {
     display: none;
   }
@@ -3834,7 +3843,7 @@ html.hoverDropdown {
 
 //end of InputfieldURLChecker
 
-.AdminThemeUikit form[action*=AdminOnSteroids] #Inputfield_tweaks #Inputfield_CKEaddons .Inputfields label{
+.AdminThemeUikit form[action*=AdminOnSteroids] #Inputfield_tweaks #Inputfield_CKEaddons .Inputfields label {
   padding-top: 40px;
 }
 

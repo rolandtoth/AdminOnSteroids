@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.5.4 (2017-09-05)
+
+- rewrite sticky CKE toolbar feature to use position: sticky and moved to Misc
+- enable prefix "!" for navItem pages group to show for superusers only
+- fix: langTabHotkeySwitcher couldn't be enabled (Misc)
+- fix gridImage title positioning with moveAssets buttons enabled
+
+
+
 ### 1.5.3 (2017-08-29)
 
 - fix for a few file compiler issues and typos (thanks to adrian)
