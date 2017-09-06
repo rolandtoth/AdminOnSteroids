@@ -3270,10 +3270,14 @@ html.stickyCKE {
     top: 0;
     position: sticky;
     z-index: 5;
+    margin-bottom: -1px;
   }
   .cke_top, .cke_contents, .cke_bottom {
     float: none;
     @include clearfix();
+  }
+  .cke_contents {
+    width: calc(100% - 1px);
   }
   .cke_bottom {
     position: sticky;
@@ -3281,8 +3285,11 @@ html.stickyCKE {
     line-height: 1;
     z-index:  2;
   }
+  [id*="cke_"].cke_chrome {
+    margin-bottom: 1em !important;
+  }
   // default theme tweaks for sticky cke
-  &.AdminThemeDefault {
+  &.AdminThemeDefault.headSticky {
     .cke_top {
       top: 102px;
     }
