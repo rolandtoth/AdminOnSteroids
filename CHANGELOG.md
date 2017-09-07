@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.5.5 (2017-09-07)
+
+- fix moveAssets, downloadAssets and filefield delete button overlaps (reported by lesaff)
+
+
+
 ### 1.5.4 (2017-09-05)
 
 - rewrite sticky CKE toolbar feature to use position: sticky and moved to Misc

@@ -3296,6 +3296,15 @@ html.stickyCKE {
   }
 }
 
+html.moveAssetButtons,
+html.downloadAssetButton {
+  .InputfieldFileDelete {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+  }
+}
+
 html.moveAssetButtons {
   .ImageData {
     margin-right: -6%; // fix for inline css 78% width
@@ -3310,10 +3319,12 @@ html.moveAssetButtons {
   }
 }
 
+// order: move, download
+
 .aos_moveAssets {
   position: absolute;
   z-index: 99;
-  right: 6px;
+  right: 56px;
   color: white;
   i {
     padding: 9px 7px 8px;
@@ -3328,6 +3339,7 @@ html.moveAssetButtons {
     }
   }
   .InputfieldImage & {
+    right: 8px;
     i {
       float: right;
       padding: 8px 5px;
@@ -3338,7 +3350,7 @@ html.moveAssetButtons {
   }
   .InputfieldImageEditAll & { // Image field, full-width row
     opacity: 0.5;
-    margin-right: 30px;
+    right: 34px;
     color: inherit;
     i {
       padding: 9px 7px 8px;
@@ -3346,6 +3358,9 @@ html.moveAssetButtons {
         transform: rotate(-90deg);
       }
     }
+  }
+  ~ .aos_downloadAsset ~ p.InputfieldFileInfo {
+    padding-right: 104px !important;
   }
 }
 
@@ -3362,24 +3377,30 @@ html.moveAssetButtons {
 }
 
 .aos_downloadAsset {
-  position: relative;
+  position: absolute;
   z-index: 99;
-  top: 1px;
+  //top: 1px;
   .gridImage--delete &,
   .InputfieldImageEdit__buttons & {
     display: none;
   }
+  .InputfieldImage & {
+    margin-top: -2px;
+  }
   .InputfieldFileItem & {
-    float: right;
-    margin-left: 2px;
-    left: auto;
+    right: 27px;
+    //margin-left: 2px;
+    //left: auto;
     top: auto;
     i {
       color: #fff;
     }
   }
+  ~ p.InputfieldFileInfo {
+    padding-right: 54px !important;
+  }
   i {
-    padding: 10px 8px;
+    padding: 9px 8px 10px;
     display: inline-block;
 
   }
@@ -3388,7 +3409,16 @@ html.moveAssetButtons {
     color: inherit !important;
     background: transparent !important;
   }
+}
 
+// fix for moveAssets without downloadAsset
+html.moveAssetButtons:not(.downloadAssetButton) {
+  .aos_moveAssets {
+    right: 28px;
+    ~ p.InputfieldFileInfo {
+       padding-right: 74px !important;
+     }
+  }
 }
 
 // ListerTweaks (ListerTweaks_options) listerHoverBtn
