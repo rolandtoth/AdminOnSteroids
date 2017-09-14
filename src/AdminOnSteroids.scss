@@ -210,6 +210,7 @@ html.aos {
         padding-left: 2em;
         left: -2em;
         margin-left: 2em;
+        margin-right: -2em;
         position: relative;
       }
     }
@@ -1941,8 +1942,8 @@ html.PageListThumbs {
           height: $thumbSize;
         }
         img {
-          //display: inline-block;
           vertical-align: middle;
+          height: 100%;
         }
         // create a pseudo to make items align vertically (:before on next item)
         // exclude the page icon (.fa)
@@ -3460,7 +3461,7 @@ html.moveAssetButtons:not(.downloadAssetButton) {
 
 html.pListCounters {
   // add pagelist counters
-  .PageListRoot > .PageList > .PageListItem + .PageList {
+  .PageListRoot > .PageList > .PageListItem ~ .PageList:not(.PageListPlaceholder) {
     .PageListItem {
       &:before {
         opacity: 0.5;

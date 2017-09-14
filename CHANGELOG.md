@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 1.5.6 (2017-09-14)
+
+- PageListThumbs: always add edit link (no longer optional) + CSS fixes
+- PageListCounter: fix counters when moving a page in the page tree
+- fix page tree jump when entering page move mode
+
+
+
 ### 1.5.5 (2017-09-07)
 
 - fix moveAssets, downloadAssets and filefield delete button overlaps (reported by lesaff)

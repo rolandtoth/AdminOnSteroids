@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 155,
+            'version'   => 156,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -192,8 +192,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'PageListThumbs_items'              => '',
             'PageListIcons'                     => '',
             'PageListThumbs_options'            => array(
-                'alignright',
-                'addlink'
+                'alignright'
             ),
             'PageListTweaks'                    => array(
                 'pListIDs',
@@ -2261,12 +2260,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $field = ($page->$field instanceof Pageimages) ? $page->$field->first() : $page->$field;
 
-        $classes = array();
+        $classes = array('addlink');
 
-//        $thumbSize = ($this->adminTheme == 'AdminThemeDefault' || ($this->RenoTweaks && in_array('pListCompact', $this->RenoTweaks))) ? 32 : 48;
-
-        // always use 48px to avoid generation too much thumbs
-        // thubms are resized with CSS
+        // always use 48px to avoid generation too much thumbs, resize with CSS
         $thumbSize = 48;
 
         if (isset($this->PageListThumbs_style) && !empty($this->PageListThumbs_style)) {
@@ -2291,13 +2287,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $classes[] = 'alignright';
             }
 
-            if (in_array('addlink', $PageListThumbs_options)) {
-
-                $classes[] = 'addlink';
-
-                $img = '<a href="' . rtrim($this->config->urls->httpRoot,
-                        '/') . $page->editUrl() . '" class="aos_pageListLink">' . $img . '</a>';
-            }
+            $img = '<a href="' . rtrim($this->config->urls->httpRoot,
+                    '/') . $page->editUrl() . '" class="aos_pageListLink">' . $img . '</a>';
         }
 
         if (!empty($classes)) {
@@ -2996,8 +2987,10 @@ HTML;
         $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
         $f->addOption('showSystemTemplates', __('Force showing system templates', __FILE__));
         $f->addOption('iconsFilter', __('Add filter box to template icon picker', __FILE__));
-        $f->addOption('uncheckAddnewActive',__('Add new page: uncheck `Active?` for non-default language names', __FILE__));
-        $f->addOption('hideAddNewDropdown', __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
+        $f->addOption('uncheckAddnewActive',
+            __('Add new page: uncheck `Active?` for non-default language names', __FILE__));
+        $f->addOption('hideAddNewDropdown',
+            __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
         $f->addOption('stickyCKE', __('Sticky CKEditor toolbar', __FILE__));
 
 
@@ -3141,7 +3134,6 @@ HTML;
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('alignright', __('Align thumbs to right', __FILE__));
-        $f->addOption('addlink', __('Edit page on thumb click', __FILE__));
 
         if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
