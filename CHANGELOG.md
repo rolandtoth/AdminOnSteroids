@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.5.7 (2017-09-18)
+
+- pageListTweaks: add Trash action for non-SuperUsers (merging module of Robin S)
+- centerLogin fix for RenoTweaks (reported by Sam C)
+- do not add NavItems for login page
+- minor pageListTweaks improvements
+
+
+
 ### 1.5.6 (2017-09-14)
 
 - PageListThumbs: always add edit link (no longer optional) + CSS fixes

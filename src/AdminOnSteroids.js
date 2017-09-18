@@ -2455,27 +2455,87 @@ $(document).ready(function () {
 
 
         // Delete action
-        $(document).on('mousedown', 'a.PageListActionExtra.PageListActionDelete, .PageDelete.aos', function (e) {
+        // $(document).on('mousedown', 'a.PageListActionDelete, .PageDelete', function (e) {
+        //
+        //     e.preventDefault();
+        //
+        //     if (e.which === 3 || e.which === 2) return false;
+        //
+        //     var link = $(this),
+        //         url = link.attr('href'),
+        //         linkTextDefault = AOSsettings.loc['delete_action'];
+        //
+        //     if (url.indexOf('delete_permanently') === -1) {
+        //
+        //         var linkCancel;
+        //
+        //         if (link.hasClass('cancel')) {
+        //             linkCancel = link.next('a');
+        //
+        //             linkCancel
+        //                 .removeClass('cancel')
+        //                 .removeClass('confirm')
+        //                 .attr('href', url.replace('delete_permanently&', 'delete&'))
+        //                 .contents().last()[0].textContent = linkTextDefault;
+        //
+        //             link.replaceWith(linkCancel);
+        //
+        //             return false;
+        //         }
+        //
+        //         linkCancel = link.clone(true);
+        //
+        //         link.addClass('confirm');
+        //
+        //         linkCancel.addClass('cancel')
+        //             .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
+        //
+        //         // replace text only (keep icon)
+        //         link.contents().last()[0].textContent = ' ' + AOSsettings.loc['permanent_delete_confirm'];
+        //         link.attr('href', url.replace('delete&', 'delete_permanently&'));
+        //
+        //         link.before(linkCancel);
+        //     }
+        //
+        //     return false;
+        // });
+
+        // Delete + non-superuser Trash actions
+        // $(document).on('mousedown', 'a.PageListActionTrash.aos-pagelist-confirm, .PageTrash.aos-pagelist-confirm', function (e) {
+        $(document).on('mousedown', 'a.aos-pagelist-confirm', function (e) {
 
             e.preventDefault();
 
-            if (e.which == 3 || e.which == 2) return false;
+            if (e.which === 3 || e.which === 2) return false;
 
             var link = $(this),
                 url = link.attr('href'),
-                linkTextDefault = AOSsettings.loc['delete_action'];
+                linkTextDefault;
 
-            if (url.indexOf('delete_permanently') === -1) {
+            if (!link.attr('data-text-original')) {
+
+                var currentText = $(this).get(0).childNodes[1] ? $(this).get(0).childNodes[1].nodeValue : $(this).html();
+
+                link.attr('data-text-original', currentText);
+
+                if (link.hasClass('PageListActionDelete') || link.hasClass('PageDelete')) {
+                    link.attr('data-text-confirm', AOSsettings.loc['permanent_delete_confirm']);
+                }
+            }
+
+
+            if (url.indexOf('&force=1') === -1) {
 
                 var linkCancel;
+
+                linkTextDefault = link.attr('data-text-original');
 
                 if (link.hasClass('cancel')) {
                     linkCancel = link.next('a');
 
                     linkCancel
                         .removeClass('cancel')
-                        .removeClass('confirm')
-                        .attr('href', url.replace('delete_permanently&', 'delete&'))
+                        .attr('href', link.attr('href').replace('&force=1', ''))
                         .contents().last()[0].textContent = linkTextDefault;
 
                     link.replaceWith(linkCancel);
@@ -2483,16 +2543,17 @@ $(document).ready(function () {
                     return false;
                 }
 
+                linkTextDefault = link.attr('data-text-confirm') ? link.attr('data-text-confirm') : link.attr('data-text-original');
+
                 linkCancel = link.clone(true);
 
-                link.addClass('confirm');
-
-                linkCancel.addClass('cancel')
+                linkCancel
+                    .addClass('cancel')
                     .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
 
                 // replace text only (keep icon)
-                link.contents().last()[0].textContent = ' ' + AOSsettings.loc['permanent_delete_confirm'];
-                link.attr('href', url.replace('delete&', 'delete_permanently&'));
+                link.contents().last()[0].textContent = linkTextDefault;
+                link.attr('href', link.attr('href') + '&force=1');
 
                 link.before(linkCancel);
             }

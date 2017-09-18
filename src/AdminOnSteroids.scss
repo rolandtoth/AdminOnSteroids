@@ -631,42 +631,31 @@ html.aos {
   position: relative;
 }
 
-a.PageDelete.aos + a,
-a.PageListActionDelete + a {
-  //color: #BC283D !important;
-  //i {
-  //  display: none;
-  //  margin-right: 5px;
-  //}
-  //position: relative;
-  //z-index: 2;
-  //&:hover {
-  color: #fff !important;
-  background-color: #BC283D !important;
-  //}
+// inline confirm for PageTrash, PageListActionDelete, etc (pagelist and recent list)
+.aos-pagelist-confirm {
+  white-space: nowrap;
+  + [href*="force=1"] {
+    margin-left: 6px;
+    color: #fff !important;
+    background-color: #BC283D !important;
+    .PageListItem & {
+      &::after {
+        // red background on hover: only in normal pagelists (not in Lister)
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(#BC283D, 0.08);
+        outline: 1px solid rgba(#BC283D, 0.16);
+        pointer-events: none !important;
+      }
+    }
+  }
 }
 
-// red background on hover: only in normal pagelists (not in Lister)
-a.PageListActionDelete + a:hover:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(#BC283D, 0.08);
-  outline: 1px solid rgba(#BC283D, 0.16);
-  //outline-offset: 2px;
-  pointer-events: none !important;
-}
-
-a.PageDelete.aos.cancel,
-a.PageListActionDelete.cancel {
-  //position: relative;
-  //z-index: 2;
-  //color: #fff !important;
-  //background-color: #BC283D !important;
-  margin-right: 5px;
+.PageList .aos-pagelist-confirm.cancel {
   font-weight: 700 !important;
   &, &:hover {
     background-color: transparent !important;
@@ -675,13 +664,9 @@ a.PageListActionDelete.cancel {
   &:hover {
     text-decoration: underline;
   }
-  //i {
-  //  display: block;
-  //}
-  //&:hover {
-  //  background-color: #BC283D !important;
-  //  border-radius: 1px !important;
-  //}
+  i {
+    display: none !important;
+  }
 }
 
 //table.ProcessListerTable tr.open > td {
@@ -2101,25 +2086,24 @@ html.highlightRows {
 }
 
 html.pListShowActions {
-  //&[class*="AdminTheme"] {
   .content .PageList {
     .PageListItem {
+      display: inline-block !important;
       .PageListActions {
         display: inline-block !important;
         opacity: 1 !important;
-        [class^="PageListAction"]:not(.PageListActionExtra) {
-          filter: saturate(0.6);
+        > [class^="PageListAction"]:not(:hover) {
+          filter: saturate(0.5);
           opacity: 0.5;
         }
-        &:hover {
-          [class^="PageListAction"]:not(.PageListActionExtra) {
-            opacity: 1;
-            filter: saturate(1);
-          }
+      }
+      &:hover {
+        [class^="PageListAction"] {
+          filter: saturate(1) !important;
+          opacity: 0.999 !important;
         }
       }
     }
-    //}
   }
 }
 
@@ -2219,6 +2203,12 @@ html.AdminThemeReno {
   // fix light blue ui dialog header
   .ui-dialog-titlebar {
     background: #2A3C51 !important;
+  }
+
+  body.id-23:not(.centerLogin) {
+    #headline {
+      padding-left: 20px !important;;
+    }
   }
 
   // disable all animations
@@ -3284,7 +3274,7 @@ html.stickyCKE {
     position: sticky;
     bottom: 0;
     line-height: 1;
-    z-index:  2;
+    z-index: 2;
   }
   [id*="cke_"].cke_chrome {
     margin-bottom: 1em !important;
@@ -3417,8 +3407,8 @@ html.moveAssetButtons:not(.downloadAssetButton) {
   .aos_moveAssets {
     right: 28px;
     ~ p.InputfieldFileInfo {
-       padding-right: 74px !important;
-     }
+      padding-right: 74px !important;
+    }
   }
 }
 
@@ -3461,7 +3451,8 @@ html.moveAssetButtons:not(.downloadAssetButton) {
 
 html.pListCounters {
   // add pagelist counters
-  .PageListRoot > .PageList > .PageListItem ~ .PageList:not(.PageListPlaceholder) {
+  .PageListRoot > .PageList > .PageListItem ~ .PageList {
+    //.PageListRoot > .PageList > .PageListItem ~ .PageList:not(.PageListPlaceholder) {
     .PageListItem {
       &:before {
         opacity: 0.5;
@@ -3497,6 +3488,11 @@ html.pListCounters {
       }
     }
   }
+  // only if unpublished-hidden pages aren't included in pListCounter
+  //.PageListItem.PageListStatusHidden,
+  //.PageListItem.PageListStatusUnpublished {
+  //  padding-left: 19px;
+  //}
 }
 
 // pListShowExtras: move template edit link to right
@@ -3575,14 +3571,20 @@ html.pListIconOnly {
     }
     .PageListActionTrash > a,
     .PageTrash {
-      @include pageListIcon("\f1f8");
-      i {
-        display: none;
+      position: static !important; // allow full-row red bg color
+      &:not(.cancel):not([href*="force=1"]) {
+        @include pageListIcon("\f1f8");
+        i {
+          display: none;
+        }
       }
     }
-    .PageListActionDelete.aos > a:not(.cancel):first-of-type,
-    .PageDelete.aos:not(.cancel):not(.confirm) {
-      @include pageListIcon("\f12d");
+    .PageListActionDelete > a,
+    .PageDelete {
+      position: static !important; // allow full-row red bg color
+      &:not(.cancel):not([href*="force=1"]) {
+        @include pageListIcon("\f12d");
+      }
     }
   }
 }

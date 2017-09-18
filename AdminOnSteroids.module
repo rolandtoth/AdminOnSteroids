@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 156,
+            'version'   => 157,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -199,6 +199,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 'highlightRows',
                 'pListMiddleClick',
                 'pListCounters',
+                //'pListTrash',
                 'pListMarkup',
                 'pListUnselect'
             ),
@@ -559,7 +560,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $subModule = 'NavItems';
 
         if (in_array($subModule, $enabledSubmodules)) {
-            $this->addHookAfter('Page::render', $this, 'addNavItems');
+            if ($this->wire('page')->id !== 23) {
+                $this->addHookAfter('Page::render', $this, 'addNavItems');
+            }
         }
 
         //FieldAndTemplateEditLinks
@@ -635,7 +638,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $this->addHookAfter('InputfieldPageListSelect::render', $this, 'addPageListUnselectButtons');
             }
 
-            if ($this->user->isSuperUser()) {
+            if ($this->wire('user')->isSuperUser()) {
 
                 if (in_array('pListIDs', $configData[$subModule])) {
                     $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListIDs');
@@ -644,62 +647,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                 // add delete button to pagelist items (bypass trash)
                 if (in_array('deleteBtn', $configData[$subModule])) {
-                    $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
-
-                        $page = $event->arguments('page');
-
-                        // do not allow for pages having children
-                        if ($page->numChildren > 0) {
-                            return false;
-                        }
-
-                        if (!$page->trashable() || !$this->user->isSuperUser()) {
-                            return false;
-                        }
-
-                        $actions = array();
-                        $adminUrl = $this->wire('config')->urls->admin . 'page/';
-                        $icon = '';
-
-                        $actions['delete_permanently'] = array(
-                            'cn'   => 'Delete aos',
-                            'name' => $icon . 'Delete',
-                            'url'  => $adminUrl . '?action=delete&id=' . $page->id,
-                            'ajax' => true
-                        );
-
-                        $event->return += $actions;
-                    });
-
-                    $this->addHookAfter('ProcessPageListActions::processAction', function (HookEvent $event) {
-
-                        $page = $event->arguments(0);
-                        $action = $event->arguments(1);
-
-                        // do not allow for pages having children
-                        if ($page->numChildren > 0) {
-                            return false;
-                        }
-
-                        if ($action == 'delete_permanently') {
-
-//                            $page->setAndSave('title', $page->title . '-hello');
-                            $page->delete();
-
-                            $event->return = array(
-                                'action'          => $action,
-                                'success'         => true,
-                                'page'            => $page->id,
-                                'updateItem'      => $page->id,
-                                'message'         => 'Page deleted.',
-                                'remove'          => true,
-                                'refreshChildren' => false
-                            );
-                        }
-                    });
+                    $this->addHookAfter("ProcessPageListActions::getExtraActions", $this, 'addDeleteButton');
+                    $this->addHookAfter('ProcessPageListActions::processAction', $this, 'addDeleteButtonAction');
                 }
             }
-
 
             if (in_array('refreshBtn', $configData[$subModule])) {
                 $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
@@ -748,7 +699,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 });
             }
 
-
+            if (in_array('pListTrash', $configData[$subModule])) {
+                if (!$this->wire('user')->isSuperUser()) {
+                    bd($this->wire('user')->isSuperUser());
+                    $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addTrashButton');
+                }
+            }
         }
 
 
@@ -826,7 +782,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $prevent_dropdown = false;
                 if (in_array('all-roles', $selected_roles)) {
                     $prevent_dropdown = true;
-                } elseif (!$user->isSuperuser() && in_array('nonsuperuser', $selected_roles)) {
+                } elseif (!$this->wire('user')->isSuperUser() && in_array('nonsuperuser', $selected_roles)) {
                     $prevent_dropdown = true;
                 } elseif (count(array_intersect($selected_roles, $user->roles->explode('name')))) {
                     $prevent_dropdown = true;
@@ -1437,7 +1393,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 } else {
                     if ($p->id == 21) {
 
-                        if ($this->user->isSuperUser()) {
+                        if ($this->wire('user')->isSuperUser()) {
                             $url = $this->config->urls->admin . 'module';
                         }
 
@@ -1644,6 +1600,92 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $event->return);
     }
 
+
+    /**
+     * Add Delete button to pagelist
+     */
+    public function addDeleteButton(HookEvent $event)
+    {
+
+        $page = $event->arguments('page');
+
+        // do not allow for pages having children
+        if ($page->numChildren > 0) {
+            return false;
+        }
+
+        if (!$page->trashable() || !$this->user->isSuperUser()) {
+            return false;
+        }
+
+        $actions = array();
+        $adminUrl = $this->wire('config')->urls->admin . 'page/';
+        $icon = '';
+
+//        $actions['delete_permanently'] = array(
+        $actions['delete'] = array(
+            'cn'   => 'Delete aos-pagelist-confirm',
+            'name' => $icon . 'Delete',
+            'url'  => $adminUrl . '?action=delete&id=' . $page->id,
+            'ajax' => true
+        );
+
+        $event->return += $actions;
+    }
+
+    /**
+     * Process action for addDeleteButton.
+     *
+     * @return bool
+     */
+    public function addDeleteButtonAction(HookEvent $event)
+    {
+
+        $page = $event->arguments(0);
+        $action = $event->arguments(1);
+
+        // do not allow for pages having children
+        if ($page->numChildren > 0) {
+            return false;
+        }
+
+        if ($action == 'delete') {
+
+            //                            $page->setAndSave('title', $page->title . '-hello');
+            $page->delete();
+
+            $event->return = array(
+                'action'          => $action,
+                'success'         => true,
+                'page'            => $page->id,
+                'updateItem'      => $page->id,
+                'message'         => 'Page deleted.',
+                'remove'          => true,
+                'refreshChildren' => false
+            );
+        }
+    }
+
+    /**
+     * Add Trash button to pagelist (for non-SuperUsers)
+     */
+    public function addTrashButton($event)
+    {
+        $page = $event->arguments(0);
+        $extras = $event->return;
+        if ($page->trashable()) {
+            $trash_icon = "<i class='fa fa-trash-o'></i>&nbsp;";
+            $extras['trash'] = array(
+                'cn'   => 'Trash aos-pagelist-confirm',
+                'name' => $trash_icon . $this->_('Trash'),
+                'url'  => $this->wire('config')->urls->admin . "page/?action=trash&id=$page->id",
+                'ajax' => true
+            );
+        }
+        $event->return = $extras;
+    }
+
+
     public function addTemplateEditLinkPageList(HookEvent $event)
     {
 
@@ -1742,7 +1784,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         foreach ($user->roles as $role) {
             $theme->addBodyClass("role-{$role->name}");
         }
-        if (!$user->isSuperuser()) {
+        if (!$this->wire('user')->isSuperuser()) {
             $theme->addBodyClass("role-nonsuperuser");
         }
 
@@ -3165,6 +3207,7 @@ HTML;
         $f->addOption('pListShowExtras', __('Always show extra actions', __FILE__));
         $f->addOption('pListMarkup', __('Allow markup tokens for "List of fields to display"', __FILE__));
         $f->addOption('pListCounters', __('Add counters to pagelist items', __FILE__));
+        $f->addOption('pListTrash', __('Add Trash action also for non-SuperUsers', __FILE__));
 
         if (isset($data[$f->name]) && $data[$f->name]) {
             $f->attr('value', $data[$f->name]);

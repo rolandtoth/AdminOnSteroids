@@ -8,6 +8,7 @@
 
 @mixin pListNum($listName) {
   counter-reset: #{$listName};
+  //> .PageListItem:not(.PageListPlaceholder):not(.PageListStatusHidden):not(.PageListStatusUnpublished) {
   > .PageListItem:not(.PageListPlaceholder) {
     &:before {
       content: counter(#{$listName}, decimal-leading-zero);
