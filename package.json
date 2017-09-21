@@ -4,16 +4,16 @@
   "description": "Various ProcessWire admin tweaks to boost productivity",
   "main": "index.js",
   "devDependencies": {
-    "node-minify": "^2.3.0",
+    "uglify-js": "*",
     "node-sass": "^4.5.3",
     "nodemon": "^1.11.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "node-sass src/AdminOnSteroids.scss AdminOnSteroids.css",
-    "minify": "node minify.js",
+    "sass": "node-sass -q --source-map true --output-style compressed src/aos.scss styles/aos.min.css && node-sass -q --source-map true --output-style compressed src/aos_config.scss styles/aos_config.min.css",
+    "minify": "uglifyjs src/aos.js -c -o scripts/aos.min.js && uglifyjs src/aos_config.js -c -o scripts/aos_config.min.js",
     "start": "npm run sass && npm run minify",
-    "watch": "nodemon --watch src -e scss,js js -x \"npm run sass && npm run minify\""
+    "watch": "nodemon -q --watch src -e scss,js -x \"npm run start\""
   },
   "repository": {
     "type": "git",
@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/rolandtoth/AdminOnSteroids/issues"
   },
-  "homepage": "https://github.com/rolandtoth/AdminOnSteroids#readme"
+  "homepage": "https://github.com/rolandtoth/AdminOnSteroids#readme",
+  "dependencies": {
+    "node-minify": "^2.3.0"
+  }
 }

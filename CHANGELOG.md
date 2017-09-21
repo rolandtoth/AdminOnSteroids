@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 1.5.8 (2017-09-19)
+
+- Centered login fix for Forgot password module (requested by szabesz)
+- fix hideNewDropdown hiding the entire topnav in the default theme
+- update package.json to use uglify and to contain *_config.css/js assets too
+- reorganize module assets to styles/scripts/images subdirectories
+
+
 ### 1.5.7 (2017-09-18)
 
 - pageListTweaks: add Trash action for non-SuperUsers (merging module of Robin S)

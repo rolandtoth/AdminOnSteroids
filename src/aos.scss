@@ -1,5 +1,5 @@
-@import '_variables';
-@import '_mixins';
+@import 'includes/variables';
+@import 'includes/mixins';
 
 // general style overrides
 html.aos {
@@ -69,18 +69,12 @@ html.aos {
   }
 
   .AdminDataTable {
-    //margin-bottom: 0;
     tr:last-child {
       td {
         border-bottom: none;
       }
     }
   }
-  //#modules_form {
-  //  .AdminDataTable {
-  //    margin-bottom: 2em;
-  //  }
-  //}
 
   //.PageListPage .pageId {
   //.PageListRoot span.label_title:after {
@@ -290,7 +284,6 @@ html.aos {
     //margin-left: 8px;
     white-space: nowrap;
     border: 2px solid #fff;
-    //transform: translateX(-50%);
     //.sliderTooltip-arrow {
     //  bottom: 0;
     //  left: 50%;
@@ -709,16 +702,16 @@ html.editFieldWidth {
     }
     &:before {
       @media only screen and (min-width: 600px) {
-        content: url('/site/modules/AdminOnSteroids/src/scale-mobile.svg');
+        content: url('/site/modules/AdminOnSteroids/images/scale-mobile.svg');
       }
       @media only screen and (min-width: 960px) {
-        content: url('/site/modules/AdminOnSteroids/src/scale.svg');
+        content: url('/site/modules/AdminOnSteroids/images/scale.svg');
       }
       @media only screen and (min-width: 1440px) {
-        content: url('/site/modules/AdminOnSteroids/src/scale-hd.svg');
+        content: url('/site/modules/AdminOnSteroids/images/scale-hd.svg');
       }
       @media only screen and (min-width: 1800px) {
-        content: url('/site/modules/AdminOnSteroids/src/scale-uhd.svg');
+        content: url('/site/modules/AdminOnSteroids/images/scale-uhd.svg');
       }
     }
   }
@@ -1178,6 +1171,38 @@ html.asmCollapse {
       #footer {
         border: none;
       }
+
+      // forgot password module
+
+      .pw-content.content {
+        max-width: 680px;
+        margin: 0 auto;
+      }
+
+      #wrap_username {
+        label, .InputfieldContent {
+          border: none;
+        }
+        .toggle-icon {
+          display: none !important;
+        }
+      }
+      #wrap_submit_forgot {
+        width: 100%;
+      }
+      input#username {
+        text-align: center;
+        max-width: 270px;
+        margin-top: 1.5rem;
+      }
+    }
+  }
+}
+
+html.hideAddNewDropdown body.id-3 {
+  #head_button {
+    > .ui-button.pw-dropdown-toggle {
+      display: none !important;
     }
   }
 }
@@ -1225,7 +1250,6 @@ html.asmCollapse {
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, .36));
     min-width: 150px;
     background: #fff;
-    //display: block;
     box-shadow: $defaultBoxShadow;
     position: absolute;
     top: 100%;
@@ -2781,8 +2805,8 @@ html.AdminThemeReno {
     position: relative;
   }
 
-  @import '../lib/perfect-scrollbar/css/mixins';
-  @import '../lib/perfect-scrollbar/css/variables';
+  @import '../scripts/vendor/perfect-scrollbar/css/mixins';
+  @import '../scripts/vendor/perfect-scrollbar/css/variables';
 
   $ps-theme-default: (
           border-radius: $ps-border-radius,
@@ -3451,8 +3475,7 @@ html.moveAssetButtons:not(.downloadAssetButton) {
 
 html.pListCounters {
   // add pagelist counters
-  .PageListRoot > .PageList > .PageListItem ~ .PageList {
-    //.PageListRoot > .PageList > .PageListItem ~ .PageList:not(.PageListPlaceholder) {
+  .PageListRoot > .PageList > .PageListItem ~ .PageList:not(.PageListPlaceholder) {
     .PageListItem {
       &:before {
         opacity: 0.5;

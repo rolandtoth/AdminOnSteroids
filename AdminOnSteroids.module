@@ -106,6 +106,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             ),
             'CKEaddons_skin'                    => 'lightwire',
             'CKEaddons_enabledFields'           => '',
+            'CKEaddons_toolbar'                 => '',
             'DeselectRadios'                    => array(
                 'adminOnly'
             ),
@@ -311,6 +312,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'headBtnToTitle',
             'headSticky',
             'headStickyCompact',
+            'hideAddNewDropdown',
             'hoverDropdown',
             'leftTopnav',
             'ListerTweaks',
@@ -501,8 +503,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $timestamp = $moduleInfo['version'] . '_' . date('YmdH');
 
         if ($this->input->get['name'] == 'AdminOnSteroids') {
-            $scripts->add($root . '/' . __CLASS__ . '_config.js?ts=' . $timestamp);
-            $styles->prepend($root . '/' . __CLASS__ . '_config.css?ts=' . $timestamp);
+            $scripts->add($root . '/scripts/aos_config.min.js?ts=' . $timestamp);
+            $styles->prepend($root . '/styles/aos_config.min.css?ts=' . $timestamp);
         }
 
         if (!$this->enabled) {
@@ -524,11 +526,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $this->editedPage
         );
 
-        $styles->prepend($root . '/' . __CLASS__ . '.css?ts=' . $timestamp);
+        $styles->prepend($root . '/styles/aos.min.css?ts=' . $timestamp);
 
-        // login page doesn't some stuff
+        // login page doesn't need some stuff
         if ($this->page->id != 23) {
-            $scripts->add($root . '/' . __CLASS__ . '.min.js?ts=' . $timestamp);
+            $scripts->add($root . '/scripts/aos.min.js?ts=' . $timestamp);
 
             // always load modal js
             $this->modules->get('JqueryUI')->use('modal');
@@ -712,9 +714,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $subModule = 'ListerTweaks';
         // default columns: only add hook if there's no bookmark requested
-        if (in_array($subModule,
-                $enabledSubmodules) && (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'],
-                    '?bookmark=') === false)
+        if (
+            in_array($subModule, $enabledSubmodules) &&
+            (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false)
         ) {
             $this->addHookBefore('ProcessPageLister::execute', function ($event) {
 
@@ -763,7 +765,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if (in_array('miniScrollSb', $configData[$subModule]) || in_array('miniScrollMain',
                         $configData[$subModule])
                 ) {
-                    $jsFiles[] = $root . '/lib/perfect-scrollbar/js/perfect-scrollbar.min.js';
+                    $jsFiles[] = $root . '/scripts/vendor/perfect-scrollbar/js/perfect-scrollbar.min.js';
                 }
             }
         }
@@ -847,6 +849,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
         }
 
+
+        $this->addHookBefore('Field(inputfieldClass=InputfieldCKEditor)::getInputfield', $this, 'customCkeToolbar');
+
+
         //LongClickDuration
         $subModule = 'LongClickDuration';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -871,7 +877,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 // make sure field is available
                 $this->_installColumnBreakField();
                 $this->addHookAfter('ProcessPageEdit::buildFormContent', $this, 'setupAdminColumns');
-                $jsFiles[] = $root . '/lib/split.js/split.min.js';
+                $jsFiles[] = $root . '/scripts/vendor/split.js/split.min.js';
             }
 
             // adminLangSwitcher
@@ -889,12 +895,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if ($this->page->process == "ProcessLanguageTranslator" && $this->wire('languages')->count() > 1) {
                     $this->addHookAfter('ProcessLanguageTranslator::executeEdit', $this, 'addTranslatorLinks');
                 }
-            }
-
-
-            // hideAddNewDropdown
-            if (in_array('hideAddNewDropdown', $configData[$subModule])) {
-                $this->addHookAfter('Page::render', $this, 'hideAddNewDropdown');
             }
 
 
@@ -923,10 +923,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
 
             // autosizeTextareas
-//            if (in_array('autosizeTextareas', $configData[ $subModule ])) {
-//                $jsFiles[] = $root . '/AutosizeTextareas/Autosize.js';
-//                $jsFiles[] = $root . '/AutosizeTextareas/AutosizeTextareas.js';
-//            }
+            if (in_array('autosizeTextareas', $configData[$subModule])) {
+                $jsFiles[] = $root . '/scripts/vendor/autosize/autosize.min.js';
+            }
 
             // langTabHotkeySwitcher
 //            if (in_array('langTabHotkeySwitcher', $configData[ $subModule ])) {
@@ -1041,7 +1040,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
 
             // write module js config to page
-            $this->config->js("AdminOnSteroids", json_encode($configData));
+            $this->wire('config')->js("AdminOnSteroids", json_encode($configData));
         }
 
         // add admin CSS/JS
@@ -1061,17 +1060,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //            return $page;
 //        }
 //    }
-
-
-    // hide "Add new" dropdown button from the main Pagelist
-    public function hideAddNewDropdown(HookEvent $event)
-    {
-        $page = $event->object;
-
-        if ($page->process == 'ProcessPageList') {
-            $event->return = str_replace('pw-dropdown-toggle', 'pw-dropdown-toggle aos-hidden', $event->return);
-        }
-    }
 
 
     // uncheck "Active?" checkbox next to language names when adding a new page
@@ -1899,6 +1887,70 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     }
 
 
+    /**
+     * Custom CKEditor toolbar items per user role (selector)
+     *
+     * @param HookEvent $event
+     */
+    public function customCkeToolbar(HookEvent $event)
+    {
+
+        // do not show modified data on Field edit page
+        if ($this->wire('process') != 'ProcessPageEdit') {
+            return;
+        }
+
+        $settings = parse_ini_string($this->CKEaddons_toolbar, true);
+
+        if (empty($settings) || !is_array($settings)) {
+            return;
+        }
+
+        $field = $event->object;
+        $user = $this->wire('user');
+
+        foreach ($settings as $selector => $values) {
+
+            if ($user->is($selector)) {
+
+                if (isset($values['field']) && !empty($values['field']) && !in_array($field->name,
+                        explode(',', $values['field']))
+                ) {
+                    continue;
+                }
+
+                if (isset($values['toolbar']) && !empty($values['toolbar'])) {
+                    $field->toolbar = $values['toolbar'];
+                }
+
+                if (isset($values['removePlugins']) && !empty($values['removePlugins'])) {
+                    $field->removePlugins = strtolower($values['removePlugins']);
+                }
+
+                if (isset($values['formatTags']) && !empty($values['formatTags'])) {
+                    $field->formatTags = str_replace(array(',', ' '), array(';', ''), $values['formatTags']);
+                }
+
+                continue;
+            }
+        }
+
+
+//        if ($this->wire('user')->is($selector)) {
+        //                $field->toolbar = 'Format, Bold, Italic, -, PWLink, -, Undo, Redo';
+        //                $field->removePlugins = 'div, justify';
+        //                $field->formatTags = 'p;h2;h3;h4';
+//        }
+
+        //if ($this->wire('user')->is('roles=superuser')) {
+        //            if ($this->wire('user')->is('email$=@gmail.com')) {
+        //                $field->toolbar = 'Format, Bold, Italic, -, PWLink, -, Undo, Redo';
+        //                $field->removePlugins = 'div, justify';
+        //                $field->formatTags = 'p;h2;h3;h4';
+        //            }
+    }
+
+
     public function addDownloadAssetLink(HookEvent $event)
     {
 
@@ -2644,6 +2696,21 @@ HTML;
 
         $f->addOption('default', 'default');
         $f->addOption('lightwire', 'LightWire');
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fsetCKE->add($f);
+
+        // Custom toolbar buttons
+
+        $f = wire('modules')->get("InputfieldTextarea");
+        $f->attr('name', 'CKEaddons_toolbar');
+        $f->label = __('Custom toolbar buttons', __FILE__);
+//        $f->attr('placeholder', '// ! AdminOnSteroids: /module/edit?name=AdminOnSteroids');
+        $f->rows = 4;
+        $f->collapsed = Inputfield::collapsedNever;
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
