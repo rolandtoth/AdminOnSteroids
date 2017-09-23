@@ -1,9 +1,10 @@
 # Changelog
 
 
-### 1.5.8 (2017-09-19)
+### 1.5.8 (2017-09-23)
 
-- Centered login fix for Forgot password module (requested by szabesz)
+- CKEaddons: feature to set CKEditor toolbar items per field or user properties (based on code of Robin S)
+- centerLogin fix for Forgot password module (requested by szabesz)
 - fix hideNewDropdown hiding the entire topnav in the default theme
 - update package.json to use uglify and to contain *_config.css/js assets too
 - reorganize module assets to styles/scripts/images subdirectories

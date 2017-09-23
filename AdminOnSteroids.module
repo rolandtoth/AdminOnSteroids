@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 157,
+            'version'   => 158,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -850,9 +850,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
 
-        $this->addHookBefore('Field(inputfieldClass=InputfieldCKEditor)::getInputfield', $this, 'customCkeToolbar');
-
-
         //LongClickDuration
         $subModule = 'LongClickDuration';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -867,6 +864,21 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             // need to set default value explicitly
             $configSettings['LongClickDuration'] = $defaultData['LongClickDuration'];
         }
+
+
+        // CKEaddons
+        $subModule = 'CKEaddons';
+
+        if (in_array($subModule, $enabledSubmodules)) {
+
+            // CKEaddons_toolbar
+            if (isset($configData['CKEaddons_toolbar']) && !empty($configData['CKEaddons_toolbar'])) {
+                $this->addHookBefore('Field(inputfieldClass=InputfieldCKEditor)::getInputfield', $this,
+                    'customCkeToolbar');
+            }
+
+        }
+
 
         // Misc
         $subModule = 'Misc';
@@ -1888,13 +1900,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
 
     /**
-     * Custom CKEditor toolbar items per user role (selector)
+     * Custom CKEditor toolbar items.
      *
      * @param HookEvent $event
+     *
+     * @return void
      */
     public function customCkeToolbar(HookEvent $event)
     {
-
         // do not show modified data on Field edit page
         if ($this->wire('process') != 'ProcessPageEdit') {
             return;
@@ -1913,47 +1926,49 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             if ($user->is($selector)) {
 
-                if (isset($values['field']) && !empty($values['field']) && !in_array($field->name,
-                        explode(',', $values['field']))
-                ) {
+                // if "field" key is present, check if current field name matches
+                if (isset($values['field']) && !empty($values['field']) && $field->name !== $values['field']) {
                     continue;
                 }
 
-                if (isset($values['toolbar']) && !empty($values['toolbar'])) {
-                    $field->toolbar = $values['toolbar'];
+                foreach ($values as $key => $value) {
+                    if(empty($value)) {
+                        continue;
+                    }
+                    switch ($key) {
+                        case 'toolbar++':
+                            $field->toolbar .= ', ' . $value;
+                            break;
+                        case 'toolbar--':
+                            $buttons = explode(', ', $field->toolbar);
+                            $buttons_to_remove = explode(', ', $value);
+                            $buttons = array_map('trim', $buttons); //trim whitespace
+                            $buttons_to_remove = array_map('trim', $buttons_to_remove); //trim whitespace
+                            $new_buttons = array_diff($buttons, $buttons_to_remove);
+                            $field->toolbar = implode(', ', $new_buttons);
+                            break;
+                        case 'formatTags':
+                            $field->formatTags = str_replace(array(',', ' '), array(';', ''), $value);
+                            break;
+                        case 'field':
+                            continue;
+                            break;
+                        case 'stop':
+                            return; //do not process next ini group
+                            break;
+                        default:
+                            $field->{$key} = $value;    // set whatever else the key is (including toolbar, removePlugins)
+                    }
                 }
 
-                if (isset($values['removePlugins']) && !empty($values['removePlugins'])) {
-                    $field->removePlugins = strtolower($values['removePlugins']);
-                }
-
-                if (isset($values['formatTags']) && !empty($values['formatTags'])) {
-                    $field->formatTags = str_replace(array(',', ' '), array(';', ''), $values['formatTags']);
-                }
-
-                continue;
+                continue;   // continue to next ini group
             }
         }
-
-
-//        if ($this->wire('user')->is($selector)) {
-        //                $field->toolbar = 'Format, Bold, Italic, -, PWLink, -, Undo, Redo';
-        //                $field->removePlugins = 'div, justify';
-        //                $field->formatTags = 'p;h2;h3;h4';
-//        }
-
-        //if ($this->wire('user')->is('roles=superuser')) {
-        //            if ($this->wire('user')->is('email$=@gmail.com')) {
-        //                $field->toolbar = 'Format, Bold, Italic, -, PWLink, -, Undo, Redo';
-        //                $field->removePlugins = 'div, justify';
-        //                $field->formatTags = 'p;h2;h3;h4';
-        //            }
     }
 
 
     public function addDownloadAssetLink(HookEvent $event)
     {
-
         $markup = $event->return;
         $url = $event->arguments[0]->url;
 
@@ -2707,8 +2722,8 @@ HTML;
 
         $f = wire('modules')->get("InputfieldTextarea");
         $f->attr('name', 'CKEaddons_toolbar');
-        $f->label = __('Custom toolbar buttons', __FILE__);
-//        $f->attr('placeholder', '// ! AdminOnSteroids: /module/edit?name=AdminOnSteroids');
+        $f->label = __('CKEditor customization', __FILE__);
+        $f->description = __('Set toolbar buttons and other settings globally or per field and/or user properties (specify in INI format)', __FILE__);
         $f->rows = 4;
         $f->collapsed = Inputfield::collapsedNever;
 
