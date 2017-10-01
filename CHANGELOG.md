@@ -1,6 +1,17 @@
 # Changelog
 
 
+### 1.5.9 (2017-10-01)
+
+- CKEditor customization tweak refactored to FieldOverrides submodule and is enabled for all field types
+- enhance FieldOverrides config textarea by InputfieldAceExtended/CodeMirror JS (idea by Robin S)
+- FieldOverrides: prepend field-overrides.ini file if exists (configurable in AssetPaths, idea by Robin S)
+- use sticky CKEditor toolbar only above desktop screen width
+- enable full row hover actions in the Tree panel too (reported by adrian)
+- added pagelist action icon "Empty Trash" for icon-only pagelist items (PageListTweaks)
+
+
+
 ### 1.5.8 (2017-09-23)
 
 - CKEaddons: feature to set CKEditor toolbar items per field or user properties (based on code of Robin S)
@@ -8,6 +19,7 @@
 - fix hideNewDropdown hiding the entire topnav in the default theme
 - update package.json to use uglify and to contain *_config.css/js assets too
 - reorganize module assets to styles/scripts/images subdirectories
+
 
 
 ### 1.5.7 (2017-09-18)

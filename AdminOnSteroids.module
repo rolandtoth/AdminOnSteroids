@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 158,
+            'version'   => 159,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -106,11 +106,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             ),
             'CKEaddons_skin'                    => 'lightwire',
             'CKEaddons_enabledFields'           => '',
-            'CKEaddons_toolbar'                 => '',
             'DeselectRadios'                    => array(
                 'adminOnly'
             ),
             'FieldAndTemplateEditLinks'         => 'pw-blank',
+            'FieldOverrides'                    => '',
+            'FieldOverridesFile'                => '',
             'FileFieldTweaks'                   => array(
                 'filterbox',
                 'downloadAssetButton',
@@ -505,6 +506,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if ($this->input->get['name'] == 'AdminOnSteroids') {
             $scripts->add($root . '/scripts/aos_config.min.js?ts=' . $timestamp);
             $styles->prepend($root . '/styles/aos_config.min.css?ts=' . $timestamp);
+
+            if (!$this->wire('modules')->isInstalled('InputfieldAceExtended')) {
+                $styles->add($root . '/CKE/plugins/codemirror/css/codemirror.min.css');
+                $styles->add($root . '/CKE/plugins/codemirror/theme/twilight.css');
+                $scripts->add($root . '/CKE/plugins/codemirror/js/codemirror.min.js');
+                $scripts->add($root . '/CKE/plugins/codemirror/js/properties.js');
+            }
         }
 
         if (!$this->enabled) {
@@ -703,7 +711,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             if (in_array('pListTrash', $configData[$subModule])) {
                 if (!$this->wire('user')->isSuperUser()) {
-                    bd($this->wire('user')->isSuperUser());
                     $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addTrashButton');
                 }
             }
@@ -815,6 +822,26 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             });
         }
 
+        // FieldOverrides
+        $subModule = 'FieldOverrides';
+        if (in_array($subModule, $enabledSubmodules)) {
+
+            if (isset($this->FieldOverrides) && !empty($this->FieldOverrides)) {
+
+                if ($this->wire('process') !== 'ProcessPageEdit') {   // enable only on page edit screen
+
+                    // check wether there is file-based settings
+                    $ini_settings = ($this->FieldOverridesFile && file_exists($this->FieldOverridesFile)) ? file_get_contents($this->FieldOverridesFile) : '';
+                    $this->FieldOverrides = $ini_settings . (isset($this->FieldOverrides) ? PHP_EOL . PHP_EOL . $this->FieldOverrides : '');
+                    $this->FieldOverrides = parse_ini_string($this->FieldOverrides, true);
+
+                    if (is_array($this->FieldOverrides)) {
+                        $this->addHookBefore('Field::getInputfield', $this, 'setFieldOverrides');
+                    }
+                }
+            }
+        }
+
         //FocusInputOnLangTabSwitch
 //        $subModule = 'FocusInputOnLangTabSwitch';
 //        if (in_array($subModule, $enabledSubmodules)) {
@@ -867,17 +894,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
 
         // CKEaddons
-        $subModule = 'CKEaddons';
-
-        if (in_array($subModule, $enabledSubmodules)) {
-
-            // CKEaddons_toolbar
-            if (isset($configData['CKEaddons_toolbar']) && !empty($configData['CKEaddons_toolbar'])) {
-                $this->addHookBefore('Field(inputfieldClass=InputfieldCKEditor)::getInputfield', $this,
-                    'customCkeToolbar');
-            }
-
-        }
+//        $subModule = 'CKEaddons';
+//
+//        if (in_array($subModule, $enabledSubmodules)) {
+//
+//        }
 
 
         // Misc
@@ -1900,70 +1921,166 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
 
     /**
-     * Custom CKEditor toolbar items.
+     * Override field settings per user/page/field poperties.
      *
      * @param HookEvent $event
      *
      * @return void
      */
-    public function customCkeToolbar(HookEvent $event)
+    public function setFieldOverrides(HookEvent $event)
     {
-        // do not show modified data on Field edit page
-        if ($this->wire('process') != 'ProcessPageEdit') {
-            return;
-        }
-
-        $settings = parse_ini_string($this->CKEaddons_toolbar, true);
-
-        if (empty($settings) || !is_array($settings)) {
-            return;
-        }
-
         $field = $event->object;
         $user = $this->wire('user');
+        $fields = $this->wire('fields');
+        $is_multilang = is_object(wire('languages'));
 
-        foreach ($settings as $selector => $values) {
+        foreach ($this->FieldOverrides as $selector => $values) {
 
-            if ($user->is($selector)) {
+            // remove items with empty values
+            array_filter($values, function ($v) {
+                return $v !== "";
+            });
 
-                // if "field" key is present, check if current field name matches
-                if (isset($values['field']) && !empty($values['field']) && $field->name !== $values['field']) {
+            // check enabled state
+            if (isset($values['is_enabled'])) {
+                if ($values['is_enabled'] == 0) {
                     continue;
+                } else {
+                    unset($values['is_enabled']);
                 }
-
-                foreach ($values as $key => $value) {
-                    if(empty($value)) {
-                        continue;
-                    }
-                    switch ($key) {
-                        case 'toolbar++':
-                            $field->toolbar .= ', ' . $value;
-                            break;
-                        case 'toolbar--':
-                            $buttons = explode(', ', $field->toolbar);
-                            $buttons_to_remove = explode(', ', $value);
-                            $buttons = array_map('trim', $buttons); //trim whitespace
-                            $buttons_to_remove = array_map('trim', $buttons_to_remove); //trim whitespace
-                            $new_buttons = array_diff($buttons, $buttons_to_remove);
-                            $field->toolbar = implode(', ', $new_buttons);
-                            break;
-                        case 'formatTags':
-                            $field->formatTags = str_replace(array(',', ' '), array(';', ''), $value);
-                            break;
-                        case 'field':
-                            continue;
-                            break;
-                        case 'stop':
-                            return; //do not process next ini group
-                            break;
-                        default:
-                            $field->{$key} = $value;    // set whatever else the key is (including toolbar, removePlugins)
-                    }
-                }
-
-                continue;   // continue to next ini group
             }
+
+            // check if user matches
+            if (isset($values['is_user'])) {
+                if (!$user->is($values['is_user'])) {
+                    continue;
+                } else {
+                    unset($values['is_user']);
+                }
+            }
+
+            // if "is_field" key is present, check if current field matches
+            if (isset($values['is_field'])) {
+                if ($fields->get($values['is_field']) && !in_array($field->id, array_values($fields->find($values['is_field'])->id()))
+                ) {
+                    continue;
+                } else {
+                    unset($values['is_field']);
+                }
+            }
+
+            // check "is_page" (selector for currently edited page)
+            if (isset($values['is_page'])) {
+                if ($this->editedPage && !$this->editedPage->is($values['is_page'])) {
+                    continue;
+                } else {
+                    unset($values['is_page']);
+                }
+            }
+
+            foreach ($values as $key => $v) {
+
+                // check for _lang_{languageName}
+                if ($is_multilang) {
+                    $lang_pos = strpos($key, '_lang_');
+                    if ($lang_pos > 1) {
+                        $language_name = substr($key, $lang_pos + strlen('_lang_'));
+                        $lang = $this->wire('languages')->get($language_name);
+                        if ($lang->id) {
+                            $key = substr($key, 0, $lang_pos) . $lang->id;
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+
+                // check for array
+//                if (strpos($v, '=>') > 1) {
+//                    list($k, $v) = explode('=>', $v);
+//                    $v = array(trim($k) => trim($v));
+//                }
+
+                switch ($key) {
+                    case 'toolbar_add':
+                        $toolbar = $field->toolbar . ', ' . trim($v, ',');
+                        $field->toolbar = $this->removeDuplicatesFromString($toolbar);
+                        break;
+                    case 'toolbar_remove':
+                        $buttons = $this->removeDelimitedStringChunks($field->toolbar, $v);
+                        $field->toolbar = $buttons;
+                        break;
+                    case 'formatTags':
+                        $format_tags = str_replace(array(',', ' '), array(';', ''), $v);
+                        $field->formatTags = $this->removeDuplicatesFromString($format_tags, ';');
+                        break;
+                    case 'formatTags_add':
+                        $v = trim(str_replace(array(',', ' '), array(';', ''), $v), ';');
+                        $format_tags = $field->formatTags . ';' . $v;
+                        $field->formatTags = $this->removeDuplicatesFromString($format_tags, ';');
+                        break;
+                    case 'formatTags_remove':
+                        $v = trim(str_replace(array(',', ' '), array(';', ''), $v), ';');
+                        $format_tags = $this->removeDelimitedStringChunks($field->formatTags, $v, ';');
+                        $field->formatTags = $format_tags;
+                        break;
+                    case 'id':
+                    case 'name':
+                    case 'type':
+                    case 'inputfieldClass':
+                        continue;
+                        break;
+                    case 'stop':
+                        return; //do not process next ini group
+                        break;
+                    default:
+                        $field->{$key} = $v;
+                }
+            }
+
+            continue;   // move to next ini group
         }
+    }
+
+
+    /**
+     * Remove duplicate strings from a separated string.
+     *
+     * @param $str
+     * @param string $delimiter
+     *
+     * @return string
+     */
+    public function removeDuplicatesFromString($str, $delimiter = ',')
+    {
+        return implode($delimiter, array_keys(array_flip(explode($delimiter, $str))));
+    }
+
+
+    /**
+     * Remove string chunks from string.
+     *
+     * @param string $str       delimiter-separated string
+     * @param string $substr    delimiter-separated string
+     * @param string $delimiter chunks separator
+     *
+     * @return string
+     */
+
+    public function removeDelimitedStringChunks($str, $substr, $delimiter = ',')
+    {
+        $chunks = explode($delimiter, $str);
+        $chunks_to_remove = explode($delimiter, $substr);
+
+        if (!is_array($chunks) || !is_array($chunks_to_remove)) {
+            return $str;
+        }
+
+        $chunks = array_map('trim', $chunks); //trim whitespace
+        $chunks_to_remove = array_map('trim', $chunks_to_remove); //trim whitespace
+
+        $out = array_diff($chunks, $chunks_to_remove);
+
+        return implode($delimiter, $out);
     }
 
 
@@ -2536,6 +2653,7 @@ HTML;
         $f->addOption('DeselectRadios', '**DeselectRadios**' . __('Enable clearing checked radio buttons', __FILE__));
         $f->addOption('FieldAndTemplateEditLinks',
             '**FieldAndTemplateEditLinks**' . __('Shortcuts to templates and fields&nbsp;(SuperUser only)', __FILE__));
+        $f->addOption('FieldOverrides', '**FieldOverrides**' . __('Conditionally override field settings', __FILE__));
         $f->addOption('FileFieldTweaks', '**FileFieldTweaks**' . __('File and image field enhancements', __FILE__));
         $f->addOption('FocusInputOnLangTabSwitch',
             '**FocusInputOnLangTabSwitch**' . __('Focus input on switching language tabs', __FILE__));
@@ -2718,23 +2836,6 @@ HTML;
 
         $fsetCKE->add($f);
 
-        // Custom toolbar buttons
-
-        $f = wire('modules')->get("InputfieldTextarea");
-        $f->attr('name', 'CKEaddons_toolbar');
-        $f->label = __('CKEditor customization', __FILE__);
-        $f->description = __('Set toolbar buttons and other settings globally or per field and/or user properties (specify in INI format)', __FILE__);
-        $f->rows = 4;
-        $f->collapsed = Inputfield::collapsedNever;
-
-        if ($data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
-        }
-
-        $fsetCKE->add($f);
-
-        $fset->add($fsetCKE);
-
 
         // ListerTweaks ----------------------------------------------- //
 
@@ -2879,6 +2980,35 @@ HTML;
 
         $fset->add($f);
 
+
+        // FieldOverrides ----------------------------------------------- //
+
+        if ($this->wire('modules')->isInstalled('InputfieldAceExtended')) {
+            $f = $this->wire('modules')->get('InputfieldAceExtended');
+            $f->mode = 'ini';
+            $f->modes = array('ini');
+            $f->theme = 'twilight';
+        } else {
+            $f = $this->wire('modules')->get('InputfieldTextarea');
+        }
+
+        $f->rows = 8;
+        $f->attr('name', 'FieldOverrides');
+        $f->label = __('FieldOverrides', __FILE__);
+        $f->showIf = 'enabledSubmodules=FieldOverrides';
+        $f->collapsed = Inputfield::collapsedNever;
+
+        if(isset($this->FieldOverridesFile) && !empty($this->FieldOverridesFile)) {
+            $f->notes = __('Additional items are prepended from this file (Asset Paths):', __FILE__) . ' `' . $this->FieldOverridesFile . '`';
+        }
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
+
         // FocusInputOnLangTabSwitch ----------------------------------------------- //
 
         $f = wire('modules')->get("InputfieldRadios");
@@ -2927,12 +3057,12 @@ HTML;
         $f->showIf = 'enabledSubmodules=Hotkeys';
         $f->collapsed = Inputfield::collapsedNever;
 
-        $f->addOption('save', __('Save on ctrl+s', __FILE__));
         $f->addOption('breadcrumbTweaks', __('Add long-click and ctrl+click actions to breadcrumbs', __FILE__));
-        $f->addOption('focusSearch', __('Focus search on alt+d', __FILE__));
         $f->addOption('removeNoticeHotkey', __('Remove notices on first ESC keypress', __FILE__));
-        $f->addOption('addPageTreeTrigger', __('Open page tree panel on alt+o', __FILE__));
-        $f->addOption('filterboxHotkey', __('Focus filterbox on alt+s', __FILE__));
+        $f->addOption('save', __('Save on', __FILE__) . ' `ctrl+s`');
+        $f->addOption('focusSearch', __('Focus search on', __FILE__) . ' `alt+d`');
+        $f->addOption('addPageTreeTrigger', __('Open page tree panel on', __FILE__) . ' `alt+o`');
+        $f->addOption('filterboxHotkey', __('Focus filterbox on', __FILE__) . ' `als+s`');
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -3460,6 +3590,18 @@ HTML;
         $f->label = __('CKEditor templates directory', __FILE__);
         $f->description = __('URL to Content Templates CKEditor plugin templates directory, eg',
                 __FILE__) . ' "/site/templates/admin/cke-templates.js"';
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+        $fsetPaths->add($f);
+
+        $f = wire('modules')->get('InputfieldText');
+        $f->name = 'FieldOverridesFile';
+        $f->label = __('FieldOverrides file', __FILE__);
+        $f->description = __('File to prepend to the admin textarea config, eg',
+                __FILE__) . ' "/site/templates/field-overrides.ini"';
         $f->collapsed = Inputfield::collapsedBlank;
 
         if ($data[$f->name]) {

@@ -3156,9 +3156,29 @@ html.AdminThemeReno {
 
 // AdminTweaks (default theme tweaks)
 // note: the default theme adds theme name class (and .modal class) to body, AOS adds to html
-@media only screen and (min-width: 960px) {
-
-  html.AdminThemeDefault {
+html.AdminThemeDefault {
+  &.pListFullRowHover:not(.pListShowActions) {
+    .content .PageList {
+      .PageListItem:hover {
+        .PageListActions {
+          display: inline-block !important;
+          //transition-delay: .25s
+        }
+      }
+      .PageListItemOpen {
+        .PageListActions {
+          display: none !important;
+        }
+        &:hover {
+          .PageListActions {
+            display: inline-block !important;
+            //transition-delay: .25s
+          }
+        }
+      }
+    }
+  }
+  @media only screen and (min-width: 960px) {
 
     &.leftTopnav #masthead #topnav {
       float: left;
@@ -3256,57 +3276,38 @@ html.AdminThemeReno {
         }
       }
     }
-    &.pListFullRowHover:not(.pListShowActions) {
-      .content .PageList {
-        .PageListItem:hover {
-          .PageListActions {
-            display: inline-block !important;
-            //transition-delay: .25s
-          }
-        }
-        .PageListItemOpen {
-          .PageListActions {
-            display: none !important;
-          }
-          &:hover {
-            .PageListActions {
-              display: inline-block !important;
-              //transition-delay: .25s
-            }
-          }
-        }
-      }
-    }
   }
 }
 
 html.stickyCKE {
-  .cke_top {
-    top: 0;
-    position: sticky;
-    z-index: 5;
-    margin-bottom: -1px;
-  }
-  .cke_top, .cke_contents, .cke_bottom {
-    float: none;
-    @include clearfix();
-  }
-  .cke_contents {
-    width: calc(100% - 1px);
-  }
-  .cke_bottom {
-    position: sticky;
-    bottom: 0;
-    line-height: 1;
-    z-index: 2;
-  }
-  [id*="cke_"].cke_chrome {
-    margin-bottom: 1em !important;
-  }
-  // default theme tweaks for sticky cke
-  &.AdminThemeDefault.headSticky {
+  @media only screen and (min-width: 960px) {
     .cke_top {
-      top: 102px;
+      top: 0;
+      position: sticky;
+      z-index: 5;
+      margin-bottom: -1px;
+    }
+    .cke_top, .cke_contents, .cke_bottom {
+      float: none;
+      @include clearfix();
+    }
+    .cke_contents {
+      width: calc(100% - 1px);
+    }
+    .cke_bottom {
+      position: sticky;
+      bottom: 0;
+      line-height: 1;
+      z-index: 2;
+    }
+    [id*="cke_"].cke_chrome {
+      margin-bottom: 1em !important;
+    }
+    // default theme tweaks for sticky cke
+    &.AdminThemeDefault.headSticky {
+      .cke_top {
+        top: 102px;
+      }
     }
   }
 }
@@ -3591,6 +3592,10 @@ html.pListIconOnly {
     .PageListActionRefresh > a,
     .PageRefresh {
       @include pageListIcon("\f021");
+    }
+    .PageListActionEmpty > a,
+    .PageEmpty {
+      @include pageListIcon("\f057");
     }
     .PageListActionTrash > a,
     .PageTrash {

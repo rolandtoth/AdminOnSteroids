@@ -41,13 +41,39 @@ $(window).load(function () {
         checkAOSstate(el);
     }
 
+    if (window.ace && $('#InputfieldAceExtended_FieldOverrides_editor').length) {
+        var cke_customizations_editor = ace.edit("InputfieldAceExtended_FieldOverrides_editor");
+        cke_customizations_editor.setOption("maxLines", 80);
+        cke_customizations_editor.$blockScrolling = Infinity;
+        // cke_customizations_editor.setOption("minLines", 2);
+    }
+
     //$('.asmList').sortable('option', 'grid', [20, 10]);
     //$('.asmList').sortable('option', 'axis', null);
     //$('.asmList').sortable('refresh');
-
 });
 
+
+
 $(document).ready(function () {
+
+        // initialize syntax highlight and autosize/autogrow for CKEditor customization textarea
+        if (window.CodeMirror) {
+
+            var fieldOverrides_textarea = document.getElementById('Inputfield_FieldOverrides');
+
+            if (fieldOverrides_textarea) {
+                CodeMirror.fromTextArea(fieldOverrides_textarea, {
+                    lineNumbers: true,
+                    mode: 'properties',
+                    theme: 'twilight',
+                    viewportMargin: Infinity,
+                    indentAuto: true,
+                    lineWrapping: true
+                });
+                // minHeight: .CodeMirror-scroll min-height in CSS
+            }
+        }
 
         // apply AOS tweaks real-time
         var html = $('html'),
@@ -221,19 +247,19 @@ $(document).ready(function () {
         // js tweaks to form configuration page
         //if ($('form[action*="AdminOnSteroids"]').length) {
 
-            var RenoTweaksSelector = '#wrap_Inputfield_RenoTweaks';
+        var RenoTweaksSelector = '#wrap_Inputfield_RenoTweaks';
 
-            $(RenoTweaksSelector + ' input[type="checkbox"]').on('change', function () {
-                setupCheckbox($(this));
-            });
+        $(RenoTweaksSelector + ' input[type="checkbox"]').on('change', function () {
+            setupCheckbox($(this));
+        });
 
-            // do not allow checking checkboxes if it's parent is set to disabled
-            $(RenoTweaksSelector).on('click', 'li.disabled input[type="checkbox"]', function (e) {
-                e.preventDefault();
-                return false;
-            });
+        // do not allow checking checkboxes if it's parent is set to disabled
+        $(RenoTweaksSelector).on('click', 'li.disabled input[type="checkbox"]', function (e) {
+            e.preventDefault();
+            return false;
+        });
 
-            setupCheckbox($(RenoTweaksSelector + ' li:eq(0) input[type="checkbox"]'));
+        setupCheckbox($(RenoTweaksSelector + ' li:eq(0) input[type="checkbox"]'));
         //}
 
         /**

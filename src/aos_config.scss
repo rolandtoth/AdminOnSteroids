@@ -30,6 +30,16 @@
   }
 }
 
+.CodeMirror {
+  height: auto !important; // make autogrow
+}
+
+
+.CodeMirror-scroll,
+#InputfieldAceExtended_FieldOverrides_editor {
+  min-height: 100px;
+}
+
 #wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore, #Inputfield_AssetPaths {
   transition: 0.3s;
   //  transform-origin: top;
@@ -72,7 +82,6 @@ li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Toolti
 
   > label,
   > .InputfieldContent {
-    //border: none;
     background: #F0F3F7;
   }
 

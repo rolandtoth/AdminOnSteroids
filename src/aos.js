@@ -149,7 +149,6 @@ function initCKE() {
     });
 }
 
-
 if (AOSsettings) {
 
     var aosUrl = AOSsettings.aosUrl,
