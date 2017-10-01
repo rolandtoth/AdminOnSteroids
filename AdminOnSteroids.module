@@ -826,18 +826,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $subModule = 'FieldOverrides';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            if (isset($this->FieldOverrides) && !empty($this->FieldOverrides)) {
+            if ($this->wire('process') !== 'ProcessPageEdit') {   // enable only on page edit screen
 
-                if ($this->wire('process') !== 'ProcessPageEdit') {   // enable only on page edit screen
+                // check wether there is file-based settings
+                $ini_settings = ($this->FieldOverridesFile && file_exists($this->FieldOverridesFile)) ? file_get_contents($this->FieldOverridesFile) : '';
+                $this->FieldOverrides = $ini_settings . (isset($this->FieldOverrides) ? PHP_EOL . PHP_EOL . $this->FieldOverrides : '');
+                $this->FieldOverrides = parse_ini_string($this->FieldOverrides, true);
 
-                    // check wether there is file-based settings
-                    $ini_settings = ($this->FieldOverridesFile && file_exists($this->FieldOverridesFile)) ? file_get_contents($this->FieldOverridesFile) : '';
-                    $this->FieldOverrides = $ini_settings . (isset($this->FieldOverrides) ? PHP_EOL . PHP_EOL . $this->FieldOverrides : '');
-                    $this->FieldOverrides = parse_ini_string($this->FieldOverrides, true);
-
-                    if (is_array($this->FieldOverrides)) {
-                        $this->addHookBefore('Field::getInputfield', $this, 'setFieldOverrides');
-                    }
+                if (is_array($this->FieldOverrides)) {
+                    $this->addHookBefore('Field::getInputfield', $this, 'setFieldOverrides');
                 }
             }
         }
@@ -2998,7 +2995,7 @@ HTML;
         $f->showIf = 'enabledSubmodules=FieldOverrides';
         $f->collapsed = Inputfield::collapsedNever;
 
-        if(isset($this->FieldOverridesFile) && !empty($this->FieldOverridesFile)) {
+        if (isset($this->FieldOverridesFile) && !empty($this->FieldOverridesFile)) {
             $f->notes = __('Additional items are prepended from this file (Asset Paths):', __FILE__) . ' `' . $this->FieldOverridesFile . '`';
         }
 
