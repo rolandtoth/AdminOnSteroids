@@ -1,6 +1,11 @@
 # Changelog
 
 
+### 1.6.0 (2017-10-02)
+
+- fix templateEditLinks added to inline CKEditor content (reported by donatasben)
+
+
 ### 1.5.9 (2017-10-01)
 
 - CKEditor customization tweak refactored to FieldOverrides submodule and is enabled for all field types
