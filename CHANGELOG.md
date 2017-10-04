@@ -1,9 +1,22 @@
 # Changelog
 
 
+### 1.6.1 (2017-10-04)
+
+- fix missing CKEaddons configuration panel (reported by Rudy)
+- ListerTweaks: if asmSelects are left empty, do not add default fields
+- AdminThemeUikit: fix language switcher placement
+- AdminThemeUikit: fix footer AOS enable/disable link position (reported by gmclelland)
+- AdminThemeUikit: fix search box focus on alt+d (reported by gmclelland)
+- AdminThemeUikit: fix page tree panel on alt+o (reported by gmclelland)
+- AdminThemeUikit: fix missing save overlay on ctrl+s (reported by gmclelland)
+
+
+
 ### 1.6.0 (2017-10-02)
 
 - fix templateEditLinks added to inline CKEditor content (reported by donatasben)
+
 
 
 ### 1.5.9 (2017-10-01)

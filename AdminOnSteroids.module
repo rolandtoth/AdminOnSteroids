@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 160,
+            'version'   => 161,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -759,7 +759,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     }
                 }
 
-                $lister->sessionSet('columns', (empty($columns)) ? $defaultFields : $columns);
+                if (empty($columns)) {
+                    $lister->sessionSet('columns', false);
+                } else {
+                    $lister->sessionSet('columns', $columns);
+                }
+
             });
         }
 
@@ -2126,7 +2131,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configLink = '<a href="' . $modulePage . '" ' . $linkStyle . ' title="' . __('Configure module',
                 __FILE__) . '"><i class="fa fa-cog"></i></a>';
 
-        $parts['footer'] = $parts['footer'] . '<p style="opacity:1;"><a href="' . $modulePage . '&toggle=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p>';
+        $configLinkMarkup = '<p style="margin-top: 10px; font-size: 0.9rem;" class="uk-container uk-container-expand"><a href="' . $modulePage . '&toggle=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>
+' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p>';
+
+        $parts['footer'] .= $configLinkMarkup;
 
         $event->return = $parts;
     }
@@ -2151,7 +2159,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if ($this->adminTheme == 'AdminThemeDefault') {
             $event->return = str_replace('<li class=\'title\'>', '<li class="title">' . $templateEditLink, $event->return);
         } else {
-            $event->return = preg_replace('/<h1 id="title">(<span>)?(.*)(<\/span>)?<\/h1>/','<h1 id="title"><span>${2}</span>' . $templateEditLink . '</h1>', $event->return, 1);
+            $event->return = preg_replace('/<h1 id="title">(<span>)?(.*)(<\/span>)?<\/h1>/', '<h1 id="title"><span>${2}</span>' . $templateEditLink . '</h1>', $event->return, 1);
         }
     }
 
@@ -2597,12 +2605,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         });
 
         // exception to ListerTweaks: use "[DEFAULTS]" if empty
-        if (empty($data['ListerTweaks_find'])) {
-            $data['ListerTweaks_find'] = array('[DEFAULTS]');
-        }
-        if (empty($data['ListerTweaks_users'])) {
-            $data['ListerTweaks_users'] = array('[DEFAULTS]');
-        }
+//        if (empty($data['ListerTweaks_find'])) {
+//            $data['ListerTweaks_find'] = array('[DEFAULTS]');
+//        }
+//        if (empty($data['ListerTweaks_users'])) {
+//            $data['ListerTweaks_users'] = array('[DEFAULTS]');
+//        }
 
         $wrapper = new InputfieldWrapper();
 
@@ -2826,6 +2834,8 @@ HTML;
 
         $fsetCKE->add($f);
 
+        $fset->add($fsetCKE);
+
 
         // ListerTweaks ----------------------------------------------- //
 
@@ -2868,9 +2878,8 @@ HTML;
             $f->addOption($fieldname);
         }
 
-        if (isset($data[$f->name]) && $data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
-        }
+
+        $f->attr('value', (isset($data[$f->name]) && $data[$f->name]) ? $data[$f->name] : '');
 
         $fsetLT->add($f);
 
@@ -2893,9 +2902,7 @@ HTML;
             $f->addOption($fieldname);
         }
 
-        if (isset($data[$f->name]) && $data[$f->name]) {
-            $f->attr('value', $data[$f->name]);
-        }
+        $f->attr('value', (isset($data[$f->name]) && $data[$f->name]) ? $data[$f->name] : '');
 
         $fsetLT->add($f);
 

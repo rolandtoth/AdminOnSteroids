@@ -1079,8 +1079,8 @@ $(document).ready(function () {
                 $(document).on('keydown', function (e) {
 
                     var keyCode = e.keyCode || e.charCode,
-                        pageTreePanelSelector = 'a.pw-panel[data-tab-icon="sitemap"]',  // no better selector than data-tab-icon
-                        pageTreePanelBtn = $(pageTreePanelSelector);
+                        pageTreePanelSelector = 'a.pw-panel[data-tab-icon="sitemap"], .uk-breadcrumb a.pw-panel',  // no better selector than data-tab-icon
+                        pageTreePanelBtn = $(pageTreePanelSelector).first();
 
                     // if panel is focused, the trigger button is outside the iframe
                     if (pageTreePanelBtn.length === 0) {
@@ -1216,9 +1216,11 @@ $(document).ready(function () {
 
                     // these are removed on document ready
                     $('body', context).addClass('aos_saving');
-                    $('#wrap, body.AdminThemeDefault #content', context).addClass('ui-state-disabled');
+                    $('body', context).addClass('ui-state-disabled');
+                    // $('#wrap, body.AdminThemeDefault #content, .uk-container#main', context).addClass('ui-state-disabled');
 
-                    aos_saveButton.addClass('ui-state-disabled').focus();
+                    // aos_saveButton.addClass('ui-state-disabled').focus();
+                    aos_saveButton.addClass('ui-state-disabled');
 
                     // IE fix
                     setTimeout(function () {
@@ -1237,13 +1239,14 @@ $(document).ready(function () {
                                 aos_triggerSave();
                             }
                         });
-                        evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* s */] = 'saveCKECommand';
+                        evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* ctrl+s */] = 'saveCKECommand';
                     });
                 }
             }
 
             function setupCKEfocusSearch() {
                 if (window.CKEDITOR) {
+
                     CKEDITOR.on('instanceReady', function (evt) {
 
                         if (HotkeysSettings.indexOf('focusSearch') !== -1) {
@@ -1253,7 +1256,7 @@ $(document).ready(function () {
                                     focusSearchBox();
                                 }
                             });
-                            evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* d */] = 'focusSearchBox';
+                            evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* alt+d */] = 'focusSearchBox';
                         }
                     });
                 }
@@ -1270,7 +1273,7 @@ $(document).ready(function () {
                                     aos_togglePageTreePanel();
                                 }
                             });
-                            evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 79 /* o */] = 'pageTreeTrigger';
+                            evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 79 /* alt+o */] = 'pageTreeTrigger';
                         }
                     });
                 }
@@ -1302,33 +1305,29 @@ $(document).ready(function () {
             }
 
             function focusSearchBox(e, blur) {
-                try {
-                    var searchBox = $('#ProcessPageSearchQuery');
+                var searchBox = $('#ProcessPageSearchQuery, .uk-navbar-right .pw-search-form .pw-search-input').first(),
+                    searchBoxValue;
 
-                    if (e) {
-                        e.preventDefault();
-                    }
+                if (e) {
+                    e.preventDefault();
+                }
 
-                    if (blur) {
-                        searchBox.blur();
-                        $('#search.open').removeClass('open');
-                        return false;
-                    }
+                if (blur) {
+                    searchBox.blur();
+                    $('#search.open').removeClass('open');
+                    return false;
+                }
 
-                    if (searchBox.is(':focus')) {
-                        searchBox.blur();
-
-                    } else {
-
-                        // ensure search box visibility
-                        $('#search').addClass('open');
-                        searchBox.focus();
-                        searchBoxValue = searchBox.val().trim();
-                        // use zero-width space to trigger autocomplete dropdown
-                        searchBox.val('​' + searchBoxValue);
-                        searchBox.trigger('keydown');
-                    }
-                } finally {
+                if (searchBox.is(':focus')) {
+                    searchBox.blur();
+                } else {
+                    // ensure search box visibility
+                    $('#search').addClass('open');
+                    searchBox.focus();
+                    searchBoxValue = searchBox.val() ? searchBox.val().trim() : '';
+                    // use zero-width space to trigger autocomplete dropdown
+                    searchBox.val('​' + searchBoxValue);
+                    searchBox.trigger('keydown');
                 }
             }
 
@@ -2314,6 +2313,8 @@ $(document).ready(function () {
 
                     if ($('body').hasClass('AdminThemeReno')) {
                         langSwitcher.prependTo('#topnav');
+                    } else if ($('body').hasClass('AdminThemeUikit')) {
+                        langSwitcher.prependTo('.pw-user-nav');
                     } else {
                         langSwitcher.appendTo('#topnav');
                         // put inside 'a' to have top menu highlighted on hover
