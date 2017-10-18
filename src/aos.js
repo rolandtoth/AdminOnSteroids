@@ -913,7 +913,7 @@ $(document).ready(function () {
             // workaround: add edit links to ajax-loaded fields
             $('.Inputfield:not(.InputfieldPageListSelect)').on('reloaded', function () {
                 var field = $(this),
-                    label = field.find('label');
+                    label = field.children('label');
 
                 if (!label.length) return;
 
@@ -3127,7 +3127,7 @@ $(document).ready(function () {
         if (_isEnabled('FileFieldTweaks')) {
 
             var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
-                $filterInput = $("<span class='InputfieldFileFieldFilter filterbox'><input type='text' placeholder='&#128269;' /><i class='fa fa-close'></i></span>"),
+                $filterInput = $("<span class='InputfieldFileFieldFilter filterbox'><input placeholder='&#128269;' /><i class='fa fa-close'></i></span>"),
                 filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
                 getItemSelector = function (field) {
                     return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
