@@ -117,6 +117,7 @@ html.aos {
   .InputfieldStateCollapsed,
   .InputfieldStateWasCollapsed {
     overflow: visible !important;
+    position: relative;
   }
 
   h1:not(.pwapi-headline),
@@ -1354,6 +1355,10 @@ html.hideAddNewDropdown body.id-3 {
       cursor: pointer;
     }
   }
+}
+
+.aos_hasTooltip{
+  position:relative;
 }
 
 .aos_EditTemplate {
