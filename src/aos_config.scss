@@ -55,6 +55,11 @@ li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Toolti
   filter: saturate(0);
 }
 
+// fix AdminThemeUiKit from expanding the min-height at runtime
+.InputfieldContent.uk-form-controls{
+  min-height: auto !important;
+}
+
 #Inputfield_tweaks {
 
   .InputfieldCheckboxesStacked {
