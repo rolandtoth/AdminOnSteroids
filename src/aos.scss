@@ -1357,7 +1357,7 @@ html.hideAddNewDropdown body.id-3 {
   }
 }
 
-.aos_hasTooltip{
+.InputfieldCheckbox.aos_hasTooltip{
   position:relative;
 }
 
@@ -3422,6 +3422,7 @@ html.moveAssetButtons {
     //margin-left: 2px;
     //left: auto;
     top: auto;
+    position: absolute;
     i {
       color: #fff;
     }
