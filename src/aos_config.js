@@ -80,7 +80,7 @@ $(document).ready(function () {
             isRenoTheme = !!(html.hasClass('AdminThemeReno')),
             isDefaultTheme = !!(html.hasClass('AdminThemeDefault'));
 
-        $('#Inputfield_tweaks input[type="checkbox"]').on('click', function (e) {
+        $(document).on('click', '#Inputfield_tweaks input[type="checkbox"]', function () {
 
             var checkbox = $(this),
                 currentId = checkbox.attr('id'),
@@ -165,72 +165,6 @@ $(document).ready(function () {
 
                 input.next('span').after(configLink);
             });
-
-
-            // targetId contains '#'
-            function scrollToSection(targetId, modifyHash) {
-
-                var target,
-                    offset,
-                    offsetTop,
-                    animParent = ($('html').hasClass('headSticky') && $('#main').length) ? $('#main') : $('html,body');
-
-                if (!targetId || targetId === location.hash) {
-
-                    animParent.animate({
-                        scrollTop: 0
-
-                    }, 300, function () {
-
-                        if (modifyHash === false) return true;
-
-                        if (history.pushState) {
-                            history.pushState(null, document.title, window.location.pathname + window.location.search);
-                        } else {
-                            location.hash = '';
-                        }
-                    });
-
-                    return false;
-
-                } else {
-
-                    target = $(targetId);
-                    offset = $('#Inputfield_tweaks').position().top - 50;
-                    offsetTop = target.position().top + offset;
-                }
-
-                animParent.animate({
-                    scrollTop: offsetTop
-
-                }, 500, function () {
-
-                    target.siblings().removeClass('focused');
-                    target.addClass('focused');
-
-                    if (modifyHash === false) return true;
-
-                    if (history.pushState) {
-                        history.pushState(null, null, targetId);
-                    } else {
-                        location.hash = targetId;
-                    }
-                });
-            }
-
-            $(document).on('ready', function () {
-                scrollToSection(location.hash, false);
-            });
-
-            // $(window).on('popstate', function () {
-            //     scrollToSection(location.hash, true);
-            // });
-
-            $('.configLink').on('click', function (e) {
-                e.preventDefault();
-                scrollToSection($(this).attr('href'), true);
-                return false;
-            });
         }
 
 
@@ -242,6 +176,97 @@ $(document).ready(function () {
 
             obj.after($('#wrap_' + current + 'Roles'));
         });
+
+
+    // assetPaths: add buttons to check 404 response
+
+            if ($('#Inputfield_AssetPaths').length) {
+
+                var assetCheckBtnText = 'Check',
+                    $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
+
+
+                $('#Inputfield_AssetPaths').on('focus', 'input', function () {
+                    $assetCheckBtn.html(assetCheckBtnText);
+                    $assetCheckBtn.removeClass();
+                    $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
+                });
+
+
+                // add button to the first visible opened inputfield
+                var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
+                if ($visibleAssetInput.length) {
+                    $visibleAssetInput.first().find('label').append($assetCheckBtn);
+                }
+
+                function UrlExists(url, cb) {
+                    $.ajax({
+                        url: url,
+                        // dataType: 'text',
+                        type: 'HEAD',
+                        cache: false,
+                        complete: function (xhr) {
+                            if (typeof cb === 'function')
+                                cb.apply(this, [xhr.status]);
+                        }
+                    });
+                }
+
+                function showResult(result) {
+
+                    var icon, className;
+
+                    if(result === true) {
+                        icon = 'check';
+                        className = 'success';
+                    } else if(result === false) {
+                        icon = 'exclamation-triangle';
+                        className = 'error';
+                    } else if (result === 'forbidden') {
+                        icon = 'question-circle';
+                        className = 'forbidden';
+                    }
+
+                    $assetCheckBtn.html(assetCheckBtnText);
+                    $assetCheckBtn.addClass(className);
+
+                    $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
+                }
+
+                $assetCheckBtn.on('click', function () {
+                    var $input = $(this).parents('.Inputfield').first().find('input'),
+                        url = $input.val();
+
+                    if (!url || url.length === 0) {
+                        $input.focus();
+                        return false;
+                    }
+                    ;
+
+                    $assetCheckBtn.html(assetCheckBtnText);
+                    $assetCheckBtn.removeClass();
+
+                    var rootUrl = window.location.origin + ProcessWire.config.urls.root,
+                        baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
+
+                    url = (url[0] === '/') ? url.substr(1) : url;
+                    url = (baseUrl + url).trim();
+
+                    UrlExists(url, function (status) {
+                        if (status === 200) {
+                            showResult(true);
+                        }
+                        else if (status === 403) {
+                            showResult('forbidden');
+                        }
+                        else {
+                            showResult(false);
+                        }
+                    });
+
+                    return false;
+                });
+            }
 
 
         // js tweaks to form configuration page

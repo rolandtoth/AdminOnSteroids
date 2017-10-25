@@ -28,7 +28,7 @@ function initCKE() {
         autosave: 'notification',
         codesnippet: 'widget,dialog,lineutils',
         indentblock: 'indent',
-        oEmbed: 'widget,lineutils',
+        oembed: 'widget,lineutils',
         token: 'widget,dialog,lineutils'
     };
 
@@ -776,84 +776,6 @@ $(document).ready(function () {
         }
 
 
-        // assetPaths: add buttons to check 404 response
-
-        if ($('#Inputfield_AssetPaths').length) {
-
-            var assetCheckBtnText = 'Check',
-                $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
-
-
-            $('#Inputfield_AssetPaths').on('focus', 'input', function () {
-                $assetCheckBtn.html(assetCheckBtnText);
-                $assetCheckBtn.removeClass();
-                $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
-            });
-
-
-            // add button to the first visible opened inputfield
-            var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
-            if ($visibleAssetInput.length) {
-                $visibleAssetInput.first().find('label').append($assetCheckBtn);
-            }
-
-            function UrlExists(url, cb) {
-                $.ajax({
-                    url: url,
-                    // dataType: 'text',
-                    type: 'HEAD',
-                    cache: false,
-                    complete: function (xhr) {
-                        if (typeof cb === 'function')
-                            cb.apply(this, [xhr.status]);
-                    }
-                });
-            }
-
-            function showResult(result) {
-
-                var icon = result ? 'check' : 'exclamation-triangle',
-                    className = result ? 'success' : 'error';
-
-                $assetCheckBtn.html(assetCheckBtnText);
-                $assetCheckBtn.addClass(className);
-
-                $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
-            }
-
-            $assetCheckBtn.on('click', function () {
-                var $input = $(this).parents('.Inputfield').first().find('input'),
-                    url = $input.val();
-
-                if (!url || url.length === 0) {
-                    $input.focus();
-                    return false;
-                }
-                ;
-
-                $assetCheckBtn.html(assetCheckBtnText);
-                $assetCheckBtn.removeClass();
-
-                var rootUrl = window.location.origin + ProcessWire.config.urls.root,
-                    baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
-
-                url = (url[0] === '/') ? url.substr(1) : url;
-                url = (baseUrl + url).trim();
-
-                UrlExists(url, function (status) {
-                    if (status === 200) {
-                        showResult(true);
-                    }
-                    else if (status === 404) {
-                        showResult(false);
-                    }
-                });
-
-                return false;
-            });
-
-        }
-
         // FieldAndTemplateEditLinks
         if (_isEnabled('FieldAndTemplateEditLinks')) {
 
@@ -913,7 +835,7 @@ $(document).ready(function () {
             // workaround: add edit links to ajax-loaded fields
             $('.Inputfield:not(.InputfieldPageListSelect)').on('reloaded', function () {
                 var field = $(this),
-                    label = field.find('label');
+                    label = field.children('label');
 
                 if (!label.length) return;
 
@@ -1180,9 +1102,15 @@ $(document).ready(function () {
 
                 } else {
 
-                    aos_saveButton = $('form.InputfieldForm').find('button[type="submit"]')
-                        .filter('.aos_hotkeySave, form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations')
-                        .eq(0);
+                    var selectors = '.aos_hotkeySave, #submit_save_unpublished, form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations'.split(',');
+
+                    $.each(selectors, function(i, selector) {
+                        var res = $(selector);
+                        if (res.length) {
+                            aos_saveButton = res;
+                            return false;
+                        }
+                    });
 
                     // modal opened, but controls have focus (outside the iframe)
                     if (aos_saveButton.length === 0) {
@@ -2764,13 +2692,14 @@ $(document).ready(function () {
 
                 // Module Filter
 
-                var hiddenStyle = window.location.href.indexOf('module/?new') !== -1 ? ' style="display: none"' : '';
+                var hiddenStyle = window.location.href.indexOf('module/?new') !== -1 ? ' style="display: none"' : '',
+                moduleFilter;
+
                 if ($('body.AdminThemeUikit').length != 0) {
-                    var moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "\' + hiddenStyle + \'><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+                    moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "\' + hiddenStyle + \'><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
                 }
                 else {
-
-                    var moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');
+                    moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');
                 }
 
                 if ($('#modules_form').length) {
@@ -3127,7 +3056,7 @@ $(document).ready(function () {
         if (_isEnabled('FileFieldTweaks')) {
 
             var FileFieldTweaksSettings = AOSsettings.FileFieldTweaks,
-                $filterInput = $("<span class='InputfieldFileFieldFilter filterbox'><input placeholder='&#128269;' /><i class='fa fa-close'></i></span>"),
+                $filterInput = $("<span class='InputfieldFileFieldFilter filterbox'><input placeholder='&#128269;' type='text' /><i class='fa fa-close'></i></span>"),
                 filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
                 getItemSelector = function (field) {
                     return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'

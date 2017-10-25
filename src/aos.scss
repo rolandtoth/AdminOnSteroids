@@ -15,6 +15,46 @@ html.aos {
     }
   }
 
+  &.BrandingLogo {
+    // Reno + Default themes
+    &.AdminThemeReno {
+      a#logo {
+        position: absolute;
+        top: 0.75em;
+        left: 1.2em;
+        bottom: 0.75em;
+        right: 0.5em;
+        margin: 0;
+        max-width: 150px;
+        background-repeat: no-repeat;
+        background-position: left center;
+        background-size: contain;
+        img {
+          display: none;
+        }
+      }
+    }
+
+    &.AdminThemeDefault {
+      a#logo {
+        margin-top: 0.75em;
+        margin-bottom: 0.25;
+        margin-right: 0.5rem;
+        img {
+          width: auto;
+          height: 24px;
+        }
+      }
+    }
+
+    // AdminThemeUikit
+    img.pw-logo {
+      width: auto;
+      height: 40px;
+      max-height: 40px;
+    }
+  }
+
   // ensure case changer positioning
   .InputfieldPageTitle {
     position: relative;
@@ -211,10 +251,6 @@ html.aos {
     }
   }
 
-  h1 {
-    max-width: calc(100% - 120px);
-  }
-
   // placeholder element to make hover easier
   #ProcessPageEdit .Inputfield label .title {
     &:before {
@@ -348,13 +384,13 @@ html.aos {
   }
 
   .cke_top .cke_button_icon.cke_button__oembed_icon {
-    background-image: url('CKE/plugins/oembed/icons/oembed.png') !important;
+    background-image: url('../CKE/plugins/oembed/icons/oembed.png') !important;
   }
   .cke_top .cke_button_icon.cke_button__codesnippet_icon {
-    background-image: url('CKE/plugins/codesnippet/icons/codesnippet.png') !important;
+    background-image: url('../CKE/plugins/codesnippet/icons/codesnippet.png') !important;
   }
   .cke_top .cke_button_icon.cke_button__token_icon {
-    background-image: url('CKE/plugins/token/icons/token.png') !important;
+    background-image: url('../CKE/plugins/token/icons/token.png') !important;
   }
 
   .cke_combo_text {
@@ -587,6 +623,15 @@ html.aos {
   }
 }
 
+@media only screen and (min-width: 960px) {
+  html.aos h1 {
+    max-width: calc(100% - 120px);
+  }
+  html.aos body.AdminThemeUikit h1 {
+    max-width: calc(100% - 400px);
+  }
+}
+
 .aos-hidden {
   display: none !important;
 }
@@ -703,16 +748,16 @@ html.editFieldWidth {
     }
     &:before {
       @media only screen and (min-width: 600px) {
-        content: url('/site/modules/AdminOnSteroids/images/scale-mobile.svg');
+        content: url('../images/scale-mobile.svg');
       }
       @media only screen and (min-width: 960px) {
-        content: url('/site/modules/AdminOnSteroids/images/scale.svg');
+        content: url('../images/scale.svg');
       }
       @media only screen and (min-width: 1440px) {
-        content: url('/site/modules/AdminOnSteroids/images/scale-hd.svg');
+        content: url('../images/scale-hd.svg');
       }
       @media only screen and (min-width: 1800px) {
-        content: url('/site/modules/AdminOnSteroids/images/scale-uhd.svg');
+        content: url('../images/scale-uhd.svg');
       }
     }
   }
@@ -1357,8 +1402,9 @@ html.hideAddNewDropdown body.id-3 {
   }
 }
 
-.aos_hasTooltip{
-  position:relative;
+// formerly: .aos_hasTooltip
+.InputfieldCheckbox {
+  position: relative;
 }
 
 .aos_EditTemplate {
@@ -1395,7 +1441,7 @@ body.aos_saving {
     height: 100%;
     display: block;
     text-align: center;
-    z-index:  25000;
+    z-index: 25000;
     color: rgba(black, 0.7);
     background: transparent;
     //animation: pulse 0.4s steps(12, end) forwards;
@@ -1433,44 +1479,6 @@ html.noFilenameTruncate {
     position: absolute;
     top: 8px;
     right: 8px;
-  }
-}
-
-#asset-check-button {
-  .InputfieldStateCollapsed & {
-    display: none;
-  }
-  position: absolute;
-  margin-left: 14px;
-  border: 1px solid #c4c4c4;
-  background: transparent;
-  border-radius: 2px;
-  padding: 3px 6px 3px 5px;
-  font-size: 0.9em;
-  cursor: pointer;
-  i {
-    font-size: 11px !important;
-    margin-left: 4px;
-    top: -1px;
-    position: relative;
-  }
-  &:hover {
-    background: #f8f8f8;
-  }
-  &.success,
-  &.error {
-    color: white;
-    i::before {
-      color: white;
-    }
-  }
-  &.success {
-    background: #3EB998;
-    border-color: #3EB998;
-  }
-  &.error {
-    background: #cf3a3a;
-    border-color: #cf3a3a;
   }
 }
 
@@ -3410,8 +3418,8 @@ html.moveAssetButtons {
 }
 
 .aos_downloadAsset {
-  position: absolute;
-  z-index: 99;
+  //position: absolute;
+  //z-index: 99;
   //top: 1px;
   .gridImage--delete &,
   .InputfieldImageEdit__buttons & {
@@ -3422,9 +3430,8 @@ html.moveAssetButtons {
   }
   .InputfieldFileItem & {
     right: 27px;
-    //margin-left: 2px;
-    //left: auto;
     top: auto;
+    position: absolute;
     i {
       color: #fff;
     }
@@ -3928,9 +3935,9 @@ html.hoverDropdown {
 
 //end of InputfieldURLChecker
 
-.AdminThemeUikit form[action*=AdminOnSteroids] #Inputfield_tweaks #Inputfield_CKEaddons .Inputfields label {
-  padding-top: 40px;
-}
+//.AdminThemeUikit form[action*=AdminOnSteroids] #Inputfield_tweaks #Inputfield_CKEaddons .Inputfields label {
+//  padding-top: 40px;
+//}
 
 @keyframes spinIn {
   0% {

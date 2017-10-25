@@ -93,6 +93,7 @@ li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Toolti
 
   .InputfieldAsmSelect {
     margin: 8px 8px 8px 20px !important;
+    outline: none !important;
     > * {
       border: none;
       padding: 0;
@@ -231,6 +232,10 @@ li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Toolti
   //    margin-top: 4px !important;
   //  }
   //}
+  .asmContainer {
+    margin-bottom: 0;
+  }
+
   .asmList {
     margin-top: 0 !important;
     margin-right: 20px;
@@ -374,6 +379,28 @@ form[action*="AdminOnSteroids"] {
       }
     }
 
+    .Inputfield {
+      .Inputfield {
+        outline: none;
+        .InputfieldHeader {
+          padding-top: 0;
+        }
+      }
+      //.InputfieldHeader {
+      //  padding-top: 0;
+      //}
+    }
+
+    .ui-slider-handle {
+      top: -9px;
+    }
+
+    .sliderTooltip-inner {
+      line-height: 1.25;
+      white-space: nowrap;
+      padding: 3px 5px;
+    }
+
     @media only screen and (min-width: 960px) {
 
       > .InputfieldContent > .Inputfields {
@@ -384,8 +411,8 @@ form[action*="AdminOnSteroids"] {
 
           > label.InputfieldHeader,
           > .InputfieldContent {
-            padding-top: 1em;
-            padding-bottom: 1em;
+            padding-top: 1.5em;
+            padding-bottom: 1.5em;
           }
           > label.InputfieldHeader {
             position: absolute;
@@ -394,6 +421,7 @@ form[action*="AdminOnSteroids"] {
             bottom: 0;
             right: 0;
             font-size: 94%;
+            line-height: 1;
           }
           > .InputfieldContent {
             padding-left: 300px;
@@ -463,6 +491,50 @@ form[action*="AdminOnSteroids"] {
   input#Inputfield_CKEaddons_plugins_div_toolbar,
   input#Inputfield_CKEaddons_plugins_justify_toolbar {
     margin-left: 21px;
+  }
+}
+
+
+#asset-check-button {
+  .InputfieldStateCollapsed & {
+    display: none;
+  }
+  position: absolute;
+  margin-left: 14px;
+  border: 1px solid #c4c4c4;
+  background: transparent;
+  border-radius: 2px;
+  padding: 3px 6px 3px 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  i {
+    font-size: 11px !important;
+    margin-left: 4px;
+    top: -1px;
+    position: relative;
+  }
+  &:hover {
+    background: #f8f8f8;
+  }
+  &.success,
+  &.forbidden,
+  &.error {
+    color: white;
+    i::before {
+      color: white;
+    }
+  }
+  &.success {
+    background: #3EB998;
+    border-color: #3EB998;
+  }
+  &.forbidden {
+    background: #F0AB4E;
+    border-color: #F0AB4E;
+  }
+  &.error {
+    background: #cf3a3a;
+    border-color: #cf3a3a;
   }
 }
 

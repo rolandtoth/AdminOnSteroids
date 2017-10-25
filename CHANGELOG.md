@@ -1,6 +1,25 @@
 # Changelog
 
 
+### 1.6.2 (2017-10-25)
+
+- added branding logo for AssetPaths
+- fix display issues with InputfieldCheckbox borders and tooltips (by gmclelland)
+- fix tooltip doesn't work correctly with InputfieldCheckbox (by gmclelland)
+- fix file/image field input filter height with AdminThemeUikit (by gmclelland)
+- fix image fields size information overlaps download icon (by gmclelland)
+- fix CKEditor error caused by missing oEmbed dependency
+- fix invalid image urls in aos.css from last refactor
+- Hotkeys ctrl+s: trigger "Save Unpublished" instead "Save" to keep the unpublished state (requested by szabesz)
+- module config page style updates for AdminThemeUikit
+- module config page: use jump to hash instead scroll (submodule "cog" icon click)
+- ListerTweaks optimizations (by Robin S)
+- do not apply default settings on module install (suggested by Macrura)
+- do not set LightWire skin by default for CKEditor (suggested by Macrura)
+- do not set any plugin by default for CKEditor (suggested by Macrura)
+
+
+
 ### 1.6.1 (2017-10-04)
 
 - fix missing CKEaddons configuration panel (reported by Rudy)

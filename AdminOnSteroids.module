@@ -33,7 +33,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 161,
+            'version'   => 162,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -58,26 +58,26 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     {
         return array(
             'enabledSubmodules'                 => array(
-                'AdminTweaks',
-                'AsmTweaks',
-                'CKEaddons',
-                'DeselectRadios',
-                'FieldAndTemplateEditLinks',
-                'FileFieldTweaks',
-                'FocusInputOnLangTabSwitch',
-                'Hotkeys',
-                'InputfieldURLChecker',
-                'ListerTweaks',
-                'LongClickDuration',
-                'Misc',
-                'ModuleTweaks',
-                'NavItems',
-                'PageListIcons',
-                'PageListThumbs',
-                'PageListTweaks',
-                'PagePreviewBtn',
-                'RenoTweaks',
-                'Tooltips'
+//                'AdminTweaks',
+//                'AsmTweaks',
+//                'CKEaddons',
+//                'DeselectRadios',
+//                'FieldAndTemplateEditLinks',
+//                'FileFieldTweaks',
+//                'FocusInputOnLangTabSwitch',
+//                'Hotkeys',
+//                'InputfieldURLChecker',
+//                'ListerTweaks',
+//                'LongClickDuration',
+//                'Misc',
+//                'ModuleTweaks',
+//                'NavItems',
+//                'PageListIcons',
+//                'PageListThumbs',
+//                'PageListTweaks',
+//                'PagePreviewBtn',
+//                'RenoTweaks',
+//                'Tooltips'
             ),
             'enabled'                           => 1,
             'restore'                           => '',
@@ -85,26 +85,22 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'AdminStyle'                        => '',
             'AdminScript'                       => '',
             'AdminTweaks'                       => array(
-                'headSticky',
-                'leftTopnav',
-                'pListFullRowHover',
-                'wide'
+//                'headSticky',
+//                'leftTopnav',
+//                'pListFullRowHover',
+//                'wide'
             ),
             'AsmTweaks'                         => array(
-                'asmCollapse',
-                'fieldMiddleEdit',
-                'editFieldWidth',
+//                'asmCollapse',
+//                'fieldMiddleEdit',
+//                'editFieldWidth',
 //                'asmLeftX'
             ),
             'CKEStyle'                          => '',
             'CKEScript'                         => '',
             'CKEtemplates'                      => '',
-            'CKEaddons_plugins'                 => array(
-                'autogrow',
-                'justify',
-                'keystrokes'
-            ),
-            'CKEaddons_skin'                    => 'lightwire',
+            'CKEaddons_plugins'                 => array(),
+            'CKEaddons_skin'                    => 'default',
             'CKEaddons_enabledFields'           => '',
             'DeselectRadios'                    => array(
                 'adminOnly'
@@ -112,12 +108,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'FieldAndTemplateEditLinks'         => 'pw-blank',
             'FieldOverrides'                    => '',
             'FieldOverridesFile'                => '',
+            'BrandingLogo'                      => '',
             'FileFieldTweaks'                   => array(
-                'filterbox',
-                'downloadAssetButton',
-                'moveAssetButtons',
-                'noFilenameTruncate',
-                'imgSelectTitle'
+//                'filterbox',
+//                'downloadAssetButton',
+//                'moveAssetButtons',
+//                'noFilenameTruncate',
+//                'imgSelectTitle'
             ),
             'FocusInputOnLangTabSwitch'         => array(
                 'focus'
@@ -126,62 +123,61 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 'focus'
             ),
             'Hotkeys'                           => array(
-                'save',
-                'focusSearch',
-                'breadcrumbTweaks',
-                'addPageTreeTrigger',
-                'filterboxHotkey',
-                'removeNoticeHotkey'
+//                'save',
+//                'focusSearch',
+//                'breadcrumbTweaks',
+//                'addPageTreeTrigger',
+//                'filterboxHotkey',
+//                'removeNoticeHotkey'
             ),
             'IUC_mode'                          => array(
                 'button'
             ),
             'IUC_buttonPosition'                => 'button-left',
             'IUC_target'                        => 'pw-blank',
-            'IUC_forceHttp'                     => 1,
+            'IUC_forceHttp'                     => '',
             'IUC_enabledTemplates'              => array(),
             'IUC_enabledFields'                 => array(),
             'ListerTweaks'                      => '',
             'ListerTweaks_find'                 => array(
-                'title',
-                'template',
-                'parent',
-                'modified',
-                'modified_users_id'
+//                'title',
+//                'template',
+//                'parent',
+//                'modified',
+//                'modified_users_id'
             ),
             'ListerTweaks_users'                => array(
-                'name',
-                'email',
-                'roles'
+//                'name',
+//                'email',
+//                'roles'
             ),
             'ListerTweaks_options'              => array(
-                'listerHoverBtn',
-                'hideTemplateEditAction'
+//                'listerHoverBtn',
+//                'hideTemplateEditAction'
             ),
             'LongClickDuration'                 => 600,
             'Misc'                              => array(
-                'adminColumns',
-                'autosizeTextareas',
-                'addOrRemoveFieldsTweaks',
-                'homeOpenNewTab',
-                'dataTableFilter',
-                'transFilter',
-                'langTabHotkeySwitcher',
-                'centerLogin',
-                'hoverDropdown',
-                'titleCaseToggle',
-                'tabIndex',
-                'emptyTrashTop',
-                'iconsFilter',
-                'stickyCKE'
-
+//                'adminColumns',
+//                'autosizeTextareas',
+//                'addOrRemoveFieldsTweaks',
+//                'homeOpenNewTab',
+//                'dataTableFilter',
+//                'transFilter',
+//                'langTabHotkeySwitcher',
+//                'centerLogin',
+//                'hoverDropdown',
+//                'titleCaseToggle',
+//                'tabIndex',
+//                'emptyTrashTop',
+//                'iconsFilter',
+//                'stickyCKE'
 //                'noAnim'
             ),
             'ModuleTweaks'                      => array(
-                'loadCollapsedModuleInfos',
+//                'loadCollapsedModuleInfos',
 //                'flatModules',
-                'moduleCompact',
-                'moduleFilter',
+//                'moduleCompact',
+//                'moduleFilter',
 //                'moduleModal'
             ),
             'NavItems'                          => 1,
@@ -194,38 +190,38 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'PageListThumbs_items'              => '',
             'PageListIcons'                     => '',
             'PageListThumbs_options'            => array(
-                'alignright'
+//                'alignright'
             ),
             'PageListTweaks'                    => array(
-                'pListIDs',
-                'highlightRows',
-                'pListMiddleClick',
-                'pListCounters',
+//                'pListIDs',
+//                'highlightRows',
+//                'pListMiddleClick',
+//                'pListCounters',
                 //'pListTrash',
-                'pListMarkup',
-                'pListUnselect'
+//                'pListMarkup',
+//                'pListUnselect'
             ),
             'RenoTweaks'                        => array(
 //                'sbSingleClickHeads',
-                'headSticky',
-//                'headStickyCompact',
-                'miniScrollSb',
-//                'miniScrollMain',
-                'sbSticky',
-//                'sbAutoHide',
-                'sbItemsVisible',
-//                'sbQuickLinksHide',
-//                'sbItemsInline',
-                'headBtnToTitle',
-                'openSearch',
-                'pListCompact',
-                'noticeLeftX',
-                'hoverTopSubmenus'
+//                'headSticky',
+////                'headStickyCompact',
+//                'miniScrollSb',
+////                'miniScrollMain',
+//                'sbSticky',
+////                'sbAutoHide',
+//                'sbItemsVisible',
+////                'sbQuickLinksHide',
+////                'sbItemsInline',
+//                'headBtnToTitle',
+//                'openSearch',
+//                'pListCompact',
+//                'noticeLeftX',
+//                'hoverTopSubmenus'
             ),
             'RestrictTreeDropdown'              => '',
             'Tooltips'                          => array(
-                'tooltipDesc',
-                'tooltipNotes'
+//                'tooltipDesc',
+//                'tooltipNotes'
 //                'tooltipOverlay'
             )
         );
@@ -261,27 +257,17 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function ___install()
     {
-
-        // apply default module settings on install or use settings.php
-
-        $settings = null;
         @$previousSettings = file_get_contents($this->settingsFile);
 
         if ($previousSettings) {
-
             $previousSettings = json_decode($previousSettings, true);
 
             // check if "restore" is enabled
             if (isset($previousSettings['restore']) && $previousSettings['restore'] == 1) {
-                $settings = $previousSettings;
+//                $settings = $previousSettings;
+                $this->wire('modules')->saveModuleConfigData($this, $previousSettings);
             }
         }
-
-        if (is_null($settings)) {
-            $settings = self::getDefaultData();
-        }
-
-        $this->wire('modules')->saveModuleConfigData($this, $settings);
 
         $this->_installColumnBreakField();
     }
@@ -301,6 +287,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $allowedHtmlClasses = array(
             'adminColumns',
             'AdminThemeDefault',
+            'BrandingLogo',
             'hoverTopSubmenus',
             'asmCollapse',
             'asmLeftX',
@@ -369,6 +356,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         if ($this->adminTheme == 'AdminThemeDefault') {
             $this->htmlClasses[] = 'AdminThemeDefault';
+        }
+
+        if ($this->BrandingLogo) {
+            $this->htmlClasses[] = 'BrandingLogo';
         }
 
         $htmlClasses = implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses));
@@ -496,7 +487,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function ready()
     {
-
         $root = $this->config->urls->siteModules . __CLASS__;
         $styles = $this->config->styles;
         $scripts = $this->config->scripts;
@@ -506,6 +496,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if ($this->input->get['name'] == 'AdminOnSteroids') {
             $scripts->add($root . '/scripts/aos_config.min.js?ts=' . $timestamp);
             $styles->prepend($root . '/styles/aos_config.min.css?ts=' . $timestamp);
+            $styles->prepend($root . '/styles/aos.min.css?ts=' . $timestamp);   // for the real-time aos settings preview
 
             if (!$this->wire('modules')->isInstalled('InputfieldAceExtended')) {
                 $styles->add($root . '/CKE/plugins/codemirror/css/codemirror.min.css');
@@ -571,6 +562,22 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             if ($this->wire('page')->id !== 23) {
                 $this->addHookAfter('Page::render', $this, 'addNavItems');
             }
+        }
+
+        if ($this->BrandingLogo) {
+            $this->addHookAfter('Page::render', function (HookEvent $event) {
+                $markup = $event->return;
+
+                if ($this->adminTheme === 'AdminThemeUikit') {
+                    $markup = str_replace($this->wire('config')->urls->adminTemplates . 'uikit/custom/images/pw-mark.png', $this->BrandingLogo, $markup);
+                } elseif ($this->adminTheme === 'AdminThemeDefault') {
+                    $markup = str_replace($this->wire('config')->urls->adminTemplates . 'styles/images/logo.png', $this->BrandingLogo, $markup);
+                } elseif ($this->adminTheme === 'AdminThemeReno') {
+                    $markup = str_replace('<a id="logo"', '<a id="logo" style="background-image: url(\'' . $this->BrandingLogo . '\');"', $markup);
+                }
+
+                $event->return = $markup;
+            });
         }
 
         //FieldAndTemplateEditLinks
@@ -721,7 +728,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         // default columns: only add hook if there's no bookmark requested
         if (
             in_array($subModule, $enabledSubmodules) &&
-            (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false)
+            (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false) &&
+            // No need for hook if no tweaks in config
+            (!empty(self::$configData['ListerTweaks_find']) || !empty(self::$configData['ListerTweaks_users']))
         ) {
             $this->addHookBefore('ProcessPageLister::execute', function ($event) {
 
@@ -759,9 +768,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     }
                 }
 
-                if (empty($columns)) {
-                    $lister->sessionSet('columns', false);
-                } else {
+                if (!empty($columns)) {
+//                    $lister->sessionSet('columns', false);
+//                } else {
                     $lister->sessionSet('columns', $columns);
                 }
 
@@ -831,12 +840,40 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             if ($this->wire('process') !== 'ProcessPageEdit') {   // enable only on page edit screen
 
-                // check wether there is file-based settings
-                $ini_settings = ($this->FieldOverridesFile && file_exists($this->FieldOverridesFile)) ? file_get_contents($this->FieldOverridesFile) : '';
-                $this->FieldOverrides = $ini_settings . (isset($this->FieldOverrides) ? PHP_EOL . PHP_EOL . $this->FieldOverrides : '');
-                $this->FieldOverrides = parse_ini_string($this->FieldOverrides, true);
+                $fieldoverrides_admin_contents = array();
+                $fieldoverrides_file_contents = array();
 
-                if (is_array($this->FieldOverrides)) {
+                // check wether there is file-based settings
+                if ($this->FieldOverridesFile && file_exists($this->FieldOverridesFile)) {
+
+                    // make array if file-based settings is an ini file
+                    $filename_array = explode(".", $this->FieldOverridesFile);
+                    $extension = end($filename_array);
+
+                    if ($extension === 'ini') {
+                        $file_contents = file_get_contents($this->FieldOverridesFile);
+                        $fieldoverrides_file_contents = parse_ini_string($file_contents, true);
+                    } else {
+                        if ($extension === 'php') {
+                            include_once($this->FieldOverridesFile);
+                            // $fieldoverrides should be the name of the array in the included file
+                            if (isset($fieldoverrides) && is_array($fieldoverrides)) {
+                                $fieldoverrides_file_contents = $fieldoverrides;
+                            }
+                        }
+                    }
+                }
+
+                // make array from admin-based settings (only ini format)
+                if (!empty($this->FieldOverrides)) {
+                    $fieldoverrides_admin_contents = parse_ini_string($this->FieldOverrides, true);
+                }
+
+                // merge the two
+                $fieldoverrides = array_merge($fieldoverrides_file_contents, $fieldoverrides_admin_contents);
+
+                if (!empty($fieldoverrides)) {
+                    $this->FieldOverrides = $fieldoverrides;
                     $this->addHookBefore('Field::getInputfield', $this, 'setFieldOverrides');
                 }
             }
@@ -1799,12 +1836,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addAdminClasses(HookEvent $event)
     {
-
         $theme = $event->object;
-        $user = $this->user;
+        $user = $this->wire('user');
+
         foreach ($user->roles as $role) {
             $theme->addBodyClass("role-{$role->name}");
         }
+
         if (!$this->wire('user')->isSuperuser()) {
             $theme->addBodyClass("role-nonsuperuser");
         }
@@ -1942,39 +1980,61 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             });
 
             // check enabled state
-            if (isset($values['is_enabled'])) {
-                if ($values['is_enabled'] == 0) {
+            if (isset($values['?enabled'])) {
+                if ($values['?enabled'] == 0) {
                     continue;
-                } else {
-                    unset($values['is_enabled']);
                 }
+                unset($values['?enabled']);
             }
 
             // check if user matches
-            if (isset($values['is_user'])) {
-                if (!$user->is($values['is_user'])) {
+            if (isset($values['?user'])) {
+                // 1: try user role first
+                // 2: try selector next
+                $userrole = $values['?user'];
+                unset($values['?user']);
+
+                if (!$user->is("roles=" . $userrole)) {
                     continue;
                 } else {
-                    unset($values['is_user']);
+                    $selector = $userrole;
+                    if (!$user->is($selector)) {
+                        continue;
+                    }
                 }
             }
 
-            // if "is_field" key is present, check if current field matches
-            if (isset($values['is_field'])) {
-                if ($fields->get($values['is_field']) && !in_array($field->id, array_values($fields->find($values['is_field'])->id()))
-                ) {
-                    continue;
+            // if "?field" key is present, check if current field matches
+            if (isset($values['?field'])) {
+                // 1: try field name first
+                // 2: try a selector for the field
+                $fieldname = $values['?field'];
+                unset($values['?field']);
+
+                if ($fields->get('name=' . $fieldname)) {
+                    if ($field->name !== $fieldname) {
+                        continue;
+                    }
                 } else {
-                    unset($values['is_field']);
+                    $fieldselector = $fieldname;
+                    if ($fields->get($fieldselector)) {
+                        if (!in_array($field->id, array_values($fields->find($fieldselector)->id()))) {
+                            continue;
+                        }
+                    }
                 }
             }
 
-            // check "is_page" (selector for currently edited page)
-            if (isset($values['is_page'])) {
-                if ($this->editedPage && !$this->editedPage->is($values['is_page'])) {
+            // check "?page" (id/selector for currently edited page)
+            if (isset($values['?page'])) {
+                $selector = $values['?page'];
+                unset($values['?page']);
+
+                if (is_numeric($selector)) {
+                    $selector = "id=" . $selector;
+                }
+                if ($this->editedPage && !$this->editedPage->is($selector)) {
                     continue;
-                } else {
-                    unset($values['is_page']);
                 }
             }
 
@@ -2633,13 +2693,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $f = wire('modules')->get("InputfieldCheckboxes");
         $f->attr('name', 'enabledSubmodules');
         $f->label = __('Submodules', __FILE__);
-        $f->description = __('Enable or disable submodules here.', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
 
-        $markupText = __('Detailed information on submodules', __FILE__);
+        $intro = __('Click on the boxes to enable or disable submodules. Use the "cog" icon to jump to their configuration section.', __FILE__);
+        $markupText = __('More info', __FILE__);
 
         $f->prependMarkup = <<< HTML
-     <p>{$markupText}: <a href="https://github.com/rolandtoth/AdminOnSteroids/wiki" target="_blank">AdminOnSteroids @ GitHub</a>
+     <p>$intro $markupText: <a href="https://github.com/rolandtoth/AdminOnSteroids/wiki" target="_blank">AdminOnSteroids @ GitHub</a>
 </p>
 HTML;
 
@@ -3599,6 +3659,18 @@ HTML;
         $f->label = __('FieldOverrides file', __FILE__);
         $f->description = __('File to prepend to the admin textarea config, eg',
                 __FILE__) . ' "/site/templates/field-overrides.ini"';
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+        $fsetPaths->add($f);
+
+        $f = wire('modules')->get('InputfieldText');
+        $f->name = 'BrandingLogo';
+        $f->label = __('Branding logo', __FILE__);
+        $f->description = __('Path to image for replacing ProcessWire logo in the header, eg.',
+                __FILE__) . ' "/site/templates/images/brand-logo.svg"';
         $f->collapsed = Inputfield::collapsedBlank;
 
         if ($data[$f->name]) {
