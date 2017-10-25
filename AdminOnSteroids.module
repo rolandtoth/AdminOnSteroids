@@ -189,8 +189,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'PageListThumbs_style'              => 'circle',
             'PageListThumbs_items'              => '',
             'PageListIcons'                     => '',
-            'PageListThumbs_options'            => array(
-//                'alignright'
+            'PageListThumbs_options'            => array(//                'alignright'
             ),
             'PageListTweaks'                    => array(
 //                'pListIDs',
@@ -726,12 +725,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $subModule = 'ListerTweaks';
         // default columns: only add hook if there's no bookmark requested
-        if (
-            in_array($subModule, $enabledSubmodules) &&
-            (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false) &&
-            // No need for hook if no tweaks in config
-            (!empty(self::$configData['ListerTweaks_find']) || !empty(self::$configData['ListerTweaks_users']))
-        ) {
+        if (in_array($subModule, $enabledSubmodules) && (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false) && (!empty(self::$configData['ListerTweaks_find']) || !empty(self::$configData['ListerTweaks_users']))) {
             $this->addHookBefore('ProcessPageLister::execute', function ($event) {
 
                 // do not mess with ListerPro
