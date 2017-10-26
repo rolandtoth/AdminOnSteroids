@@ -157,7 +157,6 @@ html.aos {
   .InputfieldStateCollapsed,
   .InputfieldStateWasCollapsed {
     overflow: visible !important;
-    position: relative;
   }
 
   h1:not(.pwapi-headline),
@@ -1377,12 +1376,17 @@ html.hideAddNewDropdown body.id-3 {
 }
 
 // FieldAndTemplateEditLinks
+// also make sure to show the TemplateEditLink when a checkbox field
+// doesn't have a label
+.aos_hasTooltip .title,
+.InputfieldCheckbox .InputfieldContent > label{
+  position: relative;
+}
 
 //both for Reno & Default themes
 //#ProcessPageEdit .aos_hasTooltip .title,
 .aos_hasTooltip .title,
 .InputfieldCheckbox label {
-  position: relative;
   display: inline-block;
   &:hover {
     .aos_EditField {
@@ -1400,11 +1404,6 @@ html.hideAddNewDropdown body.id-3 {
       cursor: pointer;
     }
   }
-}
-
-// formerly: .aos_hasTooltip
-.InputfieldCheckbox {
-  position: relative;
 }
 
 .aos_EditTemplate {
