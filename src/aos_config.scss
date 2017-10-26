@@ -6,7 +6,7 @@
 .configLink {
   position: absolute;
   right: 13px;
-  bottom: 7px;
+  bottom: 10px;
   display: inline-block;
   z-index: 5;
   i {
@@ -34,7 +34,6 @@
   height: auto !important; // make autogrow
 }
 
-
 .CodeMirror-scroll,
 #InputfieldAceExtended_FieldOverrides_editor {
   min-height: 100px;
@@ -45,7 +44,7 @@
   //  transform-origin: top;
 }
 
-li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Tooltips are disabled)
+li[id^="wrap_Inputfield"], li.Inputfield { // fix scrollto targets (when Tooltips are disabled)
   position: relative;
 }
 
@@ -53,6 +52,11 @@ li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Toolti
   pointer-events: none;
   opacity: 0.5;
   filter: saturate(0);
+}
+
+// fix AdminThemeUiKit from expanding the min-height at runtime
+.InputfieldContent.uk-form-controls {
+  min-height: 0 !important;
 }
 
 #Inputfield_tweaks {
@@ -153,7 +157,7 @@ li[id^="wrap_Inputfield"], li.Inputfield {  // fix scrollto targets (when Toolti
         //  }
         //}
         //input:checked + span:before {
-          //outline-color: rgba(#97AAB4, 0.6);
+        //outline-color: rgba(#97AAB4, 0.6);
         //}
         input:not(:checked) {
           + span {
@@ -319,7 +323,8 @@ form[action*="AdminOnSteroids"] {
         @media only screen and (min-width: 1320px) {
           column-count: 3;
         }
-        html.AdminThemeReno & {
+        html.AdminThemeReno &,
+        body.AdminThemeUikit & {
           @media only screen and (min-width: 1640px) {
             column-count: 4;
           }
@@ -358,7 +363,6 @@ form[action*="AdminOnSteroids"] {
 
   // fieldsets need extra styling not to look different
   #Inputfield_tweaks {
-
     #Inputfield_InputfieldURLChecker,
     #Inputfield_CKEaddons,
     #Inputfield_NavItems,
@@ -377,6 +381,10 @@ form[action*="AdminOnSteroids"] {
           border: none;
         }
       }
+    }
+
+    .InputfieldContent .Inputfield li:last-child .InputfieldContent.uk-form-controls {
+      padding-bottom: 0;
     }
 
     .Inputfield {
@@ -493,7 +501,6 @@ form[action*="AdminOnSteroids"] {
     margin-left: 21px;
   }
 }
-
 
 #asset-check-button {
   .InputfieldStateCollapsed & {

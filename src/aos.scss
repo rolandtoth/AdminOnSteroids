@@ -15,6 +15,15 @@ html.aos {
     }
   }
 
+  // add some space between the top bar and page content (default theme, sticky header disabled)
+  &.AdminThemeDefault:not(.headSticky) {
+    body:not(.hasWireTabs) {
+      #content > .pw-container {
+        margin-top: 13px;
+      }
+    }
+  }
+
   &.BrandingLogo {
     // Reno + Default themes
     &.AdminThemeReno {
@@ -1379,7 +1388,7 @@ html.hideAddNewDropdown body.id-3 {
 // also make sure to show the TemplateEditLink when a checkbox field
 // doesn't have a label
 .aos_hasTooltip .title,
-.InputfieldCheckbox .InputfieldContent > label{
+.InputfieldCheckbox .InputfieldContent > label {
   position: relative;
 }
 
@@ -3181,27 +3190,6 @@ html.AdminThemeReno {
 // AdminTweaks (default theme tweaks)
 // note: the default theme adds theme name class (and .modal class) to body, AOS adds to html
 html.AdminThemeDefault {
-  &.pListFullRowHover:not(.pListShowActions) {
-    .content .PageList {
-      .PageListItem:hover {
-        .PageListActions {
-          display: inline-block !important;
-          //transition-delay: .25s
-        }
-      }
-      .PageListItemOpen {
-        .PageListActions {
-          display: none !important;
-        }
-        &:hover {
-          .PageListActions {
-            display: inline-block !important;
-            //transition-delay: .25s
-          }
-        }
-      }
-    }
-  }
   @media only screen and (min-width: 960px) {
 
     &.leftTopnav #masthead #topnav {
@@ -3236,7 +3224,7 @@ html.AdminThemeDefault {
           margin-top: 3px;
         }
 
-        padding-top: 100px;
+        padding-top: 97px;
 
         #masthead {
           position: fixed;
@@ -3494,6 +3482,26 @@ html.moveAssetButtons:not(.downloadAssetButton) {
   }
   &:empty {
     display: none;
+  }
+}
+
+html.pListFullRowHover:not(.pListShowActions) {
+  #content .PageList {
+    .PageListItem:hover {
+      .PageListActions {
+        display: inline-block !important;
+      }
+    }
+    .PageListItemOpen {
+      .PageListActions {
+        display: none !important;
+      }
+      &:hover {
+        .PageListActions {
+          display: inline-block !important;
+        }
+      }
+    }
   }
 }
 

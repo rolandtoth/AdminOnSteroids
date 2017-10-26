@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.6.3 (2017-10-26)
+
+- pListFullRowHover: moved to PageListTweaks, available also for AdminThemeUikit
+- add top margin between header and page content for AdminThemeDefault (suggested by gmclelland)
+- fix AOS config page submodule box heights (by gmclelland)
+- minor AdminThemeUikit CSS tweaks
+
+
+
 ### 1.6.2 (2017-10-25)
 
 - added branding logo for AssetPaths
