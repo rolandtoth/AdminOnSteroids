@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 163,
+            'version'   => 164,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -863,7 +863,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
 
                 // merge the two
-                $fieldoverrides = array_merge($fieldoverrides_file_contents, $fieldoverrides_admin_contents);
+                $fieldoverrides = array_merge($fieldoverrides_admin_contents, $fieldoverrides_file_contents);
 
                 if (!empty($fieldoverrides)) {
                     $this->FieldOverrides = $fieldoverrides;
@@ -1987,13 +1987,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $userrole = $values['?user'];
                 unset($values['?user']);
 
-                if (!$user->is("roles=" . $userrole)) {
+                if (!($user->is("roles=" . $userrole) || ($this->isValidSelectorString($userrole) && $user->is($userrole)))) {
                     continue;
-                } else {
-                    $selector = $userrole;
-                    if (!$user->is($selector)) {
-                        continue;
-                    }
                 }
             }
 
@@ -2001,20 +1996,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             if (isset($values['?field'])) {
                 // 1: try field name first
                 // 2: try a selector for the field
+
                 $fieldname = $values['?field'];
                 unset($values['?field']);
 
-                if ($fields->get('name=' . $fieldname)) {
-                    if ($field->name !== $fieldname) {
-                        continue;
-                    }
-                } else {
-                    $fieldselector = $fieldname;
-                    if ($fields->get($fieldselector)) {
-                        if (!in_array($field->id, array_values($fields->find($fieldselector)->id()))) {
-                            continue;
-                        }
-                    }
+                if (!(($fields->get('name=' . $fieldname) && $field->name === $fieldname) || ($this->isValidSelectorString($fieldname) && in_array($field->id, array_values($fields->find($fieldname)->id()))))) {
+                    continue;
                 }
             }
 
@@ -2026,6 +2013,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if (is_numeric($selector)) {
                     $selector = "id=" . $selector;
                 }
+
                 if ($this->editedPage && !$this->editedPage->is($selector)) {
                     continue;
                 }
@@ -2047,13 +2035,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     }
                 }
 
-                // check for array
-//                if (strpos($v, '=>') > 1) {
-//                    list($k, $v) = explode('=>', $v);
-//                    $v = array(trim($k) => trim($v));
-//                }
-
                 switch ($key) {
+                    case 'stop':
+                        return; //do not process next ini group
+                        break;
                     case 'toolbar_add':
                         $toolbar = $field->toolbar . ', ' . trim($v, ',');
                         $field->toolbar = $this->removeDuplicatesFromString($toolbar);
@@ -2082,9 +2067,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     case 'inputfieldClass':
                         continue;
                         break;
-                    case 'stop':
-                        return; //do not process next ini group
-                        break;
                     default:
                         $field->{$key} = $v;
                 }
@@ -2092,6 +2074,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             continue;   // move to next ini group
         }
+    }
+
+
+    /**
+     * Check if string looks like a ProcessWire selector.
+     *
+     * @param $str
+     *
+     * @return bool
+     */
+    public function isValidSelectorString($str){
+        $validSelectorOperators = \ProcessWire\Selectors::getOperatorChars();
+        return count(array_intersect(str_split($str), $validSelectorOperators)) > 0;
     }
 
 

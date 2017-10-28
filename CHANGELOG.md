@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.6.4 (2017-10-28)
+
+- various fixes for FieldOverrides
+- wiki: distribute submodule docs to pages
+
+
+
 ### 1.6.3 (2017-10-26)
 
 - pListFullRowHover: moved to PageListTweaks, available also for AdminThemeUikit
