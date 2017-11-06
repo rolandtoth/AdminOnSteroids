@@ -3308,7 +3308,7 @@ HTML;
         $f->addOption('hideAddNewDropdown',
             __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
         $f->addOption('stickyCKE', __('Sticky CKEditor toolbar', __FILE__));
-        $f->addOption('themeConfigLinks', __('Add links to configure admin theme settings on Profile page (SuperUser only)', __FILE__));
+        $f->addOption('themeConfigLinks', __('Add Profile page links to configure admin themes (SuperUser only)', __FILE__));
 
 
         if ($data[$f->name]) {
