@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 164,
+            'version'   => 165,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -221,6 +221,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //                'tooltipDesc',
 //                'tooltipNotes'
 //                'tooltipOverlay'
+            ),
+            'UikitTweaks'                       => array(
+//                'headSticky',
             )
         );
     }
@@ -281,11 +284,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addClasses(HookEvent $event)
     {
-
         $allowedHtmlClasses = array(
             'adminColumns',
             'AdminThemeDefault',
+            'AdminThemeUikit',
             'BrandingLogo',
+            'headCompact',
             'hoverTopSubmenus',
             'asmCollapse',
             'asmLeftX',
@@ -324,6 +328,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'sbQuickLinksHide',
             'sbSticky',
             'stickyCKE',
+            'themeConfigLinks',
             'tooltipDesc',
             'tooltipNotes',
             'tooltipOverlay',
@@ -352,12 +357,22 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $html = str_replace('<html', '<html class=""', $html);
         }
 
-        if ($this->adminTheme == 'AdminThemeDefault') {
+        if ($this->adminTheme === 'AdminThemeDefault') {
             $this->htmlClasses[] = 'AdminThemeDefault';
+        }
+
+        if ($this->adminTheme === 'AdminThemeUikit') {
+            $this->htmlClasses[] = 'AdminThemeUikit';
         }
 
         if ($this->BrandingLogo) {
             $this->htmlClasses[] = 'BrandingLogo';
+        }
+
+        if (!$this->wire('user')->isSuperUser()) {
+            if (($key = array_search('themeConfigLinks', $this->htmlClasses)) !== false) {
+                unset($this->htmlClasses[$key]);
+            }
         }
 
         $htmlClasses = implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses));
@@ -369,12 +384,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addDOMClass($class)
     {
-
         if (is_array($class)) {
 
+            // do not mess similar features enabled for another admin theme
             if (
-                ($this->adminTheme == 'AdminThemeDefault' && $class[0] == 'RenoTweaks') ||
-                ($this->adminTheme == 'AdminThemeReno' && $class[0] == 'AdminTweaks')
+                ($class[0] === 'AdminTweaks' && $this->adminTheme !== 'AdminThemeDefault') ||
+                ($class[0] === 'RenoTweaks' && $this->adminTheme !== 'AdminThemeReno') ||
+                ($class[0] === 'UikitTweaks' && $this->adminTheme !== 'AdminThemeUikit')
             ) {
                 return false;
             }
@@ -770,9 +786,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             });
         }
 
+
         //RenoTweaks
         $subModule = 'RenoTweaks';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if ($this->adminTheme === 'AdminThemeReno' && in_array($subModule, $enabledSubmodules)) {
             if (in_array('headSticky', $configData[$subModule])) {
                 if (in_array('miniScrollSb', $configData[$subModule]) || in_array('miniScrollMain',
                         $configData[$subModule])
@@ -784,7 +801,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
 
         //RestrictTreeDropdown
-
         $subModule = 'RestrictTreeDropdown';
 
         if (in_array($subModule, $enabledSubmodules)) {
@@ -2204,9 +2220,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $templateEditLink = '<a href="' . $templateEditUrl . '" class="aos_EditTemplate ' . $target . '" target="_blank">' . $template->name . '<i class="fa fa-pencil"></i></a>';
 
 
-        if ($this->adminTheme == 'AdminThemeDefault') {
+        if ($this->adminTheme === 'AdminThemeDefault') {
             $event->return = str_replace('<li class=\'title\'>', '<li class="title">' . $templateEditLink, $event->return);
         } else {
+            // todo check for AdminThemeUikit
             $event->return = preg_replace('/<h1 id="title">(<span>)?(.*)(<\/span>)?<\/h1>/', '<h1 id="title"><span>${2}</span>' . $templateEditLink . '</h1>', $event->return, 1);
         }
     }
@@ -2718,6 +2735,7 @@ HTML;
         $f->addOption('RenoTweaks', '**RenoTweaks**' . __('Reno admin theme tweaks', __FILE__));
         $f->addOption('RestrictTreeDropdown', '**RestrictTreeDropdown**' . __('Hide tree dropdown by role', __FILE__));
         $f->addOption('Tooltips', '**Tooltips**' . __('Move field descriptions and notes to tooltips', __FILE__));
+        $f->addOption('UikitTweaks', '**UikitTweaks**' . __('Uikit admin theme tweaks', __FILE__));
 
         $f->attr('value', isset($data[$f->name]) ? $data[$f->name] : $defaultData[$f->name]);
 
@@ -3290,6 +3308,7 @@ HTML;
         $f->addOption('hideAddNewDropdown',
             __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
         $f->addOption('stickyCKE', __('Sticky CKEditor toolbar', __FILE__));
+        $f->addOption('themeConfigLinks', __('Add links to configure admin theme settings on Profile page (SuperUser only)', __FILE__));
 
 
         if ($data[$f->name]) {
@@ -3566,6 +3585,26 @@ HTML;
         }
 
         $fset->add($f);
+
+
+
+        // UikitTweaks ----------------------------------------------- //
+
+        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f->attr('name', 'UikitTweaks');
+        $f->label = __('UikitTweaks', __FILE__);
+        $f->showIf = 'enabledSubmodules=UikitTweaks';
+        $f->collapsed = Inputfield::collapsedNever;
+
+        $f->addOption('headSticky', __('Sticky header', __FILE__));
+        $f->addOption('headCompact', __('Compact (smaller) header', __FILE__));
+
+        if ($data[$f->name]) {
+            $f->attr('value', $data[$f->name]);
+        }
+
+        $fset->add($f);
+
 
         $wrapper->add($fset);
 

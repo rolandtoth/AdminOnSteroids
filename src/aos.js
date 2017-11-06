@@ -760,6 +760,15 @@ $(document).ready(function () {
             }
         }
 
+        // add config links to admin themes in Profile page
+        $('html.themeConfigLinks [id^="Inputfield_admin_theme_"]').each(function() {
+            var $label = $(this).parent('label'),
+                theme = $(this).attr('id').slice(23),
+                themeConfigUrl = ProcessWire.config.urls.admin + 'module/edit?name=' + theme;
+
+            $label.after('<a href="' + themeConfigUrl + '" class="themeConfigLink" target="_blank"><i class="fa fa-cog"></a>');
+        });
+
         // add "title" to h1
         if ($('h1#title').length) {
 
@@ -2696,7 +2705,7 @@ $(document).ready(function () {
                 moduleFilter;
 
                 if ($('body.AdminThemeUikit').length != 0) {
-                    moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "\' + hiddenStyle + \'><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+                    moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "' + hiddenStyle + '><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
                 }
                 else {
                     moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');

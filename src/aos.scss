@@ -356,6 +356,16 @@ html.aos {
     }
   }
 
+  // theme config links
+  .themeConfigLink {
+    margin-left: 0.4rem;
+    display: inline-block;
+    &:not(:hover) {
+      color: #7EA0AB;
+      opacity: 0.7;
+    }
+  }
+
   // CKE improvements
 
   //.CodeMirror {
@@ -467,6 +477,10 @@ html.aos {
         margin-right: 2px;
       }
     }
+  }
+
+  &.AdminThemeUikit div.filterbox {
+    padding: 12px;
   }
 
   &:not(.AdminThemeUikit) div.filterbox {
@@ -3182,6 +3196,40 @@ html.AdminThemeReno {
       .notice-remove {
         position: absolute;
         left: 10px;
+      }
+    }
+  }
+}
+
+// UikitTweaks (AdminThemeUikit theme tweaks)
+html.AdminThemeUikit {
+  @media only screen and (min-width: 960px) {
+    // headSticky
+    &.headSticky {
+      body:not(.modal) {
+        padding-top: 73px;
+        #pw-masthead {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0;
+          width: 100%;
+          backface-visibility: hidden;
+          z-index: 30;
+        }
+      }
+    }
+  }
+  &.headCompact {
+    body:not(.modal) {
+      padding-top: 54px;
+      #pw-masthead {
+        height: 54px;
+        .uk-navbar a {
+          height: 54px;
+        }
+      }
+      .pw-logo {
+        margin-top: 6px;
       }
     }
   }

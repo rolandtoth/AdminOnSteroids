@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.6.5 (2017-11-06)
+
+- new submodule: UikitTweaks
+- UikitTweaks: sticky header
+- UikitTweaks: compact (smaller) header
+- add config links to Profile page admin theme radios (Misc)
+
+
+
 ### 1.6.4 (2017-10-28)
 
 - various fixes for FieldOverrides
