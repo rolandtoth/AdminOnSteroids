@@ -3206,7 +3206,7 @@ html.AdminThemeUikit {
   @media only screen and (min-width: 960px) {
     // headSticky
     &.headSticky {
-      body:not(.modal) {
+      body:not(.modal):not(.id-23) {
         padding-top: 73px;
         #pw-masthead {
           position: fixed !important;
@@ -3217,12 +3217,17 @@ html.AdminThemeUikit {
           z-index: 30;
         }
       }
+      &.headSticky.headCompact {
+        body:not(.modal):not(.id-23) {
+          padding-top: 54px;
+        }
+      }
     }
   }
   &.headCompact {
     body:not(.modal) {
-      padding-top: 54px;
-      #pw-masthead {
+      #pw-masthead,
+      #pw-masthead-mobile {
         height: 54px;
         .uk-navbar a {
           height: 54px;
@@ -3230,6 +3235,20 @@ html.AdminThemeUikit {
       }
       .pw-logo {
         margin-top: 6px;
+      }
+    }
+    body.id-23 {
+      .pw-logo {
+        margin-top: -23px;
+      }
+    }
+  }
+  &.centerLogin {
+    body.id-23 {
+      #wrap_login_name,
+      #wrap_login_pass,
+      #ProcessLoginForm {
+        width: auto !important;
       }
     }
   }

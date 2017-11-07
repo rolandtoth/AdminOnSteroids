@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.6.6 (2017-11-07)
+
+- UikitTweaks: login page sticky header and centerLogin adjustments (reported by adrian)
+
+
+
 ### 1.6.5 (2017-11-06)
 
 - new submodule: UikitTweaks
