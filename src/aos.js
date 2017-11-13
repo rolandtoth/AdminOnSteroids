@@ -761,7 +761,7 @@ $(document).ready(function () {
         }
 
         // add config links to admin themes in Profile page
-        $('html.themeConfigLinks [id^="Inputfield_admin_theme_"]').each(function() {
+        $('html.themeConfigLinks [id^="Inputfield_admin_theme_"]').each(function () {
             var $label = $(this).parent('label'),
                 theme = $(this).attr('id').slice(23),
                 themeConfigUrl = ProcessWire.config.urls.admin + 'module/edit?name=' + theme;
@@ -1113,7 +1113,7 @@ $(document).ready(function () {
 
                     var selectors = '.aos_hotkeySave, #submit_save_unpublished, form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations'.split(',');
 
-                    $.each(selectors, function(i, selector) {
+                    $.each(selectors, function (i, selector) {
                         var res = $(selector);
                         if (res.length) {
                             aos_saveButton = res;
@@ -1404,6 +1404,25 @@ $(document).ready(function () {
 
 // Misc
         if (_isEnabled('Misc')) {
+
+            if (AOSsettings.Misc.indexOf('prevNextLinks') !== -1) {
+                var PrevNextLinks = ProcessWire.config.AOS_prevnextlinks;
+                if (PrevNextLinks) {
+
+                    var $targetElement = $('h1, li.title span, li.title').first();
+
+                    if ($targetElement.length) {
+
+                        if (PrevNextLinks['prev']) {
+                            $targetElement.append('<a href="' + PrevNextLinks['prev']['url'] + '" title="' + PrevNextLinks['prev']['title'] + '" class="aos-edit-prev"><i class="fa fa-angle-left"></i></a>');
+                        }
+
+                        if (PrevNextLinks['next']) {
+                            $targetElement.append('<a href="' + PrevNextLinks['next']['url'] + '" title="' + PrevNextLinks['next']['title'] + '" class="aos-edit-next"><i class="fa fa-angle-right"></i></a>');
+                        }
+                    }
+                }
+            }
 
             if (AOSsettings.Misc.indexOf('adminColumns') !== -1) {
 
@@ -2702,7 +2721,7 @@ $(document).ready(function () {
                 // Module Filter
 
                 var hiddenStyle = window.location.href.indexOf('module/?new') !== -1 ? ' style="display: none"' : '',
-                moduleFilter;
+                    moduleFilter;
 
                 if ($('body.AdminThemeUikit').length != 0) {
                     moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "' + hiddenStyle + '><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');

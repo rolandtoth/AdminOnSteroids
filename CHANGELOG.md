@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.6.7 (2017-11-13)
+
+- new tweak 'prevNextLinks' to Misc, based on Macrura's 'PrevNextTabs' module (thanks!)
+
+
+
 ### 1.6.6 (2017-11-07)
 
 - UikitTweaks: login page sticky header and centerLogin adjustments (reported by adrian)

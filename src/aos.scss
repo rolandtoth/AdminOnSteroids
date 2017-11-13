@@ -168,17 +168,22 @@ html.aos {
     overflow: visible !important;
   }
 
-  h1:not(.pwapi-headline),
+  h1:not(.pwapi-headline) {
+    position: relative;
+  }
+
+  h1:not(.pwapi-headline) span,
   .PageListItem:not(.PageListSortItem) .PageListPage span[class^="label_"],
   #breadcrumbs li.title span {
     position: relative;
     &:hover {
+      ~ .aos_EditTemplate,
       .aos_EditTemplate {
         display: inline-block;
         visibility: visible;
         transform: scale(1);
         opacity: 1;
-        transition: 0.07s all 1s;
+        transition: 0.07s all 0.7s;
       }
     }
   }
@@ -3252,6 +3257,30 @@ html.AdminThemeUikit {
       }
     }
   }
+}
+
+// prevNextLinks
+.aos-edit-prev,
+.aos-edit-next {
+  padding: 0 0.3rem;
+  position: relative;
+  top: 1px;
+  &:not(:hover) {
+    color: #ccc;
+  }
+  i {
+    font-size: 17px !important;
+  }
+  html:not(.AdminThemeDefault) & {
+    padding: 0 0.5rem;
+    i {
+      font-size: 27px !important;
+    }
+  }
+}
+
+.aos-edit-prev {
+  margin-left: 0.6rem;
 }
 
 // AdminTweaks (default theme tweaks)

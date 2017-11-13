@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 166,
+            'version'   => 167,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -222,8 +222,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //                'tooltipNotes'
 //                'tooltipOverlay'
             ),
-            'UikitTweaks'                       => array(
-//                'headSticky',
+            'UikitTweaks'                       => array(//                'headSticky',
             )
         );
     }
@@ -1006,11 +1005,64 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $jsFiles[] = $root . '/scripts/vendor/autosize/autosize.min.js';
             }
 
-            // langTabHotkeySwitcher
+
+            // prevNextLinks
+            if (in_array('prevNextLinks', $configData[$subModule])) {
+                if (
+                    $this->wire('page')->process == 'ProcessPageEdit'
+                    && $this->editedPage
+                    && !($this->editedPage->template->flags & Template::flagSystem)
+                ) {
+                    $selector = 'include=all, sort=sort, parent=' . $this->editedPage->parent;
+                    $prevnextlinks = array();
+                    $siblings = $this->editedPage->siblings;
+
+                    if (count($siblings) > 1) {
+
+                        $next = $this->editedPage->next($selector);
+                        $prev = $this->editedPage->prev($selector);
+
+                        if (!$next->id) {
+                            $next = $siblings->first;
+                            $isFirst = true;
+                        }
+
+                        if (!$prev->id) {
+                            $prev = $siblings->last;
+                            $isLast = true;
+                        }
+
+                        $edit_next_text = isset($isFirst) ? ' ' . __('Edit first:', __FILE__) : __('Edit next:', __FILE__);
+                        $edit_prev_text = isset($isLast) ? ' ' . __('Edit last:', __FILE__) : __('Edit previous:', __FILE__);
+
+                        if ($prev->editable()) {
+                            $prevnextlinks['prev'] = array(
+                                'title' => $edit_prev_text . ' ' . ($prev->title ? $prev->title : $prev->name),
+                                'url'   => $prev->editUrl
+                            );
+                        }
+
+                        if ($next->editable()) {
+                            $prevnextlinks['next'] = array(
+                                'title' => $edit_next_text . ' ' . ($next->title ? $next->title : $next->name),
+                                'url'   => $next->editUrl
+                            );
+                        }
+
+                        // add js chunk to be expanded as HTML
+                        if (!empty($prevnextlinks)) {
+                            $this->wire('config')->js("AOS_prevnextlinks", $prevnextlinks);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        // langTabHotkeySwitcher
 //            if (in_array('langTabHotkeySwitcher', $configData[ $subModule ])) {
 //                $jsFiles[] = $root . '/LangTabHotkeySwitcher/LangTabHotkeySwitcher.js';
 //            }
-        }
 
         // ModuleTweaks
         $subModule = 'ModuleTweaks';
@@ -2100,8 +2152,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
      *
      * @return bool
      */
-    public function isValidSelectorString($str){
+    public function isValidSelectorString($str)
+    {
         $validSelectorOperators = \ProcessWire\Selectors::getOperatorChars();
+
         return count(array_intersect(str_split($str), $validSelectorOperators)) > 0;
     }
 
@@ -3309,6 +3363,7 @@ HTML;
             __('Hide the `Add new` dropdown button from above the main pagelist', __FILE__));
         $f->addOption('stickyCKE', __('Sticky CKEditor toolbar', __FILE__));
         $f->addOption('themeConfigLinks', __('Add Profile page links to configure admin themes (SuperUser only)', __FILE__));
+        $f->addOption('prevNextLinks', __('Add links to edit previous and next pages', __FILE__));
 
 
         if ($data[$f->name]) {
@@ -3585,7 +3640,6 @@ HTML;
         }
 
         $fset->add($f);
-
 
 
         // UikitTweaks ----------------------------------------------- //
