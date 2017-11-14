@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => 167,
+            'version'   => 1671,
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1013,7 +1013,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     && $this->editedPage
                     && !($this->editedPage->template->flags & Template::flagSystem)
                 ) {
-                    $selector = 'include=all, sort=sort, parent=' . $this->editedPage->parent;
+                    $selector = 'include=all, sort=' . $this->editedPage->parent->sortfield . ', parent=' . $this->editedPage->parent;
                     $prevnextlinks = array();
                     $siblings = $this->editedPage->siblings;
 

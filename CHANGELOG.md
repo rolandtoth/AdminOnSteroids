@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.6.71 (2017-11-14)
+
+- prevNextLinks: keep page sort order
+
+
+
 ### 1.6.7 (2017-11-13)
 
 - new tweak 'prevNextLinks' to Misc, based on Macrura's 'PrevNextTabs' module (thanks!)
