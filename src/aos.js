@@ -1161,7 +1161,7 @@ $(document).ready(function () {
 
                     // IE fix
                     setTimeout(function () {
-                        aos_saveButton.click();
+                        aos_saveButton.focus().click();
                     }, 100);
                 }
             }

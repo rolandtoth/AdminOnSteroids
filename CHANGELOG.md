@@ -7,6 +7,12 @@
 
 
 
+### 1.6.7.2 (2017-11-19)
+
+- ctrl+s save fix by Robin S
+
+
+
 ### 1.6.7 (2017-11-13)
 
 - new tweak 'prevNextLinks' to Misc, based on Macrura's 'PrevNextTabs' module (thanks!)
