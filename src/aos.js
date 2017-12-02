@@ -1245,6 +1245,11 @@ $(document).ready(function () {
                 var searchBox = $('#ProcessPageSearchQuery, .uk-navbar-right .pw-search-form .pw-search-input').first(),
                     searchBoxValue;
 
+                // try in parent frame (uikit)
+                if(searchBox.length === 0) {
+                    searchBox = $('#ProcessPageSearchQuery, .uk-navbar-right .pw-search-form .pw-search-input', window.parent.document);
+                }
+
                 if (e) {
                     e.preventDefault();
                 }
@@ -2522,7 +2527,7 @@ $(document).ready(function () {
                 // clone the Submit button (only if in iframe)
                 var submitBtn = $('#ModuleEditForm button#Inputfield_submit_save_module');
 
-                if (window.frameElement && submitBtn.length) {
+                if (window.frameElement && submitBtn.length && $('body.modal').length) {
 
                     var submitBtnClone = submitBtn.clone(false),
                         submitBtnCloneRefresh = submitBtnClone.clone(),

@@ -1,15 +1,23 @@
 # Changelog
 
 
-### 1.6.71 (2017-11-14)
+### 1.6.8 (2017-12-02)
 
-- prevNextLinks: keep page sort order
+- moduleModal fix for Uikit theme (reported by jmartsch)
+- alt+d search box fix for Uikit theme (reported by jmartsch)
+- footer aos switcher alignment fix (reported by gmclelland)
 
 
 
 ### 1.6.7.2 (2017-11-19)
 
 - ctrl+s save fix by Robin S
+
+
+
+### 1.6.71 (2017-11-14)
+
+- prevNextLinks: keep page sort order
 
 
 

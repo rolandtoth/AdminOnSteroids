@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.6.7.2.',
+            'version'   => '168',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -732,6 +732,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addTrashButton');
                 }
             }
+
+//            if (in_array('pListLangs', $configData[$subModule])) {
+//                if ($this->wire('languages') && $this->wire('pages')->find('template=language, check_access=0')->count() > 1) {
+//                    $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addLanguageIndicators');
+//                }
+//            }
         }
 
 
@@ -1104,6 +1110,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'replacePageListIconUnderscores');
         }
 
+
         $subModule = 'PageListThumbs';
         if (in_array($subModule, $enabledSubmodules)) {
             $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addPageListThumb');
@@ -1282,6 +1289,34 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         return $configData;
+    }
+
+
+    public function addLanguageIndicators(HookEvent $event)
+    {
+        static $langs;
+
+        $markup = $event->return;
+        $p = $event->arguments("page");
+        $page_languages = $p->getLanguages();
+        $l = '';
+
+        if ($langs === null) {
+            $langs = wire('pages')->find('template=language,check_access=0');
+        }
+
+        //  show only if not all languages are active on the page
+        if (count($page_languages) === 0 || count($langs) === count($page_languages)) {
+            return false;
+        }
+
+        $page_language_ids = $page_languages->id();
+
+        foreach ($langs as $lang) {
+            $l .= '<b' . (in_array($lang->id, $page_language_ids) ? '  class="active"' : '') .' title="' . $lang->title . '">' . mb_substr($lang->title, 0, 3) . '</b>';
+        }
+
+        $event->return = $markup . '<i class="pagelist-langs">' . $l . '</i>';
     }
 
 
@@ -2093,10 +2128,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if ($is_multilang) {
                     $lang_pos = strpos($key, '_lang_');
                     if ($lang_pos > 1) {
-                        $language_name = substr($key, $lang_pos + strlen('_lang_'));
+                        $language_name = mb_substr($key, $lang_pos + strlen('_lang_'));
                         $lang = $this->wire('languages')->get($language_name);
                         if ($lang->id) {
-                            $key = substr($key, 0, $lang_pos) . $lang->id;
+                            $key = mb_substr($key, 0, $lang_pos) . $lang->id;
                         } else {
                             continue;
                         }
@@ -2239,6 +2274,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $parts = $event->return;
 
+        $div_class = ($this->adminTheme === 'AdminThemeUikit') ? 'pw-container uk-container uk-container-expand' : '';
+
         $enabledText = __('Disable', __FILE__) . ' AdminOnSteroids';   // Disable AdminOnSteroids
         $disabledText = __('Enable', __FILE__) . ' AdminOnSteroids';   // Enable AdminOnSteroids
 
@@ -2249,8 +2286,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configLink = '<a href="' . $modulePage . '" ' . $linkStyle . ' title="' . __('Configure module',
                 __FILE__) . '"><i class="fa fa-cog"></i></a>';
 
-        $configLinkMarkup = '<p style="margin-top: 10px; font-size: 0.9rem;" class="uk-container uk-container-expand"><a href="' . $modulePage . '&toggle=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>
-' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p>';
+        $configLinkMarkup = '<div class="' . $div_class . '"><div class="uk-grid"><div class="uk-width-2-3@m uk-flex-first@m uk-text-center uk-text-left@m uk-first-column"><p style="margin-top: 10px; font-size: 
+0.9rem;" class=""><a 
+href="' . $modulePage . '&toggle=1" 
+class="aos_toggle" 
+' . $linkStyle . '><i 
+class="fa fa-medkit"></i> 
+<span ' . $mouseover . '>
+' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p></div></div></div>';
 
         $parts['footer'] .= $configLinkMarkup;
 
@@ -2670,7 +2713,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function addAdminLangSwitcher(HookEvent $event)
     {
 
-        if ($this->languages && $this->pages->find('template=language, check_access=0')->count() > 1) {
+        if ($this->wire('languages') && $this->wire('pages')->find('template=language, check_access=0')->count() > 1) {
 
             $parts = $event->return;
 
@@ -3539,6 +3582,7 @@ HTML;
         $f->addOption('pListCounters', __('Add counters to pagelist items', __FILE__));
         $f->addOption('pListFullRowHover', __('Show pagelist actions on full row hover', __FILE__));
         $f->addOption('pListTrash', __('Add Trash action also for non-SuperUsers', __FILE__));
+//        $f->addOption('pListLangs', __('Add language indicators', __FILE__));
 
         if (isset($data[$f->name]) && $data[$f->name]) {
             $f->attr('value', $data[$f->name]);
