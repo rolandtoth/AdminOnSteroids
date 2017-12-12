@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.7.0 (2017-12-12)
+
+- fix suppressing the "required" icon in the template editor (by reported by Robin S)
+
+
+
 ### 1.6.9 (2017-12-12)
 
 - PR merge: Different size buttons when editing a page #80 (by gmclelland)

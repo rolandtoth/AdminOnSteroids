@@ -1326,7 +1326,7 @@ $(document).ready(function () {
                 function addAsmWidths() {
                     setTimeout(function () {
                         $("#wrap_fieldgroup_fields .asmListItemStatus:not(:contains('%'))").each(function () {
-                            $(this).html($(this).text() + '<em> 100%</em>');
+                            $(this).html($(this).html() + '<em> 100%</em>');
                         });
                     }, 100);
                 }
