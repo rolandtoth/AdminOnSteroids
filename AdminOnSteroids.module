@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '168',
+            'version'   => '169',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',

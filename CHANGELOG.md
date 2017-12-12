@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.6.9 (2017-12-12)
+
+- PR merge: Different size buttons when editing a page #80 (by gmclelland)
+
+
+
 ### 1.6.8 (2017-12-02)
 
 - moduleModal fix for Uikit theme (reported by jmartsch)
