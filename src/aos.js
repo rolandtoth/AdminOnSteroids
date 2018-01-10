@@ -1041,9 +1041,6 @@ $(document).ready(function () {
 
                     var keyCode = e.keyCode || e.charCode;
 
-                    // always remove event because only first keydown should trigger the notice removal
-                    $(document).off('keydown', removeNoticeHotkey);
-
                     if (keyCode === 27) {
                         if ($('a.notice-remove').length) {
                             $('a.notice-remove').first().trigger('click');
@@ -1055,7 +1052,7 @@ $(document).ready(function () {
                 }
 
                 if ($('a.notice-remove').length) {
-                    $(document).on('keydown', removeNoticeHotkey);
+                    $(document).one('keydown', removeNoticeHotkey);
                 }
             }
 
@@ -1558,7 +1555,7 @@ $(document).ready(function () {
             };
 
             // get button height with a dummy element
-            $('body').append('<input class="' + IUC.dummyFieldSelector + '">');
+            $('body').append('<input class="uk-input ' + IUC.dummyFieldSelector + '">');
             IUC.btnHeight = $('.' + IUC.dummyFieldSelector).outerHeight() - 2;
             $('.' + IUC.dummyFieldSelector).remove();
 

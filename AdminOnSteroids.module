@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '170',
+            'version'   => '171',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1381,8 +1381,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     {
 
         // do not process Image (and other) fields
-        if ($event->object->class !== 'FieldtypeFile') {
-            return;
+        if ($event->object instanceof FieldtypeFile) {
+           return;
         }
 
         // noShortName is used by InputfieldFile but not available as a config option
@@ -2274,10 +2274,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $parts = $event->return;
 
-        $div_class = ($this->adminTheme === 'AdminThemeUikit') ? 'pw-container uk-container uk-container-expand' : '';
+        $div_class = ($this->wire('config')->defaultAdminTheme === 'AdminThemeUikit') ? 'pw-container uk-container uk-container-expand' : '';
 
-        $enabledText = __('Disable', __FILE__) . ' AdminOnSteroids';   // Disable AdminOnSteroids
-        $disabledText = __('Enable', __FILE__) . ' AdminOnSteroids';   // Enable AdminOnSteroids
+        $enabledText = __('Disable', __FILE__) . ' AdminOnSteroids';
+        $disabledText = __('Enable', __FILE__) . ' AdminOnSteroids';
 
         $linkStyle = 'style="opacity: 0.75; color: inherit !important; margin-left: 0; display: inline-block; padding: 4px 0; margin-right: 1px;"';
         $mouseover = 'onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'"';
@@ -2286,13 +2286,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configLink = '<a href="' . $modulePage . '" ' . $linkStyle . ' title="' . __('Configure module',
                 __FILE__) . '"><i class="fa fa-cog"></i></a>';
 
-        $configLinkMarkup = '<div class="' . $div_class . '"><div class="uk-grid"><div class="uk-width-2-3@m uk-flex-first@m uk-text-center uk-text-left@m uk-first-column"><p style="margin-top: 10px; font-size: 
-0.9rem;" class=""><a 
-href="' . $modulePage . '&toggle=1" 
-class="aos_toggle" 
-' . $linkStyle . '><i 
-class="fa fa-medkit"></i> 
-<span ' . $mouseover . '>
+        $configLinkMarkup = '<div class="' . $div_class . '">
+<div class="uk-grid"><div class="uk-width-2-3@m uk-flex-first@m uk-text-center uk-text-left@m uk-first-column"><p style="margin-top: 10px; font-size: 0.9rem;" class="">
+<a href="' . $modulePage . '&toggle=1" class="aos_toggle"' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>
 ' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p></div></div></div>';
 
         $parts['footer'] .= $configLinkMarkup;
@@ -2339,7 +2335,7 @@ class="fa fa-medkit"></i>
             return;
         }
 
-        if ($field = $this->fields->get($inputfield->name)) {
+        if ($field = $inputfield->hasField) {
 
             if (!is_object($field)) {
                 return;
@@ -2348,10 +2344,9 @@ class="fa fa-medkit"></i>
             // add class to wrapper to be able to use :hover even if label is unavailable (eg. checkbox field)
             $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' aos_hasTooltip');
 
-
             $editFieldUrl = $this->config->urls->admin . 'setup/field/edit?id=' . $field->id;
 
-            $editFieldTooltip = '<em class="aos_EditField">' . $inputfield->name . '<i class="fa fa-pencil"></i></em>';
+            $editFieldTooltip = '<em class="aos_EditField">' . $field->name . '<i class="fa fa-pencil"></i></em>';
 
             // needed to allow HTML in label
             $inputfield->entityEncodeLabel = false;

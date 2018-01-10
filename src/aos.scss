@@ -1490,22 +1490,22 @@ html.noFilenameTruncate {
   p.InputfieldFileInfo.InputfieldItemHeader {
     padding: 6px 34px 6px 25px;
     position: relative;
-  }
-  i.fa-file-image-o,
-  .InputfieldFileInfo i {
-    left: -21px !important;
-    top: 3px;
-    float: left;
-  }
-  a.InputfieldFileName {
-    line-height: 1.33;
-    margin-left: -22px;
-    word-wrap: break-word;
-  }
-  label.InputfieldFileDelete {
-    position: absolute;
-    top: 8px;
-    right: 8px;
+    i.fa-file-image-o,
+    .InputfieldFileInfo i {
+      left: -21px !important;
+      top: 3px;
+      float: left;
+    }
+    a.InputfieldFileName {
+      line-height: 1.33;
+      margin-left: -22px;
+      word-wrap: break-word;
+    }
+    label.InputfieldFileDelete {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
   }
 }
 
@@ -1815,16 +1815,16 @@ html.moduleCompact {
         span.ConfigurableModule {
           position: relative;
           &:after {
-            transform-origin: 50%;
+            transform-origin: center;
             backface-visibility: hidden;
             content: "\f013";
             font-family: FontAwesome, sans-serif;
             position: absolute;
-            font-size: 28px;
-            color: rgba(#364D68, 0.25);
+            font-size: 1rem;
+            display: inline-block;
+            color: rgba(#364D68, 0.3);
             margin-top: 0;
-            margin-left: 0;
-            transform: scale(0.61);
+            margin-left: 0.3rem;
             animation: spinOut 0.5s forwards;
           }
         }
@@ -1974,9 +1974,9 @@ html.PageListThumbs {
     .PageListItem {
       @include clearfix;
       width: 100%;
-      a {
-        border-radius: 0 !important;
-      }
+      //a {
+      //  border-radius: 0 !important;
+      //}
       > a {
         > figure {
           vertical-align: middle;
@@ -3945,23 +3945,17 @@ html.hoverDropdown {
 }
 
 // InputfieldURLChecker
-.InputfieldURL,
-.InputfieldAssistedURL {
-  .InputfieldContent {
-    position: relative;
-  }
-}
 
 .iuc-button {
   position: absolute;
   margin-top: 1px;
-  right: 16px;
+  right: 18px;
   padding: 0 12px;
   background: transparent;
   z-index: 20;
   &.button-left {
     right: auto;
-    left: 16px;
+    left: auto;
   }
   &.iuc-hide {
     pointer-events: none !important;
@@ -3987,16 +3981,27 @@ html.hoverDropdown {
   }
 }
 
-.InputfieldContent .InputfieldAssistedURL {
-  width: 100% !important;
+//.InputfieldContent .InputfieldAssistedURL {
+//  width: 100% !important;
+//}
+
+html.aos .InputfieldAssistedUrlText {
+  padding-top: 0;
 }
 
 .InputfieldAssistedURL {
   .button-left {
-    left: 66px;
+    left: auto;
   }
-  .InputfieldMaxWidth {
-    width: calc(100% - 50px) !important;
+  //.InputfieldMaxWidth {
+  //  width: calc(100% - 50px) !important;
+  //}
+}
+
+.InputfieldContent {
+  .InputfieldURL,
+  .InputfieldAssistedURL {
+    position: relative;
   }
 }
 
@@ -4059,25 +4064,25 @@ html.hoverDropdown {
 
 @keyframes spinIn {
   0% {
-    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+    transform: rotate(0.01deg) translate3d(0, 0, 1px);
   }
   //50% {
   //}
   100% {
     color: inherit;
-    transform: rotate(360.01deg) scale(0.61) translate3d(0, 0, 1px);
+    transform: rotate(360.01deg) translate3d(0, 0, 1px);
   }
 }
 
 @keyframes spinOut {
   100% {
-    transform: rotate(0.01deg) scale(0.61) translate3d(0, 0, 1px);
+    transform: rotate(0.01deg) translate3d(0, 0, 1px);
   }
   //50% {
   //}
   0% {
     color: inherit;
-    transform: rotate(180.01deg) scale(0.61) translate3d(0, 0, 1px);
+    transform: rotate(180.01deg) translate3d(0, 0, 1px);
   }
 }
 

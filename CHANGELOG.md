@@ -1,9 +1,21 @@
 # Changelog
 
 
+### 1.7.1 (2018-01-10)
+
+- fix field edit links inside repeaters (by Robin S)
+- disable Filename Truncation does not work when field is required #84 (report & fix by gingebaker)
+- InputfieldURLChecker improvements (triggered by gmclelland)
+- fix modules list cog icon placement in Uikit theme (+ make them sharper)
+- fix enable/disable AOS link alignment when module is in disabled state
+- fix noFilenameTruncate: too broad CSS selector that may conflict with others (reported by Robin S)
+- remove forced zero border radius from pagelist action buttons (reported by adrian)
+
+
+
 ### 1.7.0 (2017-12-12)
 
-- fix suppressing the "required" icon in the template editor (by reported by Robin S)
+- fix suppressing the "required" icon in the template editor (reported by Robin S)
 
 
 
