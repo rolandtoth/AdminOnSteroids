@@ -1035,7 +1035,7 @@ $(document).ready(function () {
             }
 
 
-            if (HotkeysSettings.indexOf('removeNoticeHotkey')) {
+            if (HotkeysSettings.indexOf('removeNoticeHotkey') !== -1) {
 
                 function removeNoticeHotkey(e) {
 

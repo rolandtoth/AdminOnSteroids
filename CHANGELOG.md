@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.7.2 (2018-01-12)
+
+- fix remove notice hotkey enabled check (by Robin S)
+
+
+
 ### 1.7.1 (2018-01-10)
 
 - fix field edit links inside repeaters (by Robin S)
