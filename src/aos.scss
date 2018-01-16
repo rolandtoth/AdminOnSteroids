@@ -1490,7 +1490,7 @@ html.noFilenameTruncate {
   p.InputfieldFileInfo.InputfieldItemHeader {
     padding: 6px 34px 6px 25px;
     position: relative;
-    i.fa-file-image-o,
+    i[class*="fa-file-"],
     .InputfieldFileInfo i {
       left: -21px !important;
       top: 3px;
@@ -3430,6 +3430,26 @@ html.stickyCKE {
       .cke_top {
         top: 102px;
       }
+    }
+    &.AdminThemeUikit.headSticky {
+      &.headSticky {
+        .cke_top {
+          top: 73px;
+        }
+        &.headCompact {
+          .cke_top {
+            top: 54px;
+          }
+        }
+      }
+    }
+  }
+}
+
+html.AdminThemeUikit {
+  &.headSticky {
+    .pw-primary-nav .uk-active a::after {
+      display: none;  // hide active menu triangle
     }
   }
 }

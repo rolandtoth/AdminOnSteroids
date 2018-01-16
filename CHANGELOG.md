@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.7.3 (2018-01-16)
+
+- disable filename truncation: support icons besides fa-file-image-o
+- sticky cke toolbar: add support for AdminThemeUikit fixed/compact header
+
+
+
 ### 1.7.2 (2018-01-12)
 
 - fix remove notice hotkey enabled check (by Robin S)
