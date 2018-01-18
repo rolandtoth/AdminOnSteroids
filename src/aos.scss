@@ -478,7 +478,7 @@ html.aos {
     .filterbox-wrapper {
       margin-bottom: 1em;
       outline: none;
-      border: 1px solid #E5E5E5;
+      border: none;
       .counter {
         margin-left: 12px;
         em, strong {
@@ -496,9 +496,16 @@ html.aos {
       }
     }
     .filterbox {
-      padding: 0 20px;
+      padding: 0;
       background: transparent;
-      margin-top: 10px;
+      margin: 0 0 24px;
+      > input {
+        width: 100% !important;
+        max-width: 360px !important;
+        border: none !important;
+        border-bottom: 1px solid #E5E5E5 !important;
+        padding-left: 35px !important;
+      }
     }
   }
 

@@ -4,7 +4,7 @@
 ### 1.7.4 (2018-01-18)
 
 - logsHelperTweaks: expand Helpers field on Logs page and use radios instead select for Actions (Misc)
-- AdminThemeUikit filterbox fixes
+- AdminThemeUikit filterbox fixes + design update
 - better fix for IUC button vertical positioning (works inside repeaters too)
 - fix AdminThemeUikit pagelistUnselect button misplacement (reported by Robin S)
 - AdminThemeUikit support for h1 templateEditLink

@@ -341,12 +341,12 @@ function setupAdminDataTableFilter() {
             var dtFilter = $('<div class="Inputfield InputfieldMarkup"><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter items..." class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
         }
         else {
-            var dtFilter = $('<div class=\'uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup\'>' +
+            var dtFilter = $('<div class="uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup">' +
                 '<div class="dtFilter filterbox InputfieldContent ">' +
                 // '<span class="uk-form-icon">' +
                 // '<i class="fa fa-search"></i>' +
                 // '</span>' +
-                '<input type="text"' + autofocus + ' class=\'uk-input uk-form-width-medium\'>' +
+                '<input type="text" placeholder="Filter..."' + autofocus + ' class="uk-input uk-form-width-medium">' +
                 '<i class="fa fa-close"></i>' +
                 '<span class="counter"></span></div></div>');
         }
@@ -645,7 +645,7 @@ function setupAdminDataTableFilter() {
 // Translator filter box
 function setupTranslatorFilter() {
 
-    var transFilter = $('<div class="transFilter filterbox"><input type="text" autofocus><i class="fa fa-close"></i></div>');
+    var transFilter = $('<div class="transFilter filterbox"><input type="text" autofocus placeholder="Filter..."><i class="fa fa-close"></i></div>');
 
     $('form > .Inputfields > .Inputfield:not(.Inputfield_abandoned_fieldset)').each(function () {
 
@@ -2723,7 +2723,7 @@ $(document).ready(function () {
                     moduleFilter;
 
                 if ($('body.AdminThemeUikit').length != 0) {
-                    moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "' + hiddenStyle + '><input type="text" autofocus placeholder="Filter modules below" class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
+                    moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "' + hiddenStyle + '><input type="text" autofocus placeholder="Filter modules..." class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
                 }
                 else {
                     moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');
