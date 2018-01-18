@@ -4,6 +4,15 @@ function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
 }
 
+function addCSSRule(sheet, selector, rules, index) {
+	if("insertRule" in sheet) {
+		sheet.insertRule(selector + "{" + rules + "}", index);
+	}
+	else if("addRule" in sheet) {
+		sheet.addRule(selector, rules, index);
+	}
+}
+
 function initCKE() {
 
     var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
@@ -1438,7 +1447,7 @@ $(document).ready(function () {
 
                     var aos_splitter = Split(['.aos_col_left', '.aos_col_right'], {
                         sizes: typeof sizes === 'string' ? JSON.parse(sizes) : sizes,
-                        gutterSize: 12,
+                        gutterSize: 20,
                         minSize: 250,
                         onDragEnd: function () {
                             localStorage.setItem(storageName, JSON.stringify(aos_splitter.getSizes()));
@@ -1547,17 +1556,20 @@ $(document).ready(function () {
                 selector: 'a.iuc',
                 linkHiddenClass: 'iuc-hide',
                 lockedClass: 'iuc-locked-link',
-                dummyFieldSelector: 'IUC-dummy',
                 dataMode: 'data-iuc-mode',
                 dataTarget: 'data-iuc-target',
                 dataForceHttp: 'data-iuc-force-http',
                 dataLoaded: 'data-iuc-loaded'
             };
 
-            // get button height with a dummy element
-            $('body').append('<input class="uk-input ' + IUC.dummyFieldSelector + '">');
-            IUC.btnHeight = $('.' + IUC.dummyFieldSelector).outerHeight() - 2;
-            $('.' + IUC.dummyFieldSelector).remove();
+            // add css height and line-height to stylesheet
+            $('body').append('<input class="uk-input IUC-dummy">');
+            IUC.height = $('.IUC-dummy').outerHeight() - 2;
+            $('.IUC-dummy').remove();
+
+            if(IUC.height > 0 && document.styleSheets[0]) {
+                addCSSRule(document.styleSheets[0], '.iuc-button', 'height: ' + IUC.height + 'px; line-height: ' + IUC.height + 'px');
+            }
 
             // $(document).on('ready reloaded wiretabclick opened', initIUC);
             $(document).on('ready reloaded wiretabclick opened', initIUC);
@@ -1571,21 +1583,6 @@ $(document).ready(function () {
             });
 
             function initIUC(e) {
-
-                $(IUC.selector).not('[' + IUC.dataLoaded + '="1"]').each(function () {
-
-                    var iucLink = $(this);
-
-                    // set link height
-                    setTimeout(function () {
-                        if (IUC.btnHeight > 0) {
-                            iucLink.css({
-                                'height': IUC.btnHeight + 'px',
-                                'line-height': IUC.btnHeight + 'px'
-                            });
-                        }
-                    }, 0);
-                });
 
                 $(IUC.selector + '[' + IUC.dataMode + '!=""][' + IUC.dataMode + ']').not('[' + IUC.dataLoaded + '="1"]').each(function () {
 

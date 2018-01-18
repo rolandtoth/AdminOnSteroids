@@ -1,6 +1,18 @@
 # Changelog
 
 
+### 1.7.4 (2018-01-18)
+
+- logsHelperTweaks: expand Helpers field on Logs page and use radios instead select for Actions (Misc)
+- AdminThemeUikit filterbox fixes
+- better fix for IUC button vertical positioning (works inside repeaters too)
+- fix AdminThemeUikit pagelistUnselect button misplacement (reported by Robin S)
+- AdminThemeUikit support for h1 templateEditLink
+- fix for non-reachable h1 templateEditLink
+- aos_column_break: remove extra fieldset gutter and background color (AdminThemeUikit), increase gutter width
+
+
+
 ### 1.7.3 (2018-01-16)
 
 - disable filename truncation: support icons besides fa-file-image-o
@@ -793,7 +805,7 @@
 
 ### 0.8.2 (2016-10-20)
 
-- array to string conversion fix for InputfieldURLChecker (reported by Toutouwai)
+- array to string conversion fix for InputfieldURLChecker (reported by Robin S)
 
 
 

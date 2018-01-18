@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '173',
+            'version'   => '174',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -619,6 +619,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
         }
 
+
 //        $this->addHookBefore('ProcessPageList::execute', function(HookEvent $event) {
 //            // overwrite GET lang parameter
 //            $this->input->get['lang'] = 1020;
@@ -981,6 +982,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
             }
 
+            // logsHelperTweaks
+            if (in_array('logsHelperTweaks', $configData[$subModule])) {
+                $this->addHookAfter('InputfieldFieldset(id=FieldsetTools)::render', $this, 'expandFieldsetToolsField');
+                $this->addHookAfter('InputfieldSelect(id=Inputfield_action,is_replacement!=1)::render', $this, 'replaceLogActionsWithRadios');
+            }
+
 
             // showSystemTemplates
             if (in_array('showSystemTemplates', $configData[$subModule])) {
@@ -1200,15 +1207,38 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //    }
 
 
+    public function expandFieldsetToolsField(HookEvent $event)
+    {
+        $field = $event->object;
+        $field->collapsed = Inputfield::collapsedNo;
+        $field->label = '';
+        $field->wrapAttr('class', 'aos_no-inputfield-padding');
+    }
+
+    // replace select box for Actions field on Logs page
+    public function replaceLogActionsWithRadios(HookEvent $event)
+    {
+        $field = $event->object;
+        $config = $this->wire('config');
+
+        $radios = wire('modules')->get('InputfieldRadios');
+        $radios->name = 'action';
+        $radios->is_replacement = '1';  // custom property for the conditional hook (to run only 1 times)
+        $field->wrapAttr('class', 'InputfieldRadios');
+
+        $radios->addOptions($field->options);
+
+        // need to manually load css
+        $config->styles->add($config->urls->modules . '/Inputfield/InputfieldRadios/InputfieldRadios.css');
+
+        $event->return = $radios->render();
+    }
+
+
     // uncheck "Active?" checkbox next to language names when adding a new page
     public function uncheckAddnewActive(HookEvent $event)
     {
         $page = $this->wire('page');
-
-        // AOS is only available in the admin
-//        if ($page->template != 'admin') {
-//            return;
-//        }
 
         if ($page->process == 'ProcessPageAdd' || ($page->process == 'ProcessPageEdit' && $this->wire('input')->get('new') == 1)) {
             $event->return = str_replace("checked='checked'", "", $event->return);
@@ -1313,7 +1343,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $page_language_ids = $page_languages->id();
 
         foreach ($langs as $lang) {
-            $l .= '<b' . (in_array($lang->id, $page_language_ids) ? '  class="active"' : '') .' title="' . $lang->title . '">' . mb_substr($lang->title, 0, 3) . '</b>';
+            $l .= '<b' . (in_array($lang->id, $page_language_ids) ? '  class="active"' : '') . ' title="' . $lang->title . '">' . mb_substr($lang->title, 0, 3) . '</b>';
         }
 
         $event->return = $markup . '<i class="pagelist-langs">' . $l . '</i>';
@@ -1382,7 +1412,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         // do not process Image (and other) fields
         if ($event->object instanceof FieldtypeFile) {
-           return;
+            return;
         }
 
         // noShortName is used by InputfieldFile but not available as a config option
@@ -1998,12 +2028,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         $fsetLeft = $this->modules->get("InputfieldFieldset");
-        $fsetLeft->attr('class', $fsetLeft->attr('class') . ' aos_col_left');
+        $fsetLeft->attr('class', $fsetLeft->attr('class') . ' aos_col_left aos_no-inputfield-padding');
+        $fsetLeft->set('themeBorder', 'none');
+        $fsetLeft->set('themeOffset', false);
         $fsetLeft->wrapAttr('style', 'width: ' . $colWidths[0] . '%');
         $fsetLeft->wrapAttr('data-splitter-default', $colWidths[0]);
 
         $fsetRight = $this->modules->get("InputfieldFieldset");
-        $fsetRight->attr('class', $fsetRight->attr('class') . ' aos_col_right');
+        $fsetRight->set('themeBorder', 'none');
+        $fsetRight->set('themeOffset', false);
+        $fsetRight->attr('class', $fsetRight->attr('class') . ' aos_col_right aos_no-inputfield-padding');
         $fsetRight->wrapAttr('style', 'width: ' . $colWidths[1] . '%');
         $fsetRight->wrapAttr('data-splitter-default', $colWidths[1]);
 
@@ -2315,6 +2349,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         if ($this->adminTheme === 'AdminThemeDefault') {
             $event->return = str_replace('<li class=\'title\'>', '<li class="title">' . $templateEditLink, $event->return);
+        } else if ($this->adminTheme === 'AdminThemeUikit') {
+            $event->return = str_replace('<h1 class=\'uk-margin-remove-top\'>', '<h1 id="title" class="uk-margin-remove-top">' . $templateEditLink, $event->return);
         } else {
             // todo check for AdminThemeUikit
             $event->return = preg_replace('/<h1 id="title">(<span>)?(.*)(<\/span>)?<\/h1>/', '<h1 id="title"><span>${2}</span>' . $templateEditLink . '</h1>', $event->return, 1);
@@ -3402,6 +3438,7 @@ HTML;
         $f->addOption('stickyCKE', __('Sticky CKEditor toolbar', __FILE__));
         $f->addOption('themeConfigLinks', __('Add Profile page links to configure admin themes (SuperUser only)', __FILE__));
         $f->addOption('prevNextLinks', __('Add links to edit previous and next pages', __FILE__));
+        $f->addOption('logsHelperTweaks', __('Expand Helpers field on Logs page and use radio buttons for log actions', __FILE__));
 
 
         if ($data[$f->name]) {
