@@ -503,8 +503,11 @@ html.aos {
         width: 100% !important;
         max-width: 360px !important;
         border: none !important;
-        border-bottom: 1px solid #E5E5E5 !important;
+        border-bottom: 1px solid #D9E1EA !important;
         padding-left: 35px !important;
+        &:focus {
+          border-color: #8d939e !important;
+        }
       }
     }
   }
