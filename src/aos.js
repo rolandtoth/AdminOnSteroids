@@ -5,12 +5,12 @@ function _isEnabled(submoduleName) {
 }
 
 function addCSSRule(sheet, selector, rules, index) {
-	if("insertRule" in sheet) {
-		sheet.insertRule(selector + "{" + rules + "}", index);
-	}
-	else if("addRule" in sheet) {
-		sheet.addRule(selector, rules, index);
-	}
+    if ("insertRule" in sheet) {
+        sheet.insertRule(selector + "{" + rules + "}", index);
+    }
+    else if ("addRule" in sheet) {
+        sheet.addRule(selector, rules, index);
+    }
 }
 
 function initCKE() {
@@ -337,7 +337,7 @@ function setupAdminDataTableFilter() {
     if ($('.AdminDataTable:not(.InputfieldTable)').length) {
 
         var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '';
-        if ($('body.AdminThemeUikit').length == 0) {
+        if ($('body.AdminThemeUikit').length === 0) {
             var dtFilter = $('<div class="Inputfield InputfieldMarkup"><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter items..." class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
         }
         else {
@@ -383,7 +383,7 @@ function setupAdminDataTableFilter() {
             setDtTable(table);
 
             // add to DOM
-            if ($('.AdminDataTable').length == 1) {
+            if ($('.AdminDataTable').length === 1) {
 
                 // Sessions page
                 if ($('body').hasClass('id-1095')) {
@@ -508,28 +508,27 @@ function setupAdminDataTableFilter() {
             e = e || window.event;
 
             var target = e.target || e.srcElement,
-                filter = target.value.toLowerCase(),
                 field = $('.AdminDataTable'),
+                filter = target.value.toLowerCase(),
                 items = field.find('tbody td'),
-                //count = 0,
-                length = filter.length,
+                length,
                 invertedSearch = false;
 
-            // Lister page: process only closest tables (exception)
+            // Lister page: process only first datatable (exception)
             if ($('body').hasClass('id-1007')) {
-                field = $(target).parent().parent().find('.AdminDataTable');
+                field = $(target).parent().parent().parent().find('.AdminDataTable');
                 items = field.find('tbody td');
             }
 
             if (!target.value) {
                 updateDtFilterCounter();
                 $(target).parent().removeClass('hasValue');
-                $('tr.hidden').removeClass('hidden');
-                $('.Inputfield.hidden').removeClass('hidden');
+                field.find('tr.hidden').removeClass('hidden');
+                field.find('.Inputfield.hidden').removeClass('hidden');
                 return true;
             }
 
-            if (e.keyCode == 13) {  // Enter
+            if (e.keyCode === 13) {  // Enter
                 var visibleRowLinks = $('tbody tr:not(.hidden) a');
                 if (visibleRowLinks.length) {
                     visibleRowLinks.first().get(0).click();
@@ -568,7 +567,7 @@ function setupAdminDataTableFilter() {
 
                 var filter_tags = filter.split(" "); // Split user input by spaces
 
-                if (filter_tags.length == 0) return true;
+                if (filter_tags.length === 0) return true;
 
                 items.each(function () {
 
@@ -1252,7 +1251,7 @@ $(document).ready(function () {
                     searchBoxValue;
 
                 // try in parent frame (uikit)
-                if(searchBox.length === 0) {
+                if (searchBox.length === 0) {
                     searchBox = $('#ProcessPageSearchQuery, .uk-navbar-right .pw-search-form .pw-search-input', window.parent.document);
                 }
 
@@ -1567,7 +1566,7 @@ $(document).ready(function () {
             IUC.height = $('.IUC-dummy').outerHeight() - 2;
             $('.IUC-dummy').remove();
 
-            if(IUC.height > 0 && document.styleSheets[0]) {
+            if (IUC.height > 0 && document.styleSheets[0]) {
                 addCSSRule(document.styleSheets[0], '.iuc-button', 'height: ' + IUC.height + 'px; line-height: ' + IUC.height + 'px');
             }
 
@@ -3149,6 +3148,7 @@ $(document).ready(function () {
                         }
 
                         field.find('.InputfieldFileFieldFilter input').attr('list', field.attr('id'));
+
                     }
                 }
 

@@ -519,7 +519,7 @@ html.aos {
     clear: both;
     padding: 6px;
     background: #EAF0F2;
-    color: #6c96a4;
+    //color: #6c96a4;
 
     &:before {
       // search character icon
@@ -619,6 +619,11 @@ html.aos {
       color: #6c96a4;
     }
     /* IE 10+ */
+  }
+
+  // fixes height issue on filtered table (filterbox)
+  .tablesorter-resizable-container {
+    position: static;
   }
 
   .modules_section.hidden {

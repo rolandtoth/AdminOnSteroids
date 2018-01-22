@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 1.7.5 (2018-01-22)
+
+- filterbox fix for Find page (Lister) (reported by gmclelland)
+- filterbox: clear only current instance on ESC
+- change to string versioning
+
+
+
 ### 1.7.4 (2018-01-18)
 
 - logsHelperTweaks: expand Helpers field on Logs page and use radios instead select for Actions (Misc)
