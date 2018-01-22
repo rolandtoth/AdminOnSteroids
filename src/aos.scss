@@ -592,33 +592,6 @@ html.aos {
         margin-right: 2px;
       }
     }
-    input:focus::-webkit-input-placeholder {
-      color: transparent;
-    }
-    input::-webkit-input-placeholder {
-      color: #6c96a4;
-    }
-    input:focus:-moz-placeholder {
-      color: transparent;
-    }
-    input:-moz-placeholder {
-      color: #6c96a4;
-    }
-    /* FF 4-18 */
-    input:focus::-moz-placeholder {
-      color: transparent;
-    }
-    input::-moz-placeholder {
-      color: #6c96a4;
-    }
-    /* FF 19+ */
-    input:focus:-ms-input-placeholder {
-      color: transparent;
-    }
-    input:-ms-input-placeholder {
-      color: #6c96a4;
-    }
-    /* IE 10+ */
   }
 
   // fixes height issue on filtered table (filterbox)
