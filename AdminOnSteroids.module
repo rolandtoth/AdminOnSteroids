@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.7.5',
+            'version'   => '1.7.6',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -917,7 +917,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //						$p->of(false);	// fix breadcrumb html-encoded value issue (fixed in PW 3.05x)
                         $breadcrumbUrls[] = array(
                             'url'     => $p->viewable() ? $p->httpUrl : null,
-                            'editUrl' => $p->editable() ? rtrim($homepage->httpUrl, '/') . $p->editUrl : null
+                            'editUrl' => $p->editable() ? $p->editUrl : null
                         );
                     }
 
@@ -3439,6 +3439,8 @@ HTML;
         $f->addOption('themeConfigLinks', __('Add Profile page links to configure admin themes (SuperUser only)', __FILE__));
         $f->addOption('prevNextLinks', __('Add links to edit previous and next pages', __FILE__));
         $f->addOption('logsHelperTweaks', __('Expand Helpers field on Logs page and use radio buttons for log actions', __FILE__));
+        $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
+
 
 
         if ($data[$f->name]) {
@@ -3663,7 +3665,6 @@ HTML;
         $f->addOption('sbAutoHide', __('Autohide sidebar', __FILE__));
         $f->addOption('pListCompact', __('Use narrow pagelist rows', __FILE__));
         $f->addOption('openSearch', __('Always show search field', __FILE__));
-        $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
         $f->addOption('hoverTopSubmenus', __('Show topnav submenus on hover instead click', __FILE__));
         $f->addOption('noticeLeftX', __('Move notice close buttons to the left', __FILE__));
 

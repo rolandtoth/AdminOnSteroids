@@ -1067,6 +1067,8 @@ $(document).ready(function () {
 
             if (HotkeysSettings.indexOf('breadcrumbTweaks') !== -1 && BreadcrumbsSettings) {
 
+                $('.uk-breadcrumb').attr('id', 'breadcrumbs');  // adminthemeuikit has no id
+
                 // add "data-*" markups
                 // skip first item in Default admin theme (.pw-panel)
                 // skip debug (href #, default theme)
@@ -3013,6 +3015,14 @@ $(document).ready(function () {
             // add 'active' class if submenu has active item
             $('.AdminThemeReno .navItem.hasSubmenu a.current').parents('.hasSubmenu').first().addClass('active');
 
+            if($('html.AdminThemeUikit').length) {
+                topNavElem = $('.uk-navbar-nav.pw-primary-nav > li > ul').first();
+                $NavItems.children('li').each(function () {
+                      topNavElem.append($(this));
+                  });
+            } else {
+
+
             if (topNavHasItems) {
                 // if ($('.NavItems > li').length) {
                 $NavItems.children('li').each(function () {
@@ -3027,6 +3037,7 @@ $(document).ready(function () {
                 $NavItems.each(function () {
                     firstNavItem.children('ul').append($(this));
                 });
+            }
             }
 
             $('body').removeAttr('data-navitems');

@@ -114,6 +114,7 @@ html.aos {
     #title {
       // prevent title overlap with head buttons (on screen size < 960px)
       display: inline-block;
+      padding-right: 2rem;
     }
   }
 
@@ -191,13 +192,13 @@ html.aos {
 
   .aos_EditTemplate {
     min-width: 4rem;
-  // keep visible on hover (workaround for h1 span overflow: hidden)
+    // keep visible on hover (workaround for h1 span overflow: hidden)
     &:hover {
-        display: inline-block;
-        visibility: visible;
-        transform: scale(1);
-        opacity: 1;
-      }
+      display: inline-block;
+      visibility: visible;
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   // allows tooltips to be fully visible
@@ -505,9 +506,10 @@ html.aos {
         border: none !important;
         border-bottom: 1px solid #D9E1EA !important;
         padding-left: 35px !important;
-        &:focus {
-          border-color: #8d939e !important;
-        }
+      }
+      > input:focus,
+      &.hasValue input {
+        border-color: #8d939e !important;
       }
     }
   }
@@ -1543,6 +1545,7 @@ html.filterbox {
     display: inline-block;
     margin-top: -4px;
 
+
     input {
       transition: all $defaultTransition;
       // placeholder hack
@@ -1604,6 +1607,23 @@ html.filterbox {
   .InputfieldImageMax1 {
     .InputfieldFileFieldFilter {
       display: none;
+    }
+  }
+}
+
+html.aos body.AdminThemeUikit .InputfieldFileFieldFilter {
+  margin-left: 32px;
+  margin-top: -6px;
+  margin-bottom: 0;
+  input {
+    padding-left: 10px !important;
+    padding-right: 4px !important;
+    font-weight: normal;
+    background: #FAFBFC !important;
+    height: 36px;
+    line-height: 32px;
+    &:focus {
+      background: white !important;
     }
   }
 }
@@ -2993,32 +3013,6 @@ html.AdminThemeReno {
     }
   }
 
-  // headBtnToTitle
-  &.headBtnToTitle {
-    @media only screen and (min-width: 960px) {
-      // head_button next to title
-      #headline {
-        #head_button {
-          float: none;
-          display: inline-block;
-          margin-bottom: -1em;
-          //margin-bottom: 0;
-
-          button {
-            //background: transparent !important;
-            //color: inherit !important;
-            //border: 1px solid rgba(#000, 0.16) !important;
-          }
-        }
-        #title {
-          float: left;
-          padding-right: 0;
-          margin-right: 2em;
-        }
-      }
-    }
-  }
-
   // sbSticky
   &.sbSticky {
     @media only screen and (min-width: 960px) {
@@ -3202,6 +3196,43 @@ html.AdminThemeReno {
   }
 }
 
+html.headBtnToTitle {
+  @media only screen and (min-width: 960px) {
+    #pw-content-head-buttons,
+    #head_button {
+      float: none;
+      margin-left: 1rem;
+      margin-top: 0.2rem;
+      display: inline-block;
+      //> button {
+      //  float: none;
+      //}
+    }
+    &.AdminThemeReno {
+      #head_button {
+        margin-top: 0;
+      }
+    }
+    #pw-content-head h1,
+    #headline h1,
+    #breadcrumbs ul.nav {
+      float: left;
+    }
+    #breadcrumbs {
+      #head_button {
+        margin-bottom: -23px;
+        top: -9px;
+      }
+      //ul.nav {
+      //      margin-top: 2px;
+      //    }
+    }
+    #pw-content-body {
+      clear: both;
+    }
+  }
+}
+
 // UikitTweaks (AdminThemeUikit theme tweaks)
 html.AdminThemeUikit {
   @media only screen and (min-width: 960px) {
@@ -3330,7 +3361,7 @@ html.AdminThemeDefault {
           margin-top: 3px;
         }
 
-        padding-top: 97px;
+        padding-top: 103px;
 
         #masthead {
           position: fixed;
@@ -3377,7 +3408,7 @@ html.AdminThemeDefault {
         }
 
         #head_button {
-          margin-bottom: -16px;
+          margin-bottom: -20px;
           top: -7px;
         }
 
@@ -3806,6 +3837,10 @@ html.pListIconOnly {
       &.first {
         border-top: 1px solid rgba(#51739D, 0.2);
       }
+    }
+    > ul.ui-menu { // uikit
+      box-shadow: none;
+      border: none !important;
     }
     .page-list {
       &:hover {

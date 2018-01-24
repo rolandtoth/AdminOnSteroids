@@ -1,6 +1,16 @@
 # Changelog
 
 
+### 1.7.6 (2018-01-24)
+
+- AdminThemeUikit: fix ctrl-click on breadcrumbs
+- AdminThemeUikit: add navItems to Page menu
+- move tweak "Place header button next to the main title" to Misc (available for all 3 admin themes)
+- breadcrumb editurl: fix double directory in url on subdirectory installs
+- InputfieldFileFieldFilter positioning fix in AdminThemeUikit (reported by gmclelland)
+
+
+
 ### 1.7.5 (2018-01-22)
 
 - filterbox fix for Find page (Lister) (reported by gmclelland)
