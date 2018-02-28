@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.7.6',
+            'version'   => '1.7.7',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -593,6 +593,30 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             });
         }
 
+
+        // AsmTweaks
+        $subModule = 'AsmTweaks';
+
+        if (in_array($subModule, $enabledSubmodules)) {
+
+            if (in_array('asmPlaceholder', $configData[$subModule])) {
+                $this->addHookAfter("Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields", $this, "addAsmPlaceholderConfigField");
+                $this->addHookAfter("InputfieldAsmSelect::render", $this, "addAsmPlaceholder");
+            }
+
+            if (in_array('asmLimit', $configData[$subModule])) {
+                $this->addHookAfter("Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields", $this, "addLimitItemsConfigField");
+                $this->addHookAfter("InputfieldAsmSelect::render", $this, "addAsmLimit");
+            }
+
+            if (in_array('asmSearchBox', $configData[$subModule])) {
+                $this->addHookAfter("InputfieldAsmSelect::render", $this, "addAsmSelectBox");
+                $styles->add($root . '/scripts/vendor/select2/css/select2.min.css');
+                $scripts->add($root . '/scripts/vendor/select2/js/select2.min.js'); // note: patched
+            }
+        }
+
+
         //FieldAndTemplateEditLinks
         $subModule = 'FieldAndTemplateEditLinks';
         if (in_array($subModule, $enabledSubmodules)) {
@@ -645,11 +669,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $this->addHookAfter('InputfieldPageAutocomplete::render', $this, 'addIUCLink');
         }
 
-        //AsmTweaks
-//        $subModule = 'AsmTweaks';
-//        if (in_array($subModule, $enabledSubmodules)) {
-//            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
-//        }
 
         //PageListTweaks
         $subModule = 'PageListTweaks';
@@ -1157,7 +1176,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'cancel'                   => __('Cancel', __FILE__),
             'delete_action'            => __('Delete', __FILE__),
             'permanent_delete_confirm' => __('Delete permanently?', __FILE__),
-            'untitled'                 => __('Untitled', __FILE__)
+            'untitled'                 => __('Untitled', __FILE__),
+            'asm_max_limit'            => __('Maximum items allowed:', __FILE__)
         );
 
         // add modified enabledSubmodules to JS config (modified by roles)
@@ -1501,6 +1521,113 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         //$event->return = utf8_decode($markup);
         $event->return = $markup;
+    }
+
+
+    public function addAsmPlaceholder(HookEvent $event)
+    {
+        $field = $event->object;
+        $property = 'asmPlaceholder';
+
+        $placeholder = $field->$property ? $field->$property : ($field->hasField ? $field->hasField->$property : false);
+
+        if ($placeholder) {
+            $script = '<script>initAsmPlaceholder("' . $field->id . '")</script>';
+            $event->return = $script . str_replace('select ', 'select ' . 'data-asm-placeholder="' . $placeholder . '" ', $event->return);
+        }
+    }
+
+
+    public function addAsmLimit(HookEvent $event)
+    {
+        $field = $event->object;
+        $property = 'asmLimit';
+
+        $limit = $field->$property ? $field->$property : ($field->hasField ? $field->hasField->$property : false);
+
+        if ($limit) {
+            $script = '<script>initAsmLimit("' . $field->id . '")</script>';
+            $event->return = $script . str_replace('select ', 'select ' . 'data-asm-limit="' . $limit . '" ', $event->return);
+        }
+    }
+
+
+    public function addAsmSelectBox(HookEvent $event)
+    {
+        $field = $event->object;
+
+        if ($field->attr('data-no-asm-searchbox') === '1') {
+            return;
+        }
+
+        $id = $field->attr('id');
+
+        $script = "<script>initAsmSelectBox('$id');</script>";
+
+        $event->return .= $script;
+    }
+
+
+    public function addAsmPlaceholderConfigField(HookEvent $event)
+    {
+        // The field being edited
+        $field = $event->object;
+
+        // The inputfield wrapper
+        $wrapper = $event->return;
+        $f_before = false;
+
+        if ($field->type == 'FieldtypePage') {
+            $f_before = $wrapper->getChildByName('labelFieldName');
+        } else {
+            if ($field->type == 'FieldtypeOptions') {
+                $f_before = $wrapper->getChildByName('defaultValue');
+            }
+        }
+
+        if (!$f_before) {
+            return;
+        }
+
+        $f = $this->modules->get("InputfieldText");
+        $f->attr('name', "asmPlaceholder");
+        $f->label = $this->_("Placeholder");
+        $f->value = $field->asmPlaceholder;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        $wrapper->insertAfter($f, $f_before);
+    }
+
+    public function addLimitItemsConfigField(HookEvent $event)
+    {
+        // The field being edited
+        $field = $event->object;
+
+        // The inputfield wrapper
+        $wrapper = $event->return;
+        $f_before = false;
+
+        if ($field->type == 'FieldtypePage') {
+            $f_before = $wrapper->getChildByName('labelFieldName');
+        } else {
+            if ($field->type == 'FieldtypeOptions') {
+                $f_before = $wrapper->getChildByName('defaultValue');
+            }
+        }
+
+        if (!$f_before) {
+            return;
+        }
+
+        $f = $this->modules->get("InputfieldInteger");
+        $f->attr('name', "asmLimit");
+        $f->label = $this->_("Max limit of items");
+        $f->inputType = 'number';
+        $f->min = 0;
+        $f->value = $field->asmLimit;
+        $f->collapsed = Inputfield::collapsedBlank;
+
+        $wrapper->insertAfter($f, $f_before);
     }
 
 
@@ -2349,11 +2476,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         if ($this->adminTheme === 'AdminThemeDefault') {
             $event->return = str_replace('<li class=\'title\'>', '<li class="title">' . $templateEditLink, $event->return);
-        } else if ($this->adminTheme === 'AdminThemeUikit') {
-            $event->return = str_replace('<h1 class=\'uk-margin-remove-top\'>', '<h1 id="title" class="uk-margin-remove-top">' . $templateEditLink, $event->return);
         } else {
-            // todo check for AdminThemeUikit
-            $event->return = preg_replace('/<h1 id="title">(<span>)?(.*)(<\/span>)?<\/h1>/', '<h1 id="title"><span>${2}</span>' . $templateEditLink . '</h1>', $event->return, 1);
+            if ($this->adminTheme === 'AdminThemeUikit') {
+                $event->return = str_replace('<h1 class=\'uk-margin-remove-top\'>', '<h1 id="title" class="uk-margin-remove-top">' . $templateEditLink, $event->return);
+            } else {
+                // todo check for AdminThemeUikit
+                $event->return = preg_replace('/<h1 id="title">(<span>)?(.*)(<\/span>)?<\/h1>/', '<h1 id="title"><span>${2}</span>' . $templateEditLink . '</h1>', $event->return, 1);
+            }
         }
     }
 
@@ -2769,7 +2898,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $f->attr('name', $submoduleName . 'Roles');
         $f->label = __($submoduleName . ' roles', __FILE__);
         $f->skipLabel = Inputfield::skipLabelHeader;
-        $f->attr('data-asm-placeholder', __('ROLES', __FILE__));
+        $f->attr('asmPlaceholder', __('ROLES', __FILE__));
+        $f->attr('data-no-asm-searchbox', '1');
         $f->showIf = 'enabledSubmodules=' . $submoduleName;
         $f->setAsmSelectOption('sortable', false);
         $f->collapsed = Inputfield::collapsedNever;
@@ -2888,7 +3018,7 @@ HTML;
         $f = wire('modules')->get('InputfieldAsmSelect');
         $f->name = 'AddNewChildFirst_enabledTemplates';
         $f->label = __('Enabled templates', __FILE__);
-        $f->attr('data-asm-placeholder', __('Add templates...', __FILE__));
+        $f->attr('asmPlaceholder', __('Add templates...', __FILE__));
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->addOption('__all__', '[ALL]');
@@ -2937,9 +3067,12 @@ HTML;
         $f->addOption('asmCollapse', __('Collapse fieldset/tab items on double click', __FILE__));
         $f->addOption('asmLeftX', __('Move delete button to the left', __FILE__));
         $f->addOption('fieldMiddleEdit', __('Edit field in new tab on middle click (no template context)', __FILE__));
-        $f->addOption('editFieldWidth',
-            __('Template editor: add clickable field width percentages and display divisions on width slider',
-                __FILE__));
+        $f->addOption('editFieldWidth', __('Template editor: add clickable field width percentages and display divisions on width slider',
+            __FILE__));
+        $f->addOption('asmLimit', __('Add limit to asmSelects', __FILE__));
+        $f->addOption('asmPlaceholder', __('Add placeholder to asmSelects', __FILE__));
+        $f->addOption('asmSearchBox', __('Add search box to asmSelects', __FILE__));
+
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -2961,10 +3094,11 @@ HTML;
         $f->name = 'CKEaddons_plugins';
         $f->label = __('Plugins', __FILE__);
         $f->description = __('Plugins marked with asterisk add toolbar items.', __FILE__);
-
+        $f->attr('asmPlaceholder', __('Select plugins...', __FILE__));
+//        $f->attr('asmLimit', 3);
         $f->collapsed = Inputfield::collapsedNever;
 
-        $addsToolbarButtonText = '*';
+        $hasToolbarBtn = '*';
 
         $f->addOption('autogrow', 'Auto Grow');
         $f->addOption('autolink', 'Auto Link');
@@ -2972,17 +3106,18 @@ HTML;
         $f->addOption('codemirror', 'CodeMirror');
         $f->addOption('codesnippet', 'Code Snippet');
         $f->addOption('templates', 'Content Templates');
-        $f->addOption('div', 'Div' . $addsToolbarButtonText);
-        $f->addOption('find', 'Find' . $addsToolbarButtonText);
-        $f->addOption('indentblock', 'Indent Block' . $addsToolbarButtonText);
-        $f->addOption('justify', 'Justify' . $addsToolbarButtonText);
+        $f->addOption('div', 'Div' . $hasToolbarBtn);
+        $f->addOption('find', 'Find' . $hasToolbarBtn);
+        $f->addOption('indentblock', 'Indent Block' . $hasToolbarBtn);
+        $f->addOption('justify', 'Justify' . $hasToolbarBtn);
         $f->addOption('textselection', 'Keep TextSelection');
         $f->addOption('keystrokes', 'Keystrokes');
         $f->addOption('magicline', 'Magic Line');
-        $f->addOption('maximize', 'Maximize' . $addsToolbarButtonText);
-        $f->addOption('oembed', 'Media (oEmbed)' . $addsToolbarButtonText);
-        $f->addOption('showblocks', 'Show Blocks' . $addsToolbarButtonText);
-        $f->addOption('token', 'Token' . $addsToolbarButtonText);
+        $f->addOption('mathjax', 'Mathjax' . $hasToolbarBtn);
+        $f->addOption('maximize', 'Maximize' . $hasToolbarBtn);
+        $f->addOption('oembed', 'Media (oEmbed)' . $hasToolbarBtn);
+        $f->addOption('showblocks', 'Show Blocks' . $hasToolbarBtn);
+        $f->addOption('token', 'Token' . $hasToolbarBtn);
 
         if (isset($data[$f->name]) && $data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -2997,7 +3132,7 @@ HTML;
         $f->name = 'CKEaddons_enabledFields';
         $f->label = __('Enabled fields&nbsp;(for plugins only)', __FILE__);
 //        $f->description = __('Note: selected fields will restrict plugins only and not the skin.', __FILE__);
-        $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
+        $f->attr('asmPlaceholder', __('Add fields...', __FILE__));
         $f->collapsed = Inputfield::collapsedNever;
         $f->columnWidth = 66;
 
@@ -3060,6 +3195,7 @@ HTML;
         $f->name = 'ListerTweaks_find';
         $f->label = __('Find lister columns', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
+        $f->attr('asmPlaceholder', __('Add fields...', __FILE__));
 
         $lister_fieldnames = $this->wire('fields')->find('type!=FieldtypeFieldsetOpen|FieldtypeFieldsetClose|FieldtypeFieldsetTabOpen|FieldtypeFieldsetTabClose, sort=label')->name();
         $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
@@ -3084,6 +3220,7 @@ HTML;
         $f->name = 'ListerTweaks_users';
         $f->label = __('Users lister columns', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
+        $f->attr('asmPlaceholder', __('Add fields...', __FILE__));
 
         $lister_fieldnames = $this->wire('templates')->get('user')->fields->find('name!=pass, sort=label')->name();
         $lister_fieldnames = array_merge($lister_fieldnames, $extraFieldNames);
@@ -3335,7 +3472,7 @@ HTML;
         $f = wire('modules')->get('InputfieldAsmSelect');
         $f->name = 'IUC_enabledTemplates';
         $f->label = __('Enabled templates', __FILE__);
-        $f->attr('data-asm-placeholder', __('Add templates...', __FILE__));
+        $f->attr('asmPlaceholder', __('Add templates...', __FILE__));
         $f->collapsed = Inputfield::collapsedNever;
         $f->columnWidth = 50;
 
@@ -3362,12 +3499,13 @@ HTML;
             $f->label = __('Enabled fields', __FILE__);
             $f->collapsed = Inputfield::collapsedNever;
             $f->columnWidth = 50;
+            $f->attr('asmPlaceholder', __('Add fields...', __FILE__));
 
             foreach ($url_fields as $url_field) {
                 $f->addOption($url_field->name, self::getFormattedOptionName($url_field));
             }
 
-            $f->attr('data-asm-placeholder', __('Add fields...', __FILE__));
+            $f->attr('asmPlaceholder', __('Add fields...', __FILE__));
 
 //            $f->attr('value', isset($data[ $f->name ]) ? $data[ $f->name ] : $dataIUC[ $f->name ]);
             if ($data[$f->name]) {
@@ -3440,7 +3578,6 @@ HTML;
         $f->addOption('prevNextLinks', __('Add links to edit previous and next pages', __FILE__));
         $f->addOption('logsHelperTweaks', __('Expand Helpers field on Logs page and use radio buttons for log actions', __FILE__));
         $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
-
 
 
         if ($data[$f->name]) {
@@ -3683,6 +3820,7 @@ HTML;
         $f->description = __('Hide tree dropdown for the following roles:', __FILE__);
         $f->showIf = 'enabledSubmodules=RestrictTreeDropdown';
         $f->collapsed = Inputfield::collapsedNever;
+        $f->attr('asmPlaceholder', __('Add roles...', __FILE__));
 
         $roles = $this->wire('roles')->find("name!=guest");
         $f->addOption('all-roles', $this->_('all'));

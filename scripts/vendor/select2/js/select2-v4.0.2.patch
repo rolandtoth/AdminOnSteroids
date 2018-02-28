@@ -1,0 +1,17 @@
+diff -Naur old/select2-v4.0.2/dist/js/select2.full.js new/select2-v4.0.2/dist/js/select2.full.js
+--- old/select2-v4.0.2/dist/js/select2.full.js	2016-03-08 17:33:38.000000000 -0800
++++ new/select2-v4.0.2/dist/js/select2.full.js	2016-04-26 18:10:26.000000000 -0700
+@@ -5122,11 +5122,13 @@
+     var self = this;
+ 
+     this.$element.on('change.select2', function () {
++     if (self.dataAdapter != null) {
+       self.dataAdapter.current(function (data) {
+         self.trigger('selection:update', {
+           data: data
+         });
+       });
++     }
+     });
+ 
+     this._sync = Utils.bind(this._syncAttributes, this);

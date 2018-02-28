@@ -1,6 +1,18 @@
 # Changelog
 
 
+### 1.7.7 (2018-02-28)
+
+- asmTweaks: added searchable asmSelect fields using Select2.js (suggested by Karl_T)
+- asmTweaks: added asmSelect max limit (JavaScript only)
+- asmTweaks: added placeholder feature
+- fix filterbox disappearing when PageTable field content is refreshed (reported by szabesz)
+- Uikit theme: fix uikit min-height control issue
+- added Content Templates CKE plugin dependencies
+- added Mathjax plugin to CKEaddons
+
+
+
 ### 1.7.6 (2018-01-24)
 
 - AdminThemeUikit: fix ctrl-click on breadcrumbs

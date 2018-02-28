@@ -291,18 +291,18 @@ $(document).ready(function () {
          * Add placeholder to asmSelect
          * Selector: http://stackoverflow.com/questions/10641258/jquery-select-data-attributes-that-arent-empty#answer-23944081
          */
-        $(function () {
-            $('select[data-asm-placeholder!=""][data-asm-placeholder]').each(function () {
-
-                var placeholder = $(this).data('asmPlaceholder');
-
-                if (placeholder) {
-                    $(this).parent().find('.asmSelect option:first').attr({
-                        'selected': true,
-                        'disabled': true
-                    }).text(placeholder);
-                }
-            });
-        });
+        // $(function () {
+        //     $('select[data-asm-placeholder!=""][data-asm-placeholder]').each(function () {
+        //
+        //         var placeholder = $(this).attr('data-asm-placeholder');
+        //
+        //         if (placeholder) {
+        //             $(this).parent().find('.asmSelect option:first').attr({
+        //                 'selected': true,
+        //                 'disabled': true
+        //             }).text(placeholder);
+        //         }
+        //     });
+        // });
     }
 );

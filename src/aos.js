@@ -27,6 +27,7 @@ function initCKE() {
             justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
             indentblock: ["Indent", "Outdent"],
             maximize: ["Maximize"],
+            mathjax: ["Mathjax"],
             oembed: ["oembed"],
             showblocks: ["ShowBlocks"],
             templates: ["Templates"],
@@ -36,8 +37,10 @@ function initCKE() {
     window.CKEpluginDependencies = {
         autosave: 'notification',
         codesnippet: 'widget,dialog,lineutils',
+        mathjax: 'widget,dialog,lineutils,clipboard',
         indentblock: 'indent',
         oembed: 'widget,lineutils',
+        templates: 'dialog',
         token: 'widget,dialog,lineutils'
     };
 
@@ -48,7 +51,7 @@ function initCKE() {
     if (CKEpluginCount > 0) {
 
         var dependencies,
-            dependentPlugins = ['oembed', 'autosave', 'indentblock', 'codesnippet', 'token'];
+            dependentPlugins = ['oembed', 'autosave', 'indentblock', 'codesnippet', 'token', 'templates', 'mathjax'];
 
         for (var i = 0; i < CKEpluginCount; i++) {
 
@@ -95,6 +98,8 @@ function initCKE() {
         }
 
         // set some plugin defaults
+        // CKEDITOR.config.mathJaxClass = 'mathjax-math';
+        CKEDITOR.config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML';
         CKEDITOR.config.autoGrow_onStartup = true;
         CKEDITOR.config.autoGrow_bottomSpace = 20;
         CKEDITOR.config.autoGrow_maxHeight = 700;
@@ -183,22 +188,6 @@ if (_isEnabled('CKEaddons') && AOSsettings.CKEaddons_plugins.indexOf('autogrow')
     $(document).on('showInputfield', function (e, elem) {
         if ($(elem).hasClass('InputfieldCKEditor')) updateAutoGrowCKE($(elem));
     });
-}
-
-
-function updateAutoGrowCKE(CKEs) {
-    if (CKEs.length) {
-        CKEs.each(function (i, el) {
-
-            var CKEid = $(el).attr('id').replace('wrap_', ''),
-                editor = CKEDITOR.instances[CKEid];
-
-            if (editor && !editor.autogrowFired) {
-                editor.autogrowFired = true;
-                editor.execCommand('autogrow');
-            }
-        })
-    }
 }
 
 
@@ -382,15 +371,19 @@ function setupAdminDataTableFilter() {
 
             setDtTable(table);
 
+
             // add to DOM
             if ($('.AdminDataTable').length === 1) {
 
                 // Sessions page
                 if ($('body').hasClass('id-1095')) {
                     table.parents('.Inputfields').first().prepend(dtFilter.clone());
+
+                } else if (table.parents('.InputfieldPageTable').length) {
+                    table.parents('.InputfieldPageTable').first().children('.InputfieldContent').prepend(dtFilter.clone());
+
                 } else {
                     table.before(dtFilter.clone());
-
                 }
 
             } else {
@@ -756,9 +749,95 @@ function setupTranslatorFilter() {
 }
 
 
+function getAsmSelect2Config() {
+    return {
+        closeOnSelect: false,
+        sorter: function (data) {
+            return data.sort(function (a, b) {
+                return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+            });
+        }
+    }
+}
+
+
+function initAsmLimit(id) {
+
+    var $select = $('#' + id),
+        $asmSelect = $select.parent().find('.asmSelect'),
+        limit;
+
+    if (!$asmSelect.length) {
+        window.requestAnimationFrame(function () {
+            return initAsmLimit(id);
+        });
+    }
+
+    limit = $select.attr('data-asm-limit');
+
+    setTimeout(function () {
+        $select.on('change asmLimit', function () {
+            if ($(this).find(':selected').length >= limit) {
+                $asmSelect.attr('title', AOSsettings.loc['asm_max_limit'] + ' ' + limit);
+                $asmSelect.attr('disabled', 1);
+            } else {
+                $asmSelect.removeAttr('disabled');
+                $asmSelect.attr('title', '');
+            }
+        });
+        $select.trigger('asmLimit');
+    }, 200);
+}
+
+
+function initAsmPlaceholder(id) {
+
+    var $select = $('#' + id),
+        $asmSelect = $select.parent().find('.asmSelect'),
+        placeholder;
+
+    if (!$asmSelect.length) {
+        window.requestAnimationFrame(function () {
+            return initAsmPlaceholder(id);
+        });
+    }
+
+    placeholder = $select.attr('data-asm-placeholder');
+
+    if (placeholder) {
+        $select.parent().find('.asmSelect option:first').attr({
+            'selected': true,
+            'disabled': true
+        }).text(placeholder);
+    }
+}
+
+
+function initAsmSelectBox(inputfield_id) {
+
+    var $asmSelect = $('#wrap_' + inputfield_id + ' select.asmSelect');
+
+    if (!$asmSelect.length) {
+        window.requestAnimationFrame(function () {
+            return initAsmSelectBox(inputfield_id);
+        });
+    }
+
+    var asmSelect2Config = getAsmSelect2Config(),
+        $placeholderOption = $asmSelect.find('option[selected]:not([value])');
+
+    if ($placeholderOption.length) {
+        asmSelect2Config.placeholder = $placeholderOption.text();
+        $placeholderOption.empty(); // placeholder in select2.js needs an empty option
+    }
+
+    $asmSelect.select2(asmSelect2Config);
+}
+
+
 $(document).ready(function () {
 
-        if (AOSsettings == null) return;
+        if (AOSsettings === null) return;
 
         // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle)
         if ($('html.AdminThemeReno.headStickyCompact:not(.headBtnToTitle):not(.modal)').length) {
@@ -959,6 +1038,7 @@ $(document).ready(function () {
                 });
             });
         }
+
 
 // Hotkeys
         if (_isEnabled('Hotkeys')) {
@@ -1304,6 +1384,62 @@ $(document).ready(function () {
         if (_isEnabled('AsmTweaks')) {
             var AsmTweaksSettings = AOSsettings.AsmTweaks;
 
+
+            if (AsmTweaksSettings.indexOf('asmSearchBox') !== -1) {
+
+                // add event listeners
+
+                var select2Config = getAsmSelect2Config();
+
+                $(document).on('change', '.asmSelect ~ select', function () {
+
+                    var src = event.target || event.srcElement;
+
+                    if (src.tagName === 'I') {
+                        var $asmSelect = $(this).parents('.asmContainer').first().find('.asmSelect');
+
+                        $asmSelect.select2('destroy');
+
+                        if ($asmSelect.parent().find('[data-asm-placeholder]').length) {
+                            select2Config.placeholder = $asmSelect.parent().find('[data-asm-placeholder]').attr('data-asm-placeholder');
+                        }
+
+                        $asmSelect.select2(select2Config);
+                    }
+                });
+
+                $(document).on('select2:select', '.asmSelect', function (event) {
+                    var $asmSelect = $(this),
+                        src = event.target || event.srcElement;
+
+                    if (src.tagName === 'SELECT') {
+
+                        // var inputSelector = '.select2-search__field',
+                        //     searchTermAttr = 'data-select2-search-term',
+                        //     searchTerm = $(inputSelector).val();
+
+                        // save search term in parent's data attr
+                        // $asmSelect.parent().attr(searchTermAttr, searchTerm);
+
+                        // change and rebuild + reopen
+                        $asmSelect.val(null).trigger('change.select2');
+                        $asmSelect.select2('destroy');
+
+                        if ($asmSelect.parent().find('[data-asm-placeholder]').length) {
+                            select2Config.placeholder = $asmSelect.parent().find('[data-asm-placeholder]').attr('data-asm-placeholder');
+                        }
+
+                        $asmSelect.select2(select2Config);
+                        $asmSelect.select2('open');
+
+                        // restore previous search term
+                        // $(inputSelector).val($asmSelect.parent().attr(searchTermAttr));
+                        // $(inputSelector).trigger('keyup').select();
+                    }
+                });
+            }
+
+
             if (AsmTweaksSettings.indexOf('asmCollapse') !== -1) {
 
                 $(document).on('dblclick', '.asmFieldset', function () {
@@ -1549,6 +1685,7 @@ $(document).ready(function () {
                 });
             }
         }
+
 
 // InputfieldURLChecker
         if (_isEnabled('InputfieldURLChecker')) {
@@ -3015,29 +3152,29 @@ $(document).ready(function () {
             // add 'active' class if submenu has active item
             $('.AdminThemeReno .navItem.hasSubmenu a.current').parents('.hasSubmenu').first().addClass('active');
 
-            if($('html.AdminThemeUikit').length) {
+            if ($('html.AdminThemeUikit').length) {
                 topNavElem = $('.uk-navbar-nav.pw-primary-nav > li > ul').first();
-                $NavItems.children('li').each(function () {
-                      topNavElem.append($(this));
-                  });
-            } else {
-
-
-            if (topNavHasItems) {
-                // if ($('.NavItems > li').length) {
                 $NavItems.children('li').each(function () {
                     topNavElem.append($(this));
                 });
-                // }
             } else {
-                var firstNavItem = topNavElem.children('li').first();
 
-                firstNavItem.append('<ul>');
 
-                $NavItems.each(function () {
-                    firstNavItem.children('ul').append($(this));
-                });
-            }
+                if (topNavHasItems) {
+                    // if ($('.NavItems > li').length) {
+                    $NavItems.children('li').each(function () {
+                        topNavElem.append($(this));
+                    });
+                    // }
+                } else {
+                    var firstNavItem = topNavElem.children('li').first();
+
+                    firstNavItem.append('<ul>');
+
+                    $NavItems.each(function () {
+                        firstNavItem.children('ul').append($(this));
+                    });
+                }
             }
 
             $('body').removeAttr('data-navitems');
@@ -3389,7 +3526,88 @@ function setColWidths(tableSelector) {
         if (isInsideHiddenTab) {
             tab.attr('style', originalStyle);
         }
-        ;
 
     }, 200);
 }
+
+
+// function loadAsset(path, callback, o) {
+//
+//     var selector = getUrlParameter('selector', path).replace(/['"]+/g, '').trim(),
+//         async = getUrlParameter('async', path) === 'true',
+//         version = getUrlParameter('v', path),
+//         assetType = 'js',
+//         assetTag = 'script',
+//         assetSrc = 'src',
+//         needAsset = true;
+//
+//     if (selector.length > 0 && !document.querySelector(selector))
+//         return false;
+//
+//     if (version.length) {
+//         version = '?v=' + version;
+//     }
+//
+//     function getUrlParameter(name, url) {
+//         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+//         url = url ? url : window.location.search;
+//
+//         // var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+//         var regex = new RegExp('[\\?&]' + name + '=([^&]*)'),
+//             results = regex.exec(url);
+//
+//         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+//     }
+//
+//     path = path.split(/\?(.+)/)[0]; // remove url parameters (settings)
+//
+//     if (path.slice(-3) === 'css') {
+//         assetType = 'css';
+//         assetTag = 'link';
+//         assetSrc = 'href';
+//     }
+//
+//     if (document.querySelector(assetTag + '[' + assetSrc + '="' + path + '"]'))
+//         needAsset = false;
+//
+//     function callCallback() {
+//         if (callback) {
+//             var obj = {};
+//             if (selector)
+//                 obj.selector = selector;
+//             if (o)
+//                 obj.o = o;
+//             callback.call(obj);
+//         }
+//     }
+//
+//     if (needAsset) {
+//
+//         var asset = document.createElement(assetTag);
+//         asset[assetSrc] = path + version;
+//
+//         if (assetType === 'js') {
+//             asset.type = "text/javascript";
+//             asset.async = async;
+//
+//             if (asset.readyState) { // IE
+//                 asset.onreadystatechange = function () {
+//                     if (asset.readyState === "loaded" || asset.readyState === "complete") {
+//                         asset.onreadystatechange = null;
+//                         callCallback();
+//                     }
+//                 };
+//             } else {    // others
+//                 asset.onload = callCallback;
+//             }
+//
+//         } else {    // CSS
+//             asset.rel = "stylesheet";
+//             callCallback();
+//         }
+//         document.getElementsByTagName("head")[0].appendChild(asset);
+//
+//     } else {    // always run callback
+//         callCallback();
+//     }
+// }
