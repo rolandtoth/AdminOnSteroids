@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.7.8 (2018-03-01)
+
+- asmSearchBox: keep scroll position after select (by Karl_T)
+- asmSearchBox: option to keep search term after select
+
+
+
 ### 1.7.7 (2018-02-28)
 
 - asmTweaks: added searchable asmSelect fields using Select2.js (suggested by Karl_T)

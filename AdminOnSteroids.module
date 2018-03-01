@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.7.7',
+            'version'   => '1.7.8',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -3069,9 +3069,10 @@ HTML;
         $f->addOption('fieldMiddleEdit', __('Edit field in new tab on middle click (no template context)', __FILE__));
         $f->addOption('editFieldWidth', __('Template editor: add clickable field width percentages and display divisions on width slider',
             __FILE__));
-        $f->addOption('asmLimit', __('Add limit to asmSelects', __FILE__));
-        $f->addOption('asmPlaceholder', __('Add placeholder to asmSelects', __FILE__));
-        $f->addOption('asmSearchBox', __('Add search box to asmSelects', __FILE__));
+        $f->addOption('asmLimit', __('Add limit to asmSelect', __FILE__));
+        $f->addOption('asmPlaceholder', __('Add placeholder to asmSelect', __FILE__));
+        $f->addOption('asmSearchBox', __('Add search box to asmSelect', __FILE__));
+        $f->addOption('asmSearchBoxKeepTerm', __('Keep search term after select', __FILE__));
 
 
         if ($data[$f->name]) {

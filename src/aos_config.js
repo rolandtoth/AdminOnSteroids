@@ -54,7 +54,6 @@ $(window).load(function () {
 });
 
 
-
 $(document).ready(function () {
 
         // initialize syntax highlight and autosize/autogrow for CKEditor customization textarea
@@ -178,131 +177,114 @@ $(document).ready(function () {
         });
 
 
-    // assetPaths: add buttons to check 404 response
+        // assetPaths: add buttons to check 404 response
 
-            if ($('#Inputfield_AssetPaths').length) {
+        if ($('#Inputfield_AssetPaths').length) {
 
-                var assetCheckBtnText = 'Check',
-                    $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
-
-
-                $('#Inputfield_AssetPaths').on('focus', 'input', function () {
-                    $assetCheckBtn.html(assetCheckBtnText);
-                    $assetCheckBtn.removeClass();
-                    $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
-                });
+            var assetCheckBtnText = 'Check',
+                $assetCheckBtn = $('<button id="asset-check-button">' + assetCheckBtnText + '</button>');
 
 
-                // add button to the first visible opened inputfield
-                var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
-                if ($visibleAssetInput.length) {
-                    $visibleAssetInput.first().find('label').append($assetCheckBtn);
-                }
+            $('#Inputfield_AssetPaths').on('focus', 'input', function () {
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.removeClass();
+                $(this).parents('.Inputfield').first().find('label').append($assetCheckBtn);
+            });
 
-                function UrlExists(url, cb) {
-                    $.ajax({
-                        url: url,
-                        // dataType: 'text',
-                        type: 'HEAD',
-                        cache: false,
-                        complete: function (xhr) {
-                            if (typeof cb === 'function')
-                                cb.apply(this, [xhr.status]);
-                        }
-                    });
-                }
 
-                function showResult(result) {
+            // add button to the first visible opened inputfield
+            var $visibleAssetInput = $('#Inputfield_AssetPaths .Inputfield:not(.InputfieldStateCollapsed)');
+            if ($visibleAssetInput.length) {
+                $visibleAssetInput.first().find('label').append($assetCheckBtn);
+            }
 
-                    var icon, className;
-
-                    if(result === true) {
-                        icon = 'check';
-                        className = 'success';
-                    } else if(result === false) {
-                        icon = 'exclamation-triangle';
-                        className = 'error';
-                    } else if (result === 'forbidden') {
-                        icon = 'question-circle';
-                        className = 'forbidden';
+            function UrlExists(url, cb) {
+                $.ajax({
+                    url: url,
+                    // dataType: 'text',
+                    type: 'HEAD',
+                    cache: false,
+                    complete: function (xhr) {
+                        if (typeof cb === 'function')
+                            cb.apply(this, [xhr.status]);
                     }
-
-                    $assetCheckBtn.html(assetCheckBtnText);
-                    $assetCheckBtn.addClass(className);
-
-                    $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
-                }
-
-                $assetCheckBtn.on('click', function () {
-                    var $input = $(this).parents('.Inputfield').first().find('input'),
-                        url = $input.val();
-
-                    if (!url || url.length === 0) {
-                        $input.focus();
-                        return false;
-                    }
-                    ;
-
-                    $assetCheckBtn.html(assetCheckBtnText);
-                    $assetCheckBtn.removeClass();
-
-                    var rootUrl = window.location.origin + ProcessWire.config.urls.root,
-                        baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
-
-                    url = (url[0] === '/') ? url.substr(1) : url;
-                    url = (baseUrl + url).trim();
-
-                    UrlExists(url, function (status) {
-                        if (status === 200) {
-                            showResult(true);
-                        }
-                        else if (status === 403) {
-                            showResult('forbidden');
-                        }
-                        else {
-                            showResult(false);
-                        }
-                    });
-
-                    return false;
                 });
             }
 
+            function showResult(result) {
 
-        // js tweaks to form configuration page
-        //if ($('form[action*="AdminOnSteroids"]').length) {
+                var icon, className;
 
-        var RenoTweaksSelector = '#wrap_Inputfield_RenoTweaks';
+                if (result === true) {
+                    icon = 'check';
+                    className = 'success';
+                } else if (result === false) {
+                    icon = 'exclamation-triangle';
+                    className = 'error';
+                } else if (result === 'forbidden') {
+                    icon = 'question-circle';
+                    className = 'forbidden';
+                }
 
-        $(RenoTweaksSelector + ' input[type="checkbox"]').on('change', function () {
-            setupCheckbox($(this));
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.addClass(className);
+
+                $assetCheckBtn.html(assetCheckBtnText + '<i class="fa fa-' + icon + '">');
+            }
+
+            $assetCheckBtn.on('click', function () {
+                var $input = $(this).parents('.Inputfield').first().find('input'),
+                    url = $input.val();
+
+                if (!url || url.length === 0) {
+                    $input.focus();
+                    return false;
+                }
+                ;
+
+                $assetCheckBtn.html(assetCheckBtnText);
+                $assetCheckBtn.removeClass();
+
+                var rootUrl = window.location.origin + ProcessWire.config.urls.root,
+                    baseUrl = url.indexOf('http') === -1 ? rootUrl : '';
+
+                url = (url[0] === '/') ? url.substr(1) : url;
+                url = (baseUrl + url).trim();
+
+                UrlExists(url, function (status) {
+                    if (status === 200) {
+                        showResult(true);
+                    }
+                    else if (status === 403) {
+                        showResult('forbidden');
+                    }
+                    else {
+                        showResult(false);
+                    }
+                });
+
+                return false;
+            });
+        }
+
+
+        // setup hierarchical checkboxes
+
+        $.each(['#wrap_Inputfield_RenoTweaks, #wrap_Inputfield_AsmTweaks'], function (i, selector) {
+
+            $(selector + ' input[type="checkbox"]').on('change', function () {
+                setupCheckbox($(this));
+            });
+
+            // do not allow checking checkboxes if it's parent is set to disabled
+            $(selector).on('click', 'li.disabled input[type="checkbox"]', function (e) {
+                e.preventDefault();
+                return false;
+            });
+
+            setupCheckbox($(selector + ' li:eq(0) input[type="checkbox"]'));
+
         });
 
-        // do not allow checking checkboxes if it's parent is set to disabled
-        $(RenoTweaksSelector).on('click', 'li.disabled input[type="checkbox"]', function (e) {
-            e.preventDefault();
-            return false;
-        });
-
-        setupCheckbox($(RenoTweaksSelector + ' li:eq(0) input[type="checkbox"]'));
-        //}
-
-        /**
-         * Add placeholder to asmSelect
-         * Selector: http://stackoverflow.com/questions/10641258/jquery-select-data-attributes-that-arent-empty#answer-23944081
-         */
-        // $(function () {
-        //     $('select[data-asm-placeholder!=""][data-asm-placeholder]').each(function () {
-        //
-        //         var placeholder = $(this).attr('data-asm-placeholder');
-        //
-        //         if (placeholder) {
-        //             $(this).parent().find('.asmSelect option:first').attr({
-        //                 'selected': true,
-        //                 'disabled': true
-        //             }).text(placeholder);
-        //         }
-        //     });
-        // });
     }
 );

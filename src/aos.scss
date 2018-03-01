@@ -2255,7 +2255,7 @@ html.pListActiveBold {
 .select2-selection.select2-selection--single,
 .select2.select2-container {
   width: auto !important;
-  min-width: 200px !important;
+  min-width: 220px !important;
 }
 
 .select2-container--default .select2-selection--single {
@@ -2268,6 +2268,10 @@ html.pListActiveBold {
     padding-top: 0.36em !important;
     padding-bottom: 0.36em !important;
   }
+}
+
+.select2-container--default .select2-results__option[aria-disabled=true] {
+  color: #b4b4b4 !important;
 }
 
 .select2-container--default .select2-search--dropdown .select2-search__field {

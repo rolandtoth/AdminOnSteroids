@@ -761,8 +761,14 @@ function getAsmSelect2Config() {
 }
 
 
-function initAsmLimit(id) {
+function restoreAsmSelectBoxPlaceholder($asm, config) {
+    if ($asm.parent().find('[data-asm-placeholder]').length) {
+        config.placeholder = $asm.parent().find('[data-asm-placeholder]').attr('data-asm-placeholder');
+    }
+}
 
+
+function initAsmLimit(id) {
     var $select = $('#' + id),
         $asmSelect = $select.parent().find('.asmSelect'),
         limit;
@@ -791,7 +797,6 @@ function initAsmLimit(id) {
 
 
 function initAsmPlaceholder(id) {
-
     var $select = $('#' + id),
         $asmSelect = $select.parent().find('.asmSelect'),
         placeholder;
@@ -814,7 +819,6 @@ function initAsmPlaceholder(id) {
 
 
 function initAsmSelectBox(inputfield_id) {
-
     var $asmSelect = $('#wrap_' + inputfield_id + ' select.asmSelect');
 
     if (!$asmSelect.length) {
@@ -1355,7 +1359,7 @@ $(document).ready(function () {
                     searchBox.focus();
                     searchBoxValue = searchBox.val() ? searchBox.val().trim() : '';
                     // use zero-width space to trigger autocomplete dropdown
-                    searchBox.val('​' + searchBoxValue);
+                    searchBox.val('?' + searchBoxValue);
                     searchBox.trigger('keydown');
                 }
             }
@@ -1384,57 +1388,60 @@ $(document).ready(function () {
         if (_isEnabled('AsmTweaks')) {
             var AsmTweaksSettings = AOSsettings.AsmTweaks;
 
-
             if (AsmTweaksSettings.indexOf('asmSearchBox') !== -1) {
 
-                // add event listeners
-
-                var select2Config = getAsmSelect2Config();
+                var select2Config = getAsmSelect2Config(),
+                    keepAsmSearchTerm = AsmTweaksSettings.indexOf('asmSearchBoxKeepTerm') !== -1;
 
                 $(document).on('change', '.asmSelect ~ select', function () {
 
                     var src = event.target || event.srcElement;
 
+                    // asmSelect remove icon click
                     if (src.tagName === 'I') {
                         var $asmSelect = $(this).parents('.asmContainer').first().find('.asmSelect');
-
                         $asmSelect.select2('destroy');
-
-                        if ($asmSelect.parent().find('[data-asm-placeholder]').length) {
-                            select2Config.placeholder = $asmSelect.parent().find('[data-asm-placeholder]').attr('data-asm-placeholder');
-                        }
-
+                        restoreAsmSelectBoxPlaceholder($asmSelect, select2Config);
                         $asmSelect.select2(select2Config);
                     }
                 });
 
-                $(document).on('select2:select', '.asmSelect', function (event) {
-                    var $asmSelect = $(this),
-                        src = event.target || event.srcElement;
 
+                // save scroll position
+                $(document).on('select2:selecting', '.asmSelect', function () {
+                    $(this).attr('data-scroll-position', $('.select2-results__options').scrollTop());
+                });
+
+
+                $(document).on('select2:select', '.asmSelect', function (event) {
+
+                    var $asmSelect = $(this),
+                        src = event.target || event.srcElement,
+                        inputSelector = '.select2-search__field',
+                        searchTermAttr = 'data-select2-search-term',
+                        searchTerm = $(inputSelector).val();
+
+                    // select an item in select2 dropdown
                     if (src.tagName === 'SELECT') {
 
-                        // var inputSelector = '.select2-search__field',
-                        //     searchTermAttr = 'data-select2-search-term',
-                        //     searchTerm = $(inputSelector).val();
-
                         // save search term in parent's data attr
-                        // $asmSelect.parent().attr(searchTermAttr, searchTerm);
-
-                        // change and rebuild + reopen
-                        $asmSelect.val(null).trigger('change.select2');
-                        $asmSelect.select2('destroy');
-
-                        if ($asmSelect.parent().find('[data-asm-placeholder]').length) {
-                            select2Config.placeholder = $asmSelect.parent().find('[data-asm-placeholder]').attr('data-asm-placeholder');
+                        if (keepAsmSearchTerm) {
+                            $asmSelect.parent().attr(searchTermAttr, searchTerm);
                         }
 
+                        $asmSelect.select2('destroy');
+                        restoreAsmSelectBoxPlaceholder($asmSelect, select2Config);
                         $asmSelect.select2(select2Config);
                         $asmSelect.select2('open');
 
                         // restore previous search term
-                        // $(inputSelector).val($asmSelect.parent().attr(searchTermAttr));
-                        // $(inputSelector).trigger('keyup').select();
+                        if (keepAsmSearchTerm) {
+                            $(inputSelector).val($asmSelect.parent().attr(searchTermAttr));
+                            $(inputSelector).trigger('keyup').select();
+                        }
+
+                        // restore scroll position
+                        $(".select2-results__options").scrollTop($asmSelect.attr('data-scroll-position'));
                     }
                 });
             }
