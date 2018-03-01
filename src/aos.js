@@ -1359,7 +1359,7 @@ $(document).ready(function () {
                     searchBox.focus();
                     searchBoxValue = searchBox.val() ? searchBox.val().trim() : '';
                     // use zero-width space to trigger autocomplete dropdown
-                    searchBox.val('?' + searchBoxValue);
+                    searchBox.val('\u200b' + '\u200b' + searchBoxValue);
                     searchBox.trigger('keydown');
                 }
             }
