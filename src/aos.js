@@ -1357,10 +1357,10 @@ $(document).ready(function () {
                     // ensure search box visibility
                     $('#search').addClass('open');
                     searchBox.focus();
-                    searchBoxValue = searchBox.val() ? searchBox.val().trim() : '';
                     // use zero-width space to trigger autocomplete dropdown
-                    searchBox.val('\u200b' + '\u200b' + searchBoxValue);
+                    searchBox.val('\u200b' + (searchBox.val() || '').trim());
                     searchBox.trigger('keydown');
+                    searchBox.val(searchBox.val().substr(1));
                 }
             }
 
@@ -1436,8 +1436,13 @@ $(document).ready(function () {
 
                         // restore previous search term
                         if (keepAsmSearchTerm) {
-                            $(inputSelector).val($asmSelect.parent().attr(searchTermAttr));
-                            $(inputSelector).trigger('keyup').select();
+                            var $input = $(inputSelector);
+                            $input.val($asmSelect.parent().attr(searchTermAttr));
+                            $input.trigger('keyup');
+                            if ($input.val && $input.setSelectionRange) {
+                                var len = $input.value.length * 2;
+                                $input.setSelectionRange(len, len);
+                            }
                         }
 
                         // restore scroll position
