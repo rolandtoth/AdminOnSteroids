@@ -2186,7 +2186,7 @@ $(document).ready(function () {
 
                 if ($('[id^="Inputfield_title"]').length) {
 
-                    var $titleFields = $('[id^="Inputfield_title"]'),
+                    var $titleFields = $('[id="Inputfield_title"]'),
                         titleCases = {
                             'original': function (string, $btn) {
                                 return $btn.attr('data-original');
@@ -2223,7 +2223,7 @@ $(document).ready(function () {
                             }
                         });
 
-                        if ($input.val().length) {
+                        if ($input.val() && $input.val().length) {
                             dataOriginal = ' data-original="' + $input.val() + '"';
                         }
 

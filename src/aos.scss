@@ -2332,6 +2332,11 @@ ol.asmList + select + .select2-container {
   }
 }
 
+// make case toggle absolute positioning work
+#wrap_Inputfield_title .InputfieldContent {
+  position: relative;
+}
+
 a.case-toggle {
   position: absolute;
   right: 16px;

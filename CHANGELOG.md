@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.7.9 (2018-03-03)
+
+- title case changer fixes
+
+
+
 ### 1.7.8 (2018-03-01)
 
 - asmSearchBox: keep scroll position after select (by Karl_T)
