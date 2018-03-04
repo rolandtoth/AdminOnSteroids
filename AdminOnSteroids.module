@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.7.9',
+            'version'   => '1.8.0',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -3072,6 +3072,7 @@ HTML;
         $f->addOption('asmLimit', __('Add limit to asmSelect', __FILE__));
         $f->addOption('asmPlaceholder', __('Add placeholder to asmSelect', __FILE__));
         $f->addOption('asmSearchBox', __('Add search box to asmSelect', __FILE__));
+        $f->addOption('asmSearchBoxKeepListOpen', __('Keep list open after select', __FILE__));
         $f->addOption('asmSearchBoxKeepTerm', __('Keep search term after select', __FILE__));
 
 

@@ -1,9 +1,16 @@
 # Changelog
 
 
+### 1.8.0 (2018-03-04)
+
+- asmSearchBox: keeping option list open is now optional (requested by adrian)
+- asmPlaceholder: keep existing placeholders when used with asmSearchBox
+
+
+
 ### 1.7.9 (2018-03-03)
 
-- title case changer fixes
+- title case changer fixes (reported by adrian)
 
 
 

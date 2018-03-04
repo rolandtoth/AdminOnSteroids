@@ -751,7 +751,6 @@ function setupTranslatorFilter() {
 
 function getAsmSelect2Config() {
     return {
-        closeOnSelect: false,
         sorter: function (data) {
             return data.sort(function (a, b) {
                 return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
@@ -819,7 +818,8 @@ function initAsmPlaceholder(id) {
 
 
 function initAsmSelectBox(inputfield_id) {
-    var $asmSelect = $('#wrap_' + inputfield_id + ' select.asmSelect');
+    var $asmSelect = $('#wrap_' + inputfield_id + ' select.asmSelect'),
+    placeholder;
 
     if (!$asmSelect.length) {
         window.requestAnimationFrame(function () {
@@ -827,11 +827,14 @@ function initAsmSelectBox(inputfield_id) {
         });
     }
 
+    // add data-asm-placeholder for existing placeholder
     var asmSelect2Config = getAsmSelect2Config(),
         $placeholderOption = $asmSelect.find('option[selected]:not([value])');
 
     if ($placeholderOption.length) {
-        asmSelect2Config.placeholder = $placeholderOption.text();
+        placeholder = $placeholderOption.text();
+        asmSelect2Config.placeholder = placeholder;
+        $asmSelect.attr('data-asm-placeholder', placeholder);
         $placeholderOption.empty(); // placeholder in select2.js needs an empty option
     }
 
@@ -1419,7 +1422,8 @@ $(document).ready(function () {
                         src = event.target || event.srcElement,
                         inputSelector = '.select2-search__field',
                         searchTermAttr = 'data-select2-search-term',
-                        searchTerm = $(inputSelector).val();
+                        searchTerm = $(inputSelector).val(),
+                        keepListOpen = AsmTweaksSettings.indexOf('asmSearchBoxKeepListOpen') !== -1;
 
                     // select an item in select2 dropdown
                     if (src.tagName === 'SELECT') {
@@ -1432,6 +1436,11 @@ $(document).ready(function () {
                         $asmSelect.select2('destroy');
                         restoreAsmSelectBoxPlaceholder($asmSelect, select2Config);
                         $asmSelect.select2(select2Config);
+
+                        if(!keepListOpen) {
+                            return false;
+                        }
+
                         $asmSelect.select2('open');
 
                         // restore previous search term
