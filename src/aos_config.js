@@ -201,7 +201,6 @@ $(document).ready(function () {
             function UrlExists(url, cb) {
                 $.ajax({
                     url: url,
-                    // dataType: 'text',
                     type: 'HEAD',
                     cache: false,
                     complete: function (xhr) {
@@ -234,13 +233,12 @@ $(document).ready(function () {
 
             $assetCheckBtn.on('click', function () {
                 var $input = $(this).parents('.Inputfield').first().find('input'),
-                    url = $input.val();
+                    url = $input.val().trim();
 
                 if (!url || url.length === 0) {
                     $input.focus();
                     return false;
                 }
-                ;
 
                 $assetCheckBtn.html(assetCheckBtnText);
                 $assetCheckBtn.removeClass();
@@ -270,7 +268,7 @@ $(document).ready(function () {
 
         // setup hierarchical checkboxes
 
-        $.each(['#wrap_Inputfield_RenoTweaks, #wrap_Inputfield_AsmTweaks'], function (i, selector) {
+        $.each(['#wrap_Inputfield_RenoTweaks, #wrap_Inputfield_AsmTweaks, #wrap_Inputfield_Misc'], function (i, selector) {
 
             $(selector + ' input[type="checkbox"]').on('change', function () {
                 setupCheckbox($(this));

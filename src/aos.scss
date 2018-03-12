@@ -2306,8 +2306,8 @@ ol.asmList + select + .select2-container {
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-   right: 4px !important;
- }
+  right: 4px !important;
+}
 
 .select2-container .select2-selection--single .select2-selection__rendered {
   padding-right: 24px !important;
@@ -3307,7 +3307,8 @@ html.headBtnToTitle {
     }
     &.AdminThemeReno {
       #head_button {
-        margin-top: 0;
+        margin-top: -2px;
+        margin-bottom: -12px !important;
       }
     }
     #pw-content-head h1,
@@ -4111,6 +4112,19 @@ html.hoverDropdown {
         border: none !important;
         &:after {
           display: none !important;
+        }
+      }
+    }
+  }
+
+  // fix wrong positioning of button menu
+  &:not(.AdminThemeReno) {
+    li.InputfieldSubmit {
+      .InputfieldContent {
+        position: relative;
+        [id^="pw-dropdown-toggle-"] {
+          position: absolute;
+          left: 0;
         }
       }
     }

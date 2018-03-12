@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.8.1 (2018-03-12)
+
+- new: input mask for Inputfield (Misc)
+- bottom save button hover menu positioning fix (reported by Robin S)
+
+
+
 ### 1.8.0 (2018-03-04)
 
 - asmSearchBox: keeping option list open is now optional (requested by adrian)

@@ -774,8 +774,9 @@ function initAsmLimit(id) {
 
     if (!$asmSelect.length) {
         window.requestAnimationFrame(function () {
-            return initAsmLimit(id);
+            initAsmLimit(id);
         });
+        return false;
     }
 
     limit = $select.attr('data-asm-limit');
@@ -802,8 +803,9 @@ function initAsmPlaceholder(id) {
 
     if (!$asmSelect.length) {
         window.requestAnimationFrame(function () {
-            return initAsmPlaceholder(id);
+            initAsmPlaceholder(id);
         });
+        return false;
     }
 
     placeholder = $select.attr('data-asm-placeholder');
@@ -823,8 +825,9 @@ function initAsmSelectBox(inputfield_id) {
 
     if (!$asmSelect.length) {
         window.requestAnimationFrame(function () {
-            return initAsmSelectBox(inputfield_id);
+            initAsmSelectBox(inputfield_id);
         });
+        return false;
     }
 
     // add data-asm-placeholder for existing placeholder
@@ -839,6 +842,22 @@ function initAsmSelectBox(inputfield_id) {
     }
 
     $asmSelect.select2(asmSelect2Config);
+}
+
+
+function initInputMask(inputfield_id, options) {
+    if(!inputfield_id || !options || !window.Cleave) return;
+
+    if(!$('#' + inputfield_id).length) {
+        window.requestAnimationFrame(function () {
+            return initInputMask(inputfield_id, options);
+        });
+        return false;
+    }
+
+    $('#' + inputfield_id).attr('data-inputmask', '1');
+
+    window['mask_' + inputfield_id] = new Cleave('#' + inputfield_id, JSON.parse(options));
 }
 
 
@@ -862,6 +881,18 @@ $(document).ready(function () {
 
             $label.after('<a href="' + themeConfigUrl + '" class="themeConfigLink" target="_blank"><i class="fa fa-cog"></a>');
         });
+
+
+
+        $(document).on('submit', 'form', function() {
+            if(window.Cleave) {
+                $('input[data-inputmask]').each(function() {
+                    var inputMaskId = 'mask_' + $(this).attr('id');
+                    $(this).val(window[inputMaskId].getRawValue());
+                });
+            }
+        });
+
 
         // add "title" to h1
         if ($('h1#title').length) {

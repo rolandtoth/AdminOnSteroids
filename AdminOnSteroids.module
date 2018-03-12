@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.0',
+            'version'   => '1.8.1',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -242,7 +242,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         $field = new Field();
-        $field->type = $this->modules->get("FieldtypeText");
+        $field->type = $this->wire('modules')->get("FieldtypeText");
         $field->name = 'aos_column_break';
         $field->label = '';
         $field->skipLabel = true;
@@ -276,7 +276,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function ___uninstall()
     {
         // save current config to settings.php
-        $settings = array_filter($this->modules->getModuleConfigData($this));
+        $settings = array_filter($this->wire('modules')->getModuleConfigData($this));
         @file_put_contents($this->settingsFile, json_encode($settings));
     }
 
@@ -419,14 +419,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     {
 
         // populate self::$configData
-        $configData = $this->modules->getModuleConfigData($this);
+        $configData = $this->wire('modules')->getModuleConfigData($this);
         self::$configData = $configData;
 
         if ($this->user->isSuperUser()) {
 
             if ($this->input->toggle == 1) {
                 $configData['enabled'] = ($this->enabled == 1) ? 0 : 1;
-                $this->modules->saveModuleConfigData($this, $configData);
+                $this->wire('modules')->saveModuleConfigData($this, $configData);
 
                 $this->session->redirect($_SERVER['HTTP_REFERER']);
 
@@ -534,7 +534,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         self::$configData = $this->modifyConfigData(
-            $this->modules->getModuleConfigData($this),
+            $this->wire('modules')->getModuleConfigData($this),
             $this->editedPage
         );
 
@@ -545,7 +545,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $scripts->add($root . '/scripts/aos.min.js?ts=' . $timestamp);
 
             // always load modal js
-            $this->modules->get('JqueryUI')->use('modal');
+            $this->wire('modules')->get('JqueryUI')->use('modal');
         }
 
         $configData = self::$configData;
@@ -1007,6 +1007,18 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $this->addHookAfter('InputfieldSelect(id=Inputfield_action,is_replacement!=1)::render', $this, 'replaceLogActionsWithRadios');
             }
 
+            // inputMask
+            if (in_array('inputMask', $configData[$subModule])) {
+                $this->addHookAfter("Field(type=FieldtypeText|FieldtypeTextLanguage)::getConfigInputfields", $this, "addInputMaskConfigField");
+                $this->addHookAfter("InputfieldText::render", $this, "addInputMask");
+
+                $scripts->add($root . '/scripts/vendor/cleave.js/cleave.min.js');
+
+                if (in_array('inputMaskPhoneLib', $configData[$subModule])) {
+                    $scripts->add($root . '/scripts/vendor/cleave.js/cleave-phone.i18n.js');
+                }
+            }
+
 
             // showSystemTemplates
             if (in_array('showSystemTemplates', $configData[$subModule])) {
@@ -1124,7 +1136,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             if (in_array('moduleModal', $configData[$subModule])) {
                 // load longclick js
                 if ($this->page->process && $this->page->process == 'ProcessModule') {
-                    $this->modules->get('JqueryCore')->use('longclick');
+                    $this->wire('modules')->get('JqueryCore')->use('longclick');
                 }
             }
         }
@@ -1190,7 +1202,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if ($this->page->id != 23) {
 
             // custom CKEaddons config js and css
-
             $this->addAsset('CKEStyle', $configData);
             $this->addAsset('CKEScript', $configData);
             $this->addAsset('CKEtemplates', $configData);
@@ -1268,7 +1279,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addAsset($assetName, &$configData)
     {
-
         if (!isset($configData[$assetName])) {
             return false;
         }
@@ -1285,6 +1295,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             } elseif ($assetName === 'AdminStyle') {
                 $this->config->styles->add($baseUrl . $asset);
             } elseif ($assetName === 'AdminScript') {
+                $this->config->scripts->add($baseUrl . $asset);
+            } elseif ($assetName === 'PhoneCountryLib') {
                 $this->config->scripts->add($baseUrl . $asset);
             }
         }
@@ -1589,10 +1601,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return;
         }
 
-        $f = $this->modules->get("InputfieldText");
+        $f = $this->wire('modules')->get("InputfieldText");
         $f->attr('name', "asmPlaceholder");
         $f->label = $this->_("Placeholder");
         $f->value = $field->asmPlaceholder;
+        $f->useLanguages = true;
         $f->collapsed = Inputfield::collapsedBlank;
 
         $wrapper->insertAfter($f, $f_before);
@@ -1619,7 +1632,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return;
         }
 
-        $f = $this->modules->get("InputfieldInteger");
+        $f = $this->wire('modules')->get("InputfieldInteger");
         $f->attr('name', "asmLimit");
         $f->label = $this->_("Max limit of items");
         $f->inputType = 'number';
@@ -1628,6 +1641,82 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $f->collapsed = Inputfield::collapsedBlank;
 
         $wrapper->insertAfter($f, $f_before);
+    }
+
+
+    public function addInputMask(HookEvent $event)
+    {
+        $field = $event->object;
+        $field_base_id = $field->attr('id');
+        $initScript = '';
+
+        $langSuffixes = array('');
+
+        if ($this->wire('languages')) {
+            foreach ($this->wire('languages') as $lang) {
+                if ($lang->isDefault()) {
+                    continue;
+                }
+                $langSuffixes[] = '__' . $lang->id;
+            }
+        }
+
+        foreach ($langSuffixes as $langSuffix) {
+
+            $property = 'inputMask' . str_replace('__', '', $langSuffix);
+            $inputMask = $field->$property ? $field->$property : ($field->hasField ? $field->hasField->$property : false);
+
+            if (strlen($inputMask)) {
+
+                $maskConfig = $this->linesToArray($inputMask, false);
+
+                $field->attr('has-inputmask', 1);
+                $id = $field_base_id . $langSuffix;
+
+                $maskConfigJson = '{' . implode(',', $maskConfig) . '}';
+                $maskConfigJson = json_encode($maskConfigJson);
+
+                $initScript .= "initInputMask('$id', $maskConfigJson);";
+            }
+        }
+
+        if (strlen($initScript)) {
+            $event->return .= "<script>$initScript</script>";
+        }
+    }
+
+
+    public function addInputMaskConfigField(HookEvent $event)
+    {
+        // The field being edited
+        $field = $event->object;
+
+        // The inputfield wrapper
+        $wrapper = $event->return;
+
+        $f_before = $wrapper->getChildByName('showCount');
+
+        if (!$f_before) {
+            return;
+        }
+
+        $f = $this->wire('modules')->get("InputfieldTextarea");
+        $f->attr('name', "inputMask");
+        $f->label = $this->_("Input Mask");
+        $f->useLanguages = true;
+        $f->collapsed = Inputfield::collapsedBlank;
+        $f->value = $field->inputMask;
+
+        if ($this->wire('languages')) {
+            foreach ($this->wire('languages') as $lang) {
+                if ($lang->isDefault()) {
+                    continue;
+                }
+                $f->{'value' . $lang->id} = $field->{'inputMask' . $lang->id};
+            }
+        }
+
+        $wrapper->insertBefore($f, $f_before);
     }
 
 
@@ -2154,14 +2243,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $colWidths = array($colBreakField->columnWidth, 100 - $colBreakField->columnWidth);
         }
 
-        $fsetLeft = $this->modules->get("InputfieldFieldset");
+        $fsetLeft = $this->wire('modules')->get("InputfieldFieldset");
         $fsetLeft->attr('class', $fsetLeft->attr('class') . ' aos_col_left aos_no-inputfield-padding');
         $fsetLeft->set('themeBorder', 'none');
         $fsetLeft->set('themeOffset', false);
         $fsetLeft->wrapAttr('style', 'width: ' . $colWidths[0] . '%');
         $fsetLeft->wrapAttr('data-splitter-default', $colWidths[0]);
 
-        $fsetRight = $this->modules->get("InputfieldFieldset");
+        $fsetRight = $this->wire('modules')->get("InputfieldFieldset");
         $fsetRight->set('themeBorder', 'none');
         $fsetRight->set('themeOffset', false);
         $fsetRight->attr('class', $fsetRight->attr('class') . ' aos_col_right aos_no-inputfield-padding');
@@ -2173,7 +2262,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'splitter_' . $this->editedPage->template->name . '_' . $this->wire('user')->id);
 
 
-        $this->modules->get('FieldtypeFieldsetClose');
+        $this->wire('modules')->get('FieldtypeFieldsetClose');
         if (class_exists('\ProcessWire\InputfieldFieldsetClose')) {
             $fsetLeftEnd = new \ProcessWire\InputfieldFieldsetClose;
             $fsetRightEnd = new \ProcessWire\InputfieldFieldsetClose;
@@ -2859,15 +2948,28 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         // build settings array
-        $settings = trim($data);
-        $settings = explode("\n", $settings);
-//        $settings = array_filter($settings, 'trim');
-        $settings = array_map('trim', $settings); //trim whitespace
-        $settings = array_filter($settings, 'trim');  // remove empty lines
-
+        $settings = $this->linesToArray($data);
         $this->{$propertyName} = $settings;
 
         return $settings;
+    }
+
+
+    public function linestoArray($lines)
+    {
+        $data = trim($lines);
+        $data = explode("\n", $data);
+        $data = array_map('trim', $data); //trim whitespace
+        $data = array_filter($data, 'trim');  // remove empty lines
+
+        // remove comments
+        for ($i = 0; $i < count($data); $i++) {
+            if (strpos($data[$i], '//') === 0) {
+                unset($data[$i]);
+            }
+        }
+
+        return $data;
     }
 
     public function addAdminLangSwitcher(HookEvent $event)
@@ -3580,6 +3682,8 @@ HTML;
         $f->addOption('prevNextLinks', __('Add links to edit previous and next pages', __FILE__));
         $f->addOption('logsHelperTweaks', __('Expand Helpers field on Logs page and use radio buttons for log actions', __FILE__));
         $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
+        $f->addOption('inputMask', __('Add input mask to Input fields (JavaScript only)', __FILE__));
+        $f->addOption('inputMaskPhoneLib', __('Load phone country library for input mask', __FILE__));
 
 
         if ($data[$f->name]) {
@@ -3891,10 +3995,9 @@ HTML;
         $f->label = __('Admin CSS', __FILE__);
         $f->description = __('URL to a CSS file to be loaded in the admin, eg.',
                 __FILE__) . ' "/site/templates/admin/admin.css"';
-//        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
-        if ($data[$f->name]) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
         }
 
@@ -3905,10 +4008,9 @@ HTML;
         $f->label = __('Admin JavaScript', __FILE__);
         $f->description = __('URL to a JavaScript file to be loaded in the admin, eg.',
                 __FILE__) . ' "/site/templates/admin/admin.js"';
-//        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
-        if ($data[$f->name]) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
         }
 
@@ -3919,10 +4021,9 @@ HTML;
         $f->label = __('CKEditor custom CSS', __FILE__);
         $f->description = __('URL to a CSS file to be loaded for CKEditors, eg.',
                 __FILE__) . ' "/site/templates/admin/cke.css"';
-//        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
-        if ($data[$f->name]) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
         }
         $fsetPaths->add($f);
@@ -3932,10 +4033,9 @@ HTML;
         $f->label = __('CKEditor custom configuration script', __FILE__);
         $f->description = __('URL to a JavaScript file to be loaded for CKEditors, eg.',
                 __FILE__) . ' "/site/templates/admin/cke.js"';
-//        $f->columnWidth = 50;
         $f->collapsed = Inputfield::collapsedBlank;
 
-        if ($data[$f->name]) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
         }
         $fsetPaths->add($f);
@@ -3944,10 +4044,11 @@ HTML;
         $f->name = 'CKEtemplates';
         $f->label = __('CKEditor templates directory', __FILE__);
         $f->description = __('URL to Content Templates CKEditor plugin templates directory, eg',
-                __FILE__) . ' "/site/templates/admin/cke-templates.js"';
+                __FILE__) . ' "/site/templates/admin/cke-templates.js".' .
+            ' [' . __('Info', __FILE__) . '](https://ckeditor.com/cke4/addon/templates)';
         $f->collapsed = Inputfield::collapsedBlank;
 
-        if ($data[$f->name]) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
         }
         $fsetPaths->add($f);
@@ -3959,7 +4060,7 @@ HTML;
                 __FILE__) . ' "/site/templates/field-overrides.ini"';
         $f->collapsed = Inputfield::collapsedBlank;
 
-        if ($data[$f->name]) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
         }
         $fsetPaths->add($f);
@@ -3971,7 +4072,7 @@ HTML;
                 __FILE__) . ' "/site/templates/images/brand-logo.svg"';
         $f->collapsed = Inputfield::collapsedBlank;
 
-        if ($data[$f->name]) {
+        if (isset($data[$f->name])) {
             $f->attr('value', $data[$f->name]);
         }
         $fsetPaths->add($f);
