@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.1',
+            'version'   => '1.8.2',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -3684,6 +3684,7 @@ HTML;
         $f->addOption('headBtnToTitle', __('Place header button next to the main title', __FILE__));
         $f->addOption('inputMask', __('Add input mask to Input fields (JavaScript only)', __FILE__));
         $f->addOption('inputMaskPhoneLib', __('Load phone country library for input mask', __FILE__));
+        $f->addOption('checkAllCheckboxes', __('Add button to check/uncheck all checkboxes (appears on hover)', __FILE__));
 
 
         if ($data[$f->name]) {

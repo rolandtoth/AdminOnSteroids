@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.8.2 (2018-03-12)
+
+- Misc: new checkAllCheckboxes: button to check all checkboxes (appears on hover) (requested by adrian)
+
+
+
 ### 1.8.1 (2018-03-12)
 
 - new: input mask for Inputfield (Misc)

@@ -821,7 +821,7 @@ function initAsmPlaceholder(id) {
 
 function initAsmSelectBox(inputfield_id) {
     var $asmSelect = $('#wrap_' + inputfield_id + ' select.asmSelect'),
-    placeholder;
+        placeholder;
 
     if (!$asmSelect.length) {
         window.requestAnimationFrame(function () {
@@ -846,9 +846,9 @@ function initAsmSelectBox(inputfield_id) {
 
 
 function initInputMask(inputfield_id, options) {
-    if(!inputfield_id || !options || !window.Cleave) return;
+    if (!inputfield_id || !options || !window.Cleave) return;
 
-    if(!$('#' + inputfield_id).length) {
+    if (!$('#' + inputfield_id).length) {
         window.requestAnimationFrame(function () {
             return initInputMask(inputfield_id, options);
         });
@@ -883,10 +883,9 @@ $(document).ready(function () {
         });
 
 
-
-        $(document).on('submit', 'form', function() {
-            if(window.Cleave) {
-                $('input[data-inputmask]').each(function() {
+        $(document).on('submit', 'form', function () {
+            if (window.Cleave) {
+                $('input[data-inputmask]').each(function () {
                     var inputMaskId = 'mask_' + $(this).attr('id');
                     $(this).val(window[inputMaskId].getRawValue());
                 });
@@ -1075,6 +1074,42 @@ $(document).ready(function () {
                     }
                 });
             });
+        }
+
+
+// Misc
+        if (_isEnabled('Misc')) {
+            var MiscSettings = AOSsettings.Misc;
+
+            if (MiscSettings.indexOf('checkAllCheckboxes') !== -1) {
+
+                var $checkAllCheckboxes = $('<li id="checkAllCheckboxes"><i class="fa fa-check"></i></li>');
+
+                function checkCheckboxes(e, checkboxes) {
+
+                    if (e.which !== 1) return true; // fire on left click only
+
+                    var checkedNum = checkboxes.filter('input:checked').length,
+                        allNum = checkboxes.length,
+                        mode = checkedNum !== allNum;
+
+                    checkboxes.each(function () {
+                        $(this).prop('checked', mode);
+                    });
+
+                    return mode === true ? 1 : '';
+                }
+
+                $checkAllCheckboxes.on('click', function (e) {
+                    $(this).attr('data-checked-all', checkCheckboxes(e, $(this).parent().find('input')));
+                    $(this).focus();
+                });
+
+                $(document).on('hover', 'ul[class*="InputfieldCheckboxes"]', function () {
+                    $checkAllCheckboxes.attr('data-checked-all', $(this).find('input').length === $(this).find('input:checked').length ? '1' : '');
+                    $(this).append($checkAllCheckboxes);
+                });
+            }
         }
 
 
@@ -1468,7 +1503,7 @@ $(document).ready(function () {
                         restoreAsmSelectBoxPlaceholder($asmSelect, select2Config);
                         $asmSelect.select2(select2Config);
 
-                        if(!keepListOpen) {
+                        if (!keepListOpen) {
                             return false;
                         }
 

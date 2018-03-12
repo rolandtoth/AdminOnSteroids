@@ -4131,6 +4131,64 @@ html.hoverDropdown {
   }
 }
 
+#checkAllCheckboxes {
+  display: inline-block;
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  float: none;
+  margin-left: -0.4rem !important;
+  cursor: pointer;
+  border: 3px solid white;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 100%;
+  background: #E2E9EF;
+  text-align: center;
+  transition: all 0.2s;
+  user-select: none;
+  backface-visibility: hidden;
+  z-index: 33;
+  i {
+    pointer-events: none;
+    position: relative;
+    top: -2px;
+    &::before {
+      font-size: 0.75rem;
+      color: #3EB998;
+      text-shadow: 0 0 2px rgba(white, 0.7);
+    }
+  }
+  &:hover {
+    background: #3EB998;
+    i {
+      &::before {
+        color: white;
+        text-shadow: none;
+      }
+    }
+  }
+  &[data-checked-all="1"] {
+    i::before {
+      content: '\f00d' !important;
+    }
+  }
+}
+
+.InputfieldCheckboxes {
+  ul[class*="InputfieldCheckboxes"] {
+    position: relative;
+  }
+  &:hover {
+    #checkAllCheckboxes {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
 // InputfieldURLChecker
 
 .iuc-button {
