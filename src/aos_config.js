@@ -79,7 +79,7 @@ $(document).ready(function () {
             isRenoTheme = !!(html.hasClass('AdminThemeReno')),
             isDefaultTheme = !!(html.hasClass('AdminThemeDefault'));
 
-        $(document).on('click', '#Inputfield_tweaks input[type="checkbox"]', function () {
+        $(document).on('change', '#Inputfield_tweaks input[type="checkbox"]', function () {
 
             var checkbox = $(this),
                 currentId = checkbox.attr('id'),
@@ -152,7 +152,6 @@ $(document).ready(function () {
                 var input = $(this),
                     submoduleName = input.attr('id').replace('Inputfield_enabledSubmodules_', ''),
                     target = '#wrap_Inputfield_' + submoduleName;
-
 
                 if (!$(target).length) {
                     target = '#Inputfield_' + submoduleName;

@@ -1091,11 +1091,13 @@ $(document).ready(function () {
                 function checkCheckboxes(e, $ul) {
                     if (e.which !== 1) return true; // fire on left click only
 
-                    var mode = $ul.find('input:not(:checked)').length;
+                    var isAllChecked = $ul.find('input:not(:checked)').length > 0,
+                        inputSelector = isAllChecked ? 'input:not(:checked)' : 'input:checked';
 
-                    $ul.find('input').prop('checked', mode);
+                    // need to trigger change, eg. for showIf fields
+                    $ul.find(inputSelector).attr('checked', isAllChecked).trigger('change');
 
-                    return mode;
+                    return isAllChecked;
                 }
 
                 $(document).on('change', 'ul[class*="InputfieldCheckboxes"] input', function () {
