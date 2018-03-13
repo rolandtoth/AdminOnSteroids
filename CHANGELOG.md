@@ -4,7 +4,7 @@
 ### 1.8.3 (2018-03-13)
 
 - checkAllCheckboxes improvements
-- fix aos enable toggle markup issue (reported by Theo)
+- fix aos enable toggle markup issue (reported by theo)
 - module config: fix dependent checkboxes
 
 

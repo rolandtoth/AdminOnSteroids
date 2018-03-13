@@ -74,7 +74,7 @@ $(document).ready(function () {
             }
         }
 
-        // apply AOS tweaks real-time
+        // apply AOS tweaks realtime
         var html = $('html'),
             isRenoTheme = !!(html.hasClass('AdminThemeReno')),
             isDefaultTheme = !!(html.hasClass('AdminThemeDefault'));
@@ -83,13 +83,14 @@ $(document).ready(function () {
 
             var checkbox = $(this),
                 currentId = checkbox.attr('id'),
+                isChecked = checkbox.is(':checked'),
                 idArray = currentId.split('_');
 
             if (currentId.indexOf('AdminTweaks') !== -1 && isRenoTheme ||
                 currentId.indexOf('RenoTweaks') !== -1 && isDefaultTheme
             ) return true;
 
-            html.toggleClass(idArray[idArray.length - 1]);
+            html.toggleClass(idArray[idArray.length - 1], isChecked);
         });
 
         // AOS LongClick slider (module options page)
