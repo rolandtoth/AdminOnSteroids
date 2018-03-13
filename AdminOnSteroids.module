@@ -32,7 +32,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.2',
+            'version'   => '1.8.3',
             'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -2538,7 +2538,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $configLinkMarkup = '<div class="' . $div_class . '">
 <div class="uk-grid"><div class="uk-width-2-3@m uk-flex-first@m uk-text-center uk-text-left@m uk-first-column"><p style="margin-top: 10px; font-size: 0.9rem;" class="">
-<a href="' . $modulePage . '&toggle=1" class="aos_toggle"' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>
+<a href="' . $modulePage . '&toggle=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>
 ' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p></div></div></div>';
 
         $parts['footer'] .= $configLinkMarkup;

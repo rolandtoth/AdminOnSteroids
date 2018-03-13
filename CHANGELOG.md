@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 1.8.3 (2018-03-13)
+
+- checkAllCheckboxes improvements
+- fix aos enable toggle markup issue (reported by Theo)
+- module config: fix dependent checkboxes
+
+
 ### 1.8.2 (2018-03-12)
 
 - Misc: new checkAllCheckboxes: button to check all checkboxes (appears on hover) (requested by adrian)

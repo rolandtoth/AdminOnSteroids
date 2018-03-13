@@ -1082,31 +1082,32 @@ $(document).ready(function () {
             var MiscSettings = AOSsettings.Misc;
 
             if (MiscSettings.indexOf('checkAllCheckboxes') !== -1) {
-
                 var $checkAllCheckboxes = $('<li id="checkAllCheckboxes"><i class="fa fa-check"></i></li>');
 
-                function checkCheckboxes(e, checkboxes) {
-
-                    if (e.which !== 1) return true; // fire on left click only
-
-                    var checkedNum = checkboxes.filter('input:checked').length,
-                        allNum = checkboxes.length,
-                        mode = checkedNum !== allNum;
-
-                    checkboxes.each(function () {
-                        $(this).prop('checked', mode);
-                    });
-
-                    return mode === true ? 1 : '';
+                function updateCheckCheckboxState($ul) {
+                    $checkAllCheckboxes.attr('data-checked-all', $ul.find('input:not(:checked)').length === 0 ? '1' : '');
                 }
 
+                function checkCheckboxes(e, $ul) {
+                    if (e.which !== 1) return true; // fire on left click only
+
+                    var mode = $ul.find('input:not(:checked)').length;
+
+                    $ul.find('input').prop('checked', mode);
+
+                    return mode;
+                }
+
+                $(document).on('change', 'ul[class*="InputfieldCheckboxes"] input', function () {
+                    updateCheckCheckboxState($(this).parents('ul').first());
+                });
+
                 $checkAllCheckboxes.on('click', function (e) {
-                    $(this).attr('data-checked-all', checkCheckboxes(e, $(this).parent().find('input')));
-                    $(this).focus();
+                    $(this).attr('data-checked-all', checkCheckboxes(e, $(this).parent()) > 0 ? '1' : '');
                 });
 
                 $(document).on('hover', 'ul[class*="InputfieldCheckboxes"]', function () {
-                    $checkAllCheckboxes.attr('data-checked-all', $(this).find('input').length === $(this).find('input:checked').length ? '1' : '');
+                    updateCheckCheckboxState($(this));
                     $(this).append($checkAllCheckboxes);
                 });
             }

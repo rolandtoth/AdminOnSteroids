@@ -3310,6 +3310,9 @@ html.headBtnToTitle {
         margin-top: -2px;
         margin-bottom: -12px !important;
       }
+      #breadcrumbs ul.nav {
+        float: none;
+      }
     }
     #pw-content-head h1,
     #headline h1,
@@ -4139,7 +4142,7 @@ html.hoverDropdown {
   bottom: 100%;
   left: 0;
   float: none;
-  margin-left: -0.4rem !important;
+  margin-left: -0.45rem !important;
   cursor: pointer;
   border: 3px solid white;
   width: 1.7rem;
@@ -4147,7 +4150,7 @@ html.hoverDropdown {
   border-radius: 100%;
   background: #E2E9EF;
   text-align: center;
-  transition: all 0.2s;
+  //transition: all 0.2s;
   user-select: none;
   backface-visibility: hidden;
   z-index: 33;
@@ -4177,9 +4180,17 @@ html.hoverDropdown {
   }
 }
 
-.InputfieldCheckboxes {
-  ul[class*="InputfieldCheckboxes"] {
-    position: relative;
+//.InputfieldCheckboxes {
+ul[class*="InputfieldCheckboxes"] {
+  position: relative;
+  // extra padding on top to avoid disappearing toggle button
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    height: 1.4rem;
   }
   &:hover {
     #checkAllCheckboxes {
@@ -4188,6 +4199,8 @@ html.hoverDropdown {
     }
   }
 }
+
+//}
 
 // InputfieldURLChecker
 

@@ -268,7 +268,7 @@ $(document).ready(function () {
 
         // setup hierarchical checkboxes
 
-        $.each(['#wrap_Inputfield_RenoTweaks, #wrap_Inputfield_AsmTweaks, #wrap_Inputfield_Misc'], function (i, selector) {
+        $.each(['#wrap_Inputfield_RenoTweaks', '#wrap_Inputfield_AsmTweaks', '#wrap_Inputfield_Misc'], function (i, selector) {
 
             $(selector + ' input[type="checkbox"]').on('change', function () {
                 setupCheckbox($(this));
@@ -281,7 +281,6 @@ $(document).ready(function () {
             });
 
             setupCheckbox($(selector + ' li:eq(0) input[type="checkbox"]'));
-
         });
 
     }
