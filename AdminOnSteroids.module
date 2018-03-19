@@ -2,7 +2,7 @@
 
 /**
  * AdminOnSteroids
- * Various ProcessWire admin tweaks to boost productivity
+ * ProcessWire admin tweaks to boost productivity.
  *
  * @author Roland Toth (tpr)
  *
@@ -26,14 +26,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     protected $isLocaleSet;
     protected $allRoles;
     protected $enabledSubmodules;
+    protected $isMultiLang;
+    protected $languageCount = 0;
 
     public static function getModuleInfo()
     {
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.3',
-            'summary'   => __('Various ProcessWire admin tweaks to boost productivity'),
+            'version'   => '1.8.5',
+            'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
             'href'      => 'https://processwire.com/talk/topic/13389-adminonsteroids/',
@@ -47,6 +49,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function __construct()
     {
         $this->settingsFile = __DIR__ . "/settings.php";
+        $this->isMultiLang = count($this->wire('languages')) > 0;
+        if($this->isMultiLang) {
+            $this->languageCount = count(wire('pages')->find('template=language, check_access=0'));
+        }
     }
 
     /**
@@ -422,7 +428,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configData = $this->wire('modules')->getModuleConfigData($this);
         self::$configData = $configData;
 
-        if ($this->user->isSuperUser()) {
+        if ($this->wire('user')->isSuperUser()) {
 
             if ($this->input->toggle == 1) {
                 $configData['enabled'] = ($this->enabled == 1) ? 0 : 1;
@@ -453,9 +459,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         // remove submodules where user's role is not allowed
 
-        if (!$this->user->isSuperUser()) {
-//        $userRoles = $this->user->roles->explode('name');
-            $userRoles = $this->user->roles->name(',');
+        if (!$this->wire('user')->isSuperUser()) {
+//        $userRoles = $this->wire('user')->roles->explode('name');
+            $userRoles = $this->wire('user')->roles->name(',');
 
             // remove 'guest' role
             $userRoles = str_replace(array('guest', ',,'), array('', ','), $userRoles);
@@ -487,11 +493,13 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $subModule = 'Misc';
 
         // add to init() to change early
-        if (in_array($subModule, $enabledSubmodules)) {
-            if (in_array('adminLangSwitcher', $configData[$subModule])) {
-                if (isset($_COOKIE["aos_lang_id"])) {
-                    $lang_id = $_COOKIE["aos_lang_id"];
-                    $this->user->language = $lang_id;
+        if ($this->isMultiLang) {
+            if (in_array($subModule, $enabledSubmodules)) {
+                if (in_array('adminLangSwitcher', $configData[$subModule])) {
+                    if (isset($_COOKIE["aos_lang_id"])) {
+                        $lang_id = $_COOKIE["aos_lang_id"];
+                        $this->wire('user')->language = $lang_id;
+                    }
                 }
             }
         }
@@ -526,8 +534,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         // set $this->editedPage
         // excluded repeater pages, minor refactoring
         $this->editedPage = false;
-        $editedPageId = $this->sanitizer->int($this->config->input->get->id);
-        $editedPage = $this->pages->get($editedPageId);
+        $editedPageId = $this->wire('sanitizer')->int($this->wire('input')->get->id);
+        $editedPage = $this->wire('pages')->get($editedPageId);
 
         if ($editedPage->id && !($editedPage instanceof RepeaterPage)) {
             $this->editedPage = $editedPage;
@@ -558,7 +566,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $cssFiles = array();
 
         // if there's only the default admin theme, $user->admin_theme is not available
-        $this->adminTheme = $this->user->admin_theme ? $this->user->admin_theme : $this->config->defaultAdminTheme;
+        $this->adminTheme = $this->wire('user')->admin_theme ? $this->wire('user')->admin_theme : $this->config->defaultAdminTheme;
 
         $this->PageListThumbs_items = array();
         $this->PageListIcons = array();
@@ -621,7 +629,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $subModule = 'FieldAndTemplateEditLinks';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            if ($this->user->isSuperUser()) {
+            if ($this->wire('user')->isSuperUser()) {
 
                 // add template edit link (page action) to pagelist
                 $this->addHookAfter("ProcessPageListActions::getActions", $this, 'addTemplateEditLinkPageList');
@@ -677,7 +685,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             // always add hook to remove markup if tweak is disabled
             $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListMarkup');
 
-            if ($this->languages) {
+            if ($this->isMultiLang) {
                 $this->addHookBefore("ProcessPageListRender::getPageLabel", $this, 'pageListMarkupGetLangValue');
             }
 
@@ -754,7 +762,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
 
 //            if (in_array('pListLangs', $configData[$subModule])) {
-//                if ($this->wire('languages') && $this->wire('pages')->find('template=language, check_access=0')->count() > 1) {
+//                if ($this->isMultiLang && $this->languageCount > 1) {
 //                    $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addLanguageIndicators');
 //                }
 //            }
@@ -965,11 +973,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
 
         // CKEaddons
-//        $subModule = 'CKEaddons';
-//
-//        if (in_array($subModule, $enabledSubmodules)) {
-//
-//        }
+        $subModule = 'CKEaddons';
+
+        if (in_array($subModule, $enabledSubmodules)) {
+            if (in_array('linkfilesmenu', $configData['CKEaddons_plugins'])) {
+                $this->addHookBefore('ProcessModule::executeEdit', $this, 'CkeLinkFilesAjaxResponse');
+                $this->addHookAfter('ProcessPageEdit::execute', $this, 'CkeLinkFilesPageEditMods');
+            }
+        }
 
 
         // Misc
@@ -996,7 +1007,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             // addTranslatorLinks
             if (in_array('addTranslatorLinks', $configData[$subModule])) {
-                if ($this->page->process == "ProcessLanguageTranslator" && $this->wire('languages')->count() > 1) {
+                if ($this->wire('page')->process == "ProcessLanguageTranslator" && $this->languageCount > 1) {
                     $this->addHookAfter('ProcessLanguageTranslator::executeEdit', $this, 'addTranslatorLinks');
                 }
             }
@@ -1652,7 +1663,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $langSuffixes = array('');
 
-        if ($this->wire('languages')) {
+        if ($this->isMultiLang) {
             foreach ($this->wire('languages') as $lang) {
                 if ($lang->isDefault()) {
                     continue;
@@ -1707,7 +1718,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $f->collapsed = Inputfield::collapsedBlank;
         $f->value = $field->inputMask;
 
-        if ($this->wire('languages')) {
+        if ($this->isMultiLang) {
             foreach ($this->wire('languages') as $lang) {
                 if ($lang->isDefault()) {
                     continue;
@@ -2006,15 +2017,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
      */
     public function addDeleteButton(HookEvent $event)
     {
-
         $page = $event->arguments('page');
+
+        if (!$this->wire('user')->isSuperUser()) {
+            return false;
+        }
 
         // do not allow for pages having children
         if ($page->numChildren > 0) {
             return false;
         }
 
-        if (!$page->trashable() || !$this->user->isSuperUser()) {
+        //  not trashable but not in Trash
+        if (!$page->trashable() && !$page->isTrash()) {
             return false;
         }
 
@@ -2086,9 +2101,85 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     }
 
 
+    /**
+     * Return AJAX response for CKEditor Link Files plugin.
+     *
+     * @author Robin S., tpr
+     *
+     * @param HookEvent $event
+     */
+    public function CkeLinkFilesAjaxResponse(HookEvent $event)
+    {
+        // Must be AJAX request, must be for this module, must include pid GET variable
+        if (!$this->wire('config')->ajax || $this->wire('input')->get->name !== __CLASS__ || !$this->wire('input')->get->ckelinkfiles_pid) {
+            return;
+        }
+
+        $page = $this->wire('pages')->get((int)$this->wire('input')->get->ckelinkfiles_pid);
+
+        if (!$page->editable) {
+            return;
+        }
+
+        $event->replace = true;
+        $event->cancelHooks = true;
+        $result = array();
+        $langIDs = array('');    // use empty for default language
+
+        if ($this->isMultiLang) {
+            foreach ($this->wire('languages') as $lang) {
+                if (!$lang->isDefault()) {
+                    $langIDs[] = $lang->id;
+                }
+            }
+        }
+
+        foreach ($page->fields->find('type=FieldtypeFile') as $f) {
+            foreach ($page->getUnformatted($f->name) as $file) {
+                foreach ($langIDs as $langID) {
+                    $result[$langID][] = array(
+                        'basename'    => $file->basename,
+                        'url'         => $file->url,
+                        'description' => $file->{'description' . $langID}
+                    );
+                }
+            }
+        }
+
+        $event->return = json_encode($result);
+    }
+
+
+    /**
+     * Mods to ProcessPageEdit for CKE Link Files plugin.
+     *
+     * @author Robin S., tpr
+     *
+     * @param HookEvent $event
+     */
+    public function CkeLinkFilesPageEditMods(HookEvent $event)
+    {
+        // Return if ProcessPageEdit is being loaded via AJAX (image field)
+        if ($this->wire('config')->ajax) {
+            return;
+        }
+
+        $page = $event->object->getPage();
+        $out = $event->return;
+
+        // Data to JS
+        $this->wire('config')->js('CkeLinkFiles', array(
+            'page_id'        => $page->id,
+            'all_files_text' => $this->_('Insert links to all files'),
+            'no_files_text'  => $this->_('No files on this page')
+        ));
+
+        $event->return = $out;
+    }
+
+
     public function addTemplateEditLinkPageList(HookEvent $event)
     {
-
         if (!isset(self::$configData['ListerTweaks_options'])) {
             return false;
         }
@@ -2653,7 +2744,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $originalID = '';
         $originalTitle = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->title : '';
 
-        if (isset($this->PageListTweaks) && in_array('pListIDs', $this->PageListTweaks) && $this->user->isSuperUser()) {
+        if (isset($this->PageListTweaks) && in_array('pListIDs', $this->PageListTweaks) && $this->wire('user')->isSuperUser()) {
             $originalID = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->id : '';
         }
 
@@ -2975,19 +3066,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function addAdminLangSwitcher(HookEvent $event)
     {
 
-        if ($this->wire('languages') && $this->wire('pages')->find('template=language, check_access=0')->count() > 1) {
+        if ($this->isMultiLang && $this->languageCount > 1) {
 
             $parts = $event->return;
 
             $lang_items = '';
-            $userLangId = $this->user->language->id;
+            $userLangId = $this->wire('user')->language->id;
 
-            foreach ($this->languages as $lang) {
+            foreach ($this->wire('languages') as $lang) {
                 $activeClass = $lang->id == $userLangId ? ' class="active"' : '';
                 $lang_items .= '<li' . $activeClass . '><a href="' . $_SERVER['REQUEST_URI'] . '" data-lang-id="' . $lang->id . '"><span class="lang-title">' . $lang->title . '</span> <span class="lang-name">' . $lang->name . '</span></a></li>';
             }
 
-            $parts['masthead'] .= '<li class="aos_adminLangSwitcher" style="display: none;"><a href="#">' . $this->user->language->title . '</a><ul>' . $lang_items . '</ul></li>';
+            $parts['masthead'] .= '<li class="aos_adminLangSwitcher" style="display: none;"><a href="#">' . $this->wire('user')->language->title . '</a><ul>' . $lang_items . '</ul></li>';
 
             $event->return = $parts;
         }
@@ -3207,6 +3298,8 @@ HTML;
         $f->addOption('autogrow', 'Auto Grow');
         $f->addOption('autolink', 'Auto Link');
         $f->addOption('autosave', 'Auto Save');
+        $f->addOption('linkfilesmenu', 'Link Files Menu' . $hasToolbarBtn);
+        $f->addOption('linkhover', 'Link Hover');
         $f->addOption('codemirror', 'CodeMirror');
         $f->addOption('codesnippet', 'Code Snippet');
         $f->addOption('templates', 'Content Templates');

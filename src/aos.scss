@@ -387,67 +387,6 @@ html.aos {
     }
   }
 
-  // CKE improvements
-
-  //.CodeMirror {
-  //  line-height: inherit !important;
-  //  font-family: inherit;
-  //}
-
-  //div[class*="cke_editor_"]:not(.cke_focus) .cke_floatingtools {
-  //  display: none !important;
-  //}
-  //.cke_floatingtools {
-  //  width: auto;
-  //}
-
-  .cke_screen_reader_only { // causes html to overflow
-    height: 0;
-  }
-
-  .CodeMirror-lines {
-    font-size: 13px;
-  }
-
-  // this would cause tab, space, etc not working in editors
-  //.CodeMirror-line {
-  //  span {
-  //    white-space: normal !important;
-  //  }
-  //}
-
-  .cke_reset_all .CodeMirror-scroll * {
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    word-break: normal;
-  }
-
-  .cke_top .cke_button_icon.cke_button__oembed_icon {
-    background-image: url('../CKE/plugins/oembed/icons/oembed.png') !important;
-  }
-  .cke_top .cke_button_icon.cke_button__codesnippet_icon {
-    background-image: url('../CKE/plugins/codesnippet/icons/codesnippet.png') !important;
-  }
-  .cke_top .cke_button_icon.cke_button__token_icon {
-    background-image: url('../CKE/plugins/token/icons/token.png') !important;
-  }
-  .cke_top .cke_button_icon.cke_button__mathjax_icon {
-    background-image: url('../CKE/plugins/mathjax/icons/mathjax.png') !important;
-  }
-
-  .cke_combo_text {
-    white-space: nowrap;
-  }
-
-  .cke_dialog_body {
-    //.cke_dialog_contents * {
-    //  box-sizing: border-box !important;
-    //}
-    label {
-      display: inline-block !important;
-    }
-  }
-
   .AdminDataTable {
     thead tr.hidden {
       opacity: 0.5;
@@ -2255,7 +2194,7 @@ html.pListActiveBold {
 .select2-selection.select2-selection--single,
 .select2.select2-container {
   width: auto !important;
-  min-width: 220px !important;
+  min-width: 180px !important;
 }
 
 .select2-container--default .select2-selection--single {
@@ -4367,5 +4306,147 @@ html.aos .InputfieldAssistedUrlText {
   100% {
     max-width: 100px;
     //overflow: visible;
+  }
+}
+
+// https://github.com/rolandtoth/AdminOnSteroids/issues/89#issuecomment-373186490
+
+/* override AdminThemeUiKit css so the page edit hover dropdown buttons don't touch together */
+.hoverDropdown .AdminThemeUikit button.ui-button.pw-button-dropdown-main {
+  margin-right: 10px !important;
+}
+
+/* override the rule above so page edit head hover dropdown buttons don't space out to much */
+.hoverDropdown .AdminThemeUikit #pw-content-head-buttons .ui-button {
+  margin-right: 0 !important;
+}
+
+// CKE improvements
+
+//.CodeMirror {
+//  line-height: inherit !important;
+//  font-family: inherit;
+//}
+
+//div[class*="cke_editor_"]:not(.cke_focus) .cke_floatingtools {
+//  display: none !important;
+//}
+//.cke_floatingtools {
+//  width: auto;
+//}
+
+.cke_screen_reader_only { // causes html to overflow
+  height: 0;
+}
+
+.CodeMirror-lines {
+  font-size: 13px;
+}
+
+// this would cause tab, space, etc not working in editors
+//.CodeMirror-line {
+//  span {
+//    white-space: normal !important;
+//  }
+//}
+
+.cke_reset_all .CodeMirror-scroll * {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: normal;
+}
+
+.cke_top .cke_button_icon.cke_button__oembed_icon {
+  background-image: url('../CKE/plugins/oembed/icons/oembed.png') !important;
+}
+
+.cke_top .cke_button_icon.cke_button__codesnippet_icon {
+  background-image: url('../CKE/plugins/codesnippet/icons/codesnippet.png') !important;
+}
+
+.cke_top .cke_button_icon.cke_button__token_icon {
+  background-image: url('../CKE/plugins/token/icons/token.png') !important;
+}
+
+.cke_top .cke_button_icon.cke_button__mathjax_icon {
+  background-image: url('../CKE/plugins/mathjax/icons/mathjax.png') !important;
+}
+
+.cke_top .cke_button_icon.cke_button__linkfilesmenu_icon {
+  background-image: url('../CKE/plugins/linkfilesmenu/icons/linkfilesmenu.png') !important;
+}
+
+.cke_combo_text {
+  white-space: nowrap;
+}
+
+.cke_dialog_body {
+  //.cke_dialog_contents * {
+  //  box-sizing: border-box !important;
+  //}
+  label {
+    display: inline-block !important;
+  }
+}
+
+.cke_button_label {
+  white-space: nowrap;
+  + .cke_button_label {
+    display: none !important; // LightWire skin
+  }
+}
+
+// CkeLinkFiles
+
+[id^="link-files-menu"] {
+  position: absolute;
+  z-index: 10000;
+  display: none;
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    display: inline-block;
+    border: 1px solid #d1d1d1;
+    list-style: none;
+  }
+  li {
+    margin: 0;
+    border-top: 1px solid #ebebeb;
+    background: #fff;
+    white-space: nowrap;
+    padding: 3px 12px 3px 6px;
+    cursor: pointer;
+    strong {
+      font-size: 0.9rem;
+      display: block;
+      font-weight: 700;
+    }
+    span {
+      display: block;
+      font-size: 0.75rem;
+      line-height: 1.2;
+      padding-bottom: 3px;
+    }
+    &:first-child {
+      border-top: 0;
+    }
+    &.all-files {
+      font-size: 0.75rem;
+      font-style: italic;
+    }
+    &.no-files {
+      font-size: 0.75rem;
+      font-style: italic;
+      cursor: default;
+      &:hover {
+        background: #fff;
+      }
+    }
+    &:hover {
+      background: #ebebeb;
+    }
   }
 }

@@ -1,6 +1,22 @@
 # Changelog
 
 
+### 1.8.5 (2018-03-19)
+
+- new CKEditor plugin "Link Files Menu" (by Robin S, multilang by tpr)
+- CKEditor maximize plugin + LightWire skin: fix disappearing toolbar icons
+
+
+
+### 1.8.4 (2018-03-15)
+
+- new CKEditor plugin "Link Hover" (by Robin S)
+- added workaround for button spacing #89 (by gmclelland)
+- pagelist Delete action: allow for pages in Trash too
+- multilanguage PHP notice fix
+
+
+
 ### 1.8.3 (2018-03-13)
 
 - checkAllCheckboxes improvements

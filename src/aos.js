@@ -26,6 +26,7 @@ function initCKE() {
             find: ["Find", "Replace"],
             justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
             indentblock: ["Indent", "Outdent"],
+            linkfilesmenu: ["LinkFilesMenu"],
             maximize: ["Maximize"],
             mathjax: ["Mathjax"],
             oembed: ["oembed"],
