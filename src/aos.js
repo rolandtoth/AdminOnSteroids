@@ -26,6 +26,7 @@ function initCKE() {
             find: ["Find", "Replace"],
             justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
             indentblock: ["Indent", "Outdent"],
+            layoutmanager: ["AddLayout"],
             linkfilesmenu: ["LinkFilesMenu"],
             maximize: ["Maximize"],
             mathjax: ["Mathjax"],
@@ -39,10 +40,13 @@ function initCKE() {
         autosave: 'notification',
         codesnippet: 'widget,dialog,lineutils',
         mathjax: 'widget,dialog,lineutils,clipboard',
+        layoutmanager: 'basewidget,widget',
         indentblock: 'indent',
         oembed: 'widget,lineutils',
+        openlink: 'contextmenu,link',
         templates: 'dialog',
-        token: 'widget,dialog,lineutils'
+        token: 'widget,dialog,lineutils',
+        wordcount: 'htmlwriter,undo'
     };
 
     // keep the plugin order from admin
@@ -52,7 +56,9 @@ function initCKE() {
     if (CKEpluginCount > 0) {
 
         var dependencies,
-            dependentPlugins = ['oembed', 'autosave', 'indentblock', 'codesnippet', 'token', 'templates', 'mathjax'];
+            dependentPlugins = [];
+
+        for (var k in window.CKEpluginDependencies) dependentPlugins.push(k);
 
         for (var i = 0; i < CKEpluginCount; i++) {
 
@@ -131,10 +137,16 @@ function initCKE() {
                 CKEfield.customConfig = AOSsettings.customCKEScript;
             }
 
-            // load custom css file (only if there's no field custom css set)
-            // by default contents.css is loaded from /wire/... directory
-            if (CKEfield.contentsCss.indexOf('/wire/') !== -1 && AOSsettings.customCKEStyle) {
-                CKEfield.contentsCss = AOSsettings.customCKEStyle;
+            // load custom css file
+            if (AOSsettings.customCKEStyle) {
+                if (CKEfield.contentsCss.indexOf('/wire/') !== -1) {
+                    // (only if there's no field custom css set)
+                    // by default contents.css is loaded from /wire/... directory
+                    CKEfield.contentsCss = AOSsettings.customCKEStyle;
+                } else {
+                    // load both: field + aos
+                    CKEfield.contentsCss = [CKEfield.contentsCss, AOSsettings.customCKEStyle];
+                }
             }
 
             // process enabled fields

@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.5',
+            'version'   => '1.8.6',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -3313,8 +3313,11 @@ HTML;
         $f->addOption('mathjax', 'Mathjax' . $hasToolbarBtn);
         $f->addOption('maximize', 'Maximize' . $hasToolbarBtn);
         $f->addOption('oembed', 'Media (oEmbed)' . $hasToolbarBtn);
+        $f->addOption('openlink', 'Open Link');
         $f->addOption('showblocks', 'Show Blocks' . $hasToolbarBtn);
+        $f->addOption('smallerselection', 'Smaller Selection');
         $f->addOption('token', 'Token' . $hasToolbarBtn);
+        $f->addOption('wordcount', 'WordCount');
 
         if (isset($data[$f->name]) && $data[$f->name]) {
             $f->attr('value', $data[$f->name]);

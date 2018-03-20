@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.8.6 (2018-03-20)
+
+- new CKEditor plugin "Open Link"
+- new CKEditor plugin "Smaller Selection"
+- new CKEditor plugin "WordCount"
+- CKEditor custom CSS: do not override CSS set in field settings with CSS set in AssetPaths (load both)
+
+
+
 ### 1.8.5 (2018-03-19)
 
 - new CKEditor plugin "Link Files Menu" (by Robin S, multilang by tpr)
