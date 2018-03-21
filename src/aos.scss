@@ -4062,12 +4062,10 @@ html.hoverDropdown {
   // fix wrong positioning of button menu
   &:not(.AdminThemeReno) {
     li.InputfieldSubmit {
-      .InputfieldContent {
-        position: relative;
-        [id^="pw-dropdown-toggle-"] {
-          position: absolute;
-          left: 0;
-        }
+      position: relative;
+      [id^="pw-dropdown-toggle-"] {
+        position: absolute;
+        left: 0;
       }
     }
   }
@@ -4093,6 +4091,9 @@ html.hoverDropdown {
   user-select: none;
   backface-visibility: hidden;
   z-index: 33;
+  //.AdminDataList & {
+  //  transform: translateY(100%);
+  //}
   i {
     pointer-events: none;
     position: relative;
@@ -4119,8 +4120,8 @@ html.hoverDropdown {
   }
 }
 
-//.InputfieldCheckboxes {
 ul[class*="InputfieldCheckboxes"] {
+  //.AdminDataList {
   position: relative;
   // extra padding on top to avoid disappearing toggle button
   &::before {
@@ -4138,8 +4139,6 @@ ul[class*="InputfieldCheckboxes"] {
     }
   }
 }
-
-//}
 
 // InputfieldURLChecker
 
