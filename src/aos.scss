@@ -47,7 +47,7 @@ html.aos {
     &.AdminThemeDefault {
       a#logo {
         margin-top: 0.75em;
-        margin-bottom: 0.25;
+        margin-bottom: 0.25em;
         margin-right: 0.5rem;
         img {
           width: auto;
@@ -4024,51 +4024,91 @@ html.pListIconOnly {
 html.hoverDropdown {
   //@media only screen and (min-width: 960px) {
   .ui-button {
-
     &.pw-button-dropdown-main {
-      border-radius: 4px !important;
+      position: relative;
+      //border-radius: 4px !important;
+      //padding-right: 16px !important;
+      // extend the main button to overlap the menu opening button
+      &::after {
+        content: '';
+        position: absolute;
+        left: 100%;
+        top: 0;
+        bottom: 0;
+        width: 1.7rem;
+        display: inline-block;
+      }
       span {
         pointer-events: none;
-        &:after {
-          content: "\f107";
-          font-family: 'FontAwesome', sans-serif;
-          position: relative;
-          margin-left: 6px;
-          font-size: 12px;
-          line-height: 12px; //set this the same as font-size
-          margin-right: 1px;
-          //top: 0;
-          display: inline-block;
-        }
+        //&:after {
+        //  content: "\f107";
+        //  font-family: 'FontAwesome', sans-serif;
+        //  position: relative;
+        //  margin-left: 6px;
+        //  font-size: 12px;
+        //  line-height: 12px; //set this the same as font-size
+        //  margin-right: 1px;
+        //  //top: 0;
+        //  display: inline-block;
+        //}
       }
     }
-
-    &[id^="pw-dropdown-toggle-"] {
-      &, span {
-        width: 0 !important;
-        overflow: hidden;
-        visibility: hidden;
-        padding-right: 0 !important;
-        padding-left: 0 !important;
-        pointer-events: none;
-        border: none !important;
-        &:after {
-          display: none !important;
-        }
-      }
+    &.pw-button-dropdown-toggle {
+      pointer-events: none;
+      position: relative;
+      z-index: 5;
+      //border-left: none !important;
+      //span {
+      //  left: -8px;
+      //  position: relative;
+      //}
     }
   }
+
+  //&.AdminThemeUikit {
+  //  .ui-button {
+  //    &.pw-button-dropdown-main {
+  //      // https://github.com/rolandtoth/AdminOnSteroids/issues/89#issuecomment-373186490
+  //      /* override AdminThemeUiKit css so the page edit hover dropdown buttons don't touch together */
+  //      //margin-right: 10px !important;
+  //      /* override the rule above so page edit head hover dropdown buttons don't space out to much */
+  //      //#pw-content-head-buttons .ui-button {
+  //      //  margin-right: 0 !important;
+  //      //}
+  //      padding-right: 20px;
+  //
+  //      //padding-right: 42px !important;
+  //      + button {
+  //        //margin-left: -24px !important;
+  //        //text-indent: -24px;
+  //      }
+  //    }
+  //    &.pw-button-dropdown-toggle {
+  //      span {
+  //        left: -18px;
+  //      }
+  //    }
+  //  }
+  //}
+
+  //#submit_publish {
+  //  float: none;
+    //+ button {
+    //  margin-right: 0 !important;
+    //  float: left;
+    //}
+  //}
 
   // fix wrong positioning of button menu
-  &:not(.AdminThemeReno) {
-    li.InputfieldSubmit {
-      position: relative;
-      [id^="pw-dropdown-toggle-"] {
-        position: absolute;
-        left: 0;
-      }
-    }
-  }
+  //&:not(.AdminThemeReno) {
+  //  li.InputfieldSubmit {
+  //    position: relative;
+  //    [id^="pw-dropdown-toggle-"] {
+  //      position: absolute;
+  //      left: 0;
+  //    }
+  //  }
+  //}
 }
 
 #checkAllCheckboxes {
@@ -4306,18 +4346,6 @@ html.aos .InputfieldAssistedUrlText {
     max-width: 100px;
     //overflow: visible;
   }
-}
-
-// https://github.com/rolandtoth/AdminOnSteroids/issues/89#issuecomment-373186490
-
-/* override AdminThemeUiKit css so the page edit hover dropdown buttons don't touch together */
-.hoverDropdown .AdminThemeUikit button.ui-button.pw-button-dropdown-main {
-  margin-right: 10px !important;
-}
-
-/* override the rule above so page edit head hover dropdown buttons don't space out to much */
-.hoverDropdown .AdminThemeUikit #pw-content-head-buttons .ui-button {
-  margin-right: 0 !important;
 }
 
 // CKE improvements
