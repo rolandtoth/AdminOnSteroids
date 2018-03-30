@@ -26,7 +26,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     protected $isLocaleSet;
     protected $allRoles;
     protected $enabledSubmodules;
-    protected $isMultiLang;
+    protected $isMultiLang = false;
     protected $languageCount = 0;
 
     public static function getModuleInfo()
@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.6',
+            'version'   => '1.8.7',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -49,8 +49,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function __construct()
     {
         $this->settingsFile = __DIR__ . "/settings.php";
-        $this->isMultiLang = count($this->wire('languages')) > 0;
-        if($this->isMultiLang) {
+        if ($this->wire('languages')) {
+            $this->isMultiLang = count($this->wire('languages')) > 0;
             $this->languageCount = count(wire('pages')->find('template=language, check_access=0'));
         }
     }
@@ -636,12 +636,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                 if ($this->editedPage) {
 
-                    // add edit field link only if the edited page is not a special page (eg. admin)
-                    if ($this->process == 'ProcessPageView' && $this->editedPage->template && $this->editedPage->template->flags === 0) {
+                    if ($this->process == 'ProcessPageView' && $this->editedPage->template && $this->editedPage->template->flags !== Template::flagSystem) {
                         $this->addHookAfter('Page::render', $this, 'addTemplateEditLink');
-                        $this->addHookAfter('Inputfield::render', $this, 'addFieldEditLinks');
-                        $this->addHookAfter('Inputfield::renderValue', $this, 'addFieldEditLinks');
                     }
+
+                    $this->addHookAfter('Inputfield::render', $this, 'addFieldEditLinks');
+                    $this->addHookAfter('Inputfield::renderValue', $this, 'addFieldEditLinks');
                 }
             } else {
                 // remove the submodule entirely if not superuser
@@ -880,7 +880,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $subModule = 'FieldOverrides';
         if (in_array($subModule, $enabledSubmodules)) {
 
-            if ($this->wire('process') !== 'ProcessPageEdit') {   // enable only on page edit screen
+            if ($this->isOnPageEditScreen()) {
 
                 $fieldoverrides_admin_contents = array();
                 $fieldoverrides_file_contents = array();
@@ -1064,9 +1064,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             // prevNextLinks
             if (in_array('prevNextLinks', $configData[$subModule])) {
                 if (
-                    $this->wire('page')->process == 'ProcessPageEdit'
-                    && $this->editedPage
-                    && !($this->editedPage->template->flags & Template::flagSystem)
+                    in_array($this->wire('page')->process, array('ProcessPageEdit', 'ProcessUser', 'ProcessRole'))
+                    && $this->wire('input')->id
+//                    && $this->editedPage
+//                    && !($this->editedPage->template->flags && $this->editedPage->template->flags === Template::flagSystem)
                 ) {
                     $selector = 'include=all, sort=' . $this->editedPage->parent->sortfield . ', parent=' . $this->editedPage->parent;
                     $prevnextlinks = array();
@@ -2407,7 +2408,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $field = $event->object;
         $user = $this->wire('user');
         $fields = $this->wire('fields');
-        $is_multilang = is_object(wire('languages'));
 
         foreach ($this->FieldOverrides as $selector => $values) {
 
@@ -2466,7 +2466,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             foreach ($values as $key => $v) {
 
                 // check for _lang_{languageName}
-                if ($is_multilang) {
+                if ($this->isMultiLang) {
                     $lang_pos = strpos($key, '_lang_');
                     if ($lang_pos > 1) {
                         $language_name = mb_substr($key, $lang_pos + strlen('_lang_'));
@@ -2680,9 +2680,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return;
         }
 
+
         if ($field = $inputfield->hasField) {
 
             if (!is_object($field)) {
+                return;
+            }
+
+            if ($field->flags && $field->hasFlag(Field::flagSystem)) {
                 return;
             }
 
@@ -3107,6 +3112,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     }
 
 
+    public function isOnPageEditScreen()
+    {
+        return $this->wire('input') && strpos($this->wire('input')->url, '/page/edit/') !== false && isset($this->wire('input')->id);
+    }
+
+
     public function getModuleConfigInputfields(array $data)
     {
 
@@ -3217,7 +3228,7 @@ HTML;
         $f->addOption('__all__', '[ALL]');
 
         foreach ($this->wire('templates') as $t) {
-            if ($t->name == 'home' || ($t->flags & Template::flagSystem)) {
+            if ($t->name == 'home' || ($t->flags && $t->flags === Template::flagSystem)) {
                 continue;
             }
             $f->addOption($t->name, self::getFormattedOptionName($t));

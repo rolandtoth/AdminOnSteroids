@@ -1,6 +1,16 @@
 # Changelog
 
 
+### 1.8.7 (2018-03-30)
+
+- fieldOverrides: fix restricting to load on page edit screen only
+- prevNextLinks: enable also for User and Role edit screens
+- Field edit links: fix restricting to load on page edit screen only
+- attempt to fix Js error when inserting CSS rule with Js
+- fix PHP warning on multilanguage check
+
+
+
 ### 1.8.6 (2018-03-20)
 
 - new CKEditor plugin "Open Link"

@@ -4,11 +4,21 @@ function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
 }
 
-function addCSSRule(sheet, selector, rules, index) {
+function addCSSRule(selector, rules, index) {
+    var sheet;
+    if (!document.styleSheets.length) {
+        var style = document.createElement("style");
+        // WebKit hack
+        style.appendChild(document.createTextNode(""));
+        // Add the <style> element to the page
+        document.head.appendChild(style);
+        sheet = style.sheet;
+    } else {
+        sheet = document.styleSheets[0];
+    }
     if ("insertRule" in sheet) {
         sheet.insertRule(selector + "{" + rules + "}", index);
-    }
-    else if ("addRule" in sheet) {
+    } else if ("addRule" in sheet) {
         sheet.addRule(selector, rules, index);
     }
 }
@@ -1808,8 +1818,8 @@ $(document).ready(function () {
             IUC.height = $('.IUC-dummy').outerHeight() - 2;
             $('.IUC-dummy').remove();
 
-            if (IUC.height > 0 && document.styleSheets[0]) {
-                addCSSRule(document.styleSheets[0], '.iuc-button', 'height: ' + IUC.height + 'px; line-height: ' + IUC.height + 'px');
+            if (IUC.height > 0) {
+                addCSSRule('.iuc-button', 'height: ' + IUC.height + 'px; line-height: ' + IUC.height + 'px');
             }
 
             // $(document).on('ready reloaded wiretabclick opened', initIUC);
