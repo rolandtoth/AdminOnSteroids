@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.8.8 (2018-04-03)
+
+- prevNextLinks: do not load all siblings (by adrian)
+
+
+
 ### 1.8.7 (2018-03-30)
 
 - fieldOverrides: fix restricting to load on page edit screen only

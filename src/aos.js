@@ -1674,12 +1674,16 @@ $(document).ready(function () {
 
                     if ($targetElement.length) {
 
+                        var icon;
+
                         if (PrevNextLinks['prev']) {
-                            $targetElement.append('<a href="' + PrevNextLinks['prev']['url'] + '" title="' + PrevNextLinks['prev']['title'] + '" class="aos-edit-prev"><i class="fa fa-angle-left"></i></a>');
+                            icon = 'fa fa-angle-left';
+                            $targetElement.append('<a href="' + PrevNextLinks['prev']['url'] + '" title="' + PrevNextLinks['prev']['title'] + '" class="aos-edit-prev"><i class="' + icon + '"></i></a>');
                         }
 
                         if (PrevNextLinks['next']) {
-                            $targetElement.append('<a href="' + PrevNextLinks['next']['url'] + '" title="' + PrevNextLinks['next']['title'] + '" class="aos-edit-next"><i class="fa fa-angle-right"></i></a>');
+                            icon = 'fa fa-angle-right';
+                            $targetElement.append('<a href="' + PrevNextLinks['next']['url'] + '" title="' + PrevNextLinks['next']['title'] + '" class="aos-edit-next"><i class="' + icon + '"></i></a>');
                         }
                     }
                 }

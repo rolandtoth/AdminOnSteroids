@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.7',
+            'version'   => '1.8.8',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -1069,39 +1069,44 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //                    && $this->editedPage
 //                    && !($this->editedPage->template->flags && $this->editedPage->template->flags === Template::flagSystem)
                 ) {
-                    $selector = 'include=all, sort=' . $this->editedPage->parent->sortfield . ', parent=' . $this->editedPage->parent;
-                    $prevnextlinks = array();
-                    $siblings = $this->editedPage->siblings;
 
-                    if (count($siblings) > 1) {
+                    $parent = $this->editedPage->parent();
+                    $sortfield = ($parent && $parent->sortfield) ? $parent->sortfield : 'sort';
+                    $selector = 'include=all, template!=admin, id!=' . $this->wire('config')->http404PageID . ', sort=' . $sortfield . ', parent=' . $parent;
+                    $prevnextlinks = array();
+                    $isFirst = false;
+                    $isLast = false;
+                    $numSiblings = $parent->numChildren(true);
+
+                    if ($numSiblings > 1) {
 
                         $next = $this->editedPage->next($selector);
                         $prev = $this->editedPage->prev($selector);
 
                         if (!$next->id) {
-                            $next = $siblings->first;
+                            $next = $parent->find($selector . ', limit=1')->first();
                             $isFirst = true;
                         }
 
                         if (!$prev->id) {
-                            $prev = $siblings->last;
+                            $prev = $parent->find($selector . ', limit=1, start=' . $numSiblings)->first();
                             $isLast = true;
                         }
 
-                        $edit_next_text = isset($isFirst) ? ' ' . __('Edit first:', __FILE__) : __('Edit next:', __FILE__);
-                        $edit_prev_text = isset($isLast) ? ' ' . __('Edit last:', __FILE__) : __('Edit previous:', __FILE__);
+                        $edit_next_text = $isFirst ? ' ' . __('Edit first:', __FILE__) : __('Edit next:', __FILE__);
+                        $edit_prev_text = $isLast ? ' ' . __('Edit last:', __FILE__) : __('Edit previous:', __FILE__);
 
-                        if ($prev->editable()) {
+                        if ($prev->id && $prev->editable()) {
                             $prevnextlinks['prev'] = array(
-                                'title' => $edit_prev_text . ' ' . ($prev->title ? $prev->title : $prev->name),
-                                'url'   => $prev->editUrl
+                                'title'   => $edit_prev_text . ' ' . ($prev->title ? $prev->title : $prev->name),
+                                'url'     => $prev->editUrl
                             );
                         }
 
-                        if ($next->editable()) {
+                        if ($next->id && $next->editable()) {
                             $prevnextlinks['next'] = array(
-                                'title' => $edit_next_text . ' ' . ($next->title ? $next->title : $next->name),
-                                'url'   => $next->editUrl
+                                'title'  => $edit_next_text . ' ' . ($next->title ? $next->title : $next->name),
+                                'url'    => $next->editUrl
                             );
                         }
 
