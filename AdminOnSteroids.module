@@ -1066,7 +1066,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if (
                     in_array($this->wire('page')->process, array('ProcessPageEdit', 'ProcessUser', 'ProcessRole'))
                     && $this->wire('input')->id
-//                    && $this->editedPage
+                    && $this->editedPage
 //                    && !($this->editedPage->template->flags && $this->editedPage->template->flags === Template::flagSystem)
                 ) {
 
