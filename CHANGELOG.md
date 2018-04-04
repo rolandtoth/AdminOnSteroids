@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.8.9 (2018-04-04)
+
+- prevNextLinks: template level sort order fix (by Robin S)
+
+
+
 ### 1.8.8 (2018-04-03)
 
 - prevNextLinks: do not load all siblings (by adrian)

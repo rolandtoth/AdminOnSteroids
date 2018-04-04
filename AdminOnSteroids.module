@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.8',
+            'version'   => '1.8.9',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -62,44 +62,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     static public function getDefaultData()
     {
         return array(
-            'enabledSubmodules'                 => array(
-//                'AdminTweaks',
-//                'AsmTweaks',
-//                'CKEaddons',
-//                'DeselectRadios',
-//                'FieldAndTemplateEditLinks',
-//                'FileFieldTweaks',
-//                'FocusInputOnLangTabSwitch',
-//                'Hotkeys',
-//                'InputfieldURLChecker',
-//                'ListerTweaks',
-//                'LongClickDuration',
-//                'Misc',
-//                'ModuleTweaks',
-//                'NavItems',
-//                'PageListIcons',
-//                'PageListThumbs',
-//                'PageListTweaks',
-//                'PagePreviewBtn',
-//                'RenoTweaks',
-//                'Tooltips'
-            ),
+            'enabledSubmodules'                 => array(),
             'enabled'                           => 1,
             'restore'                           => '',
             'AddNewChildFirst_enabledTemplates' => array(),
             'AdminStyle'                        => '',
             'AdminScript'                       => '',
-            'AdminTweaks'                       => array(
-//                'headSticky',
-//                'leftTopnav',
-//                'wide'
-            ),
-            'AsmTweaks'                         => array(
-//                'asmCollapse',
-//                'fieldMiddleEdit',
-//                'editFieldWidth',
-//                'asmLeftX'
-            ),
+            'AdminTweaks'                       => array(),
+            'AsmTweaks'                         => array(),
             'CKEStyle'                          => '',
             'CKEScript'                         => '',
             'CKEtemplates'                      => '',
@@ -113,27 +83,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'FieldOverrides'                    => '',
             'FieldOverridesFile'                => '',
             'BrandingLogo'                      => '',
-            'FileFieldTweaks'                   => array(
-//                'filterbox',
-//                'downloadAssetButton',
-//                'moveAssetButtons',
-//                'noFilenameTruncate',
-//                'imgSelectTitle'
-            ),
+            'FileFieldTweaks'                   => array(),
             'FocusInputOnLangTabSwitch'         => array(
                 'focus'
             ),
             'FocusInputOnLangTabSwitchCKE'      => array(
                 'focus'
             ),
-            'Hotkeys'                           => array(
-//                'save',
-//                'focusSearch',
-//                'breadcrumbTweaks',
-//                'addPageTreeTrigger',
-//                'filterboxHotkey',
-//                'removeNoticeHotkey'
-            ),
+            'Hotkeys'                           => array(),
             'IUC_mode'                          => array(
                 'button'
             ),
@@ -143,47 +100,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'IUC_enabledTemplates'              => array(),
             'IUC_enabledFields'                 => array(),
             'ListerTweaks'                      => '',
-            'ListerTweaks_find'                 => array(
-//                'title',
-//                'template',
-//                'parent',
-//                'modified',
-//                'modified_users_id'
-            ),
-            'ListerTweaks_users'                => array(
-//                'name',
-//                'email',
-//                'roles'
-            ),
-            'ListerTweaks_options'              => array(
-//                'listerHoverBtn',
-//                'hideTemplateEditAction'
-            ),
+            'ListerTweaks_find'                 => array(),
+            'ListerTweaks_users'                => array(),
+            'ListerTweaks_options'              => array(),
             'LongClickDuration'                 => 600,
-            'Misc'                              => array(
-//                'adminColumns',
-//                'autosizeTextareas',
-//                'addOrRemoveFieldsTweaks',
-//                'homeOpenNewTab',
-//                'dataTableFilter',
-//                'transFilter',
-//                'langTabHotkeySwitcher',
-//                'centerLogin',
-//                'hoverDropdown',
-//                'titleCaseToggle',
-//                'tabIndex',
-//                'emptyTrashTop',
-//                'iconsFilter',
-//                'stickyCKE'
-//                'noAnim'
-            ),
-            'ModuleTweaks'                      => array(
-//                'loadCollapsedModuleInfos',
-//                'flatModules',
-//                'moduleCompact',
-//                'moduleFilter',
-//                'moduleModal'
-            ),
+            'Misc'                              => array(),
+            'ModuleTweaks'                      => array(),
             'NavItems'                          => 1,
             'NavItems_pages'                    => array(),
             'NavItems_pages_submenu'            => '',
@@ -193,43 +115,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'PageListThumbs_style'              => 'circle',
             'PageListThumbs_items'              => '',
             'PageListIcons'                     => '',
-            'PageListThumbs_options'            => array(//                'alignright'
-            ),
-            'PageListTweaks'                    => array(
-//                'pListIDs',
-//                'highlightRows',
-//                'pListMiddleClick',
-//                'pListCounters',
-                //'pListTrash',
-//                'pListMarkup',
-//                'pListUnselect'
-            ),
-            'RenoTweaks'                        => array(
-//                'sbSingleClickHeads',
-//                'headSticky',
-////                'headStickyCompact',
-//                'miniScrollSb',
-////                'miniScrollMain',
-//                'sbSticky',
-////                'sbAutoHide',
-//                'sbItemsVisible',
-////                'sbQuickLinksHide',
-////                'sbItemsInline',
-//                'headBtnToTitle',
-//                'pListFullRowHover',
-//                'openSearch',
-//                'pListCompact',
-//                'noticeLeftX',
-//                'hoverTopSubmenus'
-            ),
+            'PageListThumbs_options'            => array(),
+            'PageListTweaks'                    => array(),
+            'RenoTweaks'                        => array(),
             'RestrictTreeDropdown'              => '',
-            'Tooltips'                          => array(
-//                'tooltipDesc',
-//                'tooltipNotes'
-//                'tooltipOverlay'
-            ),
-            'UikitTweaks'                       => array(//                'headSticky',
-            )
+            'Tooltips'                          => array(),
+            'UikitTweaks'                       => array()
         );
     }
 
@@ -240,7 +131,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     protected function _installColumnBreakField()
     {
-
         // install AdminColumns field
         // use skipLabel and collapsed to avoid visiblity if AOS is uninstalled (no need to remove from templates)
         if ($this->fields->get('aos_column_break')) {
@@ -1070,13 +960,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //                    && !($this->editedPage->template->flags && $this->editedPage->template->flags === Template::flagSystem)
                 ) {
 
+                    // sort precedence: template level - parent level - "sort"
+                    $sortfield = 'sort';
                     $parent = $this->editedPage->parent();
 
-                    // order: template level - parent level - "sort"
-                    $sortfield = $this->editedPage->template->sortfield;
-
-                    if (empty($sortfield)) {
-                        $sortfield = ($parent && $parent->sortfield) ? $parent->sortfield : 'sort';
+                    if ($parent->id) {
+                        $sortfield = $parent->template->sortfield ?: $parent->sortfield;
                     }
 
                     $baseSelector = 'include=all, template!=admin, id!=' . $this->wire('config')->http404PageID . ', parent=' . $parent;
@@ -1089,8 +978,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                         $selector = $baseSelector . ', sort=' . $sortfield;
 
-                        if(strpos($sortfield, '-') === 0) {
-                            $sortfieldReversed = substr($sortfield, 1);
+                        if (strpos($sortfield, '-') === 0) {
+                            $sortfieldReversed = ltrim($sortfield, '-');
                         } else {
                             $sortfieldReversed = '-' . $sortfield;
                         }
@@ -3896,7 +3785,6 @@ HTML;
         $f->attr('name', 'PageListIcons');
         $f->label = __('PageList icons', __FILE__);
         $f->showIf = 'enabledSubmodules=PageListIcons';
-
         $f->collapsed = Inputfield::collapsedNever;
 
         if (isset($data[$f->name]) && $data[$f->name]) {
