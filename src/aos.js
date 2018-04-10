@@ -337,27 +337,23 @@ function restoreFilterBoxValue(input) {
 // default AdminDataTable filter
 function setupAdminDataTableFilter() {
 
-
     // do not add dtFilter to modules
     if ($('#modules_form').length) {
         return false;
     }
 
-
-    // if ($('.dtFilter').length) return false;
-
     if ($('.AdminDataTable:not(.InputfieldTable)').length) {
 
+
+
         var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '';
+
         if ($('body.AdminThemeUikit').length === 0) {
             var dtFilter = $('<div class="Inputfield InputfieldMarkup"><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter items..." class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
         }
         else {
             var dtFilter = $('<div class="uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup">' +
                 '<div class="dtFilter filterbox InputfieldContent ">' +
-                // '<span class="uk-form-icon">' +
-                // '<i class="fa fa-search"></i>' +
-                // '</span>' +
                 '<input type="text" placeholder="Filter..."' + autofocus + ' class="uk-input uk-form-width-medium">' +
                 '<i class="fa fa-close"></i>' +
                 '<span class="counter"></span></div></div>');
@@ -365,16 +361,9 @@ function setupAdminDataTableFilter() {
 
         function updateDtFilterCounter(num, input, total) {
 
-            // $(input).toggleClass('hidden', !num);
-
             var counter = $(input).siblings('.counter');
 
-            // see in CSS
-            // if((!num)) {
-            //     counter.text('');
-            // } else {
             counter.html('<strong>' + num + '</strong>' + '<em>/ ' + total + '</em>');
-            // }
         }
 
         // do not show if there is only 1 item
@@ -403,6 +392,7 @@ function setupAdminDataTableFilter() {
                     table.parents('.Inputfields').first().prepend(dtFilter.clone());
 
                 } else if (table.parents('.InputfieldPageTable').length) {
+                    if (table.parents('.InputfieldPageTable').first().find('.dtFilter').length) return true;   // filterbox may be already present on reload event
                     table.parents('.InputfieldPageTable').first().children('.InputfieldContent').prepend(dtFilter.clone());
 
                 } else {

@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 1.9.0 (2018-04-10)
+
+- fix for additional adminDataTable filterbox after PageTable reload (reported by szabesz)
+- remove CSS rule that made impossible to resize ListerPro columns (reported by szabesz)
+- make TracyDebugger panels appear above sticky headers and AOS submodule blocks (reported by adrian)
+
+
+
 ### 1.8.9 (2018-04-04)
 
 - prevNextLinks: template level sort order fix (by Robin S)

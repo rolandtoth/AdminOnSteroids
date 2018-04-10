@@ -542,9 +542,10 @@ html.aos {
   }
 
   // fixes height issue on filtered table (filterbox)
-  .tablesorter-resizable-container {
-    position: static;
-  }
+  // ...but also makes impossible to resize columns (eg. ListerPro)
+  //.tablesorter-resizable-container {
+  //  position: static;
+  //}
 
   .modules_section.hidden {
     display: none;
@@ -2403,10 +2404,6 @@ html.AdminThemeReno {
       }
 
       #ProcessPageSearchAutocomplete {
-        z-index: 100000 + 20000 !important;
-      }
-
-      .tracy-panel {
         z-index: 100000 + 20000 !important;
       }
 
@@ -4476,4 +4473,8 @@ html.aos .InputfieldAssistedUrlText {
       background: #ebebeb;
     }
   }
+}
+
+#tracy-debug {
+  z-index: 100000 + 20000 !important;
 }

@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.8.9',
+            'version'   => '1.9.0',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -3005,8 +3005,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $f->attr('name', $submoduleName . 'Roles');
         $f->label = __($submoduleName . ' roles', __FILE__);
         $f->skipLabel = Inputfield::skipLabelHeader;
-        $f->attr('asmPlaceholder', __('ROLES', __FILE__));
         $f->attr('data-no-asm-searchbox', '1');
+        $f->attr('asmPlaceholder', __('ROLES', __FILE__));
         $f->showIf = 'enabledSubmodules=' . $submoduleName;
         $f->setAsmSelectOption('sortable', false);
         $f->collapsed = Inputfield::collapsedNever;
