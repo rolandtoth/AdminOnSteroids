@@ -3283,7 +3283,7 @@ html.AdminThemeUikit {
           left: 0;
           width: 100%;
           backface-visibility: hidden;
-          z-index: 30;
+          z-index: 1;
         }
       }
       &.headSticky.headCompact {
@@ -4090,10 +4090,10 @@ html.hoverDropdown {
 
   //#submit_publish {
   //  float: none;
-    //+ button {
-    //  margin-right: 0 !important;
-    //  float: left;
-    //}
+  //+ button {
+  //  margin-right: 0 !important;
+  //  float: left;
+  //}
   //}
 
   // fix wrong positioning of button menu
@@ -4475,6 +4475,6 @@ html.aos .InputfieldAssistedUrlText {
   }
 }
 
-#tracy-debug {
-  z-index: 100000 + 20000 !important;
-}
+//#tracy-debug {
+//  z-index: 1;
+//}
