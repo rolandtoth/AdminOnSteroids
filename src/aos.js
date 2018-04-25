@@ -107,6 +107,8 @@ function initCKE() {
             CKEDITOR.config.skin = CKEskin + ',' + aosUrl + 'CKE/skins/' + CKEskin + '/';
         }
 
+        var isMiniScrollbarEnabled = AOSsettings.Misc && AOSsettings.Misc.indexOf('miniScrollbar') !== -1;
+
         // Content Templates templates.js
         if (CKEtemplatesFile) {
             CKEDITOR.config.templates_files = [CKEtemplatesFile];
@@ -152,11 +154,21 @@ function initCKE() {
                 if (CKEfield.contentsCss.indexOf('/wire/') !== -1) {
                     // (only if there's no field custom css set)
                     // by default contents.css is loaded from /wire/... directory
-                    CKEfield.contentsCss = AOSsettings.customCKEStyle;
+                    CKEfield.contentsCss = [AOSsettings.customCKEStyle];
                 } else {
                     // load both: field + aos
                     CKEfield.contentsCss = [CKEfield.contentsCss, AOSsettings.customCKEStyle];
                 }
+            }
+
+            // ensure contentsCss is an array
+            if(CKEfield.contentsCss.constructor !== Array) {
+                CKEfield.contentsCss = [CKEfield.contentsCss];
+            }
+
+            // also load scrollbar.css if enabled in Misc
+            if(isMiniScrollbarEnabled) {
+                CKEfield.contentsCss.push(aosUrl + '/styles/scrollbar.css');
             }
 
             // process enabled fields

@@ -241,7 +241,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'leftTopnav',
             'ListerTweaks',
             'listerHoverBtn',
-            'miniScrollbar',
             'moduleCompact',
             'moduleModal',
             'moveAssetButtons',
@@ -956,6 +955,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if (in_array('inputMaskPhoneLib', $configData[$subModule])) {
                     $scripts->add($root . '/scripts/vendor/cleave.js/cleave-phone.i18n.js');
                 }
+            }
+
+            // load CSS for miniScrollbar
+            if (in_array('miniScrollbar', $configData[$subModule])) {
+                $styles->add($root . '/styles/scrollbar.css');
             }
 
             // showSystemTemplates

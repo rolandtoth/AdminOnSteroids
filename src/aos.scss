@@ -4488,23 +4488,3 @@ html.aos .InputfieldAssistedUrlText {
   }
 }
 
-//#tracy-debug {
-//  z-index: 1;
-//}
-
-html.miniScrollbar {
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: rgba(black, 0.07);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(black, 0.3);
-    &:hover {
-      background: rgba(black, 0.5);
-    }
-  }
-}
