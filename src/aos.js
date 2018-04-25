@@ -3197,33 +3197,10 @@ $(document).ready(function () {
 
             // enable single clicking on headers in sidebar
             if (renoTweaksSettings.indexOf('sbSingleClickHeads') !== -1 && renoTweaksSettings.indexOf('sbItemsVisible') !== -1) {
-
                 $('#sidebar > #main-nav > li > a').on('click', function () {
                     window.location.href = $(this).attr('href');
                     return false;
                 });
-            }
-
-            // miniScrollbar
-            if (window.Ps) {
-
-                var sidebarNav = document.querySelector('#main-nav'),
-                    // mainContent = document.querySelector('#content'),
-                    mainContent = document.querySelector('body:not(.modal-inline) #main'),
-                    PsSettings = {
-                        wheelSpeed: 2,
-                        theme: 'pw-scrollbar',
-                        suppressScrollX: true,
-                        wheelPropagation: true
-                    };
-
-                if (sidebarNav && renoTweaksSettings.indexOf('miniScrollSb') !== -1) {
-                    Ps.initialize(sidebarNav, PsSettings);
-                }
-
-                if (mainContent && renoTweaksSettings.indexOf('miniScrollMain') !== -1) {
-                    Ps.initialize(mainContent, PsSettings);
-                }
             }
         }
 

@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.9.1 (2018-04-23)
+
+- new: sticky action (PageListTweaks)
+- miniScrollbars: removed JS lib (RenoTweaks), added CSS-based solution to Misc (Chrome only)
+- z-index fix to avoid TracyDebugger panel overlaps
+- fixed language switcher issue with non-existing lang_id (by theo)
+
+
+
 ### 1.9.0 (2018-04-10)
 
 - fix for additional adminDataTable filterbox after PageTable reload (reported by szabesz)

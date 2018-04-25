@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.0',
+            'version'   => '1.9.1',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -129,11 +129,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return __CLASS__;
     }
 
+
     protected function _installColumnBreakField()
     {
-        // install AdminColumns field
         // use skipLabel and collapsed to avoid visiblity if AOS is uninstalled (no need to remove from templates)
-        if ($this->fields->get('aos_column_break')) {
+        if ($this->wire('fields')->get('aos_column_break')) {
             return;
         }
 
@@ -144,10 +144,49 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $field->skipLabel = true;
         $field->collapsed = Inputfield::collapsedYesLocked;
         $field->tags = '-aos';
-//        $field->columnWidth = 67;
         $field->save();
 
-        $this->message(__('Added "aos_column_break" field for AdminColumns submodule.', __FILE__));
+        $this->message(__('Installed field "aos_column_break".', __FILE__));
+    }
+
+
+    protected function _installStickyField()
+    {
+        if ($this->wire('fields')->get('sticky')) {
+            return;
+        }
+
+        $field = new Field();
+        $field->type = $this->wire('modules')->get("FieldtypeInteger");
+        $field->name = 'sticky';
+        $field->inputType = 'number';
+        $field->collapsed = Inputfield::collapsedBlank;
+        $field->label = __('Sticky position', __FILE__);
+        $field->description = __('The higher the value the higher on the pagelist will the page appear.', __FILE__);
+        $field->tags = '-aos';
+        $field->set('flags', Field::flagGlobal);
+        $field->save();
+
+        $this->message(__('Installed field "sticky".', __FILE__));
+    }
+
+
+    protected function _removeStickyField()
+    {
+        $sticky = $this->wire('fields')->get('sticky');
+        $sticky->set('flags', false);
+        $sticky->save();
+
+        foreach ($this->wire('templates') as $template) {
+            foreach ($template->fieldgroup as $field) {
+                if ($field->name === 'sticky') {
+                    $template->fieldgroup->remove($field);
+                    $template->fieldgroup->save();
+                }
+            }
+        }
+
+        $this->wire('fields')->delete($sticky);
     }
 
 
@@ -202,6 +241,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'leftTopnav',
             'ListerTweaks',
             'listerHoverBtn',
+            'miniScrollbar',
             'moduleCompact',
             'moduleModal',
             'moveAssetButtons',
@@ -388,7 +428,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if (in_array('adminLangSwitcher', $configData[$subModule])) {
                     if (isset($_COOKIE["aos_lang_id"])) {
                         $lang_id = $_COOKIE["aos_lang_id"];
-                        $this->wire('user')->language = $lang_id;
+                        $item = $this->wire('pages')->get('template=language,id=' . $lang_id);
+                        if ($item->id) {
+                            $this->wire('user')->language = $lang_id;
+                        }
                     }
                 }
             }
@@ -590,11 +633,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListIDs');
                 }
 
-
                 // add delete button to pagelist items (bypass trash)
                 if (in_array('deleteBtn', $configData[$subModule])) {
                     $this->addHookAfter("ProcessPageListActions::getExtraActions", $this, 'addDeleteButton');
                     $this->addHookAfter('ProcessPageListActions::processAction', $this, 'addDeleteButtonAction');
+                }
+
+                if (in_array('stickyBtn', $configData[$subModule])) {
+                    $this->_installStickyField();
+                    $this->addHookAfter("ProcessPageList::find", $this, 'stickyFindMod');
+                    $this->addHookAfter("ProcessPageListActions::getExtraActions", $this, 'addStickyButton');
+                    $this->addHookAfter('ProcessPageListActions::processAction', $this, 'addStickyButtonAction');
+                    $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addStickyPageLabelIcon');
+                    $this->addHookAfter('ProcessPageEdit::buildForm', $this, 'moveStickyFieldToSettings');
                 }
             }
 
@@ -707,19 +758,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
 
             });
-        }
-
-
-        //RenoTweaks
-        $subModule = 'RenoTweaks';
-        if ($this->adminTheme === 'AdminThemeReno' && in_array($subModule, $enabledSubmodules)) {
-            if (in_array('headSticky', $configData[$subModule])) {
-                if (in_array('miniScrollSb', $configData[$subModule]) || in_array('miniScrollMain',
-                        $configData[$subModule])
-                ) {
-                    $jsFiles[] = $root . '/scripts/vendor/perfect-scrollbar/js/perfect-scrollbar.min.js';
-                }
-            }
         }
 
 
@@ -920,7 +958,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
             }
 
-
             // showSystemTemplates
             if (in_array('showSystemTemplates', $configData[$subModule])) {
 
@@ -950,7 +987,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $jsFiles[] = $root . '/scripts/vendor/autosize/autosize.min.js';
             }
 
-
             // prevNextLinks
             if (in_array('prevNextLinks', $configData[$subModule])) {
                 if (
@@ -960,7 +996,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 //                    && !($this->editedPage->template->flags && $this->editedPage->template->flags === Template::flagSystem)
                 ) {
 
-                    // sort precedence: template level - parent level - "sort"
+                    // sort precedence: template level - page level - "sort"
                     $sortfield = 'sort';
                     $parent = $this->editedPage->parent();
 
@@ -1938,7 +1974,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return false;
         }
 
-        //  not trashable but not in Trash
+        //  not trashable and not in Trash
         if (!$page->trashable() && !$page->isTrash()) {
             return false;
         }
@@ -1947,7 +1983,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $adminUrl = $this->wire('config')->urls->admin . 'page/';
         $icon = '';
 
-//        $actions['delete_permanently'] = array(
         $actions['delete'] = array(
             'cn'   => 'Delete aos-pagelist-confirm',
             'name' => $icon . 'Delete',
@@ -1988,6 +2023,103 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 'remove'          => true,
                 'refreshChildren' => false
             );
+        }
+    }
+
+
+    // prepend sort=-sticky to pagelist find
+    public function stickyFindMod(HookEvent $event)
+    {
+        $page = $event->arguments('page');
+        $selectorString = $event->arguments('selectorString');
+        $sortfield = $page->template->sortfield ?: $page->sortfield;
+
+        $event->return = $page->children('sort=-sticky,sort=' . $sortfield . ',' . $selectorString);
+    }
+
+
+    /**
+     * Add Sticky button to pagelist
+     */
+    public function addStickyButton(HookEvent $event)
+    {
+        // allow on ProcessPageList only
+        if($event->process != 'ProcessPageList') {
+            return false;
+        }
+
+        $page = $event->arguments('page');
+
+        if (in_array($page->id, array(1, 27), true)) {
+            return false;
+        }
+
+        if ($page->isTrash()) {
+            return false;
+        }
+
+        if ($page->template->flags && $page->template->flags === Template::flagSystem) {
+            return false;
+        }
+
+        $actions = array();
+        $adminUrl = $this->wire('config')->urls->admin . 'page/';
+        $action = $page->sticky ? 'unsticky' : 'sticky';
+        $cn = $page->sticky ? 'Unsticky' : 'Sticky';
+        $icon = '';
+
+        $actions[$action] = array(
+            'cn'   => $cn,
+            'name' => $icon . $cn,
+            'url'  => $adminUrl . '?action=' . $action . '&id=' . $page->id,
+            'ajax' => true
+        );
+
+        $event->return = array_merge($actions, $event->return);
+    }
+
+    /**
+     * Process action for addStickyButton.
+     *
+     * @return bool
+     */
+    public function addStickyButtonAction(HookEvent $event)
+    {
+        $page = $event->arguments(0);
+        $action = $event->arguments(1);
+
+        if ($action == 'sticky' || $action == 'unsticky') {
+
+            if ($action == 'sticky') {
+                $highestSticky = $page->parent->get('sticky!="", sort="-sticky, id!=' . $page->id);
+                $page->sticky = (int)$highestSticky->sticky + 10;
+                $message = 'Page made sticky';
+            } else {
+                $page->sticky = null;
+                $message = 'Page unsticky';
+            }
+
+            $page->save('sticky', array('quiet' => true));
+
+            $event->return = array(
+                'action'          => $action,
+                'success'         => true,
+                'page'            => $page->parent->id,
+                'updateItem'      => $page->id,
+                'message'         => $message,
+                'remove'          => false,
+                'refreshChildren' => $page->parent->id
+            );
+        }
+    }
+
+
+    public function addStickyPageLabelIcon(HookEvent $event)
+    {
+        $page = $event->arguments('page');
+
+        if ($page->sticky) {
+            $event->return = '&#9733; ' . $event->return;
         }
     }
 
@@ -2139,7 +2271,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function setupAdminColumnsTabs($fields, $form)
     {
-
         $dataColumnBreaks = array();
 
         foreach ($fields as $f) {
@@ -2173,7 +2304,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if (!empty($dataColumnBreaks)) {
             $form->wrapAttr('data-column-break', json_encode($dataColumnBreaks));
         }
-
     }
 
 
@@ -2201,7 +2331,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function setupAdminColumns(HookEvent $event)
     {
-
         $form = $event->return;
         $fields = $form->children();
         $colBreakField = $fields->get('aos_column_break');
@@ -2302,6 +2431,19 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $form->add($fsetRight);
         $form->add($fsetRightEnd);
+    }
+
+
+    public function moveStickyFieldToSettings(HookEvent $event)
+    {
+        $form = $event->return;
+        $settingsTab = $form->children->get('id=ProcessPageEditSettings');
+        $stickyField = $form->get('sticky');
+
+        if ($stickyField && $settingsTab) {
+            $form->remove($stickyField);
+            $settingsTab->append($stickyField);
+        }
     }
 
 
@@ -3701,6 +3843,7 @@ HTML;
         $f->addOption('inputMask', __('Add input mask to Input fields (JavaScript only)', __FILE__));
         $f->addOption('inputMaskPhoneLib', __('Load phone country library for input mask', __FILE__));
         $f->addOption('checkAllCheckboxes', __('Add button to check/uncheck all checkboxes (appears on hover)', __FILE__));
+        $f->addOption('miniScrollbar', __('Use mini scrollbars (Chrome only)', __FILE__));
 
 
         if ($data[$f->name]) {
@@ -3865,6 +4008,7 @@ HTML;
         $f->addOption('pListIDs', __('Show page IDs (SuperUser only)', __FILE__));
         $f->addOption('refreshBtn', __('Add Refresh button to refresh page details displayed', __FILE__));
         $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
+        $f->addOption('stickyBtn', __('Add Sticky button to pagelist', __FILE__));
         $f->addOption('pListUnselect', __('Add unselect/restore buttons to PageListSelect', __FILE__));
         $f->addOption('pListIconOnly', __('Icon-only pagelist actions', __FILE__));
         $f->addOption('pListMiddleClick', __('Use middle mouse click/ctrl+click to View/Edit page', __FILE__));
@@ -3914,8 +4058,6 @@ HTML;
 
         $f->addOption('headSticky', __('Sticky header', __FILE__));
         $f->addOption('headStickyCompact', __('Compact header', __FILE__));
-        $f->addOption('miniScrollSb', __('Use mini scrollbar for sidebar', __FILE__));
-        $f->addOption('miniScrollMain', __('Use mini scrollbar for main content', __FILE__));
         $f->addOption('sbSticky', __('Sticky sidebar', __FILE__));
         $f->addOption('sbItemsVisible', __('Always show sidebar items (disable accordion)', __FILE__));
         $f->addOption('sbSingleClickHeads', __('Single click navigation of sidebar headers', __FILE__));

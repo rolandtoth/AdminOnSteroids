@@ -78,6 +78,9 @@ html.aos {
     line-height: 1.5em !important;
   }
   &.AdminThemeReno {
+    #wrap {
+      z-index: 1; // avoid Tracy panel overlaps
+    }
     #search {
       z-index: 8;
     }
@@ -2492,9 +2495,6 @@ html.AdminThemeReno {
           top: 0;
           //max-height: 100%;
           //overflow: auto;
-          &.ps-theme-pw-scrollbar {
-            overflow: hidden !important;
-          }
           padding-bottom: 0;
           // placeholder to push down bottom (Firefox)
           &:after {
@@ -2566,6 +2566,8 @@ html.AdminThemeReno {
   &.headSticky.headStickyCompact:not(.modal) {
 
     @media only screen and (min-width: 960px) {
+
+      overflow: hidden;
 
       // System Notifications module
       #NotificationGhosts {
@@ -2904,46 +2906,6 @@ html.AdminThemeReno {
 
   #main-nav {
     position: relative;
-  }
-
-  @import '../scripts/vendor/perfect-scrollbar/css/mixins';
-  @import '../scripts/vendor/perfect-scrollbar/css/variables';
-
-  $ps-theme-default: (
-          border-radius: $ps-border-radius,
-          rail-default-opacity: $ps-rail-default-opacity,
-          rail-container-hover-opacity: $ps-rail-container-hover-opacity,
-          rail-hover-opacity: $ps-rail-hover-opacity,
-          bar-bg: $ps-bar-bg,
-          bar-container-hover-bg: $ps-bar-container-hover-bg,
-          bar-hover-bg: $ps-bar-hover-bg,
-          rail-hover-bg: $ps-rail-hover-bg,
-          scrollbar-x-rail-bottom: $ps-scrollbar-x-rail-bottom,
-          scrollbar-x-rail-height: $ps-scrollbar-x-rail-height,
-          scrollbar-x-bottom: $ps-scrollbar-x-bottom,
-          scrollbar-x-height: $ps-scrollbar-x-height,
-          scrollbar-y-rail-right: $ps-scrollbar-y-rail-right,
-          scrollbar-y-rail-width: $ps-scrollbar-y-rail-width,
-          scrollbar-y-right: $ps-scrollbar-y-right,
-          scrollbar-y-width: $ps-scrollbar-y-width,
-  );
-
-  .ps-theme-pw-scrollbar {
-    @include ps-container(map-merge($ps-theme-default, (
-            border-radius: 2,
-            rail-default-opacity: 0,
-            bar-bg: transparent,
-            bar-container-hover-bg: rgba(#2F4248, 0.4),
-            rail-hover-bg: rgba(#2F4248, 0.2),
-            bar-hover-bg: rgba(#2F4248, 0.5),
-            scrollbar-y-rail-width: 6px,
-            scrollbar-y-width: 6px
-    )));
-
-    //.ps-theme-pw-scrollbar {
-    //  overflow-x: visible !important;
-    //}
-
   }
 
   ul.quicklinks {
@@ -3784,6 +3746,39 @@ html.pListCounters {
 //}
 
 html.pListIconOnly {
+  .PageListActions a {
+    max-width: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-bottom: 0 !important;
+    position: relative;
+    z-index: 2;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1;
+    &:not(.PageExtras) {
+      color: #7ea0ab !important;
+      background: transparent !important;
+      &:hover {
+        color: #E83561 !important;
+        z-index: 20;
+      }
+    }
+    &:before {
+      font-family: Fontawesome;
+      padding: 0 4px;
+      text-align: center;
+      margin-right: 5px;
+      min-width: 30px;
+      display: inline-block;
+      font-size: 15px;
+      margin-left: 0;
+    }
+    tr.open & {
+      display: inline-block !important;
+    }
+  }
   // for default theme
   .PageExtras.extras-open ~ a {
     display: inline-block !important;
@@ -3796,6 +3791,10 @@ html.pListIconOnly {
     .PageListActionEdit > a[href*="page/edit"],
     a.PageEdit {
       @include pageListIcon("\f040");
+    }
+    .PageListActionEdit > a[href*="template/edit?"],  // template edit action
+    a.PageEdit {
+      max-width: unset;
     }
     .PageListActionView > a,
     a.PageView {
@@ -3862,6 +3861,20 @@ html.pListIconOnly {
       position: static !important; // allow full-row red bg color
       &:not(.cancel):not([href*="force=1"]) {
         @include pageListIcon("\f12d");
+      }
+    }
+    .PageListActionSticky > a,
+    a.PageSticky {
+      @include pageListIcon("\f006");
+      &:hover {
+        @include pageListIcon("\f005");
+      }
+    }
+    .PageListActionUnsticky > a,
+    a.PageUnsticky {
+      @include pageListIcon("\f005");
+      &:hover {
+        @include pageListIcon("\f006");
       }
     }
   }
@@ -4478,3 +4491,20 @@ html.aos .InputfieldAssistedUrlText {
 //#tracy-debug {
 //  z-index: 1;
 //}
+
+html.miniScrollbar {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(black, 0.07);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(black, 0.3);
+    &:hover {
+      background: rgba(black, 0.5);
+    }
+  }
+}
