@@ -469,29 +469,16 @@ html.aos {
     clear: both;
     padding: 6px !important;
     background: #EAF0F2;
-    //color: #6c96a4;
-
-    &:before {
-      // search character icon
-      content: "\1F50E";
-      position: absolute;
-      padding: 6px 11px;
-      top: 51%;
-      transform: translateY(-50%);
-      font-size: 15px;
-      color: #6c96a4;
-      pointer-events: none;
-    }
-
     input {
       width: auto !important;
       padding-right: 32px !important;
       min-width: 250px;
       display: inline-block;
-      background: rgba(#fff, 0.5) !important;
-      padding-left: 33px !important;
+      background: rgba(#fff, 0.5) url('../images/search.svg') 0.48rem 48% no-repeat !important;
+      background-size: 1.24rem 1.24rem !important;
+      padding-left: 2rem !important;
       &:focus {
-        background: #fff !important;
+        background-color: #fff !important;
       }
       &.empty {
         border-color: $colorDelete !important;
@@ -2101,12 +2088,19 @@ html.PageListThumbs {
   display: none;
 }
 
+.icons-filter-wrap {
+  display: inline-block;
+  background: transparent !important;
+}
+
 #icons-filter {
   display: inline-block;
-  padding: 2px 5px;
-  margin-left: 30px;
+  padding: 0.33rem 0.45rem;
+  width: auto;
+  margin-left: 1rem;
   &.hidden {
-    display: none;
+    //padding: 0;
+    visibility: hidden;
   }
 }
 

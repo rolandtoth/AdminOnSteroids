@@ -2567,7 +2567,7 @@ $(document).ready(function () {
             // iconsFilter (by Robin S)
             if (AOSsettings.Misc.indexOf('iconsFilter') !== -1 && $('.InputfieldIconAll').length) {
 
-                $('.InputfieldIconAll').before('<input id="icons-filter" class="hidden" placeholder="&#128269">');
+                $('.InputfieldIconAll').before('<div class="filterbox icons-filter-wrap"><input id="icons-filter" class="hidden uk-input"></div>');
 
                 var $filterIcons,
                     hasParentSpan,
