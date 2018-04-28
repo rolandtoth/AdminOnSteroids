@@ -1133,7 +1133,7 @@ $(document).ready(function () {
                     $(this).attr('data-checked-all', checkCheckboxes(e, $(this).parent()) > 0 ? '1' : '');
                 });
 
-                $(document).on('hover', 'ul[class*="InputfieldCheckboxes"]', function () {
+                $(document).on('hover', '.InputfieldCheckboxes:not("[data-no-checkall-checkboxes=\"1\"]") ul[class*="InputfieldCheckboxes"]', function () {
                     updateCheckCheckboxState($(this));
                     $(this).append($checkAllCheckboxes);
                 });

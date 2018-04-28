@@ -4,6 +4,10 @@
 // general style overrides
 html.aos {
 
+  // make mini scrollbar overlap contents
+  min-width: 100vw;
+  overflow-x: hidden;
+
   // on pagelist item hover underline only the first span (added by the module)
   .pw-content .PageList .PageListItem > a.PageListPage {
     &:hover {
@@ -2105,6 +2109,7 @@ html.PageListThumbs {
 }
 
 html.noAnim {
+  scroll-behavior: auto !important;
   *, *:after, *:before {
     transition-duration: 0s !important;
     animation: none !important;
@@ -3361,7 +3366,7 @@ html.AdminThemeDefault {
           backface-visibility: hidden;
           z-index: 30;
           //z-index: 100000 + 1000;
-          width: 100%;
+          width: 100vw;
           top: 0;
           left: 0;
           // adminlangswitcher fix
@@ -3377,7 +3382,7 @@ html.AdminThemeDefault {
           z-index: 30;
           top: 47px;
           left: 0;
-          width: 100%;
+          width: 100vw;
           border: none;
         }
 
@@ -3786,7 +3791,7 @@ html.pListIconOnly {
     a.PageEdit {
       @include pageListIcon("\f040");
     }
-    .PageListActionEdit > a[href*="template/edit?"],  // template edit action
+    .PageListActionEdit > a[href*="template/edit?"], // template edit action
     a.PageEdit {
       max-width: unset;
     }
@@ -4481,4 +4486,3 @@ html.aos .InputfieldAssistedUrlText {
     }
   }
 }
-

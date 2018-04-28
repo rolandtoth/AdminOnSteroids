@@ -16,7 +16,7 @@
  */
 class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 {
-    static $configData;
+    public static $configData;
     public $adminTheme;
     protected $editedPage;
     protected $PageListThumbs_items;
@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.1',
+            'version'   => '1.9.2',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -48,7 +48,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function __construct()
     {
-        $this->settingsFile = __DIR__ . "/settings.php";
+        $this->settingsFile = __DIR__ . '/settings.php';
         if ($this->wire('languages')) {
             $this->isMultiLang = count($this->wire('languages')) > 0;
             $this->languageCount = count(wire('pages')->find('template=language, check_access=0'));
@@ -138,7 +138,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         $field = new Field();
-        $field->type = $this->wire('modules')->get("FieldtypeText");
+        $field->type = $this->wire('modules')->get('FieldtypeText');
         $field->name = 'aos_column_break';
         $field->label = '';
         $field->skipLabel = true;
@@ -157,7 +157,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         $field = new Field();
-        $field->type = $this->wire('modules')->get("FieldtypeInteger");
+        $field->type = $this->wire('modules')->get('FieldtypeInteger');
         $field->name = 'sticky';
         $field->inputType = 'number';
         $field->collapsed = Inputfield::collapsedBlank;
@@ -261,6 +261,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'sbItemsVisible',
             'sbQuickLinksHide',
             'sbSticky',
+            'scrollTop',
             'stickyCKE',
             'themeConfigLinks',
             'tooltipDesc',
@@ -287,7 +288,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $html = $event->return;
 
         // add empty class to html (default theme has no html class but check always)
-        if (!preg_match("/<html(.+)class=(.+)>/i", $html)) {
+        if (!preg_match('/<html(.+)class=(.+)>/i', $html)) {
             $html = str_replace('<html', '<html class=""', $html);
         }
 
@@ -312,7 +313,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $htmlClasses = implode(' ', array_intersect($allowedHtmlClasses, $this->htmlClasses));
 
         $event->return = preg_replace("/<html(.+)class=('|\")(.*?)('|\")/i",
-            "<html$1class=$2aos $3 " . $htmlClasses . "$4", $html);
+            '<html$1class=$2aos $3 ' . $htmlClasses . '$4', $html);
     }
 
 
@@ -425,8 +426,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if ($this->isMultiLang) {
             if (in_array($subModule, $enabledSubmodules)) {
                 if (in_array('adminLangSwitcher', $configData[$subModule])) {
-                    if (isset($_COOKIE["aos_lang_id"])) {
-                        $lang_id = $_COOKIE["aos_lang_id"];
+                    if (isset($_COOKIE['aos_lang_id'])) {
+                        $lang_id = $_COOKIE['aos_lang_id'];
                         $item = $this->wire('pages')->get('template=language,id=' . $lang_id);
                         if ($item->id) {
                             $this->wire('user')->language = $lang_id;
@@ -540,17 +541,17 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if (in_array($subModule, $enabledSubmodules)) {
 
             if (in_array('asmPlaceholder', $configData[$subModule])) {
-                $this->addHookAfter("Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields", $this, "addAsmPlaceholderConfigField");
-                $this->addHookAfter("InputfieldAsmSelect::render", $this, "addAsmPlaceholder");
+                $this->addHookAfter('Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields', $this, 'addAsmPlaceholderConfigField');
+                $this->addHookAfter('InputfieldAsmSelect::render', $this, 'addAsmPlaceholder');
             }
 
             if (in_array('asmLimit', $configData[$subModule])) {
-                $this->addHookAfter("Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields", $this, "addLimitItemsConfigField");
-                $this->addHookAfter("InputfieldAsmSelect::render", $this, "addAsmLimit");
+                $this->addHookAfter('Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields', $this, 'addLimitItemsConfigField');
+                $this->addHookAfter('InputfieldAsmSelect::render', $this, 'addAsmLimit');
             }
 
             if (in_array('asmSearchBox', $configData[$subModule])) {
-                $this->addHookAfter("InputfieldAsmSelect::render", $this, "addAsmSelectBox");
+                $this->addHookAfter('InputfieldAsmSelect::render', $this, 'addAsmSelectBox');
                 $styles->add($root . '/scripts/vendor/select2/css/select2.min.css');
                 $scripts->add($root . '/scripts/vendor/select2/js/select2.min.js'); // note: patched
             }
@@ -564,7 +565,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             if ($this->wire('user')->isSuperUser()) {
 
                 // add template edit link (page action) to pagelist
-                $this->addHookAfter("ProcessPageListActions::getActions", $this, 'addTemplateEditLinkPageList');
+                $this->addHookAfter('ProcessPageListActions::getActions', $this, 'addTemplateEditLinkPageList');
 
                 if ($this->editedPage) {
 
@@ -615,10 +616,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if (in_array($subModule, $enabledSubmodules)) {
 
             // always add hook to remove markup if tweak is disabled
-            $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListMarkup');
+            $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addPageListMarkup');
 
             if ($this->isMultiLang) {
-                $this->addHookBefore("ProcessPageListRender::getPageLabel", $this, 'pageListMarkupGetLangValue');
+                $this->addHookBefore('ProcessPageListRender::getPageLabel', $this, 'pageListMarkupGetLangValue');
             }
 
             // pListUnselect
@@ -629,27 +630,27 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             if ($this->wire('user')->isSuperUser()) {
 
                 if (in_array('pListIDs', $configData[$subModule])) {
-                    $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addPageListIDs');
+                    $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addPageListIDs');
                 }
 
                 // add delete button to pagelist items (bypass trash)
                 if (in_array('deleteBtn', $configData[$subModule])) {
-                    $this->addHookAfter("ProcessPageListActions::getExtraActions", $this, 'addDeleteButton');
+                    $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addDeleteButton');
                     $this->addHookAfter('ProcessPageListActions::processAction', $this, 'addDeleteButtonAction');
                 }
 
                 if (in_array('stickyBtn', $configData[$subModule])) {
                     $this->_installStickyField();
-                    $this->addHookAfter("ProcessPageList::find", $this, 'stickyFindMod');
-                    $this->addHookAfter("ProcessPageListActions::getExtraActions", $this, 'addStickyButton');
+                    $this->addHookAfter('ProcessPageList::find', $this, 'stickyFindMod');
+                    $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addStickyButton');
                     $this->addHookAfter('ProcessPageListActions::processAction', $this, 'addStickyButtonAction');
-                    $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'addStickyPageLabelIcon');
+                    $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addStickyPageLabelIcon');
                     $this->addHookAfter('ProcessPageEdit::buildForm', $this, 'moveStickyFieldToSettings');
                 }
             }
 
             if (in_array('refreshBtn', $configData[$subModule])) {
-                $this->addHookAfter("ProcessPageListActions::getExtraActions", function (HookEvent $event) {
+                $this->addHookAfter('ProcessPageListActions::getExtraActions', function (HookEvent $event) {
 
                     $page = $event->arguments('page');
 
@@ -791,7 +792,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         if (in_array($subModule, $enabledSubmodules)) {
 
-            $this->addHookAfter("Pages::added", function (HookEvent $event) {
+            $this->addHookAfter('Pages::added', function (HookEvent $event) {
                 $page = $event->arguments[0];
                 $selected_templates = $this->AddNewChildFirst_enabledTemplates;
 
@@ -816,7 +817,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if ($this->FieldOverridesFile && file_exists($this->FieldOverridesFile)) {
 
                     // make array if file-based settings is an ini file
-                    $filename_array = explode(".", $this->FieldOverridesFile);
+                    $filename_array = explode('.', $this->FieldOverridesFile);
                     $extension = end($filename_array);
 
                     if ($extension === 'ini') {
@@ -875,7 +876,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                         );
                     }
 
-                    $this->wire('config')->js("AOS_breadcrumbs", $breadcrumbUrls);    // add to js config (head)
+                    $this->wire('config')->js('AOS_breadcrumbs', $breadcrumbUrls);    // add to js config (head)
                 }
             }
             // see main js file
@@ -934,7 +935,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             // addTranslatorLinks
             if (in_array('addTranslatorLinks', $configData[$subModule])) {
-                if ($this->wire('page')->process == "ProcessLanguageTranslator" && $this->languageCount > 1) {
+                if ($this->wire('page')->process == 'ProcessLanguageTranslator' && $this->languageCount > 1) {
                     $this->addHookAfter('ProcessLanguageTranslator::executeEdit', $this, 'addTranslatorLinks');
                 }
             }
@@ -947,8 +948,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             // inputMask
             if (in_array('inputMask', $configData[$subModule])) {
-                $this->addHookAfter("Field(type=FieldtypeText|FieldtypeTextLanguage)::getConfigInputfields", $this, "addInputMaskConfigField");
-                $this->addHookAfter("InputfieldText::render", $this, "addInputMask");
+                $this->addHookAfter('Field(type=FieldtypeText|FieldtypeTextLanguage)::getConfigInputfields', $this, 'addInputMaskConfigField');
+                $this->addHookAfter('InputfieldText::render', $this, 'addInputMask');
 
                 $scripts->add($root . '/scripts/vendor/cleave.js/cleave.min.js');
 
@@ -1056,7 +1057,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                         // add js chunk to be expanded as HTML
                         if (!empty($prevnextlinks)) {
-                            $this->wire('config')->js("AOS_prevnextlinks", $prevnextlinks);
+                            $this->wire('config')->js('AOS_prevnextlinks', $prevnextlinks);
                         }
                     }
                 }
@@ -1105,8 +1106,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $subModule = 'PageListIcons';
         if (in_array($subModule, $enabledSubmodules)) {
             // use addHookBefore to add icon early (otherwise skips first!)
-            $this->addHookBefore("ProcessPageListRender::getPageLabel", $this, 'addPageListIcon');
-            $this->addHookAfter("ProcessPageListRender::getPageLabel", $this, 'replacePageListIconUnderscores');
+            $this->addHookBefore('ProcessPageListRender::getPageLabel', $this, 'addPageListIcon');
+            $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'replacePageListIconUnderscores');
         }
 
 
@@ -1131,7 +1132,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 });
             }
             if (in_array('noFilenameTruncate', $configData[$subModule])) {
-                $this->addHookBefore("InputfieldFile::render", $this, "disableFilenameTruncate");
+                $this->addHookBefore('InputfieldFile::render', $this, 'disableFilenameTruncate');
             }
         }
 
@@ -1177,7 +1178,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
 
             // write module js config to page
-            $this->wire('config')->js("AdminOnSteroids", json_encode($configData));
+            $this->wire('config')->js('AdminOnSteroids', json_encode($configData));
         }
 
         // add admin CSS/JS
@@ -1233,7 +1234,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $page = $this->wire('page');
 
         if ($page->process == 'ProcessPageAdd' || ($page->process == 'ProcessPageEdit' && $this->wire('input')->get('new') == 1)) {
-            $event->return = str_replace("checked='checked'", "", $event->return);
+            $event->return = str_replace("checked='checked'", '', $event->return);
         }
     }
 
@@ -1320,7 +1321,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         static $langs;
 
         $markup = $event->return;
-        $p = $event->arguments("page");
+        $p = $event->arguments('page');
         $page_languages = $p->getLanguages();
         $l = '';
 
@@ -1347,7 +1348,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     {
 
         $markup = $event->return;
-        $page = $event->arguments("page");
+        $page = $event->arguments('page');
 
         // uncomment to disable in Tree menu
 //        $options = $event->arguments('options');
@@ -1421,7 +1422,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $submodule = 'PageListTweaks';
         $pageLabelField = $page->template->pageLabelField;
 
-        if ($pageLabelField == "") {
+        if ($pageLabelField == '') {
             return false;
         }
 
@@ -1562,9 +1563,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return;
         }
 
-        $f = $this->wire('modules')->get("InputfieldText");
-        $f->attr('name', "asmPlaceholder");
-        $f->label = $this->_("Placeholder");
+        $f = $this->wire('modules')->get('InputfieldText');
+        $f->attr('name', 'asmPlaceholder');
+        $f->label = $this->_('Placeholder');
         $f->value = $field->asmPlaceholder;
         $f->useLanguages = true;
         $f->collapsed = Inputfield::collapsedBlank;
@@ -1593,9 +1594,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return;
         }
 
-        $f = $this->wire('modules')->get("InputfieldInteger");
-        $f->attr('name', "asmLimit");
-        $f->label = $this->_("Max limit of items");
+        $f = $this->wire('modules')->get('InputfieldInteger');
+        $f->attr('name', 'asmLimit');
+        $f->label = $this->_('Max limit of items');
         $f->inputType = 'number';
         $f->min = 0;
         $f->value = $field->asmLimit;
@@ -1661,9 +1662,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return;
         }
 
-        $f = $this->wire('modules')->get("InputfieldTextarea");
-        $f->attr('name', "inputMask");
-        $f->label = $this->_("Input Mask");
+        $f = $this->wire('modules')->get('InputfieldTextarea');
+        $f->attr('name', 'inputMask');
+        $f->label = $this->_('Input Mask');
         $f->useLanguages = true;
         $f->collapsed = Inputfield::collapsedBlank;
         $f->value = $field->inputMask;
@@ -1719,7 +1720,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addNavItems(HookEvent $event)
     {
-        $items = "";
+        $items = '';
         $NavItems_pages = isset(self::$configData['NavItems_pages']) ? self::$configData['NavItems_pages'] : false;
         $NavItems_pages_submenu = isset(self::$configData['NavItems_pages_submenu']) ? self::$configData['NavItems_pages_submenu'] : false;
         $NavItems_custom = isset(self::$configData['NavItems_custom']) ? self::$configData['NavItems_custom'] : false;
@@ -1733,9 +1734,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             foreach ($this->pages->getById($NavItems_pages) as $p) {
 
-                $url = "javascript:";
-                $editUrl = "";
-                $activeClass = "";
+                $url = 'javascript:';
+                $editUrl = '';
+                $activeClass = '';
                 $inputId = $this->wire('input')->get->id;
 
                 /**
@@ -1779,7 +1780,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     }
                 }
 
-                if ($url == "") {
+                if ($url == '') {
                     continue;
 
                 } else {
@@ -1938,7 +1939,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                         continue;
                     }
                     // trim and add * to indicate it's admin only
-                    $title = ltrim($title, '!') . "*";
+                    $title = ltrim($title, '!') . '*';
                 }
 
                 $url = ltrim($url, '/');
@@ -1950,7 +1951,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
         }
 
-        if ($items == "") {
+        if ($items == '') {
             return false;
         }
 
@@ -2237,7 +2238,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return false;
         }
 
-        $page = $event->arguments("page");
+        $page = $event->arguments('page');
         $actions = $event->return;
         $template = $page->template;
 
@@ -2321,7 +2322,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         if (!$this->wire('user')->isSuperuser()) {
-            $theme->addBodyClass("role-nonsuperuser");
+            $theme->addBodyClass('role-nonsuperuser');
         }
 
         // add currently edited page info (template, id)
@@ -2377,14 +2378,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $colWidths = array($colBreakField->columnWidth, 100 - $colBreakField->columnWidth);
         }
 
-        $fsetLeft = $this->wire('modules')->get("InputfieldFieldset");
+        $fsetLeft = $this->wire('modules')->get('InputfieldFieldset');
         $fsetLeft->attr('class', $fsetLeft->attr('class') . ' aos_col_left aos_no-inputfield-padding');
         $fsetLeft->set('themeBorder', 'none');
         $fsetLeft->set('themeOffset', false);
         $fsetLeft->wrapAttr('style', 'width: ' . $colWidths[0] . '%');
         $fsetLeft->wrapAttr('data-splitter-default', $colWidths[0]);
 
-        $fsetRight = $this->wire('modules')->get("InputfieldFieldset");
+        $fsetRight = $this->wire('modules')->get('InputfieldFieldset');
         $fsetRight->set('themeBorder', 'none');
         $fsetRight->set('themeOffset', false);
         $fsetRight->attr('class', $fsetRight->attr('class') . ' aos_col_right aos_no-inputfield-padding');
@@ -2468,7 +2469,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             // remove items with empty values
             array_filter($values, function ($v) {
-                return $v !== "";
+                return $v !== '';
             });
 
             // check enabled state
@@ -2486,7 +2487,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $userrole = $values['?user'];
                 unset($values['?user']);
 
-                if (!($user->is("roles=" . $userrole) || ($this->isValidSelectorString($userrole) && $user->is($userrole)))) {
+                if (!($user->is('roles=' . $userrole) || ($this->isValidSelectorString($userrole) && $user->is($userrole)))) {
                     continue;
                 }
             }
@@ -2510,7 +2511,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 unset($values['?page']);
 
                 if (is_numeric($selector)) {
-                    $selector = "id=" . $selector;
+                    $selector = 'id=' . $selector;
                 }
 
                 if ($this->editedPage && !$this->editedPage->is($selector)) {
@@ -2976,7 +2977,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             // if only a string is supplied without "=" in it, consider it as a template
             // eg. cirle-o: basic-page matches other items too - use template=basic-page (maybe because common fieldgroup?)
             if (is_string($selector) && strpos($selector, '=') === 0) {
-                $selector = "template=" . $selector;
+                $selector = 'template=' . $selector;
             }
 
             if ($page->is($selector) || $page->matches($selector)) {
@@ -3147,7 +3148,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addRoleFields($submoduleName, $data, $parent)
     {
-        $f = wire('modules')->get("InputfieldAsmSelect");
+        $f = wire('modules')->get('InputfieldAsmSelect');
         $f->attr('name', $submoduleName . 'Roles');
         $f->label = __($submoduleName . ' roles', __FILE__);
         $f->skipLabel = Inputfield::skipLabelHeader;
@@ -3211,10 +3212,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         // Submodules ----------------------------------------------- //
 
-
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'enabledSubmodules');
         $f->label = __('Submodules', __FILE__);
+        $f->wrapAttr('data-no-checkall-checkboxes', '1');
         $f->collapsed = Inputfield::collapsedNever;
 
         $intro = __('Click on the boxes to enable or disable submodules. Use the "cog" icon to jump to their configuration section.', __FILE__);
@@ -3261,14 +3262,14 @@ HTML;
 
         // Tweaks Fieldset ----------------------------------------------- //
 
-        $fset = wire('modules')->get("InputfieldFieldset");
+        $fset = wire('modules')->get('InputfieldFieldset');
         $fset->attr('name', 'tweaks');
         $fset->label = __('Submodule options', __FILE__);
         $fset->collapsed = Inputfield::collapsedNever;
 
         // AddNewChildFirst ----------------------------------------------- //
 
-        $fsetANCF = wire('modules')->get("InputfieldFieldset");
+        $fsetANCF = wire('modules')->get('InputfieldFieldset');
         $fsetANCF->attr('name', 'AddNewChildFirst');
         $fsetANCF->label = __('AddNewChildFirst', __FILE__);
         $fsetANCF->showIf = 'enabledSubmodules=AddNewChildFirst';
@@ -3299,7 +3300,7 @@ HTML;
 
         // AdminTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'AdminTweaks');
         $f->label = __('AdminTweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=AdminTweaks';
@@ -3318,7 +3319,7 @@ HTML;
 
         // AsmTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'AsmTweaks');
         $f->showIf = 'enabledSubmodules=AsmTweaks';
         $f->collapsed = Inputfield::collapsedNever;
@@ -3344,7 +3345,7 @@ HTML;
 
         // CKEaddons ----------------------------------------------- //
 
-        $fsetCKE = wire('modules')->get("InputfieldFieldset");
+        $fsetCKE = wire('modules')->get('InputfieldFieldset');
         $fsetCKE->attr('name', 'CKEaddons');
         $fsetCKE->label = __('CKEaddons', __FILE__);
         $fsetCKE->showIf = 'enabledSubmodules=CKEaddons';
@@ -3450,7 +3451,7 @@ HTML;
             'num_children',
         );
 
-        $fsetLT = wire('modules')->get("InputfieldFieldset");
+        $fsetLT = wire('modules')->get('InputfieldFieldset');
         $fsetLT->attr('name', 'ListerTweaks');
         $fsetLT->label = __('ListerTweaks', __FILE__);
         $fsetLT->showIf = 'enabledSubmodules=ListerTweaks';
@@ -3504,7 +3505,7 @@ HTML;
 
         // hoverActions
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'ListerTweaks_options');
         $f->label = __('Lister options', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
@@ -3521,7 +3522,7 @@ HTML;
 
         // DeselectRadios ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'DeselectRadios');
         $f->collapsed = Inputfield::collapsedNever;
         $f->description = __('', __FILE__);
@@ -3536,7 +3537,7 @@ HTML;
 
         // FieldAndTemplateEditLinks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldRadios");
+        $f = wire('modules')->get('InputfieldRadios');
         $f->attr('name', 'FieldAndTemplateEditLinks');
         $f->showIf = 'enabledSubmodules=FieldAndTemplateEditLinks';
         $f->collapsed = Inputfield::collapsedNever;
@@ -3554,7 +3555,7 @@ HTML;
 
         // FileFieldTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'FileFieldTweaks');
         $f->showIf = 'enabledSubmodules=FileFieldTweaks';
         $f->collapsed = Inputfield::collapsedNever;
@@ -3604,7 +3605,7 @@ HTML;
 
         // FocusInputOnLangTabSwitch ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldRadios");
+        $f = wire('modules')->get('InputfieldRadios');
         $f->attr('name', 'FocusInputOnLangTabSwitch');
         $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
         $f->collapsed = Inputfield::collapsedNever;
@@ -3623,7 +3624,7 @@ HTML;
 
         $fset->add($f);
 
-        $f = wire('modules')->get("InputfieldRadios");
+        $f = wire('modules')->get('InputfieldRadios');
         $f->attr('name', 'FocusInputOnLangTabSwitchCKE');
         $f->label = __('FocusInputOnLangTabSwitch CKE', __FILE__);
         $f->showIf = 'enabledSubmodules=FocusInputOnLangTabSwitch';
@@ -3645,7 +3646,7 @@ HTML;
 
         // Hotkeys ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'Hotkeys');
         $f->showIf = 'enabledSubmodules=Hotkeys';
         $f->collapsed = Inputfield::collapsedNever;
@@ -3665,7 +3666,7 @@ HTML;
 
         // InputfieldURLChecker ----------------------------------------------- //
 
-        $fsetIUC = wire('modules')->get("InputfieldFieldset");
+        $fsetIUC = wire('modules')->get('InputfieldFieldset');
         $fsetIUC->attr('name', 'InputfieldURLChecker');
         $fsetIUC->label = __('InputfieldURLChecker', __FILE__);
         $fsetIUC->showIf = 'enabledSubmodules=InputfieldURLChecker';
@@ -3795,7 +3796,7 @@ HTML;
 
         // LongClickDuration ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldText");
+        $f = wire('modules')->get('InputfieldText');
         $f->attr('name', 'LongClickDuration');
         $f->description = __('', __FILE__);
         $f->notes = __('', __FILE__);
@@ -3810,7 +3811,7 @@ HTML;
 
         // Misc ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'Misc');
         $f->showIf = 'enabledSubmodules=Misc';
         $f->collapsed = Inputfield::collapsedNever;
@@ -3848,6 +3849,7 @@ HTML;
         $f->addOption('inputMaskPhoneLib', __('Load phone country library for input mask', __FILE__));
         $f->addOption('checkAllCheckboxes', __('Add button to check/uncheck all checkboxes (appears on hover)', __FILE__));
         $f->addOption('miniScrollbar', __('Use mini scrollbars (Chrome only)', __FILE__));
+//        $f->addOption('scrollTop', __('Add scroll-to-top link', __FILE__));
 
 
         if ($data[$f->name]) {
@@ -3858,7 +3860,7 @@ HTML;
 
         // ModuleTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'ModuleTweaks');
         $f->showIf = 'enabledSubmodules=ModuleTweaks';
         $f->collapsed = Inputfield::collapsedNever;
@@ -3880,13 +3882,13 @@ HTML;
 
         // NavItems ----------------------------------------------- //
 
-        $fsetCNI = wire('modules')->get("InputfieldFieldset");
+        $fsetCNI = wire('modules')->get('InputfieldFieldset');
         $fsetCNI->attr('name', 'NavItems');
         $fsetCNI->label = __('NavItems', __FILE__);
         $fsetCNI->showIf = 'enabledSubmodules=NavItems';
 
 
-        $f = wire('modules')->get("InputfieldText");
+        $f = wire('modules')->get('InputfieldText');
         $f->attr('name', 'NavItems_pages_submenu');
         $f->label = __('Group selected pages into submenu:', __FILE__);
         $f->attr('placeholder', __('submenu name... (optional)', __FILE__));
@@ -3910,7 +3912,7 @@ HTML;
         $fsetCNI->add($f);
 
 
-        $f = wire('modules')->get("InputfieldTextarea");
+        $f = wire('modules')->get('InputfieldTextarea');
         $f->attr('name', 'NavItems_custom');
         $f->label = __('Custom items', __FILE__);
         $f->attr('placeholder', '// ! AdminOnSteroids: /module/edit?name=AdminOnSteroids');
@@ -3928,7 +3930,7 @@ HTML;
 
         // PageListIcons ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldTextarea");
+        $f = wire('modules')->get('InputfieldTextarea');
         $f->attr('name', 'PageListIcons');
         $f->label = __('PageList icons', __FILE__);
         $f->showIf = 'enabledSubmodules=PageListIcons';
@@ -3942,13 +3944,13 @@ HTML;
 
         // PageListThumbs ----------------------------------------------- //
 
-        $fsetPageListThumbs = wire('modules')->get("InputfieldFieldset");
+        $fsetPageListThumbs = wire('modules')->get('InputfieldFieldset');
         $fsetPageListThumbs->attr('name', 'PageListThumbs');
         $fsetPageListThumbs->label = __('PageListThumbs', __FILE__);
         $fsetPageListThumbs->showIf = 'enabledSubmodules=PageListThumbs';
 //        $fsetPageListThumbs->collapsed = Inputfield::collapsedNever;
 
-        $f = wire('modules')->get("InputfieldRadios");
+        $f = wire('modules')->get('InputfieldRadios');
         $f->attr('name', 'PageListThumbs_style');
         $f->label = __('Style', __FILE__);
         $f->collapsed = Inputfield::collapsedNever;
@@ -3967,7 +3969,7 @@ HTML;
         $fsetPageListThumbs->add($f);
 
 
-        $f = wire('modules')->get("InputfieldTextarea");
+        $f = wire('modules')->get('InputfieldTextarea');
         $f->attr('name', 'PageListThumbs_items');
         $f->label = __('Source', __FILE__);
         $f->attr('placeholder', __('Enter field or field:selector pair(s)', __FILE__));
@@ -3983,7 +3985,7 @@ HTML;
         $fsetPageListThumbs->add($f);
 
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'PageListThumbs_options');
         $f->label = __('Settings', __FILE__); // Thumb settings
         $f->collapsed = Inputfield::collapsedNever;
@@ -4002,7 +4004,7 @@ HTML;
 
         // PageListTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'PageListTweaks');
         $f->label = __('PageListTweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=PageListTweaks';
@@ -4034,7 +4036,7 @@ HTML;
 
         // PagePreviewBtn ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldRadios");
+        $f = wire('modules')->get('InputfieldRadios');
         $f->attr('name', 'PagePreviewBtn');
         $f->label = __('PagePreviewButton', __FILE__);
         $f->showIf = 'enabledSubmodules=PagePreviewBtn';
@@ -4054,7 +4056,7 @@ HTML;
 
         // RenoTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'RenoTweaks');
         $f->label = __('RenoTweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=RenoTweaks';
@@ -4082,7 +4084,7 @@ HTML;
 
         // RestrictTreeDropdown ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldAsmSelect");
+        $f = wire('modules')->get('InputfieldAsmSelect');
         $f->attr('name', 'RestrictTreeDropdown');
         $f->label = __('RestrictTreeDropdown', __FILE__);
         $f->description = __('Hide tree dropdown for the following roles:', __FILE__);
@@ -4090,7 +4092,7 @@ HTML;
         $f->collapsed = Inputfield::collapsedNever;
         $f->attr('asmPlaceholder', __('Add roles...', __FILE__));
 
-        $roles = $this->wire('roles')->find("name!=guest");
+        $roles = $this->wire('roles')->find('name!=guest');
         $f->addOption('all-roles', $this->_('all'));
         $f->addOption('nonsuperuser', $this->_('all non-superuser'));
         foreach ($roles as $select_option) {
@@ -4105,7 +4107,7 @@ HTML;
 
         // Tooltips ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'Tooltips');
         $f->label = __('Tooltips', __FILE__);
         $f->showIf = 'enabledSubmodules=Tooltips';
@@ -4127,7 +4129,7 @@ HTML;
 
         // UikitTweaks ----------------------------------------------- //
 
-        $f = wire('modules')->get("InputfieldCheckboxes");
+        $f = wire('modules')->get('InputfieldCheckboxes');
         $f->attr('name', 'UikitTweaks');
         $f->label = __('UikitTweaks', __FILE__);
         $f->showIf = 'enabledSubmodules=UikitTweaks';
@@ -4148,7 +4150,7 @@ HTML;
 
         // Assets paths
 
-        $fsetPaths = wire('modules')->get("InputfieldFieldset");
+        $fsetPaths = wire('modules')->get('InputfieldFieldset');
         $fsetPaths->attr('name', 'AssetPaths');
         $fsetPaths->label = __('Asset Paths', __FILE__);
 

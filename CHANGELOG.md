@@ -1,7 +1,14 @@
 # Changelog
 
 
-### 1.9.1 (2018-04-23)
+### 1.9.2 (2018-04-26)
+
+- put miniScrollbars over page content
+- checkAllCheckboxes: skip tags with data-no-checkall-checkboxes="1" attribute
+
+
+
+### 1.9.1 (2018-04-25)
 
 - new: sticky action (PageListTweaks)
 - miniScrollbars: removed JS lib (RenoTweaks), added CSS-based solution to Misc (Chrome only)
