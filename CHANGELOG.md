@@ -5,7 +5,7 @@
 
 - put miniScrollbars over page content
 - checkAllCheckboxes: skip tags with data-no-checkall-checkboxes="1" attribute
-
+- use SVG for filterbox icon
 
 
 ### 1.9.1 (2018-04-25)
