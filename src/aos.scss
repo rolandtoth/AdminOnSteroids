@@ -1030,7 +1030,7 @@ html {
   &.empty,
   &.initial {
     pointer-events: none;
-    opacity: 0.33;
+    opacity: 0.3;
     filter: saturate(0);
     border-color: inherit;
   }
@@ -1053,12 +1053,19 @@ html {
     }
     ~ .PageListRoot {
       float: left;
-      width: calc(100% - 64px);
+      width: calc(100% - 54px);
     }
   }
   &.restore {
     position: relative;
     top: -1px;
+    margin-right: 0;
+  }
+}
+
+html.aos {
+  .InputfieldPageListSelect {
+    @include clearfix();
   }
 }
 

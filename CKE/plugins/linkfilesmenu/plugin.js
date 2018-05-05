@@ -130,7 +130,7 @@ function addFilesMenu(page_id) {
 
     $('[id^="link-files-menu"]').remove();
 
-    var ajax_url = config.urls.admin + 'module/edit?name=AdminOnSteroids&ckelinkfiles_pid=' + page_id;
+    var ajax_url = config.urls.admin + 'login/logout/?request=AdminOnSteroids&ckelinkfiles_pid=' + page_id;
 
     function getBaseNameWithoutExtension(str) {
         return str.replace(/\.[^/.]+$/, '');

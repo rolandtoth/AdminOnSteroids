@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 1.9.3 (2018-05-05)
+
+- pagelist markup: switch to $datetime api var (allows relative datetime strings too)
+- pagelist markup: add %createdUser% and %modifiedUser% tokens
+- pagelistUnselect: fix Uikit theme spacing issue (reported by Robin S)
+- CKEditor plugin Link Files Menu: apply fix from Robin S from his original module (ajax response not working for non-superusers)
+
+
+
 ### 1.9.2 (2018-04-26)
 
 - put miniScrollbars over page content

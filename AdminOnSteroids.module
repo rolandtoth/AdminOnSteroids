@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.2',
+            'version'   => '1.9.3',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -905,7 +905,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         if (in_array($subModule, $enabledSubmodules)) {
             if (in_array('linkfilesmenu', $configData['CKEaddons_plugins'])) {
-                $this->addHookBefore('ProcessModule::executeEdit', $this, 'CkeLinkFilesAjaxResponse');
+                $this->addHookBefore('ProcessLogin::executeLogout', $this, 'CkeLinkFilesAjaxResponse');
                 $this->addHookAfter('ProcessPageEdit::execute', $this, 'CkeLinkFilesPageEditMods');
             }
         }
@@ -1416,13 +1416,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addPageListMarkup(HookEvent $event)
     {
-
         $page = $event->arguments[0];
         $markup = $event->return;
         $submodule = 'PageListTweaks';
         $pageLabelField = $page->template->pageLabelField;
 
-        if ($pageLabelField == '') {
+        if ($pageLabelField === '') {
             return false;
         }
 
@@ -1433,10 +1432,17 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             return false;
         }
 
+        // replace common tokens
+        $markup = strtr($markup,
+            array(
+                '%createdUser%'  => $page->createdUser->name,
+                '%modifiedUser%' => $page->modifiedUser->name,
+            )
+        );
+
         $markupStartRegex = "/\[([A-Za-z]*)(\.)?([A-Za-z0-9-_\.]*)\]/";
         $markupCloseRegex = "/\[\/([A-Za-z]*?)\]/";
         $dateRegex = "/\(([0-9]*)\|date(:([a-zA-sZ:.\%_ \-\/]*))?\)*/";
-        $emptyTagsRegex = "/(\[(.*)\])*/";
 
         if (isset(self::$configData[$submodule]) && in_array('pListMarkup', self::$configData[$submodule])) {
 
@@ -1446,8 +1452,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             // (2313121|date)
             // (|date:H:i:is)
             // (|date)
+            // {title} [em][i]modified ({modified}|date:relative) by %modifiedUser%[/i][/em]
 
             $markup = preg_replace_callback($dateRegex, function ($match) {
+
+                $out = '&#216;';
 
                 // set locale in config.php
                 if (!$this->isLocaleSet) {
@@ -1460,9 +1469,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
 
                 $dateString = $match[1];
-                $format = isset($match[2]) ? ltrim($match[2], ':') : '%Y-%m-%d';
 
-                return empty($dateString) ? '&#216;' : strftime($format, $dateString);
+                if (!empty($dateString)) {
+                    $format = isset($match[2]) ? ltrim($match[2], ':') : '%Y-%m-%d';
+//                    $out = strftime($format, $dateString);
+                    $out = $this->wire('datetime')->date($format, $dateString);
+                }
+
+                return $out;
+
             }, $markup);
 
 
@@ -2049,7 +2064,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function addStickyButton(HookEvent $event)
     {
         // allow on ProcessPageList only
-        if($event->process != 'ProcessPageList') {
+        if ($event->process != 'ProcessPageList') {
             return false;
         }
 
@@ -2157,16 +2172,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
      */
     public function CkeLinkFilesAjaxResponse(HookEvent $event)
     {
-        // Must be AJAX request, must be for this module, must include pid GET variable
-        if (!$this->wire('config')->ajax || $this->wire('input')->get->name !== __CLASS__ || !$this->wire('input')->get->ckelinkfiles_pid) {
+        // Must be AJAX request, must be from this module, must include pid GET variable
+        if (!$this->wire('config')->ajax || $this->wire('input')->get->request !== __CLASS__ || !$this->wire('input')->get->ckelinkfiles_pid) {
             return;
         }
 
         $page = $this->wire('pages')->get((int)$this->wire('input')->get->ckelinkfiles_pid);
-
-        if (!$page->editable) {
-            return;
-        }
 
         $event->replace = true;
         $event->cancelHooks = true;
@@ -2181,14 +2192,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
         }
 
-        foreach ($page->fields->find('type=FieldtypeFile') as $f) {
-            foreach ($page->getUnformatted($f->name) as $file) {
-                foreach ($langIDs as $langID) {
-                    $result[$langID][] = array(
-                        'basename'    => $file->basename,
-                        'url'         => $file->url,
-                        'description' => $file->{'description' . $langID}
-                    );
+        if ($page->editable) {
+            foreach ($page->fields->find('type=FieldtypeFile') as $f) {
+                foreach ($page->getUnformatted($f->name) as $file) {
+                    foreach ($langIDs as $langID) {
+                        $result[$langID][] = array(
+                            'basename'    => $file->basename,
+                            'url'         => $file->url,
+                            'description' => $file->{'description' . $langID}
+                        );
+                    }
                 }
             }
         }
