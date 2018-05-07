@@ -1064,7 +1064,8 @@ html {
 }
 
 html.aos {
-  .InputfieldPageListSelect {
+  .InputfieldPageListSelect,
+  .InputfieldPageListSelect .InputfieldContent {
     @include clearfix();
   }
 }
