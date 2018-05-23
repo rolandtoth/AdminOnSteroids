@@ -1772,31 +1772,24 @@ $(document).ready(function () {
             // AutosizeTextareas
             if (AOSsettings.Misc.indexOf('autosizeTextareas') !== -1) {
 
+                var textAreaSelector = 'textarea:not(.noAutosize)';
+
                 $(document).on('ready reloaded wiretabclick', function (e) {
 
                     var target = e.target || e.srcElement,
-                        autosizeTextareas = target.querySelectorAll('textarea');
+                        autosizeTextareas = target.querySelectorAll(textAreaSelector);
 
                     if (window.autosize && autosizeTextareas.length) {
-
                         // try update first (init doesn't work if already initialized)
                         autosize.update(autosizeTextareas);
                         autosize(autosizeTextareas);
-
-                        // force autosize
-                        // Array.prototype.forEach.call(autosizeTextareas, function (el, i) {
-                        //     el.addEventListener('focus', function () {
-                        //         // autosize(el);
-                        //         autosize.update(el);
-                        //     });
-                        // });
                     }
                 });
 
-// update textareas when clicking on language tabs
+                // update textareas when clicking on language tabs
                 $(document).on('tabsactivate', '.langTabs', function (e, ui) {
 
-                    var textareas = ui.newPanel.get(0).querySelectorAll('textarea');
+                    var textareas = ui.newPanel.get(0).querySelectorAll(textAreaSelector);
 
                     if (textareas.length && window.autosize && window.autosize.update) {
                         autosize.update(textareas);

@@ -1,6 +1,16 @@
 # Changelog
 
 
+### 1.9.4 (2018-05-23)
+
+- new: extra columns on Fields setup page showing description, notes, id and inputfield class (Misc)
+- skip autosizing textareas having "noAutosize" classname (requested by bernhard)
+- add cache busting string to assetPaths (requested by Robin S)
+- check if $_SERVER['REFERER'] exists before redirect (reported by Robin S)
+- fix 1px title field misalignment caused by casechanger (reported by Robin S)
+
+
+
 ### 1.9.3 (2018-05-05)
 
 - pagelist markup: switch to $datetime api var (allows relative datetime strings too)

@@ -34,7 +34,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.3',
+            'version'   => '1.9.4',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -353,20 +353,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function init()
     {
-
         // populate self::$configData
         $configData = $this->wire('modules')->getModuleConfigData($this);
         self::$configData = $configData;
 
         if ($this->wire('user')->isSuperUser()) {
 
-            if ($this->input->toggle == 1) {
+            if ($this->wire('input')->toggle == 1) {
                 $configData['enabled'] = ($this->enabled == 1) ? 0 : 1;
                 $this->wire('modules')->saveModuleConfigData($this, $configData);
 
-                $this->session->redirect($_SERVER['HTTP_REFERER']);
-
-                $this->halt();
+                if (isset($_SERVER['HTTP_REFERER'])) {
+                    $this->wire('session')->redirect($_SERVER['HTTP_REFERER']);
+                    $this->halt();
+                }
             }
 
             $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAOSToggleLink');
@@ -988,8 +988,49 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
 
             // autosizeTextareas
-            if (in_array('autosizeTextareas', $configData[$subModule])) {
+            if (in_array('autosizeTextareas', $configData[$subModule], true)) {
                 $jsFiles[] = $root . '/scripts/vendor/autosize/autosize.min.js';
+            }
+
+
+            // extendedFieldList
+            if (in_array('extendedFieldList', $configData[$subModule], true)) {
+                $this->addHookAfter('ProcessField::getListTableRow', function (HookEvent $event) {
+
+                    $field = $event->arguments(0);
+                    $data = $event->return;
+
+                    if (!empty($data[2])) {
+
+                        $description = '';
+                        $notes = '';
+                        $langID = '';
+
+                        if ($this->isMultiLang && !$this->wire('user')->language->isDefaultLanguage) {
+                            $langID = $this->wire('user')->language->id;
+                        }
+
+                        if ($field->description) {
+                            $description = '<small class="description" title="description" style="line-height: 1.33; display: block; min-width: 180px;">' . $field->get('description' . $langID) . '</small>';
+                        }
+                        if ($field->notes) {
+                            $notes = '<small class="notes" title="notes" style="line-height: 1.3; display: block; min-width: 130px;">' . $field->get('notes' . $langID) . '</small>';
+                        }
+                        $data[] = $description;
+                        $data[] = $notes;
+                        $data[] = '<small title="id">' . $field->id . '</small>';
+                    }
+
+                    if ($field->inputfieldClass && isset($data[1])) {
+                        $className = str_replace('Inputfield', '', $field->inputfieldClass);
+
+                        if ($className !== $field->type->shortName) {
+                            $data[1] .= ' (' . $className . ')';
+                        }
+                    }
+
+                    $event->return = $data;
+                });
             }
 
             // prevNextLinks
@@ -1246,20 +1287,27 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         $asset = trim($configData[$assetName], '/ ');
+        $config = $this->wire('config');
 
-        if (strlen($asset)) {
+        if ('' !== $asset) {
 
             // allow absolute or relative url
-            $baseUrl = strpos($asset, 'http') !== false ? '' : $this->config->urls->httpRoot;
+            $baseUrl = strpos($asset, 'http') !== false ? '' : $config->urls->httpRoot;
+            $basePath = strpos($asset, 'http') !== false ? '' : $config->paths->root;
+
+            $assetUrl = $baseUrl . $asset;
+            $assetPath = $basePath . $asset;
+
+            $assetUrl .= '?v=' . @filemtime($assetPath);
 
             if (strpos($assetName, 'CKE') !== false) {
-                $configData['custom' . $assetName] = $baseUrl . $asset;
+                $configData['custom' . $assetName] = $assetUrl;
             } elseif ($assetName === 'AdminStyle') {
-                $this->config->styles->add($baseUrl . $asset);
+                $config->styles->add($assetUrl);
             } elseif ($assetName === 'AdminScript') {
-                $this->config->scripts->add($baseUrl . $asset);
+                $config->scripts->add($assetUrl);
             } elseif ($assetName === 'PhoneCountryLib') {
-                $this->config->scripts->add($baseUrl . $asset);
+                $config->scripts->add($assetUrl);
             }
         }
     }
@@ -3862,8 +3910,7 @@ HTML;
         $f->addOption('inputMaskPhoneLib', __('Load phone country library for input mask', __FILE__));
         $f->addOption('checkAllCheckboxes', __('Add button to check/uncheck all checkboxes (appears on hover)', __FILE__));
         $f->addOption('miniScrollbar', __('Use mini scrollbars (Chrome only)', __FILE__));
-//        $f->addOption('scrollTop', __('Add scroll-to-top link', __FILE__));
-
+        $f->addOption('extendedFieldList', __('Show additional field details on Fields setup page', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

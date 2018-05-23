@@ -68,11 +68,6 @@ html.aos {
     }
   }
 
-  // ensure case changer positioning
-  .InputfieldPageTitle {
-    position: relative;
-  }
-
   // fix strike-through missing on double spans
   .PageListStatusUnpublished a.PageListPage span {
     text-decoration: line-through;
@@ -82,6 +77,9 @@ html.aos {
     line-height: 1.5em !important;
   }
   &.AdminThemeReno {
+    body, .ui-dialog {
+      font-size: .951em; // makes equal height inputfields (instead .95)
+    }
     #wrap {
       z-index: 1; // avoid Tracy panel overlaps
     }
@@ -2283,45 +2281,53 @@ ol.asmList + select + .select2-container {
 }
 
 // make case toggle absolute positioning work
-#wrap_Inputfield_title .InputfieldContent {
-  position: relative;
-}
+//#wrap_Inputfield_title .InputfieldContent {
+//  position: relative;
+//}
+// ensure case changer positioning
+//.InputfieldPageTitle {
+//  position: relative;
+//}
 
 a.case-toggle {
-  position: absolute;
-  right: 16px;
+  float: right;
+  height: 0;
   white-space: nowrap;
-  .LanguageSupport & {
-    right: 0;
-  }
+  padding: 0;
+  z-index: 200;
+  top: 4px;
+  position: relative;
+  //.LanguageSupport & {
+  //  right: 0;
+  //}
   .langTabsOff & {
     right: 16px;
   }
-  padding: 5px 8px;
   html.AdminThemeDefault & {
-    padding: 1px 6px;
-    right: 16px !important;
+    top: 0;
   }
   + input {
     padding-right: 36px !important;
   }
   i {
-    &:before {
+    padding: 6px 12px;
+    &::before {
       font-size: 12px;
     }
-    + i:before {
-      font-size: 9px;
+    + i {
+      margin-left: -24px;
+      &::before {
+        font-size: 9px;
+      }
     }
   }
   &:not(:hover) {
     color: rgba(#2C3E55, 0.5);
-
   }
   &:hover {
     cursor: pointer;
     &:before {
       width: auto;
-      margin-right: 8px;
       transform: scaleX(1);
     }
   }
