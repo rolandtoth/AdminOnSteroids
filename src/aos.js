@@ -162,12 +162,12 @@ function initCKE() {
             }
 
             // ensure contentsCss is an array
-            if(CKEfield.contentsCss.constructor !== Array) {
+            if (CKEfield.contentsCss.constructor !== Array) {
                 CKEfield.contentsCss = [CKEfield.contentsCss];
             }
 
             // also load scrollbar.css if enabled in Misc
-            if(isMiniScrollbarEnabled) {
+            if (isMiniScrollbarEnabled) {
                 CKEfield.contentsCss.push(aosUrl + '/styles/scrollbar.css');
             }
 
@@ -355,7 +355,6 @@ function setupAdminDataTableFilter() {
     }
 
     if ($('.AdminDataTable:not(.InputfieldTable)').length) {
-
 
 
         var autofocus = $('#ProcessTemplateList, #ProcessFieldList').length ? ' autofocus' : '';
@@ -1333,19 +1332,32 @@ $(document).ready(function () {
 
                 if (aos_saveButton.length) {
 
-                    var context = $('html');
+                    var context = $('html'),
+                        $body;
 
                     if ($('iframe.pw-modal-window', window.parent.document).length) {
                         context = $('iframe.pw-modal-window', window.parent.document).contents().find('html');
                     }
 
-                    // these are removed on document ready
-                    $('body', context).addClass('aos_saving');
-                    $('body', context).addClass('ui-state-disabled');
-                    // $('#wrap, body.AdminThemeDefault #content, .uk-container#main', context).addClass('ui-state-disabled');
+                    $body = $('body', context);
 
-                    // aos_saveButton.addClass('ui-state-disabled').focus();
-                    aos_saveButton.addClass('ui-state-disabled');
+                    if ($body.hasClass('aos_saving')) {
+                        return false;
+                    }
+
+                    if (!aos_saveButton.hasClass('aos_hotkey_save_added')) {
+
+                        $(aos_saveButton.get(0).form).on('submit', function () {
+                            // these are removed on document ready
+                            $body.addClass('aos_saving');
+                            $body.addClass('ui-state-disabled');
+
+                            aos_saveButton.addClass('ui-state-disabled');
+                        });
+
+                        // flag to prevent adding the onSubmit event multiple times
+                        aos_saveButton.addClass('aos_hotkey_save_added');
+                    }
 
                     // IE fix
                     setTimeout(function () {
@@ -2695,6 +2707,11 @@ $(document).ready(function () {
             var link = $(this),
                 url = link.attr('href'),
                 linkTextDefault;
+
+            // skip confirm if ctrl key is pressed
+            if (e.metaKey || e.ctrlKey) {
+                url += '&force=1';
+            }
 
             if (!link.attr('data-text-original')) {
 

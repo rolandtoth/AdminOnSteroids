@@ -1,12 +1,25 @@
 # Changelog
 
 
+### 1.9.5 (2018-06-01)
+
+- fix inline pagelist items if "Always show pagelist actions" was checked (reported by ottogal)
+- Delete and Trash action (non-superusers): skip confirmation if ctrl key is pressed
+- new Skip Trash? checkbox on page edit Delete tab (SuperUsers only, requested by Robin S)
+- fix NavItems causing JS error on "Find Files to Translate" page Search box
+- hotkey save: do not add blocking overlay until html5 required attribute requirements are not resolved (reported by Robin S, #95)
+- asmSelect searchbox: allow wider dropdown
+- AdminThemeUikit, percentage-based widths ON: move AsmSelect placeholder and maxlimit fields after Required field to avoid layout issues
+- add namespace and FileCompiler=0 to bypass PW's FileCompiler (slow compile on Win localhost, may need modules refresh)
+
+
+
 ### 1.9.4 (2018-05-23)
 
 - new: extra columns on Fields setup page showing description, notes, id and inputfield class (Misc)
 - skip autosizing textareas having "noAutosize" classname (requested by bernhard)
 - add cache busting string to assetPaths (requested by Robin S)
-- check if $_SERVER['REFERER'] exists before redirect (reported by Robin S)
+- check if $_SERVER['HTTP_REFERER'] exists before redirect (reported by Robin S)
 - fix 1px title field misalignment caused by casechanger (reported by Robin S)
 
 

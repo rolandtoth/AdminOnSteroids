@@ -2134,6 +2134,7 @@ html.pListShowActions {
   .content .PageList {
     .PageListItem {
       display: inline-block !important;
+      width: 100% !important;
       .PageListActions {
         display: inline-block !important;
         opacity: 1 !important;
@@ -2201,9 +2202,19 @@ html.pListActiveBold {
 // select2.js
 
 .select2-selection.select2-selection--single,
-.select2.select2-container {
+.select2.select2-container,
+span.select2-dropdown {
   width: auto !important;
-  min-width: 180px !important;
+  min-width: 200px !important;
+  max-width: 600px;
+}
+
+.select2-results__option {
+  white-space: nowrap;
+}
+
+.select2-dropdown--above {
+  border-bottom: 1px solid #aaa !important;
 }
 
 .select2-container--default .select2-selection--single {
@@ -2294,7 +2305,7 @@ a.case-toggle {
   height: 0;
   white-space: nowrap;
   padding: 0;
-  z-index: 200;
+  z-index: 5;
   top: 4px;
   position: relative;
   //.LanguageSupport & {
@@ -3251,21 +3262,20 @@ html.AdminThemeUikit {
     // headSticky
     &.headSticky {
       body:not(.modal):not(.id-23) {
-        padding-top: 73px;
-        #pw-masthead {
-          position: fixed !important;
-          top: 0 !important;
-          left: 0;
-          width: 100%;
+        //padding-top: 73px;
+        #pw-mastheads {
+          position: sticky !important;
           backface-visibility: hidden;
-          z-index: 1;
+          top: 0 !important;
+          //width: 100%;
+          z-index: 6;
         }
       }
-      &.headSticky.headCompact {
-        body:not(.modal):not(.id-23) {
-          padding-top: 54px;
-        }
-      }
+      //&.headSticky.headCompact {
+      //  body:not(.modal):not(.id-23) {
+      //    padding-top: 54px;
+      //  }
+      //}
     }
   }
   &.headCompact {

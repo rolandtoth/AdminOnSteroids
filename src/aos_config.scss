@@ -59,8 +59,45 @@ li[id^="wrap_Inputfield"], li.Inputfield { // fix scrollto targets (when Tooltip
   min-height: 0 !important;
 }
 
-#Inputfield_tweaks {
+//.headSticky:not(.AdminThemeReno) {
+.headSticky {
+  #Inputfield_tweaks {
+    // scroll link offset
+    $offset: 110px;
 
+    //> .InputfieldContent > .Inputfields {
+    //  display: block; // override uikit flex
+    //  > li {
+    //    position: relative;
+    //    background: transparent;
+    //    @include clearfix;
+    //    &::before {
+    //      content: '';
+    //      height: $offset;
+    //      margin: -$offset 0 0;
+    //      display: block;
+    //      background: transparent;
+    //      pointer-events: none;
+    //    }
+    //    > .InputfieldHeader {
+    //      top: $offset !important;
+    //      z-index: 3;
+    //      background: transparent !important;
+    //      pointer-events: none;
+    //    }
+    //    > .InputfieldContent {
+    //      background: white !important;
+    //      > * {
+    //        // next element partly covers the content, move current content to the front
+    //        z-index: 4;
+    //      }
+    //    }
+    //  }
+    //}
+  }
+}
+
+#Inputfield_tweaks {
   .InputfieldCheckboxesStacked {
     label {
       padding-right: 1em;
@@ -291,227 +328,226 @@ li[id^="wrap_Inputfield"], li.Inputfield { // fix scrollto targets (when Tooltip
   }
 }
 
-form[action*="AdminOnSteroids"] {
+//form[action*="AdminOnSteroids"] {
 
-  > .Inputfields > li {
-    margin-bottom: 0.7em;
-  }
-  //.Inputfield_enabled {
-  //  margin-top: 1em;
-  //}
-  //.Inputfield_AssetsPaths {
-  //  margin-bottom: 1em;
-  //}
+form > .Inputfields > li {
+  margin-bottom: 0.7em;
+}
 
-  #wrap_Inputfield_enabledSubmodules {
-    > .InputfieldContent {
-      label {
-        font-size: 94%;
-        line-height: 1.45;
-        //font-style: italic;
-        color: rgba(#2A3C51, 0.64);
-        strong {
-          font-style: normal;
-          display: block;
-          font-weight: bold;
-          margin-bottom: 5px;
-          color: #2A3C51;
-        }
-      }
-      ul {
-        > li {
-          break-inside: avoid;
-          position: relative;
-        }
-        @media only screen and (min-width: 960px) {
-          column-count: 2;
-          column-gap: 0;
-          //column-gap: 6px;
-        }
-        @media only screen and (min-width: 1320px) {
-          column-count: 3;
-        }
-        html.AdminThemeReno &,
-        body.AdminThemeUikit & {
-          @media only screen and (min-width: 1640px) {
-            column-count: 4;
-          }
-        }
+//.Inputfield_enabled {
+//  margin-top: 1em;
+//}
+//.Inputfield_AssetsPaths {
+//  margin-bottom: 1em;
+//}
+
+#wrap_Inputfield_enabledSubmodules {
+  > .InputfieldContent {
+    label {
+      font-size: 94%;
+      line-height: 1.45;
+      //font-style: italic;
+      color: rgba(#2A3C51, 0.64);
+      strong {
+        font-style: normal;
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #2A3C51;
       }
     }
-  }
-
-  //html.AdminThemeReno & {
-  //  //@media only screen and (min-width: 1900px) {
-  //  @media only screen and (min-width: 11479px) {
-  //    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
-  //      column-gap: 6px;
-  //      column-count: 2;
-  //      column-fill: balance; // Firefox only
-  //    }
-  //  }
-  //}
-  //html.AdminThemeDefault & {
-  //  @media only screen and (min-width: 1599px) {
-  //    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
-  //      column-gap: 6px;
-  //      column-count: 2;
-  //      column-fill: balance; // Firefox only
-  //    }
-  //  }
-  //}
-
-  .Inputfields .InputfieldRadiosColumns {
-    > li {
-      width: auto !important;
-      padding-right: 3%;
-    }
-
-  }
-
-  // fieldsets need extra styling not to look different
-  #Inputfield_tweaks {
-    #Inputfield_InputfieldURLChecker,
-    #Inputfield_CKEaddons,
-    #Inputfield_NavItems,
-    #Inputfield_ListerTweaks,
-    #Inputfield_AddNewChildFirst,
-    #Inputfield_PageListThumbs {
-      label {
-        background: transparent;
+    ul {
+      > li {
+        break-inside: avoid;
+        position: relative;
       }
-      .Inputfields {
-        margin-left: -1em;
-        margin-right: -0.33em;
-        label, .InputfieldContent {
-          padding-top: 0;
-          //padding-left: 0;
-          border: none;
+      @media only screen and (min-width: 960px) {
+        column-count: 2;
+        column-gap: 0;
+        //column-gap: 6px;
+      }
+      @media only screen and (min-width: 1320px) {
+        column-count: 3;
+      }
+      html.AdminThemeReno &,
+      body.AdminThemeUikit & {
+        @media only screen and (min-width: 1640px) {
+          column-count: 4;
         }
       }
     }
-
-    .InputfieldContent .Inputfield li:last-child .InputfieldContent.uk-form-controls {
-      padding-bottom: 0;
-    }
-
-    .Inputfield {
-      .Inputfield {
-        outline: none;
-        .InputfieldHeader {
-          padding-top: 0;
-        }
-      }
-      //.InputfieldHeader {
-      //  padding-top: 0;
-      //}
-    }
-
-    .ui-slider-handle {
-      top: -9px;
-    }
-
-    .sliderTooltip-inner {
-      line-height: 1.25;
-      white-space: nowrap;
-      padding: 3px 5px;
-    }
-
-    @media only screen and (min-width: 960px) {
-
-      > .InputfieldContent > .Inputfields {
-
-        > li {
-          position: relative;
-          break-inside: avoid;
-
-          > label.InputfieldHeader,
-          > .InputfieldContent {
-            padding-top: 1.5em;
-            padding-bottom: 1.5em;
-          }
-          > label.InputfieldHeader {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            font-size: 94%;
-            line-height: 1;
-          }
-          > .InputfieldContent {
-            padding-left: 300px;
-            position: relative;
-            background: transparent;
-            width: 100%;
-            //top: 1px;
-            //border-left: none;
-            //border: 1px solid #fff;
-            //border: none;
-          }
-        }
-      }
-    }
-  }
-
-  label {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .InputfieldCheckboxesStacked {
-    li.disabled {
-      opacity: 0.7;
-      label {
-        &:hover {
-          cursor: not-allowed !important;
-        }
-      }
-    }
-  }
-
-  .AdminDataTable tr td:first-child {
-    color: inherit !important;
-  }
-
-  input[type="radio"],
-  input[type="checkbox"] {
-    vertical-align: top;
-    position: relative;
-    top: 5px;
-    &:hover {
-      cursor: pointer;
-    }
-    + span {
-      //opacity: 0.7;
-      white-space: normal;
-      display: inline-block;
-      margin-bottom: 0.25em;
-      //padding-right: 20px;
-    }
-    &:checked {
-      + span {
-        opacity: 1;
-      }
-    }
-  }
-
-  // push these items to the right to mimic hiearchy (indent)
-  input#Inputfield_RenoTweaks_sbSingleClickHeads,
-    //input#Inputfield_RenoTweaks_sbItemsInline,
-  input#Inputfield_RenoTweaks_miniScrollSb,
-  input#Inputfield_RenoTweaks_miniScrollMain,
-  input#Inputfield_RenoTweaks_headStickyCompact,
-  input#Inputfield_RenoTweaks_stickyCKEBar,
-  input#Inputfield_CKEaddons_plugins_div_toolbar,
-  input#Inputfield_Misc_inputMaskPhoneLib,
-  input#Inputfield_CKEaddons_plugins_justify_toolbar,
-  input#Inputfield_AsmTweaks_asmSearchBoxKeepListOpen,
-  input#Inputfield_AsmTweaks_asmSearchBoxKeepTerm {
-    margin-left: 21px;
   }
 }
+
+//html.AdminThemeReno & {
+//  //@media only screen and (min-width: 1900px) {
+//  @media only screen and (min-width: 11479px) {
+//    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
+//      column-gap: 6px;
+//      column-count: 2;
+//      column-fill: balance; // Firefox only
+//    }
+//  }
+//}
+//html.AdminThemeDefault & {
+//  @media only screen and (min-width: 1599px) {
+//    #Inputfield_tweaks > .InputfieldContent > .Inputfields {
+//      column-gap: 6px;
+//      column-count: 2;
+//      column-fill: balance; // Firefox only
+//    }
+//  }
+//}
+
+.Inputfields .InputfieldRadiosColumns {
+  > li {
+    width: auto !important;
+    padding-right: 3%;
+  }
+
+}
+
+// fieldsets need extra styling not to look different
+#Inputfield_tweaks {
+  #Inputfield_InputfieldURLChecker,
+  #Inputfield_CKEaddons,
+  #Inputfield_NavItems,
+  #Inputfield_ListerTweaks,
+  #Inputfield_AddNewChildFirst,
+  #Inputfield_PageListThumbs {
+    //label {
+    //  background: transparent;
+    //}
+    .Inputfields {
+      margin-left: -1em;
+      margin-right: -0.33em;
+      label, .InputfieldContent {
+        padding-top: 0;
+        //padding-left: 0;
+        border: none;
+      }
+    }
+  }
+
+  .InputfieldContent .Inputfield li:last-child .InputfieldContent.uk-form-controls {
+    padding-bottom: 0;
+  }
+
+  .Inputfield {
+    .Inputfield {
+      outline: none;
+      .InputfieldHeader {
+        padding-top: 0;
+      }
+    }
+  }
+
+  .ui-slider-handle {
+    top: -9px;
+  }
+
+  .sliderTooltip-inner {
+    line-height: 1.25;
+    white-space: nowrap;
+    padding: 3px 5px;
+  }
+
+  @media only screen and (min-width: 960px) {
+
+    > .InputfieldContent > .Inputfields {
+
+      > li {
+        position: relative;
+        break-inside: avoid;
+
+        > label.InputfieldHeader,
+        > .InputfieldContent {
+          padding-top: 1.5em;
+          padding-bottom: 1.5em;
+        }
+        > label.InputfieldHeader {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          font-size: 94%;
+          line-height: 1;
+          background: white;
+        }
+        > .InputfieldContent {
+          padding-left: 300px;
+          position: relative;
+          background: transparent;
+          width: 100%;
+          //top: 1px;
+          //border-left: none;
+          //border: 1px solid #fff;
+          //border: none;
+        }
+      }
+    }
+  }
+}
+
+label {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.InputfieldCheckboxesStacked {
+  li.disabled {
+    opacity: 0.7;
+    label {
+      &:hover {
+        cursor: not-allowed !important;
+      }
+    }
+  }
+}
+
+//.AdminDataTable tr td:first-child {
+//  color: inherit !important;
+//}
+
+input[type="radio"],
+input[type="checkbox"] {
+  vertical-align: top;
+  position: relative;
+  top: 5px;
+  &:hover {
+    cursor: pointer;
+  }
+  + span {
+    //opacity: 0.7;
+    white-space: normal;
+    display: inline-block;
+    margin-bottom: 0.25em;
+    //padding-right: 20px;
+  }
+  &:checked {
+    + span {
+      opacity: 1;
+    }
+  }
+}
+
+// push these items to the right to mimic hiearchy (indent)
+input#Inputfield_RenoTweaks_sbSingleClickHeads,
+input#Inputfield_RenoTweaks_miniScrollSb,
+input#Inputfield_RenoTweaks_miniScrollMain,
+input#Inputfield_RenoTweaks_headStickyCompact,
+input#Inputfield_RenoTweaks_stickyCKEBar,
+input#Inputfield_CKEaddons_plugins_div_toolbar,
+input#Inputfield_Misc_inputMaskPhoneLib,
+input#Inputfield_CKEaddons_plugins_justify_toolbar,
+input#Inputfield_AsmTweaks_asmSearchBoxKeepListOpen,
+input#Inputfield_AsmTweaks_asmSearchBoxKeepTerm {
+  margin-left: 21px;
+}
+
+//}
 
 #asset-check-button {
   .InputfieldStateCollapsed & {

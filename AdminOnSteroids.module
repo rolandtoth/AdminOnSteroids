@@ -1,4 +1,4 @@
-<?php
+<?php namespace ProcessWire;
 
 /**
  * AdminOnSteroids
@@ -14,6 +14,9 @@
  * http://www.ryancramer.com
  *
  */
+
+// FileCompiler=0
+
 class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 {
     public static $configData;
@@ -34,7 +37,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.4',
+            'version'   => '1.9.5',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -441,13 +444,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function ready()
     {
-        $root = $this->config->urls->siteModules . __CLASS__;
-        $styles = $this->config->styles;
-        $scripts = $this->config->scripts;
-        $moduleInfo = $this->getModuleInfo();
+        $config = $this->wire('config');
+        $root = $config->urls->siteModules . 'AdminOnSteroids';
+        $styles = $config->styles;
+        $scripts = $config->scripts;
+        $moduleInfo = static::getModuleInfo();
         $timestamp = $moduleInfo['version'] . '_' . date('YmdH');
 
-        if ($this->input->get['name'] == 'AdminOnSteroids') {
+        if ($this->wire('input')->get['name'] === 'AdminOnSteroids') {
             $scripts->add($root . '/scripts/aos_config.min.js?ts=' . $timestamp);
             $styles->prepend($root . '/styles/aos_config.min.css?ts=' . $timestamp);
             $styles->prepend($root . '/styles/aos.min.css?ts=' . $timestamp);   // for the real-time aos settings preview
@@ -499,7 +503,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $cssFiles = array();
 
         // if there's only the default admin theme, $user->admin_theme is not available
-        $this->adminTheme = $this->wire('user')->admin_theme ? $this->wire('user')->admin_theme : $this->config->defaultAdminTheme;
+        $this->adminTheme = $this->wire('user')->admin_theme ? $this->wire('user')->admin_theme : $config->defaultAdminTheme;
 
         $this->PageListThumbs_items = array();
         $this->PageListIcons = array();
@@ -560,7 +564,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         //FieldAndTemplateEditLinks
         $subModule = 'FieldAndTemplateEditLinks';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
             if ($this->wire('user')->isSuperUser()) {
 
@@ -578,7 +582,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
             } else {
                 // remove the submodule entirely if not superuser
-                if (($key = array_search($subModule, $enabledSubmodules)) !== false) {
+                if (($key = array_search($subModule, $enabledSubmodules, true)) !== false) {
                     unset($enabledSubmodules[$key]);
                 }
             }
@@ -633,10 +637,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addPageListIDs');
                 }
 
-                // add delete button to pagelist items (bypass trash)
                 if (in_array('deleteBtn', $configData[$subModule])) {
+                    // add delete action to pagelist items (bypass trash)
                     $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addDeleteButton');
                     $this->addHookAfter('ProcessPageListActions::processAction', $this, 'addDeleteButtonAction');
+
+                    // add delete field to page edit Delete tab
+                    $this->addHookAfter('ProcessPageEdit::buildFormDelete', $this, 'addDeletePermanentlyField');
+                    $this->addHookBefore('Pages::trash', $this, 'addDeletePermanentlyHook');
                 }
 
                 if (in_array('stickyBtn', $configData[$subModule])) {
@@ -785,7 +793,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
         }
 
-
         //AddNewChildFirst
 
         $subModule = 'AddNewChildFirst';
@@ -827,7 +834,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                         if ($extension === 'php') {
                             include_once($this->FieldOverridesFile);
                             // $fieldoverrides should be the name of the array in the included file
-                            if (isset($fieldoverrides) && is_array($fieldoverrides)) {
+                            if ($fieldoverrides !== null && is_array($fieldoverrides)) {
                                 $fieldoverrides_file_contents = $fieldoverrides;
                             }
                         }
@@ -1198,11 +1205,11 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         // add modified enabledSubmodules to JS config (modified by roles)
         // note: array_values is used to have values-only array in JS
         $configData['enabledSubmodules'] = array_values($enabledSubmodules);
-        $configData['aosUrl'] = $this->config->urls->AdminOnSteroids;
-//        $configData['aosModuleUrl']      = $this->config->urls->admin . 'module/edit?name=AdminOnSteroids';
+        $configData['aosUrl'] = $config->urls->AdminOnSteroids;
+//        $configData['aosModuleUrl']      = $config->urls->admin . 'module/edit?name=AdminOnSteroids';
 
         // do not add JS to page on login page
-        if ($this->page->id != 23) {
+        if ($this->wire('page')->id != 23) {
 
             // custom CKEaddons config js and css
             $this->addAsset('CKEStyle', $configData);
@@ -1510,7 +1517,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 if (!$this->isLocaleSet) {
                     $configLocale = $this->wire('config')->getLocale;
 
-                    if (is_object($configLocale) && ($configLocale instanceof Closure)) {
+                    if (is_object($configLocale) && ($configLocale instanceof \Closure)) {
                         setlocale(LC_ALL, $configLocale());
                         $this->isLocaleSet = true;
                     }
@@ -1615,7 +1622,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $f_before = false;
 
         if ($field->type == 'FieldtypePage') {
-            $f_before = $wrapper->getChildByName('labelFieldName');
+            $f_before = $wrapper->getChildByName('required');
         } else {
             if ($field->type == 'FieldtypeOptions') {
                 $f_before = $wrapper->getChildByName('defaultValue');
@@ -1646,7 +1653,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $f_before = false;
 
         if ($field->type == 'FieldtypePage') {
-            $f_before = $wrapper->getChildByName('labelFieldName');
+            $f_before = $wrapper->getChildByName('required');
         } else {
             if ($field->type == 'FieldtypeOptions') {
                 $f_before = $wrapper->getChildByName('defaultValue');
@@ -2020,9 +2027,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $items = '<ul class="NavItems">' . $items . '</ul>';
 
-//        $event->return = str_replace('</body>', $items . '</body>', $event->return);
-        $event->return = str_replace('<body', '<body data-navitems="' . htmlspecialchars($items, ENT_QUOTES) . '"',
-            $event->return);
+        $event->return = str_replace('<body', "<body data-navitems='" . htmlspecialchars($items, ENT_QUOTES, 'UTF-8') . "'", $event->return);
     }
 
 
@@ -2094,6 +2099,66 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
     }
 
+
+    public function addDeletePermanentlyField(HookEvent $event)
+    {
+        // there is already a Delete Permanently field if page is in Trash
+        if ($this->editedPage && $this->editedPage->isTrash) {
+            return false;
+        }
+
+        $form = $event->return;
+        $trashConfirmField = $form->get('delete_page');
+
+        if (!$trashConfirmField) {
+            return false;
+        }
+
+        $f = wire('modules')->get('InputfieldCheckbox');
+        $f->attr('id+name', 'delete_permanently');
+        $f->checkboxLabel = __('Delete Permanently', __FILE__);
+        $f->label = __('Skip Trash?', __FILE__);
+        $f->description = __('Check to permanently delete this page.', __FILE__);
+        $f->value = '1';
+//        $f->showIf = 'delete_page!=0';
+
+        $trashConfirmField->columnWidth = 50;
+        $f->columnWidth = 50;
+
+        $f->collapsed = Inputfield::collapsedNever;
+        $trashConfirmField->collapsed = Inputfield::collapsedNever;
+
+        // add fieldset (Reno top spacing bug)
+        if($this->adminTheme === 'AdminThemeReno') {
+            $fset = wire('modules')->get('InputfieldFieldset');
+            $fset->add($trashConfirmField);
+            $fset->add($f);
+            $form->remove($trashConfirmField);
+            $form->insertBefore($fset, $form->get('submit_delete'));
+        } else {
+            $form->insertAfter($f, $trashConfirmField);
+        }
+    }
+
+
+    // delete page instead trashing if delete_permanently was checked
+    public function addDeletePermanentlyHook(HookEvent $event)
+    {
+        if (isset($this->wire('input')->post->delete_permanently)) {
+
+            $p = $event->arguments[0];
+            $session = $this->wire('session');
+
+            $afterDeleteRedirect = $this->wire('config')->urls->admin . "page/?open={$p->parent->id}";
+            // if($this->wire('page')->process != $this->className()) $afterDeleteRedirect = "../";
+
+            if ($p->deleteable()) {
+                $session->message(sprintf(__('Deleted page: %s'), $p->url)); // Page deleted message
+                $this->wire('pages')->delete($p, true);
+                $session->redirect($afterDeleteRedirect);
+            }
+        }
+    }
 
     // prepend sort=-sticky to pagelist find
     public function stickyFindMod(HookEvent $event)
@@ -2221,7 +2286,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     public function CkeLinkFilesAjaxResponse(HookEvent $event)
     {
         // Must be AJAX request, must be from this module, must include pid GET variable
-        if (!$this->wire('config')->ajax || $this->wire('input')->get->request !== __CLASS__ || !$this->wire('input')->get->ckelinkfiles_pid) {
+        if (!$this->wire('config')->ajax || $this->wire('input')->get->request !== 'AdminOnSteroids' || !$this->wire('input')->get->ckelinkfiles_pid) {
             return;
         }
 
@@ -2647,7 +2712,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
      */
     public function isValidSelectorString($str)
     {
-        $validSelectorOperators = \ProcessWire\Selectors::getOperatorChars();
+        $validSelectorOperators = Selectors::getOperatorChars();
 
         return count(array_intersect(str_split($str), $validSelectorOperators)) > 0;
     }
@@ -2786,7 +2851,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addFieldEditLinks(HookEvent $event)
     {
-
         $inputfield = $event->object;
 
         if ($inputfield->type == 'hidden') {
@@ -2804,14 +2868,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 return;
             }
 
-            if ($field->flags && $field->hasFlag(Field::flagSystem)) {
+            if ($field->flags && $field->hasFlag(Field::flagSystem) && $field->name !== 'title') {
                 return;
             }
 
             // add class to wrapper to be able to use :hover even if label is unavailable (eg. checkbox field)
             $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' aos_hasTooltip');
 
-            $editFieldUrl = $this->config->urls->admin . 'setup/field/edit?id=' . $field->id;
+            $editFieldUrl = $this->wire('config')->urls->admin . 'setup/field/edit?id=' . $field->id;
 
             $editFieldTooltip = '<em class="aos_EditField">' . $field->name . '<i class="fa fa-pencil"></i></em>';
 
@@ -3176,7 +3240,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $data = array_filter($data, 'trim');  // remove empty lines
 
         // remove comments
-        for ($i = 0; $i < count($data); $i++) {
+        $dataCount = count($data);
+
+        for ($i = 0; $i < $dataCount; $i++) {
             if (strpos($data[$i], '//') === 0) {
                 unset($data[$i]);
             }
@@ -4073,7 +4139,7 @@ HTML;
         $f->addOption('highlightRows', __('Highlight rows on hover', __FILE__));
         $f->addOption('pListIDs', __('Show page IDs (SuperUser only)', __FILE__));
         $f->addOption('refreshBtn', __('Add Refresh button to refresh page details displayed', __FILE__));
-        $f->addOption('deleteBtn', __('Add Delete button to delete page permanently (SuperUser only)', __FILE__));
+        $f->addOption('deleteBtn', __('Add pagelist Delete action and page edit checkbox to bypass Trash (SuperUser only)', __FILE__));
         $f->addOption('stickyBtn', __('Add Sticky button to pagelist', __FILE__));
         $f->addOption('pListUnselect', __('Add unselect/restore buttons to PageListSelect', __FILE__));
         $f->addOption('pListIconOnly', __('Icon-only pagelist actions', __FILE__));
