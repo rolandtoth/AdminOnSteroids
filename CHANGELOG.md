@@ -1,7 +1,14 @@
 # Changelog
 
 
-### 1.9.5 (2018-06-01)
+### 1.9.6 (2018-06-04)
+
+- fix field edit link added twice for multi-select page reference fields (reported by Robin S)
+- eliminate spacing issue in Uikit theme caused by field edit link DOM position
+
+
+
+### 1.9.5 (2018-06-04)
 
 - fix inline pagelist items if "Always show pagelist actions" was checked (reported by ottogal)
 - Delete and Trash action (non-superusers): skip confirmation if ctrl key is pressed

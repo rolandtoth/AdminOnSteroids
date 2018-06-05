@@ -37,7 +37,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.5',
+            'version'   => '1.9.6',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -2129,7 +2129,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $trashConfirmField->collapsed = Inputfield::collapsedNever;
 
         // add fieldset (Reno top spacing bug)
-        if($this->adminTheme === 'AdminThemeReno') {
+        if ($this->adminTheme === 'AdminThemeReno') {
             $fset = wire('modules')->get('InputfieldFieldset');
             $fset->add($trashConfirmField);
             $fset->add($f);
@@ -2853,14 +2853,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     {
         $inputfield = $event->object;
 
-        if ($inputfield->type == 'hidden') {
+        if ($inputfield->type === 'hidden') {
             return;
         }
 
-        if (strpos($event->return, 'data-editurl')) {
+        $markup = $event->return;
+
+        if (strpos($markup, 'data-editurl')) {
             return;
         }
-
 
         if ($field = $inputfield->hasField) {
 
@@ -2879,25 +2880,30 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             $editFieldTooltip = '<em class="aos_EditField">' . $field->name . '<i class="fa fa-pencil"></i></em>';
 
-            // needed to allow HTML in label
+            // need to allow HTML in label
             $inputfield->entityEncodeLabel = false;
             $inputfield->label = '<span class="title">' . $editFieldTooltip . $inputfield->label . '</span>';
+
+            // add tooltip if there's no label (checkbox)
+            if ($inputfield instanceof InputfieldCheckbox) {
+                $markup = str_replace('</label>', $editFieldTooltip . '</label>', $markup);
+            }
 
             // use hidden link to be able to use modal/panel
             // note: link is not added to the label tag because it won't be clickable
 
-            $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
+            $link = '';
 
-            $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+            // for multi-select page reference fields $link was added twice #96
+            if (strpos($markup, 'aos_EditFieldLink') === false) {
 
-            // add tooltip if there's no label (checkbox)
-            if ($inputfield instanceof InputfieldCheckbox) {
-                $event->return = str_replace('</label>', $editFieldTooltip . '</label>', $event->return);
+                $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
+                $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
+
+                $link = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" data-field-name="' . $inputfield->name . '" target="_blank" style="display: none !important;">Edit</a>';
             }
 
-            $link = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" data-field-name="' . $inputfield->name . '" target="_blank" style="display: none !important;">Edit</a>';
-
-            $event->return = $link . $event->return;
+            $event->return = $markup . $link;
         }
     }
 
