@@ -37,7 +37,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.6',
+            'version'   => '1.9.7',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -2102,12 +2102,12 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addDeletePermanentlyField(HookEvent $event)
     {
-        // there is already a Delete Permanently field if page is in Trash
-        if ($this->editedPage && $this->editedPage->isTrash) {
+        if ($this->editedPage && !$this->editedPage->trashable()) {
             return false;
         }
 
         $form = $event->return;
+
         $trashConfirmField = $form->get('delete_page');
 
         if (!$trashConfirmField) {

@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 1.9.7 (2018-06-12)
+
+- add Skip trash checkbox only to pages that are trashable (reported by Robin S)
+
+
+
 ### 1.9.6 (2018-06-04)
 
 - fix field edit link added twice for multi-select page reference fields (reported by Robin S)
@@ -27,7 +33,7 @@
 - skip autosizing textareas having "noAutosize" classname (requested by bernhard)
 - add cache busting string to assetPaths (requested by Robin S)
 - check if $_SERVER['HTTP_REFERER'] exists before redirect (reported by Robin S)
-- fix 1px title field misalignment caused by casechanger (reported by Robin S)
+- fix 1px title field misalignment caused by case-toggle button (reported by Robin S)
 
 
 
