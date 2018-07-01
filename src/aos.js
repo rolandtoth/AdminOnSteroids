@@ -3227,10 +3227,10 @@ $(document).ready(function () {
         }
 
         // NavItems
-        if ($('body[data-navitems]').length) {
+        if (window.navItemsHtml) {
 
             var topNavElem,
-                $NavItems = $($('body').attr('data-navitems')),
+                $NavItems = $(navItemsHtml),
                 topNavHasItems = true;
 
             if ($('body').hasClass('AdminThemeReno')) {

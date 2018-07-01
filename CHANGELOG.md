@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 1.9.8 (2018-07-10)
+
+- NavItems: faster and less error-prone way to pass markup to JavaScript
+- fix: styling issue on horizontal checkboxlists (checkAllCheckboxes)
+- fix: z-index issue after page moved in Page List #97 (reported by Robin S)
+
+
+
 ### 1.9.7 (2018-06-12)
 
 - add Skip trash checkbox only to pages that are trashable (reported by Robin S)

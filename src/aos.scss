@@ -627,9 +627,13 @@ html.aos {
   z-index: 100000 + 1000 !important;
 }
 
-// confirm button
 .PageListItem {
+  // confirm button
   position: relative;
+  // z-index fix after moving page (uikit theme)
+  &[style] {
+    z-index: inherit !important;
+  }
 }
 
 // inline confirm for PageTrash, PageListActionDelete, etc (pagelist and recent list)
@@ -4160,13 +4164,10 @@ html.hoverDropdown {
   border-radius: 100%;
   background: #E2E9EF;
   text-align: center;
-  //transition: all 0.2s;
+  padding: 0 !important;
   user-select: none;
   backface-visibility: hidden;
   z-index: 33;
-  //.AdminDataList & {
-  //  transform: translateY(100%);
-  //}
   i {
     pointer-events: none;
     position: relative;
