@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title'     => 'AdminOnSteroids',
             'class'     => 'AdminOnSteroids',
-            'version'   => '1.9.8',
+            'version'   => '1.9.9',
             'summary'   => __('ProcessWire admin tweaks to boost productivity.'),
             'author'    => 'Roland Toth',
             'autoload'  => 'template=admin',
@@ -229,6 +229,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'hoverTopSubmenus',
             'asmCollapse',
             'asmLeftX',
+            'asmCounter',
             'centerLogin',
             'downloadAssetButton',
             'editFieldWidth',
@@ -2877,7 +2878,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             $editFieldUrl = $this->wire('config')->urls->admin . 'setup/field/edit?id=' . $field->id;
 
-            $editFieldTooltip = '<em class="aos_EditField">' . $field->name . '<i class="fa fa-pencil"></i></em>';
+            $editFieldTooltip = '<em class="aos_EditField" data-for-field="' . $field->id . '">' . $field->name . '<i class="fa fa-pencil"></i></em>';
 
             // need to allow HTML in label
             $inputfield->entityEncodeLabel = false;
@@ -2899,7 +2900,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
                 $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
-                $link = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" data-field-name="' . $inputfield->name . '" target="_blank" style="display: none !important;">Edit</a>';
+                $link = '<a href="' . $editFieldUrl . '" class="' . $target . ' aos_EditFieldLink" data-field-id="' . $field->id . '" target="_blank" style="display: none !important;">Edit</a>';
             }
 
             $event->return = $markup . $link;
@@ -3466,6 +3467,7 @@ HTML;
         $f->addOption('asmSearchBox', __('Add search box to asmSelect', __FILE__));
         $f->addOption('asmSearchBoxKeepListOpen', __('Keep list open after select', __FILE__));
         $f->addOption('asmSearchBoxKeepTerm', __('Keep search term after select', __FILE__));
+        $f->addOption('asmCounter', __('Add counter to asmSelect', __FILE__));
 
 
         if ($data[$f->name]) {

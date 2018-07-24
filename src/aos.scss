@@ -4,9 +4,15 @@
 // general style overrides
 html.aos {
 
+  .InputfieldPageListSelect,
+  .InputfieldPageListSelect .InputfieldContent {
+    @include clearfix();
+  }
+
   // make mini scrollbar overlap contents
-  min-width: 100vw;
-  overflow-x: hidden;
+  overflow: overlay;
+  //min-width: 100vw;
+  //overflow-x: hidden; // note: this makes asmselect weird on moving items
 
   // on pagelist item hover underline only the first span (added by the module)
   .pw-content .PageList .PageListItem > a.PageListPage {
@@ -1056,6 +1062,12 @@ html {
     ~ .PageListRoot {
       float: left;
       width: calc(100% - 54px);
+      margin-bottom: 1.5rem;
+    }
+    ~ .notes {
+      width: 100%;
+      clear: both;
+      margin-top: 1.5rem;
     }
   }
   &.restore {
@@ -1065,10 +1077,82 @@ html {
   }
 }
 
-html.aos {
-  .InputfieldPageListSelect,
-  .InputfieldPageListSelect .InputfieldContent {
-    @include clearfix();
+html.asmCounter {
+  .InputfieldPage,
+  .Inputfield.InputfieldAsmSelect {
+    position: relative;
+    > .InputfieldStateCollapsed .asmList {
+      counter-reset: pageRefCounter;
+    }
+    // if not collapsed, display the counter on the bottom
+    // (cannot be positioned on the top)
+    &:not(.InputfieldStateCollapsed) {
+      .asmListItem:last-child::before {
+        margin-top: 7px;
+        font-size: 0.88rem;
+        top: 100%;
+        right: 0;
+      }
+    }
+    &.InputfieldStateCollapsed {
+      > .InputfieldContent {
+        // override default display: none to be able to move counter out of the div
+        display: block;
+        height: 0;
+        padding: 0;
+        border: none;
+      }
+      .asmContainer * {
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+      }
+      .asmListItem {
+        * {
+          display: none;
+        }
+        &:last-child::before {
+          top: -70px;
+          right: 32px;
+        }
+      }
+    }
+    .asmListItem {
+      &:not(.ui-sortable-helper) {
+        counter-increment: pageRefCounter;
+      }
+      &:not(.ui-state-highlight):last-child {
+        margin-bottom: 11px !important; // place for the bottom counter
+        &::before {
+          content: counter(pageRefCounter) ' selected';
+          position: absolute;
+          color: #8d939e;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+  /* Uikit theme */
+  &.AdminThemeUikit {
+    .InputfieldPage,
+    .Inputfield.InputfieldAsmSelect {
+      .asmListItem:last-child::before {
+        top: 100%;
+        right: 0;
+      }
+      &.InputfieldStateCollapsed .asmListItem:last-child::before {
+        top: -79px !important;
+        right: 48px !important;
+      }
+      &:not(.InputfieldStateCollapsed) {
+        .asmListItem:last-child::before {
+          font-size: 0.94rem;
+          margin-top: 6px;
+        }
+      }
+    }
   }
 }
 
@@ -1379,6 +1463,12 @@ html.hideAddNewDropdown body.id-3 {
     &:hover {
       cursor: pointer;
     }
+  }
+}
+
+.aos_hasTooltip {
+  .InputfieldRepeaterItem:hover .InputfieldContent {
+    overflow: visible !important;
   }
 }
 
@@ -2209,8 +2299,8 @@ html.pListActiveBold {
 .select2.select2-container,
 span.select2-dropdown {
   width: auto !important;
-  min-width: 200px !important;
-  max-width: 600px;
+  min-width: 300px !important;
+  max-width: 640px;
 }
 
 .select2-results__option {
@@ -4167,7 +4257,7 @@ html.hoverDropdown {
   padding: 0 !important;
   user-select: none;
   backface-visibility: hidden;
-  z-index: 33;
+  z-index: 3;
   i {
     pointer-events: none;
     position: relative;
@@ -4222,7 +4312,7 @@ ul[class*="InputfieldCheckboxes"] {
   right: 18px;
   padding: 0 12px;
   background: transparent;
-  z-index: 20;
+  z-index: 2;
   &.button-left {
     right: auto;
     left: auto;

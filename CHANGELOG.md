@@ -1,6 +1,17 @@
 # Changelog
 
 
+### 1.9.9 (2018-07-24)
+
+- added asmCounter (asmTweaks)
+- fixed asmSelect items wrong position on move
+- fixed z-index issue: InputfieldURLChecker and checkAllCheckboxes vs AdminThemeUikit sticky header
+- fixed z-index issue: repeater field vs field edit link
+- fixed repeater field edit links pointed to wrong urls
+- fixed pagelist unselect buttons causing notes field wrong positioning (reported by Robin S, #99)
+
+
+
 ### 1.9.8 (2018-07-10)
 
 - NavItems: faster and less error-prone way to pass markup to JavaScript

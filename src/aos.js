@@ -887,6 +887,8 @@ function initInputMask(inputfield_id, options) {
 
 $(document).ready(function () {
 
+
+
         if (AOSsettings === null) return;
 
         // set search field position to avoid overlap with Save button (Reno, compactHeader, unchecked headBtnToTitle)
@@ -967,18 +969,19 @@ $(document).ready(function () {
             // wrap AdminThemeDefault li.title inner in a span
             $('ul.nav li.title').wrapInner('<span>');
 
-            //$(document).on('mousedown', '#ProcessPageEdit .Inputfield .aos_EditField', function (e) {
             $(document).on('mousedown', '.Inputfield .aos_EditField', function (e) {
 
-                var editFieldLink = $(this).parents('.Inputfield').eq(0).find('.aos_EditFieldLink');
+                var fieldID = $(this).attr('data-for-field'),
+                    // in repeaters field names are suffixed, eg. "excerpt_repeater1516"
+                    editFieldLink = $(this).parents('.Inputfield').eq(0).find('.aos_EditFieldLink[data-field-id="' + fieldID + '"]');
 
                 // right click
-                if (e.which == 3) return false;
+                if (e.which === 3) return false;
 
                 if (editFieldLink.length) {
 
                     // if middle mouse button pressed, open a new page
-                    if (e.which == 2 || e.button == 4) {
+                    if (e.which === 2 || e.button === 4) {
                         window.open(editFieldLink.attr('href').replace('&modal=1', ''));
                     } else {
                         editFieldLink[0].click();
