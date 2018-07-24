@@ -1093,6 +1093,9 @@ html.asmCounter {
         top: 100%;
         right: 0;
       }
+      p.notes {
+          margin-top: 2.2rem;
+      }
     }
     &.InputfieldStateCollapsed {
       > .InputfieldContent {
@@ -1101,6 +1104,10 @@ html.asmCounter {
         height: 0;
         padding: 0;
         border: none;
+        // hide description and notes too when collapsed
+        > p {
+          display: none;
+        }
       }
       .asmContainer * {
         height: 0 !important;
