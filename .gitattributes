@@ -1,4 +1,3 @@
-$ cat .gitattributes
 * linguist-vendored
 *.php linguist-vendored=false
 *.module linguist-vendored=false
