@@ -5,6 +5,7 @@ function getParentCheckbox(cb) {
     return cb;
 }
 
+
 function setupCheckbox(currentCheckbox) {
 
     var nextCheckbox = currentCheckbox.parent().parent('li').next('li').find('input');
@@ -27,6 +28,7 @@ function setupCheckbox(currentCheckbox) {
 function checkAOSstate(el) {
     $('#wrap_Inputfield_enabledSubmodules, #Inputfield_tweaks, #wrap_Inputfield_restore, #Inputfield_AssetPaths').toggleClass('aos_disabled', !el.is(':checked'));
 }
+
 
 $(window).load(function () {
 
