@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 2.0.0 (2018-08-02)
+
+- caseChanger: enable for text fields, update to work with ajax fields and repeaters, trigger form change, CSS improvements
+
+
+
 ### 1.9.9 (2018-07-24)
 
 - added asmCounter (asmTweaks)

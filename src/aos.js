@@ -1,4 +1,5 @@
-var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null;
+var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWire.config.AdminOnSteroids) ? JSON.parse(ProcessWire.config.AdminOnSteroids) : null,
+    currentLanguageId = ProcessWire.config.LanguageSupport ? ProcessWire.config.LanguageSupport.language.id : '';
 
 function _isEnabled(submoduleName) {
     return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
@@ -2298,55 +2299,33 @@ $(document).ready(function () {
         // titleCaseToggle
         if (AOSsettings.Misc.indexOf('titleCaseToggle') !== -1) {
 
-            if ($('[id^="Inputfield_title"]').length) {
+            // titleCaseToggle
+            if (AOSsettings.Misc.indexOf('titleCaseToggle') !== -1) {
 
-                var $titleFields = $('[id="Inputfield_title"]'),
+                var pageTitleSelector,
                     titleCases = {
-                        'original': function (string, $btn) {
-                            return $btn.attr('data-original');
-                        },
-                        'Lorem ipsum': function (string) {
-                            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
-                        },
-                        'Lorem Ipsum': function (string) {
-                            return string.replace(/\w\S*/g, function (txt) {
-                                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                            })
-                        },
-                        'LOREM IPSUM': function (string) {
-                            return string.toLocaleUpperCase();
-                        },
-                        'lorem ipsum': function (string) {
-                            return string.toLocaleLowerCase();
-                        }
-                    };
-
-                $titleFields.each(function () {
-
-                    var $input = $(this),
-                        dataOriginal = '';
-
-                    $input.on('caseChange', function (e, $toggleBtn) {
-                        toggleCase($input, $toggleBtn);
-                    });
-
-                    // change the original on type
-                    $input.on('keyup', function () {
-                        if ($input.prev('a.case-toggle').length) {
-                            $input.prev('a.case-toggle').attr('data-original', $input.val());
-                        }
-                    });
-
-                    if ($input.val() && $input.val().length) {
-                        dataOriginal = ' data-original="' + $input.val() + '"';
+                    'original': function (string, $btn) {
+                        return $btn.attr('data-original');
+                    },
+                    'Lorem ipsum': function (string) {
+                        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+                    },
+                    'Lorem Ipsum': function (string) {
+                        return string.replace(/\w\S*/g, function (txt) {
+                            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                        });
+                    },
+                    'LOREM IPSUM': function (string) {
+                        return string.toLocaleUpperCase();
+                    },
+                    'lorem ipsum': function (string) {
+                        return string.toLocaleLowerCase();
                     }
+                };
 
-                    $(this).before('<a class="case-toggle" data-case="original"' + dataOriginal + '><i class="fa fa-font"></i><i class="fa fa-font"></i></a>');
-                });
 
 
                 function getMode(currentMode) {
-
                     var modesArray = Object.keys(titleCases),
                         mode = modesArray[0];
 
@@ -2361,48 +2340,86 @@ $(document).ready(function () {
 
                     var string = $input.val(),
                         mode = getMode($toggleBtn.attr('data-case')),
-                        newValue,
-                        pageTitleSelector = $('h1#title > span').length ? 'h1#title > span' : 'h1#title';
-
-                    if ($('body.AdminThemeDefault').length) {
-                        pageTitleSelector = $('#breadcrumbs li.title > span').length ? '#breadcrumbs li.title span' : '#breadcrumbs li.title';
-                    }
+                        isCurrentPageTitleField = $input.attr('id') === 'Inputfield_title' + (currentLanguageId !== '' ? '__' + currentLanguageId : ''),
+                        newValue;
 
                     if (titleCases[mode]) {
                         newValue = titleCases[mode](string, $toggleBtn);
                     }
 
-                    if (newValue && newValue.length) {
+                    $toggleBtn.attr('data-case', mode);
+
+                    if (newValue && newValue.length && string !== newValue) {
 
                         $input.val(newValue);
 
+                        // do it here because h1 span may be added later by js
+                        if ($('body.AdminThemeDefault').length) {
+                            pageTitleSelector = $('#breadcrumbs li.title > span').length ? '#breadcrumbs li.title span' : '#breadcrumbs li.title';
+                        } else {
+                            pageTitleSelector = $('h1 > span').length ? 'h1 > span' : 'h1';
+                        }
+
                         // #Inputfield_title: only modify page title if it's the default language title input
-                        if ($input.attr('id') == 'Inputfield_title' && $(pageTitleSelector).length) {
-                            // $(pageTitleSelector).text(newValue);
-                            // $(pageTitleSelector).get(0).childNodes[0].nodeValue = newValue;
+                        if (isCurrentPageTitleField && $(pageTitleSelector).length) {
+                            $(pageTitleSelector).text(newValue);
                             $(pageTitleSelector).contents().filter(function () {
                                 return this.nodeType == 3;
                             }).first().replaceWith(newValue);
                         }
 
-                        $toggleBtn.attr('data-case', mode);
+                        $input.trigger('change');
                     }
 
                     $input.focus();
                 }
 
-                $(document).on('click', '.case-toggle', function () {
+                function initCaseToggles() {
 
+                    var $titleFields = $('.InputfieldPageTitle, .InputfieldText, .InputfieldFileDescription').find('input[type="text"]:not([data-casetoggle-init])');
+
+                    $titleFields.each(function () {
+                        var $input = $(this),
+                            dataOriginal = '';
+
+                        $input.attr('data-casetoggle-init', '1');
+
+                        $input.on('caseChange', function (e, $toggleBtn) {
+                            toggleCase($input, $toggleBtn);
+                        });
+
+                        // change the original on type
+                        $input.on('keyup', function () {
+                            if ($input.prev('a.case-toggle').length) {
+                                $input.prev('a.case-toggle').attr('data-original', $input.val());
+                            }
+                        });
+
+                        if ($input.val() && $input.val().length) {
+                            dataOriginal = ' data-original="' + $input.val() + '"';
+                        }
+
+                        $(this).before('<a class="case-toggle" data-case="original"' + dataOriginal + '><i class="fa fa-font"></i><i class="fa fa-font"></i></a>');
+                    });
+                }
+
+                $(document).on('ready loaded opened wiretabclick', function () {
+                    initCaseToggles();
+                });
+
+                $(document).on('reloaded AjaxUploadDone', '.Inputfield, .InputfieldRepeater', function () {
+                    initCaseToggles();
+                });
+
+                $(document).on('click', '.case-toggle', function () {
                     var $toggleBtn = $(this),
-                        $input = $(this).parent().find('[id^="Inputfield_title"]');
+                        $input = $toggleBtn.parent().find('input[type="text"]');
 
                     if ($input.length) {
-
                         if (!$input.val()) {
                             // add data-original if it's first click (was empty on start)
                             $toggleBtn.attr('data-original', $input.val());
                         }
-
                         $input.trigger('caseChange', [$toggleBtn]);
                     }
 
@@ -3370,7 +3387,7 @@ $(document).ready(function () {
 
         if (FileFieldTweaksSettings.indexOf('filterbox') !== -1) {
 
-            // show filterbox when number of images in the field increases above 2
+            // show filterbox when number of images in the field goes above 1
             $(filterFieldSelector).on('DOMNodeInserted.aos_filterbox', function (e) {
 
                 var target = e.target || e.srcElement,
