@@ -1,9 +1,15 @@
 # Changelog
 
 
+### 2.0.1 (2018-08-03)
+
+- case changer: update to work with Batch Child Editor module's title fields
+
+
+
 ### 2.0.0 (2018-08-02)
 
-- caseChanger: enable for text fields, update to work with ajax fields and repeaters, trigger form change, CSS improvements
+- case changer: enable also for text fields and image/file field descriptions, trigger change, update for repeaters/ajax fields
 
 
 

@@ -2256,6 +2256,14 @@ a.case-toggle {
         top: 28px;
         right: 2px;
     }
+    html.AdminThemeUikit & {
+        &:before {
+            line-height: 2.7;
+        }
+    }
+    .batchChildTableContainer & {
+        right: 19px;
+    }
     +input {
         padding-right: 36px !important;
     }
@@ -2265,14 +2273,15 @@ a.case-toggle {
             font-size: 12px;
         }
         +i {
-            margin-left: -24px;
+            margin-left: -25px;
             &::before {
                 font-size: 9px;
             }
         }
     }
     &:not(:hover) {
-        color: rgba(#2C3E55, 0.5);
+        color: inherit !important;
+        opacity: 0.4;
     }
     &:hover {
         cursor: pointer;
@@ -2282,9 +2291,13 @@ a.case-toggle {
         }
     }
     &:before {
+        content: attr(data-case);
+        position: absolute;
+        right: 100%;
+        margin-right: -4px;
+        line-height: 2.5;
         width: 0;
         display: inline-block;
-        content: attr(data-case);
         font-size: 12px;
         color: rgba(#2C3E55, 0.7);
         transform-origin: right;

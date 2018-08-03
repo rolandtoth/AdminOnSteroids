@@ -2376,7 +2376,7 @@ $(document).ready(function () {
 
                 function initCaseToggles() {
 
-                    var $titleFields = $('.InputfieldPageTitle, .InputfieldText, .InputfieldFileDescription').find('input[type="text"]:not([data-casetoggle-init])');
+                    var $titleFields = $('.InputfieldPageTitle, .InputfieldText, .InputfieldFileDescription, .batchChildTableContainer').find('input[type="text"]:not([data-casetoggle-init])');
 
                     $titleFields.each(function () {
                         var $input = $(this),
