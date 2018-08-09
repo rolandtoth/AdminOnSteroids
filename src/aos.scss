@@ -3416,9 +3416,6 @@ html.moveAssetButtons {
 }
 
 .aos_downloadAsset {
-    //position: absolute;
-    //z-index: 99;
-    //top: 1px;
     .gridImage--delete &,
     .InputfieldImageEdit__buttons & {
         display: none;
@@ -3430,6 +3427,7 @@ html.moveAssetButtons {
         right: 27px;
         top: auto;
         position: absolute;
+        z-index: 1;
         i {
             color: #fff;
         }

@@ -48,6 +48,10 @@ CKEDITOR.plugins.add('linkfilesmenu', {
 
 $(function () {
 
+    if(!config.CkeLinkFiles) {
+        return false;
+    }
+
     // Add menu on DOM ready
     addFilesMenu(config.CkeLinkFiles.page_id);
 

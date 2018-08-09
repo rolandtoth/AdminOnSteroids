@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2.0.2 (2018-08-09)
+
+- ckeLinkFiles: prevent Js error if config.CkeLinkFiles is not available
+- fix downloadAsset button z-index (reported by matjazp)
+
+
+
 ### 2.0.1 (2018-08-03)
 
 - case changer: update to work with Batch Child Editor module's title fields
