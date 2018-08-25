@@ -2,7 +2,7 @@ var AOSsettings = AOSsettings || (ProcessWire && ProcessWire.config && ProcessWi
     currentLanguageId = ProcessWire.config.LanguageSupport ? ProcessWire.config.LanguageSupport.language.id : '';
 
 function _isEnabled(submoduleName) {
-    return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1
+    return AOSsettings.enabledSubmodules.indexOf(submoduleName) !== -1;
 }
 
 function addCSSRule(selector, rules, index) {
@@ -194,7 +194,7 @@ function initCKE() {
             addCKEtoolbars(CKEfield);
 
             CKEfield.aos = true;
-        })
+        });
     });
 }
 
@@ -237,7 +237,7 @@ function updateAutoGrowCKE(CKEs) {
                 editor.autogrowFired = true;
                 editor.execCommand('autogrow');
             }
-        })
+        });
     }
 }
 
@@ -260,7 +260,8 @@ function posTop() {
 function debounce(func, wait, immediate) {
     var timeout;
     return function () {
-        var context = this, args = arguments;
+        var context = this,
+            args = arguments;
         var later = function () {
             timeout = null;
             if (!immediate) func.apply(context, args);
@@ -281,7 +282,7 @@ function addImageSelectLabels(imageUL) {
                 url = link.attr('href'),
                 imgName;
 
-            imgTitle = link.find('img').attr('alt') || AOSsettings.loc['untitled'];
+            imgTitle = link.find('img').attr('alt') || AOSsettings.loc.untitled;
             imgName = url.split('&')[0].split(',')[1];
 
             link.append('<span class="imageSelectLabel">' + imgTitle + '<small>' + imgName + '</small></span>');
@@ -361,8 +362,7 @@ function setupAdminDataTableFilter() {
 
         if ($('body.AdminThemeUikit').length === 0) {
             var dtFilter = $('<div class="Inputfield InputfieldMarkup"><div class="dtFilter filterbox InputfieldContent"><input type="text"' + autofocus + ' placeholder="Filter items..." class="ui-input"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
-        }
-        else {
+        } else {
             var dtFilter = $('<div class="uk-inline filterbox-wrapper uk-grid-margin Inputfield InputfieldMarkup">' +
                 '<div class="dtFilter filterbox InputfieldContent ">' +
                 '<input type="text" placeholder="Filter..."' + autofocus + ' class="uk-input uk-form-width-medium">' +
@@ -403,7 +403,7 @@ function setupAdminDataTableFilter() {
                     table.parents('.Inputfields').first().prepend(dtFilter.clone());
 
                 } else if (table.parents('.InputfieldPageTable').length) {
-                    if (table.parents('.InputfieldPageTable').first().find('.dtFilter').length) return true;   // filterbox may be already present on reload event
+                    if (table.parents('.InputfieldPageTable').first().find('.dtFilter').length) return true; // filterbox may be already present on reload event
                     table.parents('.InputfieldPageTable').first().children('.InputfieldContent').prepend(dtFilter.clone());
 
                 } else {
@@ -455,7 +455,7 @@ function setupAdminDataTableFilter() {
 
             if (e.keyCode === 27) { // ESC
                 if (!target.value) {
-                    target.blur();  // if input is empty, remove focus
+                    target.blur(); // if input is empty, remove focus
                 } else {
                     setTimeout(function () {
                         cleardtFilter($(target));
@@ -484,7 +484,12 @@ function setupAdminDataTableFilter() {
             var input = $(this),
                 pager = input.parents('form').find('.MarkupPagerNav'),
                 keyCode = e.keyCode || e.charCode || e.which,
-                arrow = { left: 37, up: 38, right: 39, down: 40 };
+                arrow = {
+                    left: 37,
+                    up: 38,
+                    right: 39,
+                    down: 40
+                };
 
             if (e.metaKey || e.ctrlKey) {
                 switch (keyCode) {
@@ -545,7 +550,7 @@ function setupAdminDataTableFilter() {
                 return true;
             }
 
-            if (e.keyCode === 13) {  // Enter
+            if (e.keyCode === 13) { // Enter
                 var visibleRowLinks = $('tbody tr:not(.hidden) a');
                 if (visibleRowLinks.length) {
                     visibleRowLinks.first().get(0).click();
@@ -705,7 +710,7 @@ function setupTranslatorFilter() {
 
         if (e.keyCode === 27) { // ESC
             if (!target.value) {
-                target.blur();  // if input is empty, remove focus
+                target.blur(); // if input is empty, remove focus
             } else {
                 setTimeout(function () {
                     clearTransFilter($(target));
@@ -773,17 +778,6 @@ function setupTranslatorFilter() {
 }
 
 
-function getAsmSelect2Config() {
-    return {
-        sorter: function (data) {
-            return data.sort(function (a, b) {
-                return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
-            });
-        }
-    }
-}
-
-
 function restoreAsmSelectBoxPlaceholder($asm, config) {
     if ($asm.parent().find('[data-asm-placeholder]').length) {
         config.placeholder = $asm.parent().find('[data-asm-placeholder]').attr('data-asm-placeholder');
@@ -808,7 +802,7 @@ function initAsmLimit(id) {
     setTimeout(function () {
         $select.on('change asmLimit', function () {
             if ($(this).find(':selected').length >= limit) {
-                $asmSelect.attr('title', AOSsettings.loc['asm_max_limit'] + ' ' + limit);
+                $asmSelect.attr('title', AOSsettings.loc.asm_max_limit + ' ' + limit);
                 $asmSelect.attr('disabled', 1);
             } else {
                 $asmSelect.removeAttr('disabled');
@@ -855,7 +849,7 @@ function initAsmSelectBox(inputfield_id) {
     }
 
     // add data-asm-placeholder for existing placeholder
-    var asmSelect2Config = getAsmSelect2Config(),
+    var asmSelect2Config = {},
         $placeholderOption = $asmSelect.find('option[selected]:not([value])');
 
     if ($placeholderOption.length) {
@@ -922,15 +916,17 @@ $(document).ready(function () {
     // add "title" to h1
     if ($('h1#title').length) {
 
+        var pTitle = '';
+
         if ($('h1#title > span').length) {
-            pageTitle = $('h1#title > span')[0].innerText;
+            pTitle = $('h1#title > span')[0].innerText;
         } else {
-            pageTitle = $('h1#title').text();
+            pTitle = $('h1#title').text();
             $('h1#title').wrapInner('<span>');
         }
 
-        if (pageTitle && pageTitle.length > 64) {
-            $('h1#title').attr('title', pageTitle);
+        if (pTitle.length > 64) {
+            $('h1#title').attr('title', pTitle);
         }
     }
 
@@ -1160,7 +1156,7 @@ $(document).ready(function () {
 
                 var keyCode = e.keyCode || e.charCode;
 
-                if (keyCode === 27) {  // ESC
+                if (keyCode === 27) { // ESC
                     e.preventDefault();
                     panelCloseBtn.get(0).click();
                     // put back focus to main document for other hotkeys
@@ -1183,7 +1179,7 @@ $(document).ready(function () {
 
                     var keyCode = e.keyCode || e.charCode;
 
-                    if (e.altKey && keyCode === 83) {  // S
+                    if (e.altKey && keyCode === 83) { // S
                         e.preventDefault();
                         filterbox.find('input').focus();
                         return false;
@@ -1201,7 +1197,7 @@ $(document).ready(function () {
             $(document).on('keydown', function (e) {
 
                 var keyCode = e.keyCode || e.charCode,
-                    pageTreePanelSelector = 'a.pw-panel[data-tab-icon="sitemap"], .uk-breadcrumb a.pw-panel',  // no better selector than data-tab-icon
+                    pageTreePanelSelector = 'a.pw-panel[data-tab-icon="sitemap"], .uk-breadcrumb a.pw-panel', // no better selector than data-tab-icon
                     pageTreePanelBtn = $(pageTreePanelSelector).first();
 
                 // if panel is focused, the trigger button is outside the iframe
@@ -1210,7 +1206,7 @@ $(document).ready(function () {
                 }
 
                 if (pageTreePanelBtn.length) {
-                    if (e.altKey && keyCode === 79) {   // alt+o
+                    if (e.altKey && keyCode === 79) { // alt+o
                         aos_togglePageTreePanel();
                     }
                 }
@@ -1250,7 +1246,7 @@ $(document).ready(function () {
 
         if (HotkeysSettings.indexOf('breadcrumbTweaks') !== -1 && BreadcrumbsSettings) {
 
-            $('.uk-breadcrumb').attr('id', 'breadcrumbs');  // adminthemeuikit has no id
+            $('.uk-breadcrumb').attr('id', 'breadcrumbs'); // adminthemeuikit has no id
 
             // add "data-*" markups
             // skip first item in Default admin theme (.pw-panel)
@@ -1259,14 +1255,14 @@ $(document).ready(function () {
 
                 // Default admin theme has an extra element in the beginning of the breadcrumb
                 if (!BreadcrumbsSettings[i]) {
-                    return true;    // = continue
+                    return true; // = continue
                 }
 
-                if (BreadcrumbsSettings[i]['url']) {
-                    $(this).attr('data-url', BreadcrumbsSettings[i]['url']);
+                if (BreadcrumbsSettings[i].url) {
+                    $(this).attr('data-url', BreadcrumbsSettings[i].url);
                 }
-                if (BreadcrumbsSettings[i]['editUrl']) {
-                    $(this).attr('data-editurl', BreadcrumbsSettings[i]['editUrl']);
+                if (BreadcrumbsSettings[i].editUrl) {
+                    $(this).attr('data-editurl', BreadcrumbsSettings[i].editUrl);
                 }
             });
 
@@ -1295,7 +1291,7 @@ $(document).ready(function () {
             // if CKEditor is maximized (via plugin), return to normal state
             $('.cke_button__maximize.cke_button_on').trigger('click');
 
-            if (window.frameElement && !$('body').hasClass('modal')) {  // in iframe but not in a modal (eg. with FEEL)
+            if (window.frameElement && !$('body').hasClass('modal')) { // in iframe but not in a modal (eg. with FEEL)
 
                 aos_saveButton = $('.ui-dialog-buttonset button[role="button"]', window.parent.document).eq(0);
 
@@ -1379,7 +1375,7 @@ $(document).ready(function () {
                             aos_triggerSave();
                         }
                     });
-                    evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* ctrl+s */] = 'saveCKECommand';
+                    evt.editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* ctrl+s */ ] = 'saveCKECommand';
                 });
             }
         }
@@ -1396,7 +1392,7 @@ $(document).ready(function () {
                                 focusSearchBox();
                             }
                         });
-                        evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* alt+d */] = 'focusSearchBox';
+                        evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 68 /* alt+d */ ] = 'focusSearchBox';
                     }
                 });
             }
@@ -1413,7 +1409,7 @@ $(document).ready(function () {
                                 aos_togglePageTreePanel();
                             }
                         });
-                        evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 79 /* alt+o */] = 'pageTreeTrigger';
+                        evt.editor.keystrokeHandler.keystrokes[CKEDITOR.ALT + 79 /* alt+o */ ] = 'pageTreeTrigger';
                     }
                 });
             }
@@ -1484,12 +1480,12 @@ $(document).ready(function () {
 
                 var keyCode = e.keyCode || e.charCode;
 
-                if (keyCode === 27) {  // ESC
+                if (keyCode === 27) { // ESC
                     focusSearchBox(e, true);
                     return false;
                 }
 
-                if (e.altKey && keyCode === 68) {  // alt+d
+                if (e.altKey && keyCode === 68) { // alt+d
                     focusSearchBox(e);
                 }
             });
@@ -1502,7 +1498,7 @@ $(document).ready(function () {
 
         if (AsmTweaksSettings.indexOf('asmSearchBox') !== -1) {
 
-            var select2Config = getAsmSelect2Config(),
+            var select2Config = {},
                 keepAsmSearchTerm = AsmTweaksSettings.indexOf('asmSearchBoxKeepTerm') !== -1;
 
             $(document).on('change', '.asmSelect ~ select', function () {
@@ -1693,14 +1689,14 @@ $(document).ready(function () {
 
                     var icon;
 
-                    if (PrevNextLinks['prev']) {
+                    if (PrevNextLinks.prev) {
                         icon = 'fa fa-angle-left';
-                        $targetElement.append('<a href="' + PrevNextLinks['prev']['url'] + '" title="' + PrevNextLinks['prev']['title'] + '" class="aos-edit-prev"><i class="' + icon + '"></i></a>');
+                        $targetElement.append('<a href="' + PrevNextLinks.prev.url + '" title="' + PrevNextLinks.prev.title + '" class="aos-edit-prev"><i class="' + icon + '"></i></a>');
                     }
 
-                    if (PrevNextLinks['next']) {
+                    if (PrevNextLinks.next) {
                         icon = 'fa fa-angle-right';
-                        $targetElement.append('<a href="' + PrevNextLinks['next']['url'] + '" title="' + PrevNextLinks['next']['title'] + '" class="aos-edit-next"><i class="' + icon + '"></i></a>');
+                        $targetElement.append('<a href="' + PrevNextLinks.next.url + '" title="' + PrevNextLinks.next.title + '" class="aos-edit-next"><i class="' + icon + '"></i></a>');
                     }
                 }
             }
@@ -2052,7 +2048,7 @@ $(document).ready(function () {
             // });
             $(document).on("hover", ".PageListActions a:not([title]), .PageListerActions a:not([title])", function () {
                 $(this).attr('title', $(this).text());
-            })
+            });
         }
 
         // pListMiddleClick
@@ -2224,7 +2220,7 @@ $(document).ready(function () {
                         if (ckeInstanceId) {
                             switchLangCKE(ckeInstanceId);
                         }
-                    })
+                    });
                 }
 
                 $(document).on('keydown', '.LanguageSupport input, .LanguageSupport textarea', function (e) {
@@ -2232,7 +2228,12 @@ $(document).ready(function () {
                     e = e || window.event;
 
                     var keyCode = e.keyCode || e.which,
-                        arrow = { left: 37, up: 38, right: 39, down: 40 },
+                        arrow = {
+                            left: 37,
+                            up: 38,
+                            right: 39,
+                            down: 40
+                        },
                         langTabs = $(this).closest('.langTabs'),
                         inputs = langTabs.find('input, textarea'),
                         index;
@@ -2258,7 +2259,6 @@ $(document).ready(function () {
                                 index = langTabs.find('ul .ui-tabs-active').index() - 1;
                                 index = getIndex(index, 'down');
                                 return activateLangTab(index);
-                                break;
 
                             case arrow.right:
                                 e.preventDefault();
@@ -2271,7 +2271,6 @@ $(document).ready(function () {
                                 index = langTabs.find('ul .ui-tabs-active').index() + 1;
                                 index = getIndex(index, 'up');
                                 return activateLangTab(index);
-                                break;
 
                             case arrow.up:
                             case arrow.down:
@@ -2304,24 +2303,24 @@ $(document).ready(function () {
 
                 var pageTitleSelector,
                     titleCases = {
-                    'original': function (string, $btn) {
-                        return $btn.attr('data-original');
-                    },
-                    'Lorem ipsum': function (string) {
-                        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
-                    },
-                    'Lorem Ipsum': function (string) {
-                        return string.replace(/\w\S*/g, function (txt) {
-                            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                        });
-                    },
-                    'LOREM IPSUM': function (string) {
-                        return string.toLocaleUpperCase();
-                    },
-                    'lorem ipsum': function (string) {
-                        return string.toLocaleLowerCase();
-                    }
-                };
+                        'original': function (string, $btn) {
+                            return $btn.attr('data-original');
+                        },
+                        'Lorem ipsum': function (string) {
+                            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+                        },
+                        'Lorem Ipsum': function (string) {
+                            return string.replace(/\w\S*/g, function (txt) {
+                                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                            });
+                        },
+                        'LOREM IPSUM': function (string) {
+                            return string.toLocaleUpperCase();
+                        },
+                        'lorem ipsum': function (string) {
+                            return string.toLocaleLowerCase();
+                        }
+                    };
 
 
 
@@ -2433,8 +2432,8 @@ $(document).ready(function () {
             // add "Apply to all" button to set all selects to selected option (add fields to templates, "Actions" tab of Edit field page)
             var addOrRemoveFieldSelects = $('form[action*="./send-templates-save?id="] select');
 
-            if (addOrRemoveFieldSelects.length > 1) {   // only add if there are more than 1 dropdowns
-                var btn = $('<a href="#" class="addOrRemoveApplyButton" title="' + AOSsettings.loc['apply_to_all'] + '"><i class="fa fa-server" aria-hidden="true"></i></a>');
+            if (addOrRemoveFieldSelects.length > 1) { // only add if there are more than 1 dropdowns
+                var btn = $('<a href="#" class="addOrRemoveApplyButton" title="' + AOSsettings.loc.apply_to_all + '"><i class="fa fa-server" aria-hidden="true"></i></a>');
                 addOrRemoveFieldSelects.first().after(btn);
 
                 btn.on('click', function () {
@@ -2452,7 +2451,7 @@ $(document).ready(function () {
                     $(this).after(btn);
                 });
 
-            } else if (addOrRemoveFieldSelects.length === 1) {  // show all items if there's only one select
+            } else if (addOrRemoveFieldSelects.length === 1) { // show all items if there's only one select
                 var select = addOrRemoveFieldSelects.first();
                 select.attr('size', select.find('option, optgroup').length);
             }
@@ -2466,8 +2465,8 @@ $(document).ready(function () {
                     checkAllBtn = $('<a href="#" class="checkAllFieldToRemoveBtn">'),
                     checkboxSelector = (checkboxSelector === '') ? 'input[type="checkbox"]' : checkboxSelector,
                     checkboxes = form.find(checkboxSelector),
-                    textCheckAll = AOSsettings.loc['check_all'],
-                    textClearAll = AOSsettings.loc['clear_all'];
+                    textCheckAll = AOSsettings.loc.check_all,
+                    textClearAll = AOSsettings.loc.clear_all;
 
                 if (!checkboxes.length || checkboxes.length <= 1) return false;
 
@@ -2530,8 +2529,7 @@ $(document).ready(function () {
             var homeIcon = $('body').hasClass('AdminThemeDefault') ? 'fa-eye' : 'fa-home';
             try {
                 $('#topnav i.' + homeIcon).parent('a').attr('target', '_blank');
-            } finally {
-            }
+            } finally {}
         }
 
         // AdminDataTable filter box
@@ -2598,7 +2596,7 @@ $(document).ready(function () {
                 prev_value;
 
             $('a.InputfieldIconShowAll').click(function () {
-                $filterIcons = false;   // InputfieldIcons.js currently re-inits on each open
+                $filterIcons = false; // InputfieldIcons.js currently re-inits on each open
                 $('#icons-filter').toggleClass('hidden').val('').focus();
             });
 
@@ -2739,7 +2737,7 @@ $(document).ready(function () {
             link.attr('data-text-original', currentText);
 
             if (link.hasClass('PageListActionDelete') || link.hasClass('PageDelete')) {
-                link.attr('data-text-confirm', AOSsettings.loc['permanent_delete_confirm']);
+                link.attr('data-text-confirm', AOSsettings.loc.permanent_delete_confirm);
             }
         }
 
@@ -2769,7 +2767,7 @@ $(document).ready(function () {
 
             linkCancel
                 .addClass('cancel')
-                .contents().last()[0].textContent = ' ' + AOSsettings.loc['cancel'];
+                .contents().last()[0].textContent = ' ' + AOSsettings.loc.cancel;
 
             // replace text only (keep icon)
             link.contents().last()[0].textContent = linkTextDefault;
@@ -2813,19 +2811,19 @@ $(document).ready(function () {
                     submitBtnCloneRefresh = submitBtnClone.clone(),
                     loc = AOSsettings.loc;
 
-                submitBtn.children('.ui-button-text').html(loc['save']);
+                submitBtn.children('.ui-button-text').html(loc.save);
 
                 submitBtnClone
                     .attr('id', submitBtn.attr('id') + '_forceClose')
                     .addClass('ui-priority-secondary')
                     .appendTo(submitBtn.parent())
-                    .children('.ui-button-text').html(loc['save_and_exit']).before('<i class="fa fa-fw fa-close"></i>');
+                    .children('.ui-button-text').html(loc.save_and_exit).before('<i class="fa fa-fw fa-close"></i>');
 
                 submitBtnCloneRefresh
                     .attr('id', submitBtn.attr('id') + '_forceCloseRefresh')
                     .addClass('ui-priority-secondary')
                     .appendTo(submitBtn.parent())
-                    .children('.ui-button-text').html(loc['save_and_reload']).before('<i class="fa fa-fw fa-refresh"></i>');
+                    .children('.ui-button-text').html(loc.save_and_reload).before('<i class="fa fa-fw fa-refresh"></i>');
 
                 submitBtnClone.on('click', function () {
 
@@ -2837,7 +2835,7 @@ $(document).ready(function () {
 
                 submitBtnCloneRefresh.on('click', function () {
                     $('body', window.parent.document).addClass('needsReload');
-                })
+                });
             }
 
             $('#modules_form td > a').on('pw-modal-closed', function (event, ui) {
@@ -2873,7 +2871,7 @@ $(document).ready(function () {
 
                 var modulesArray = [],
                     mainTbody = '#modules_form .AdminDataTable:eq(0) tbody',
-                    addNewBtn = '<button type="button" id="add_new_button" class="ui-button ui-widget ui-corner-all ui-state-default ui-priority-secondary"><span class="ui-button-text"><i class="fa fa-plus-circle"></i> ' + AOSsettings.loc['add_new'] + '</span></button>',
+                    addNewBtn = '<button type="button" id="add_new_button" class="ui-button ui-widget ui-corner-all ui-state-default ui-priority-secondary"><span class="ui-button-text"><i class="fa fa-plus-circle"></i> ' + AOSsettings.loc.add_new + '</span></button>',
                     addNewBlock = $('#tab_new_modules'),
                     addNewBlockInput = addNewBlock.find('input:eq(0)'),
                     mainBlock = $('#tab_site_modules'),
@@ -2938,10 +2936,10 @@ $(document).ready(function () {
                         //moduleName = row.children('td').first().find('a').text().trim();
                         // there is a "small" html tag inside the link but we need the pure link text
                         moduleName = row.children('td').first().find('a').first()
-                            .clone()    //clone the element
+                            .clone() //clone the element
                             .children() //select all the children
-                            .remove()   //remove all the children
-                            .end()  //again go back to selected element
+                            .remove() //remove all the children
+                            .end() //again go back to selected element
                             .text().trim();
                     }
 
@@ -3010,8 +3008,7 @@ $(document).ready(function () {
 
             if ($('body.AdminThemeUikit').length != 0) {
                 moduleFilter = $('<div class="filterbox-wrapper Inputfield"><div class="moduleFilter filterbox InputfieldContent "' + hiddenStyle + '><input type="text" autofocus placeholder="Filter modules..." class="uk-input uk-form-width-medium"><i class="fa fa-close"></i><span class="counter"></span></div></div>');
-            }
-            else {
+            } else {
                 moduleFilter = $('<div class="moduleFilter filterbox"' + hiddenStyle + '><input type="text" autofocus><i class="fa fa-close"></i></div>');
             }
 
@@ -3065,7 +3062,7 @@ $(document).ready(function () {
 
                     if (e.keyCode === 27) { // ESC
                         if (!target.value) {
-                            target.blur();  // if input is empty, remove focus
+                            target.blur(); // if input is empty, remove focus
                         } else {
                             setTimeout(function () {
                                 clearModuleFilter();
@@ -3088,7 +3085,12 @@ $(document).ready(function () {
                     var currentTab = $('#modules_form').find('.WireTabs .on'),
                         hasMatchesTabs = $('.WireTabs .hasMatches'),
                         keyCode = e.keyCode || e.charCode || e.which,
-                        arrow = { left: 37, up: 38, right: 39, down: 40 },
+                        arrow = {
+                            left: 37,
+                            up: 38,
+                            right: 39,
+                            down: 40
+                        },
                         tabID,
                         prevTab,
                         nextTab;
@@ -3114,7 +3116,6 @@ $(document).ready(function () {
                                 $('.WireTab#' + tabID).css('display', 'block');
                                 prevTab.find('a').addClass('on').trigger('click');
                                 return false;
-                                break;
 
                             case arrow.right:
 
@@ -3128,7 +3129,6 @@ $(document).ready(function () {
                                 $('.WireTab#' + tabID).css('display', 'block');
                                 nextTab.find('a').addClass('on').trigger('click');
                                 return false;
-                                break;
                         }
                     }
                 });
@@ -3146,7 +3146,7 @@ $(document).ready(function () {
 
                     $('.WireTabs a').removeClass('hasMatches');
 
-                    if (keyCode == 13) {  // Enter
+                    if (keyCode == 13) { // Enter
                         if ($('tr:not(.hidden) a').length) {
                             $('tr:not(.hidden) a').first().get(0).click();
                         }
@@ -3329,7 +3329,8 @@ $(document).ready(function () {
         $("#aos_PagePreviewBtn").hover(
             function () {
                 $(this).prev('.aos_EditTemplate').css('display', 'none');
-            }, function () {
+            },
+            function () {
                 $(this).prev('.aos_EditTemplate').removeAttr('style');
             }
         );
@@ -3343,8 +3344,8 @@ $(document).ready(function () {
         var RestrictTreeDropdownSettings = AOSsettings.RestrictTreeDropdown;
 
         if (RestrictTreeDropdownSettings === true) {
-            $('a[href$="/page/list/"]').parent('li').remove();  // Default theme
-            $('a[href$="/page/"]').children('i.quicklink-open').remove();   // Reno
+            $('a[href$="/page/list/"]').parent('li').remove(); // Default theme
+            $('a[href$="/page/"]').children('i.quicklink-open').remove(); // Reno
         }
 
     }
@@ -3358,7 +3359,7 @@ $(document).ready(function () {
             $filterInput = $("<span class='InputfieldFileFieldFilter filterbox'><input placeholder='&#128269;' type='text' /><i class='fa fa-close'></i></span>"),
             filterFieldSelector = '.InputfieldImage.Inputfield:not(.filterbox_loaded), .InputfieldFile.Inputfield:not(.filterbox_loaded)',
             getItemSelector = function (field) {
-                return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem'
+                return field.hasClass('InputfieldImage') ? '.gridImage:not(.gridImagePlaceholder)' : '.InputfieldFileItem';
             };
 
 
@@ -3382,7 +3383,7 @@ $(document).ready(function () {
                     parent.parent().find('input[type="file"]').first().trigger('change');
                     currentItem.fadeIn(speed);
                 });
-            })
+            });
         }
 
         if (FileFieldTweaksSettings.indexOf('filterbox') !== -1) {
@@ -3546,7 +3547,7 @@ $(document).ready(function () {
 
                 if (e.keyCode === 27) { // ESC
                     if (!target.value) {
-                        target.blur();  // if input is empty, remove focus
+                        target.blur(); // if input is empty, remove focus
                     } else {
                         clearFilterbox($(target).closest('.InputfieldFileFieldFilter').find('input'));
                     }
@@ -3618,8 +3619,7 @@ $(document).ready(function () {
             }, 200));
         }
     }
-}
-);
+});
 
 function setColWidths(tableSelector) {
 
@@ -3640,7 +3640,11 @@ function setColWidths(tableSelector) {
 
         if (isInsideHiddenTab) {
             originalStyle = tab.attr('style');
-            tab.css({ position: "absolute", visibility: "hidden", display: "block" })
+            tab.css({
+                position: "absolute",
+                visibility: "hidden",
+                display: "block"
+            });
         }
 
         table.find('th').each(function () {

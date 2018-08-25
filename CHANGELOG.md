@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2.0.3 (2018-08-25)
+
+- remove select2 sort (requested by Robin S)
+- linting notice fixes
+
+
+
 ### 2.0.2 (2018-08-09)
 
 - ckeLinkFiles: prevent Js error if config.CkeLinkFiles is not available
