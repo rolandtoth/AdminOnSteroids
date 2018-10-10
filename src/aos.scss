@@ -1,24 +1,32 @@
 // out: ../styles/aos.min.css, compress: true, sourceMap: false, autoprefixer: last 3 versions, groupmedia: true
 @import 'includes/variables';
 @import 'includes/mixins';
+
 // general style overrides
 html.aos {
+
     .InputfieldPageListSelect,
     .InputfieldPageListSelect .InputfieldContent {
         @include clearfix();
-    } // make mini scrollbar overlap contents
+    }
+
+    // make mini scrollbar overlap contents
     overflow: overlay; //min-width: 100vw;
+
     //overflow-x: hidden; // note: this makes asmselect weird on moving items
     // on pagelist item hover underline only the first span (added by the module)
     .pw-content .PageList .PageListItem>a.PageListPage {
         &:hover {
             text-decoration: none;
+
             >span {
                 position: relative; // make sure data-pid (pagelist IDs) are correctly positioned
                 text-decoration: underline;
             }
         }
-    } // add some space between the top bar and page content (default theme, sticky header disabled)
+    }
+
+    // add some space between the top bar and page content (default theme, sticky header disabled)
     &.AdminThemeDefault:not(.headSticky) {
         body:not(.hasWireTabs) {
             #content>.pw-container {
@@ -26,7 +34,9 @@ html.aos {
             }
         }
     }
+
     &.BrandingLogo {
+
         // Reno + Default themes
         &.AdminThemeReno {
             a#logo {
@@ -40,73 +50,94 @@ html.aos {
                 background-repeat: no-repeat;
                 background-position: left center;
                 background-size: contain;
+
                 img {
                     display: none;
                 }
             }
         }
+
         &.AdminThemeDefault {
             a#logo {
                 margin-top: 0.75em;
                 margin-bottom: 0.25em;
                 margin-right: 0.5rem;
+
                 img {
                     width: auto;
                     height: 24px;
                 }
             }
-        } // AdminThemeUikit
+        }
+
+        // AdminThemeUikit
         img.pw-logo {
             width: auto;
             height: 40px;
             max-height: 40px;
         }
-    } // fix strike-through missing on double spans
+    }
+
+    // fix strike-through missing on double spans
     .PageListStatusUnpublished a.PageListPage span {
         text-decoration: line-through;
     }
+
     .PageListPage {
         line-height: 1.5em !important;
     }
+
     &.AdminThemeReno {
+
         body,
         .ui-dialog {
             font-size: .951em; // makes equal height inputfields (instead .95)
         }
+
         #wrap {
             z-index: 1; // avoid Tracy panel overlaps
         }
+
         #search {
             z-index: 8;
         }
+
         .quicklinks {
             z-index: 100000 + 30000;
         }
+
         #sidebar {
             backface-visibility: hidden;
             min-width: 210px !important;
         }
+
         @media only screen and (min-width: 1200px) {
             #sidebar {
                 min-width: 230px !important;
             }
         }
     }
+
     #content {
         clear: both;
     }
+
     &.AdminThemeDefault {
+
         // fix for third menu nav items
         .topnav {
             border-right: 1px solid transparent;
         }
-    } // fix hover dropdown menus not having right padding
+    }
+
+    // fix hover dropdown menus not having right padding
     &.AdminThemeReno .pw-dropdown-menu,
     &.AdminThemeReno .dropdown-menu {
         li {
             margin-right: 14px;
         }
     }
+
     #headline {
         #title {
             // prevent title overlap with head buttons (on screen size < 960px)
@@ -114,18 +145,22 @@ html.aos {
             padding-right: 2rem;
         }
     }
+
     .AdminDataTable {
         tr:last-child {
             td {
                 border-bottom: none;
             }
         }
-    } //.PageListPage .pageId {
+    }
+
+    //.PageListPage .pageId {
     //.PageListRoot span.label_title:after {
     //.PageListRoot [data-pid]:after {
     .quicklinks,
     .PageListRoot,
     .ui-menu {
+
         // restrict to given parents to avoid appear elsewehere (eg Users list)
         [data-pid]:after {
             content: attr(data-pid);
@@ -141,7 +176,9 @@ html.aos {
             color: rgba(28, 40, 54, .57);
         }
     }
+
     .ui-menu {
+
         // AdminThemeDefault menu item overrides
         [data-pid]:after {
             margin-left: 1px;
@@ -151,24 +188,32 @@ html.aos {
             opacity: 0.5;
             transform: translateY(-6px);
         }
-    } // allow template edit links to appear
+    }
+
+    // allow template edit links to appear
     //.PageList:not(.PageListSortingList) {
     .PageListItem>.PageList,
     .PageList:hover {
         overflow: visible !important;
     }
+
     .InputfieldStateCollapsed,
     .InputfieldStateWasCollapsed {
         overflow: visible !important;
     }
+
     h1:not(.pwapi-headline) {
         position: relative;
     }
+
     h1:not(.pwapi-headline) span,
-    .PageListItem:not(.PageListSortItem) .PageListPage span[class^="label_"], //h1#title,
+    .PageListItem:not(.PageListSortItem) .PageListPage span[class^="label_"],
+    //h1#title,
     #breadcrumbs li.title span {
         position: relative;
+
         &:hover {
+
             ~.aos_EditTemplate,
             .aos_EditTemplate {
                 display: inline-block;
@@ -179,29 +224,37 @@ html.aos {
             }
         }
     }
+
     .aos_EditTemplate {
         min-width: 4rem; // keep visible on hover (workaround for h1 span overflow: hidden)
+
         &:hover {
             display: inline-block;
             visibility: visible;
             transform: scale(1);
             opacity: 1;
         }
-    } // allows tooltips to be fully visible
+    }
+
+    // allows tooltips to be fully visible
     .PageListItem a.PageListPage:hover {
         opacity: 1 !important;
     }
+
     .PageListPlaceholder.ui-sortable .PageListItem {
         padding: 0 !important;
     }
+
     .PageListRoot.PageListSorting {
         #PageListMoveFrom {
             // allow moving out sort item from its container (though disables nice animation)
             overflow: visible !important;
         }
+
         .PageListItem {
             display: block;
         }
+
         .PageListSortPlaceholder {
             width: 100% !important;
             display: block;
@@ -210,22 +263,27 @@ html.aos {
             border: none;
             position: relative;
             transition: all 0.25s;
+
             &.narrow {
                 max-height: 0;
             }
         }
+
         .PageListItem.PageListSortItem {
             background: transparent !important;
             position: relative;
             z-index: 100000 + 5000 !important;
+
             &.ui-sortable-helper {
                 border-bottom-color: transparent !important;
             }
         }
+
         .sortableHover {
             background-color: rgba(#2C3E50, 0.05) !important;
             position: relative;
             left: 0 !important; //&.loading {
+
             &:before {
                 content: "\f055";
                 font-family: FontAwesome, sans-serif;
@@ -240,12 +298,15 @@ html.aos {
                 backface-visibility: hidden;
                 animation: pulse 0.8s ease-in-out alternate infinite !important;
             }
+
             &.PageListItemOpen {
                 &:before {
                     content: "\f056";
                 }
             }
-        } // workaround to show icons to left with overflow: hidden
+        }
+
+        // workaround to show icons to left with overflow: hidden
         .PageList {
             .PageList {
                 padding-left: 2em;
@@ -255,7 +316,9 @@ html.aos {
                 position: relative;
             }
         }
-    } // placeholder element to make hover easier
+    }
+
+    // placeholder element to make hover easier
     #ProcessPageEdit .Inputfield label .title {
         &:before {
             content: "";
@@ -270,38 +333,49 @@ html.aos {
             min-width: 80px;
         }
     }
+
     #ui-datepicker-div {
         z-index: 100000 + 20000 !important;
     }
+
     select:-moz-focusring {
         color: transparent;
         text-shadow: 0 0 0 #000;
     }
+
     .aos_col_left,
     .aos_col_right {
         width: 67%;
         float: left;
         clear: none !important;
         margin-top: 0 !important;
+
         >.InputfieldContent {
             background: transparent;
         }
     }
+
     .aos_col_right {
         width: 33%; //float: right;
         margin-left: -1px !important;
-    } // hide aos_column_break field
+    }
+
+    // hide aos_column_break field
     #ProcessPageEditContent #wrap_Inputfield_aos_column_break {
         height: 0 !important;
         overflow: hidden !important;
-    } // inline ckeditor toolbar fix
+    }
+
+    // inline ckeditor toolbar fix
     .InputfieldCKEditorInline {
         position: relative;
     }
+
     #longClickSlider {
         max-width: 360px;
         margin: 8px 0 6px 3px;
     }
+
     .sliderTooltip {
         position: absolute;
         z-index: 1020;
@@ -313,6 +387,7 @@ html.aos {
         left: 0; //margin-left: 8px;
         white-space: nowrap;
         border: 2px solid #fff; //.sliderTooltip-arrow {
+
         //  bottom: 0;
         //  left: 50%;
         //  margin-left: -5px;
@@ -332,32 +407,40 @@ html.aos {
             text-align: center;
             font-weight: normal !important;
             text-decoration: none;
+
             span {
                 font-weight: bold !important;
                 font-size: 15px;
             }
         }
-    } // theme config links
+    }
+
+    // theme config links
     .themeConfigLink {
         margin-left: 0.4rem;
         display: inline-block;
+
         &:not(:hover) {
             color: #7EA0AB;
             opacity: 0.7;
         }
     }
+
     .AdminDataTable {
         thead tr.hidden {
             opacity: 0.5;
             border-bottom: 3em solid transparent;
         }
+
         tbody tr.hidden {
             display: none;
         }
     }
+
     li.Inputfield.hidden {
         display: none !important;
     }
+
     .hasMatches {
         &:after {
             // bullet character
@@ -368,39 +451,48 @@ html.aos {
             transform: translateY(-4px);
         }
     }
+
     &:not(.flatModules) body.AdminThemeDefault .moduleFilter {
         position: relative;
         top: -2.7em;
     }
+
     body.AdminThemeUikit {
         .uk-form-controls {
             min-height: initial !important; // fixes Tooltips large blanks
         }
+
         .filterbox-wrapper {
             margin-bottom: 1em;
             outline: none;
             border: none;
+
             .counter {
                 margin-left: 12px;
+
                 em,
                 strong {
                     display: inline-block;
                 }
+
                 em {
                     font-style: normal;
                     opacity: 0.66;
                     font-size: 12px;
                 }
+
                 strong {
                     font-size: 16px;
                     margin-right: 2px;
                 }
             }
         }
+
         .filterbox {
             padding: 0;
             background: transparent;
             margin: 0 0 24px;
+
             >input {
                 width: 100% !important;
                 max-width: 360px !important;
@@ -408,12 +500,14 @@ html.aos {
                 border-bottom: 1px solid #D9E1EA !important;
                 padding-left: 35px !important;
             }
+
             >input:focus,
             &.hasValue input {
                 border-color: #8d939e !important;
             }
         }
     }
+
     div.filterbox {
         position: relative;
         margin-top: 8px;
@@ -421,6 +515,7 @@ html.aos {
         clear: both;
         padding: 6px !important;
         background: #EAF0F2;
+
         input {
             width: auto !important;
             padding-right: 32px !important;
@@ -429,12 +524,15 @@ html.aos {
             background: rgba(#fff, 0.5) url('../images/search.svg') 0.48rem 48% no-repeat !important;
             background-size: 1.24rem 1.24rem !important;
             padding-left: 2rem !important;
+
             &:focus {
                 background-color: #fff !important;
             }
+
             &.empty {
                 border-color: $colorDelete !important;
             }
+
             +.fa-close {
                 color: inherit;
                 margin-left: -30px;
@@ -444,21 +542,25 @@ html.aos {
                 top: 50%;
                 transform: translateY(-50%);
                 position: absolute;
+
                 &:hover {
                     cursor: pointer;
                     opacity: 0.84;
                 }
             }
         }
+
         &.hasValue {
             input+.fa-close {
                 display: inline-block;
             }
+
             .counter {
                 opacity: 1;
                 visibility: visible;
             }
         }
+
         .counter {
             opacity: 0;
             visibility: hidden;
@@ -467,21 +569,26 @@ html.aos {
             transition: opacity $defaultTransition;
             position: relative;
             top: 1px;
+
             em,
             strong {
                 display: inline-block;
             }
+
             em {
                 font-style: normal;
                 opacity: 0.66;
                 font-size: 12px; //word-spacing: -1px;
             }
+
             strong {
                 font-size: 16px;
                 margin-right: 2px;
             }
         }
-    } // fixes height issue on filtered table (filterbox)
+    }
+
+    // fixes height issue on filtered table (filterbox)
     // ...but also makes impossible to resize columns (eg. ListerPro)
     //.tablesorter-resizable-container {
     //  position: static;
@@ -489,10 +596,12 @@ html.aos {
     .modules_section.hidden {
         display: none;
     }
+
     .addOrRemoveApplyButton,
     .checkAllFieldToRemoveBtn {
         display: inline-block;
         margin-left: 5px;
+
         span {
             display: none; //  display: inline-block;
             //  margin-left: 0.5em;
@@ -502,16 +611,20 @@ html.aos {
             //  //transform: scaleX(0);
             //  opacity: 0;
         }
+
         i {
             //font-size: 17px !important;
             transition: all $defaultTransition;
             backface-visibility: hidden;
             padding: 5px;
+
             &:not(:hover) {
                 opacity: 0.5;
                 color: #2A3C51;
             }
-        } //&:not(:hover) {
+        }
+
+        //&:not(:hover) {
         //  color: inherit;
         //}
         //&:hover span {
@@ -519,10 +632,12 @@ html.aos {
         //  //transform: scaleX(1);
         //}
     }
+
     .checkAllFieldToRemoveBtn {
         margin-left: 10px;
         padding: 6px 8px;
     }
+
     #abandoned_fieldset .checkAllFieldToRemoveBtn {
         margin-left: 0;
         margin-bottom: 10px;
@@ -533,6 +648,7 @@ html.aos {
     html.aos h1 {
         max-width: calc(100% - 120px);
     }
+
     html.aos body.AdminThemeUikit h1 {
         max-width: calc(100% - 400px);
     }
@@ -549,6 +665,7 @@ html.aos {
 // CKEditor html source dialog
 .cke_dialog_background_cover {
     z-index: 100000 + 3000 !important;
+
     +.cke_reset_all>table {
         z-index: 100000 + 3050 !important;
     }
@@ -574,6 +691,7 @@ html.aos {
 .PageListItem {
     // confirm button
     position: relative; // z-index fix after moving page (uikit theme)
+
     &[style] {
         z-index: inherit !important;
     }
@@ -582,10 +700,12 @@ html.aos {
 // inline confirm for PageTrash, PageListActionDelete, etc (pagelist and recent list)
 .aos-pagelist-confirm {
     white-space: nowrap;
+
     +[href*="force=1"] {
         margin-left: 6px;
         color: #fff !important;
         background-color: #BC283D !important;
+
         .PageListItem & {
             &::after {
                 // red background on hover: only in normal pagelists (not in Lister)
@@ -605,14 +725,17 @@ html.aos {
 
 .PageList .aos-pagelist-confirm.cancel {
     font-weight: 700 !important;
+
     &,
     &:hover {
         background-color: transparent !important;
         color: #BC283D !important;
     }
+
     &:hover {
         text-decoration: underline;
     }
+
     i {
         display: none !important;
     }
@@ -629,39 +752,48 @@ html.editFieldWidth {
                 display: none;
             }
         }
+
         .asmListItemStatus {
             span.ui-priority-secondary {
                 color: inherit !important;
             }
+
             em {
                 opacity: 0.57;
                 font-size: 12px;
                 margin-left: -2px;
                 letter-spacing: -0.5px;
             }
+
             &:hover {
                 text-decoration: underline;
                 cursor: pointer;
+
                 em {
                     opacity: 1;
                 }
             }
         }
     }
+
     #columnWidthSlider {
         &:hover {
             cursor: pointer;
         }
+
         &:before {
             @media only screen and (min-width: 600px) {
                 content: url('../images/scale-mobile.svg');
             }
+
             @media only screen and (min-width: 960px) {
                 content: url('../images/scale.svg');
             }
+
             @media only screen and (min-width: 1440px) {
                 content: url('../images/scale-hd.svg');
             }
+
             @media only screen and (min-width: 1800px) {
                 content: url('../images/scale-uhd.svg');
             }
@@ -674,11 +806,14 @@ html.emptyTrashTop {
         form>ul {
             display: flex;
             flex-direction: column;
+
             li {
                 order: 1;
+
                 &:nth-child(1) {
                     order: 2;
                 }
+
                 &:last-child {
                     margin-bottom: 1em;
                 }
@@ -691,18 +826,23 @@ html.asmLeftX {
     body {
         .Inputfields .asmListItem {
             padding-left: 24px;
+
             span.asmListItemStatus {
                 right: 12px;
             }
+
             .asmListItemRemove {
                 left: 12px;
                 right: auto;
             }
         }
+
         .InputfieldPageListSelectMultiple ol li .itemRemove {
             float: left;
             margin-right: 12px;
-        } //.Inputfields .asmFieldsetStart,
+        }
+
+        //.Inputfields .asmFieldsetStart,
         //.Inputfields .asmFieldsetStart ~ .asmListItem {
         //  padding-left: 48px;
         //  .asmListItemRemove {
@@ -710,11 +850,14 @@ html.asmLeftX {
         //  }
         //}
     }
+
     &.asmCollapse {
         body {
+
             .Inputfields .asmFieldsetStart,
             .Inputfields .asmFieldsetStart~.asmListItem {
                 padding-left: 48px;
+
                 .asmListItemRemove {
                     left: 34px;
                 }
@@ -734,23 +877,28 @@ html.asmLeftX {
 .aos-language-translator-links {
     @include clearfix;
     margin-left: -8px;
+
     li {
         float: left;
         line-height: 1;
+
         &:not(:last-child) {
             margin-right: 0.5em;
             padding-right: 0.5em;
             border-right: 1px solid #7EA0AB;
         }
     }
+
     a {
         font-size: 0.9em;
         display: inline-block;
         padding: 0.16em 10px;
         vertical-align: middle;
+
         &:not(:hover) {
             color: inherit;
         }
+
         span {
             opacity: 0.66;
             font-size: 0.9em;
@@ -765,8 +913,11 @@ html.asmLeftX {
         .WireTabs {
             // disable active tab having bottom border
             z-index: 2;
-        } //li:not(.translated):not(.untranslated):not(.noTooltip) { // disable in Language Translator
+        }
+
+        //li:not(.translated):not(.untranslated):not(.noTooltip) { // disable in Language Translator
         form:not([action^="./?textdomain"]) {
+
             // disable in Language Translator
             .aos_tooltips_blueprint {
                 position: absolute;
@@ -784,9 +935,12 @@ html.asmLeftX {
                 font-size: 1px;
                 letter-spacing: -1px;
                 color: transparent;
+
                 * {
                     visibility: hidden;
-                } // icon
+                }
+
+                // icon
                 &:before {
                     content: "\f05a";
                     text-indent: 0;
@@ -808,11 +962,13 @@ html.asmLeftX {
                     border-radius: 100%; //z-index: 9980;
                     transform-origin: 50% 50%;
                 }
+
                 &:hover,
                 &.tooltip-active {
                     * {
                         visibility: visible;
                     }
+
                     text-indent: 0;
                     padding: 8px 12px;
                     width: auto;
@@ -822,16 +978,20 @@ html.asmLeftX {
                     font-size: 14px;
                     letter-spacing: 0;
                     z-index: 100000+10000;
+
                     &,
                     *:not(a) {
                         // set everything white but links
                         color: #f8f8f8;
                     }
+
                     &:before {
                         color: rgba(#000, 0.66);
                         cursor: pointer;
                         z-index: -1;
-                    } // arrow
+                    }
+
+                    // arrow
                     &:after {
                         $size: 6px;
                         content: "";
@@ -842,11 +1002,13 @@ html.asmLeftX {
                         border-top-color: #1C2836;
                     }
                 }
+
                 &.tooltip-active {
                     //  // enable selection
                     pointer-events: all;
                 }
             }
+
             .aos_tooltips_blueprint_overlay {
                 top: 0 !important;
                 left: 0 !important;
@@ -856,16 +1018,19 @@ html.asmLeftX {
                 margin: 0 !important;
                 font-size: 90%;
                 background-color: rgba(#1C2836, 0.88) !important;
+
                 &:hover,
                 &.tooltip-active {
                     padding: 12px 24px !important;
                 }
+
                 &:before {
                     left: -10px !important;
                     bottom: auto !important;
                     top: -4px !important;
                     margin: 0 !important;
                 }
+
                 &:after {
                     display: none;
                 }
@@ -876,11 +1041,15 @@ html.asmLeftX {
 
 html.tooltipDesc,
 html.tooltipNotes {
+
     li[id^="wrap_Inputfield"],
     li.Inputfield {
         position: relative;
-    } // fix repeater/matrix repeater icon cutoffs
+    }
+
+    // fix repeater/matrix repeater icon cutoffs
     li.InputfieldStateWasCollapsed {
+
         &,
         .InputfieldContent {
             overflow: visible !important;
@@ -893,17 +1062,21 @@ html {
         p.description {
             @extend .aos_tooltips_blueprint;
         }
+
         &.tooltipOverlay {
             p.description {
                 @extend .aos_tooltips_blueprint_overlay;
             }
         }
     }
+
     &.tooltipNotes {
+
         //li:not(.translated):not(.untranslated):not(.noTooltip) {
         form:not([action^="./?textdomain"]) {
             p.notes {
                 @extend .aos_tooltips_blueprint;
+
                 &:before {
                     content: "\f27a" !important;
                     font-size: 13px !important;
@@ -911,22 +1084,28 @@ html {
                 }
             }
         }
+
         &.tooltipOverlay {
             p.notes {
                 @extend .aos_tooltips_blueprint_overlay;
                 transform: translateY(0) !important;
+
                 &:before {
                     transform: translateY(17px) !important;
                 }
             }
+
             &.tooltipDesc {
                 p.notes:before {
                     transform: translateY(39px) !important;
                 }
             }
         }
-    } // move down notes only if there's description
+    }
+
+    // move down notes only if there's description
     &.tooltipNotes.tooltipDesc {
+
         //li:not(.translated):not(.untranslated):not(.noTooltip) {
         form:not([action^="./?textdomain"]) {
             p.notes {
@@ -944,14 +1123,17 @@ html {
     transition-duration: 0.1s !important;
     max-width: 60px;
     line-height: 1 !important;
+
     i {
         padding: 3px 5px !important;
         display: inline-block;
     }
+
     &,
     &:hover {
         padding: 0 !important;
     }
+
     &.empty,
     &.initial {
         pointer-events: none;
@@ -959,33 +1141,40 @@ html {
         filter: saturate(0);
         border-color: inherit;
     }
+
     &.clear {
         background-color: transparent !important;
         margin-left: -3px;
         margin-right: 5px;
         float: left;
         color: #8d939e !important;
+
         &:hover {
             color: $colorDelete !important;
             background-color: transparent !important;
+
             i {
                 transform: scale(1.2);
                 transform-origin: center;
             }
+
             ~.PageListRoot .PageListSelectName {
                 text-decoration: line-through;
             }
         }
+
         ~.PageListRoot {
             float: left;
             width: calc(100% - 54px);
             margin-bottom: 1rem;
         }
+
         ~.notes {
             width: 100%;
             clear: both;
         }
     }
+
     &.restore {
         position: relative;
         top: -3px;
@@ -994,12 +1183,16 @@ html {
 }
 
 html.asmCounter {
+
     .InputfieldPage,
     .Inputfield.InputfieldAsmSelect {
         position: relative;
+
         >.InputfieldStateCollapsed .asmList {
             counter-reset: pageRefCounter;
-        } // if not collapsed, display the counter on the bottom
+        }
+
+        // if not collapsed, display the counter on the bottom
         // (cannot be positioned on the top)
         &:not(.InputfieldStateCollapsed) {
             .asmListItem:last-child {
@@ -1010,10 +1203,12 @@ html.asmCounter {
                     right: 0;
                 }
             }
+
             p.notes {
                 margin-top: 1rem;
             }
         }
+
         &.InputfieldStateCollapsed {
             >.InputfieldContent {
                 // override default display: none to be able to move counter out of the div
@@ -1021,33 +1216,40 @@ html.asmCounter {
                 height: 0;
                 padding: 0;
                 border: none; // hide description and notes too when collapsed
+
                 >p,
                 >ul {
                     display: none;
                 }
             }
+
             .asmContainer * {
                 height: 0 !important;
                 padding: 0 !important;
                 margin: 0 !important;
                 border: none !important;
             }
+
             .asmListItem {
                 * {
                     display: none;
                 }
+
                 &:last-child::before {
                     top: -91px;
                     right: 32px;
                 }
             }
         }
+
         .asmListItem {
             &:not(.ui-sortable-helper):not(.asmListItemDeleted) {
                 counter-increment: pageRefCounter;
             }
+
             &:not(.ui-state-highlight):last-child {
                 margin-bottom: 2rem !important; // place for the bottom counter
+
                 &::before {
                     content: counter(pageRefCounter) ' selected';
                     position: absolute;
@@ -1057,18 +1259,22 @@ html.asmCounter {
             }
         }
     }
+
     /* Uikit theme */
     &.AdminThemeUikit {
+
         .InputfieldPage,
         .Inputfield.InputfieldAsmSelect {
             .asmListItem:last-child::before {
                 top: 100%;
                 right: 0;
             }
+
             &.InputfieldStateCollapsed .asmListItem:last-child::before {
                 top: -101px !important;
                 right: 48px !important;
             }
+
             &:not(.InputfieldStateCollapsed) {
                 .asmListItem:last-child::before {
                     margin-top: 5px;
@@ -1083,11 +1289,13 @@ html.asmCounter {
 //  color: inherit !important;
 //}
 html.asmCollapse {
+
     .Inputfields .asmFieldsetStart~.asmListItem,
     .Inputfields .asmFieldsetEnd,
     .Inputfields .asmFieldsetStart {
         padding-left: 24px;
     }
+
     .asmFieldsetStart {
         &:before {
             content: '\f056';
@@ -1101,22 +1309,28 @@ html.asmCollapse {
             position: absolute;
             color: rgba(255, 255, 255, 0.66);
         }
+
         &.collapsed {
+
             a,
             i,
             span,
             &:before {
                 color: rgba(255, 255, 255, 0.66);
             }
+
             &:hover {
                 cursor: pointer;
+
                 &:before {
                     color: inherit;
                 }
             }
+
             &:before {
                 content: '\f055';
             }
+
             &:after {
                 content: '';
                 position: absolute;
@@ -1135,75 +1349,95 @@ html.asmCollapse {
     html.centerLogin:not(.modal) {
         body.id-23 {
             text-align: center;
+
             #headline {
                 box-shadow: none;
                 padding-right: 20px !important;
                 padding-left: 20px !important;
             }
+
             #title {
                 padding: 0 !important;
                 float: none !important;
                 line-height: 1.25;
                 margin: -0.25em auto 0 !important;
             }
+
             #main {
                 text-align: center;
             }
+
             form#ProcessLoginForm {
                 >ul {
                     width: 300px;
                     display: inline-block;
+
                     li {
                         float: none;
                         width: 100%;
+
                         label {
                             padding-left: 1em;
                             padding-right: 1em;
                         }
                     }
                 }
+
                 +* {
                     margin-top: 32px;
                 }
             }
+
             #notices {
                 border-bottom: none;
             }
+
             .NoticeMessage {
                 padding-right: 20px !important;
                 padding-left: 20px !important;
             }
+
             ul.Inputfields {
+
                 #login_name,
                 #login_pass {
                     text-align: center;
                 }
             }
+
             .notice-remove {
                 float: none;
                 position: relative !important;
                 left: -10px !important;
                 margin-left: -40px;
             }
+
             #footer {
                 border: none;
-            } // forgot password module
+            }
+
+            // forgot password module
             .pw-content.content {
                 max-width: 680px;
                 margin: 0 auto;
             }
+
             #wrap_username {
+
                 label,
                 .InputfieldContent {
                     border: none;
                 }
+
                 .toggle-icon {
                     display: none !important;
                 }
             }
+
             #wrap_submit_forgot {
                 width: 100%;
             }
+
             input#username {
                 text-align: center;
                 max-width: 270px;
@@ -1225,8 +1459,10 @@ html.hideAddNewDropdown body.id-3 {
     position: relative;
     z-index: 100000 + 100;
     margin-right: 2px; //text-align: right;
+
     >a {
         position: relative;
+
         &:after {
             content: "" !important;
             border: 4px solid transparent !important;
@@ -1237,18 +1473,22 @@ html.hideAddNewDropdown body.id-3 {
             right: 4px !important;
             left: auto !important;
             margin-top: -2px;
+
             body.AdminThemeDefault & {
                 position: relative;
                 top: 2px;
                 margin-top: 0;
                 right: -4px !important;
             }
+
             body.AdminThemeUikit & {
                 margin-top: 0;
                 right: 1px !important;
             }
         }
+
         &:before {
+
             // hover fix z-index
             body.AdminThemeDefault & {
                 content: "";
@@ -1262,9 +1502,11 @@ html.hideAddNewDropdown body.id-3 {
             }
         }
     }
+
     &:hover {
         cursor: pointer;
     }
+
     ul {
         filter: drop-shadow(0 0 1px rgba(0, 0, 0, .36));
         padding: 0;
@@ -1279,12 +1521,15 @@ html.hideAddNewDropdown body.id-3 {
         transition: 0.075s $defaultTransition;
         transform: scaleY(0);
         transform-origin: center top;
+
         li {
             display: block;
         }
+
         body.AdminThemeDefault & {
             top: 47px;
         }
+
         &:before {
             content: "";
             border: 7px solid transparent;
@@ -1294,6 +1539,7 @@ html.hideAddNewDropdown body.id-3 {
             top: -14px;
             right: 20px;
         }
+
         li {
             a {
                 opacity: 0.84;
@@ -1303,10 +1549,12 @@ html.hideAddNewDropdown body.id-3 {
                 justify-content: space-between;
                 font-weight: normal;
                 text-decoration: none !important; //width: 100%;
+
                 .lang-title {
                     display: inline-block;
                     font-weight: normal;
                 }
+
                 .lang-name {
                     display: inline-block;
                     font-size: 84%;
@@ -1314,19 +1562,24 @@ html.hideAddNewDropdown body.id-3 {
                     opacity: 0.6;
                     font-weight: normal !important;
                 }
+
                 &:hover {
                     background: rgba(#1C2836, 0.05);
+
                     span.title {
                         opacity: 1;
                     }
                 }
+
                 &:active {
                     background: rgba(#1C2836, 0.1);
                 }
             }
+
             &.active {
                 a {
                     opacity: 1;
+
                     .lang-title {
                         font-weight: bold;
                     }
@@ -1334,6 +1587,7 @@ html.hideAddNewDropdown body.id-3 {
             }
         }
     }
+
     &:hover {
         ul {
             opacity: 1;
@@ -1355,6 +1609,7 @@ html.hideAddNewDropdown body.id-3 {
 .aos_hasTooltip .title,
 .InputfieldCheckbox label {
     display: inline-block;
+
     &:hover {
         .aos_EditField {
             display: inline-block;
@@ -1364,9 +1619,11 @@ html.hideAddNewDropdown body.id-3 {
             transition: 0.07s all 1s;
         }
     }
+
     .aos_EditField {
         font-style: normal;
         @include aos_tooltip($margin: 0 0 8px -4px);
+
         &:hover {
             cursor: pointer;
         }
@@ -1385,6 +1642,7 @@ html.hideAddNewDropdown body.id-3 {
 }
 
 html.AdminThemeReno {
+
     .PageListActionEdit a[href*="setup/template/edit"],
     .PageListerActions .PageEdit[href*="setup/template/edit"] {
         &:not(:hover) {
@@ -1392,6 +1650,7 @@ html.AdminThemeReno {
             opacity: 0.5;
             font-size: 13px;
         }
+
         &:hover {
             font-size: 13px !important;
         }
@@ -1401,6 +1660,7 @@ html.AdminThemeReno {
 // Hotkeys
 body.aos_saving {
     pointer-events: none;
+
     &::after {
         content: "\f0c7";
         font-family: FontAwesome;
@@ -1433,17 +1693,20 @@ html.noFilenameTruncate {
     p.InputfieldFileInfo.InputfieldItemHeader {
         padding: 6px 34px 6px 25px;
         position: relative;
+
         i[class*="fa-file-"],
         .InputfieldFileInfo i {
             left: -21px !important;
             top: 3px;
             float: left;
         }
+
         a.InputfieldFileName {
             line-height: 1.33;
             margin-left: -22px;
             word-wrap: break-word;
         }
+
         label.InputfieldFileDelete {
             position: absolute;
             top: 8px;
@@ -1460,11 +1723,13 @@ html.filterbox {
             padding-bottom: 13px;
         }
     }
+
     .ImageOuter.gridImage,
     .InputfieldFileItem {
         transition: all $defaultTransition;
         transform-origin: center center;
         height: auto;
+
         &.hidden {
             transform: scale(0);
             width: 0;
@@ -1475,41 +1740,52 @@ html.filterbox {
             overflow: hidden;
         }
     }
+
     body.AdminThemeDefault .InputfieldFileFieldFilter {
         position: absolute;
         margin-top: 0;
     }
+
     .InputfieldFileFieldFilter {
         position: absolute;
         margin-left: 24px;
         display: inline-block;
         margin-top: -4px;
+
         input {
             transition: all $defaultTransition;
         }
+
         input:focus::-webkit-input-placeholder {
             color: transparent;
         }
+
         input:focus:-moz-placeholder {
             color: transparent;
         }
+
         /* FF 4-18 */
         input:focus::-moz-placeholder {
             color: transparent;
         }
+
         /* FF 19+ */
         input:focus:-ms-input-placeholder {
             color: transparent;
         }
+
         /* IE 10+ */
         &.hasValue input,
         input:focus {
             background: #fff !important;
             outline: none;
-        } // disable default clear button on iE
+        }
+
+        // disable default clear button on iE
         input::-ms-clear {
             display: none;
         }
+
         i {
             display: none;
             position: absolute;
@@ -1518,16 +1794,19 @@ html.filterbox {
             transform: translateY(-50%);
             padding: 12px;
             opacity: 0.5;
+
             &:hover {
                 opacity: 1;
             }
         }
+
         &.hasValue {
             i {
                 display: block;
             }
         }
     }
+
     .InputfieldStateCollapsed,
     .InputfieldImageMax1 {
         .InputfieldFileFieldFilter {
@@ -1540,6 +1819,7 @@ html.aos body.AdminThemeUikit .InputfieldFileFieldFilter {
     margin-left: 32px;
     margin-top: -6px;
     margin-bottom: 0;
+
     input {
         padding-left: 10px !important;
         padding-right: 4px !important;
@@ -1547,6 +1827,7 @@ html.aos body.AdminThemeUikit .InputfieldFileFieldFilter {
         background: #FAFBFC !important;
         height: 36px;
         line-height: 32px;
+
         &:focus {
             background: white !important;
         }
@@ -1558,11 +1839,15 @@ html.flatModules body.id-21 {
     #add_new_button.active:not(:hover) {
         opacity: 0.4;
     }
+
     .WireTabs.nav {
         display: none;
-    } // hide last row's border-bottom
+    }
+
+    // hide last row's border-bottom
     #tab_site_modules .Inputfields .InputfieldContent {
         padding-bottom: 10px !important;
+
         &:after {
             content: "";
             height: 1px;
@@ -1573,15 +1858,20 @@ html.flatModules body.id-21 {
             display: block;
             background: #fff;
         }
-    } // always hide modules category and table headers
+    }
+
+    // always hide modules category and table headers
     #modules_form {
         h2 {
             display: none;
         }
     }
+
     .modules_section:not(:first-of-type) thead {
         display: none !important;
-    } // hide unnecessary links from sidebar Modules section
+    }
+
+    // hide unnecessary links from sidebar Modules section
     //#main-nav a.module + ul > li:not(:first-child):not(:last-child) {
     //  display: none !important;
     //}
@@ -1591,22 +1881,28 @@ html.flatModules body.id-21 {
     #modules_form #tab_site_modules {
         display: block !important;
     }
+
     #modules_form>.Inputfields>.Inputfield {
+
         &#tab_configurable_modules,
         &#tab_install_modules {
             display: none !important;
         }
+
         &:not(:first-child) thead {
             display: none !important;
         }
+
         .AdminDataTable,
         .Inputfields .InputfieldMarkup .InputfieldHeader+.InputfieldContent {
             margin-bottom: 0;
             padding-bottom: 0;
         }
+
         .InputfieldContent>p:first-child {
             display: none;
         }
+
         >.Inputfields>.Inputfield:not(.InputfieldFieldset) .InputfieldHeader:not(.uk-form-label) {
             height: 0;
             overflow: hidden;
@@ -1615,16 +1911,20 @@ html.flatModules body.id-21 {
             margin-bottom: -1px;
         }
     }
+
     #tab_new_modules {
         margin-bottom: 1em;
         display: block !important;
+
         .InputfieldMarkup {
             display: none;
         }
+
         +#tab_site_modules {
             display: none !important;
         }
     }
+
     li+#tab_new_modules {
         margin-top: 1em;
     }
@@ -1634,19 +1934,23 @@ html.moduleModal {
     .ui-dialog-buttonpane {
         border-top: 1px solid rgba(#000, 0.12);
         width: 100%;
+
         .ui-dialog-buttonset {
             float: none; //text-align: center;
             margin-left: 12px;
+
             button {
                 display: inline-block !important; //opacity: 1 !important;
                 visibility: visible !important;
                 min-width: 92px;
                 margin-right: 8px;
+
                 &:not(:first-child) {
                     span {
                         font-weight: normal;
                     }
                 }
+
                 i {
                     margin: 0 4px 0 -6px;
                     position: relative;
@@ -1662,60 +1966,76 @@ html.moduleCompact {
         .modules_filter {
             display: none;
         }
+
         .modules_section:not(:first-of-type) thead {
             display: none;
         }
+
         .modules_section+p {
             margin-top: 2em;
-        } //.AdminDataTable {
+        }
+
+        //.AdminDataTable {
         //  margin-bottom: 0 !important;
         //}
         h2 {
             display: none;
         }
+
         table.AdminDataList {
             .buttons {
                 float: right;
                 margin: 0;
+
                 button {
                     +button {
                         margin-left: 4px;
                     }
                 }
+
                 button[name="delete"] {
                     background: $colorDelete !important;
                     border-color: $colorDelete !important;
+
                     &:hover {
                         background: saturate($colorDelete, 20%) !important;
                         border-color: saturate($colorDelete, 20%) !important;
                     }
                 }
             }
+
             p.module-summary {
+
                 &,
                 +span {
                     float: left;
                     display: block;
                     max-width: calc(100% - 120px);
                 }
+
                 +span {
                     clear: left;
+
                     +.buttons {
                         // pull up
                         margin-top: -20px;
                     }
                 }
             }
+
             @media only screen and (min-width: 960px) {
                 td:first-child {
                     position: relative;
+
                     i {
                         position: absolute;
                         right: 8px;
                         top: 11px;
                     }
+
                     a {
                         display: block;
+
                         span {
                             position: static;
                             display: block;
@@ -1723,21 +2043,26 @@ html.moduleCompact {
                         }
                     }
                 }
+
                 td:last-child {
                     position: relative; //display:flex;
                     //flex-direction: column-reverse;
                 }
+
                 td:nth-child(2) {
                     br {
                         display: none;
                     }
+
                     small {
                         margin-left: 8px;
                         opacity: 0.7;
                     }
                 }
+
                 span.ConfigurableModule {
                     position: relative;
+
                     &:after {
                         transform-origin: center;
                         backface-visibility: hidden;
@@ -1752,9 +2077,11 @@ html.moduleCompact {
                         animation: spinOut 0.5s forwards;
                     }
                 }
+
                 span.not_installed>span.ConfigurableModule:after {
                     display: none;
                 }
+
                 td a:hover {
                     span.ConfigurableModule {
                         &:after {
@@ -1762,12 +2089,14 @@ html.moduleCompact {
                         }
                     }
                 }
+
                 button.ProcessModuleSettings {
                     display: none;
                 }
             }
         }
     }
+
     &.noAnim {
         form#modules_form {
             table.AdminDataList {
@@ -1797,10 +2126,12 @@ body.AdminThemeDefault {
 #aos_PagePreviewBtn {
     margin-left: 0.5em;
     position: absolute;
+
     i {
         color: rgba(0, 0, 0, 0.33);
         font-size: 0.7em !important;
     }
+
     &:hover {
         i {
             color: inherit !important;
@@ -1831,6 +2162,7 @@ body.AdminThemeDefault {
     #search {
         width: auto;
     }
+
     #ProcessPageSearchForm {
         width: auto;
     }
@@ -1842,6 +2174,7 @@ html.adminColumns {
         @include clearfix; //  position: relative;
         //  overflow: hidden;
     }
+
     .gutter {
         //background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==') no-repeat 47% 180px;
         cursor: ew-resize;
@@ -1849,6 +2182,7 @@ html.adminColumns {
         min-height: 200px;
         position: relative;
         z-index: 300; //&:hover:after {
+
         //  content: "";
         ////  left: 3px;
         //  background: #f8f8f8;
@@ -1879,16 +2213,21 @@ html.adminColumns {
 html.PageListThumbs {
     @media only screen and (max-width: 960px) {
         .PageListItem {
-            figure, i {
+
+            figure,
+            i {
                 display: none !important;
             }
         }
     }
+
     @media only screen and (min-width: 960px) {
         $thumbSize: 48px;
+
         .PageListItem {
             @include clearfix;
             width: 100%; //a {
+
             //  border-radius: 0 !important;
             //}
             >a {
@@ -1896,6 +2235,7 @@ html.PageListThumbs {
                     vertical-align: middle;
                 }
             }
+
             figure {
                 padding: 0; //background: #F0F3F7;
                 display: inline-block;
@@ -1907,16 +2247,20 @@ html.PageListThumbs {
                 position: relative;
                 margin: -5px 20px -5px 0; // required for cropping with border-radius
                 z-index: 20;
+
                 a {
                     display: block;
                     padding: 0;
                     position: relative;
                     height: $thumbSize;
                 }
+
                 img {
                     vertical-align: middle;
                     height: 100%;
-                } // create a pseudo to make items align vertically (:before on next item)
+                }
+
+                // create a pseudo to make items align vertically (:before on next item)
                 // exclude the page icon (.fa)
                 +*:not(.fa):before {
                     content: "";
@@ -1929,6 +2273,7 @@ html.PageListThumbs {
                     margin: 0;
                     padding: 0 !important;
                 }
+
                 &.square,
                 &.circle {
                     width: $thumbSize; //min-width: $thumbSize;
@@ -1937,23 +2282,28 @@ html.PageListThumbs {
                     //  display: block;
                     //}
                 }
+
                 &.circle {
+
                     &,
                     a:after {
                         border-radius: 100% !important;
                         overflow: hidden;
                     }
                 }
+
                 &.alignright {
                     float: right;
                     margin-right: 4px !important;
                     margin-left: 12px !important;
                 }
+
                 &.addlink {
                     a {
                         backface-visibility: hidden;
                         overflow: hidden;
                         position: relative;
+
                         &:after {
                             text-align: center;
                             content: "\f044";
@@ -1974,6 +2324,7 @@ html.PageListThumbs {
                             visibility: hidden;
                             transition: all $defaultTransition;
                         }
+
                         &:hover {
                             &:after {
                                 opacity: 1;
@@ -1984,14 +2335,17 @@ html.PageListThumbs {
                     }
                 }
             }
+
             img {
                 display: block;
                 margin: 0 auto;
             }
         }
+
         &.pListCompact,
         body.AdminThemeDefault {
             $thumbSize: 32px;
+
             .PageListItem {
                 figure {
                     //height: $thumbSize;
@@ -1999,16 +2353,20 @@ html.PageListThumbs {
                     min-width: $thumbSize;
                     min-height: $thumbSize;
                     margin: -2px 16px -2px 0;
+
                     a {
                         height: $thumbSize;
                     }
+
                     +*:before {
                         height: $thumbSize - 4px;
                     }
+
                     &.square,
                     &.circle {
                         width: $thumbSize;
                     }
+
                     &.addlink {
                         a {
                             &:after {
@@ -2018,12 +2376,16 @@ html.PageListThumbs {
                     }
                 }
             }
-        } // disable in PageListSelect field
+        }
+
+        // disable in PageListSelect field
         .PageListSelectHeader {
             figure {
                 display: none !important;
             }
-        } // but allow the image in the pagelist without edit link
+        }
+
+        // but allow the image in the pagelist without edit link
         .PageListSelectHeader~.PageList {
             figure a {
                 pointer-events: none !important;
@@ -2051,6 +2413,7 @@ html.PageListThumbs {
     padding: 0.33rem 0.45rem;
     width: auto;
     margin-left: 1rem;
+
     &.hidden {
         //padding: 0;
         visibility: hidden;
@@ -2059,6 +2422,7 @@ html.PageListThumbs {
 
 html.noAnim {
     scroll-behavior: auto !important;
+
     *,
     *:after,
     *:before {
@@ -2068,6 +2432,7 @@ html.noAnim {
 }
 
 html.highlightRows {
+
     .PageListItem:hover,
     .AdminDataTable.AdminDataList tr:hover td {
         background: rgba(#EAF0F2, 0.48);
@@ -2079,14 +2444,17 @@ html.pListShowActions {
         .PageListItem {
             display: inline-block !important;
             width: 100% !important;
+
             .PageListActions {
                 display: inline-block !important;
                 opacity: 1 !important;
+
                 >[class^="PageListAction"]:not(:hover) {
                     filter: saturate(0.5);
                     opacity: 0.5;
                 }
             }
+
             &:hover {
                 [class^="PageListAction"] {
                     filter: saturate(1) !important;
@@ -2099,12 +2467,14 @@ html.pListShowActions {
 
 html.pListActiveBold {
     .PageListItemOpen:not(.PageListSortItem) {
+
         //border-bottom-color: rgba(#2F4248, 0.15) !important;
         a.PageListPage {
             font-weight: bold;
             background-color: transparent !important;
         }
     }
+
     .content .PageList .PageListID1 {
         background: transparent;
     }
@@ -2116,19 +2486,23 @@ html.pListActiveBold {
         display: inline-block;
         vertical-align: top;
         margin-top: 0.33em;
+
         a {
             display: block;
         }
+
         img {
             float: none !important;
             margin: 0 0 0.42em;
         }
     }
+
     .imageSelectLabel {
         display: inline-block;
         margin-right: 1em;
         max-width: 200px;
         line-height: 1.4;
+
         small {
             display: block;
             margin-top: 0.25em;
@@ -2166,6 +2540,7 @@ span.select2-dropdown {
 
 .select2-search--dropdown {
     padding: 0 !important;
+
     input {
         padding-top: 0.36em !important;
         padding-bottom: 0.36em !important;
@@ -2200,7 +2575,9 @@ ol.asmList+select+.select2-container {
 .select2-results__option {
     &:empty {
         display: none;
-    } //&[aria-disabled="true"] {
+    }
+
+    //&[aria-disabled="true"] {
     //  display: none !important;
     //}
 }
@@ -2217,16 +2594,20 @@ ol.asmList+select+.select2-container {
     .select2-container .select2-selection--single {
         height: 32px;
     }
+
     .select2-selection__rendered {
         line-height: 30px;
     }
+
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 30px;
         right: 6px;
     }
+
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 30px;
     }
+
     .select2-container .select2-selection--single .select2-selection__rendered {
         padding-left: 10px;
     }
@@ -2240,56 +2621,72 @@ a.case-toggle {
     z-index: 5;
     top: 4px;
     position: relative;
+
     .langTabsOff & {
         right: 16px;
     }
+
     html.AdminThemeDefault & {
         top: 0;
     }
+
     html.AdminThemeDefault .langTabsOff & {
         right: -1px;
     }
+
     html.AdminThemeReno .langTabsOff & {
         right: 0;
     }
+
     html.AdminThemeUikit .langTabsOff & {
         top: 28px;
         right: 2px;
     }
+
     html.AdminThemeUikit & {
         &:before {
             line-height: 2.7;
         }
     }
+
     .batchChildTableContainer & {
         right: 19px;
     }
+
     +input {
         padding-right: 36px !important;
     }
+
     i {
         padding: 6px 12px;
+
         &::before {
             font-size: 12px;
         }
+
         +i {
             margin-left: -25px;
+
             &::before {
                 font-size: 9px;
             }
         }
     }
+
     &:not(:hover) {
         color: inherit !important;
         opacity: 0.4;
     }
+
     &:hover {
         cursor: pointer;
+
         &:before {
             width: auto;
             transform: scaleX(1);
         }
     }
+
     &:before {
         content: attr(data-case);
         position: absolute;
@@ -2308,17 +2705,22 @@ a.case-toggle {
 /*RenoTweaks Reno theme tweaks*/
 
 html.AdminThemeReno {
+
     // fix light blue ui dialog header
     .ui-dialog-titlebar {
         background: #2A3C51 !important;
     }
+
     body.id-23:not(.centerLogin) {
         #headline {
             padding-left: 20px !important;
             ;
         }
-    } // disable all animations
+    }
+
+    // disable all animations
     body:not(.pw-ready) {
+
         #branding:not(.hide),
         #masthead:not(.full),
         #sidebar:not(.hide),
@@ -2328,8 +2730,11 @@ html.AdminThemeReno {
             //transition: none;
             transition-duration: 0s;
         }
-    } // headSticky
+    }
+
+    // headSticky
     &.hoverTopSubmenus:not(.modal) {
+
         #topnav .pw-dropdown,
         #topnav .dropdown {
             ul {
@@ -2338,10 +2743,12 @@ html.AdminThemeReno {
                 transform-origin: center top;
                 padding: 0 !important;
                 box-shadow: none !important;
+
                 &:before {
                     top: -16px !important;
                 }
             }
+
             &:hover {
                 ul {
                     transform: scaleY(1);
@@ -2352,13 +2759,16 @@ html.AdminThemeReno {
             }
         }
     }
+
     &.headSticky:not(.modal) {
         @media only screen and (min-width: 960px) {
+
             // System Notifications module
             #NotificationGhosts {
                 //z-index: 100000 + 20000 !important;
                 z-index: 100000 + 240 !important;
             }
+
             .NotificationMenu {
                 //z-index: 100000 + 2000;
                 //z-index: 100000 + 240;
@@ -2374,21 +2784,26 @@ html.AdminThemeReno {
                 max-height: 75vh;
                 overflow-x: hidden !important;
                 overflow-y: auto !important;
+
                 li:first-child {
                     box-shadow: inset 0 3px 3px rgba(#000, 0.075);
                 }
             }
+
             #ProcessPageSearchAutocomplete {
                 z-index: 100000 + 20000 !important;
             }
+
             .ui-widget-overlay,
             .mfp-bg {
                 z-index: 100000 + 1002;
             }
+
             .ui-dialog,
             .mfp-wrap {
                 z-index: 100000 + 1022;
             }
+
             .pw-button-dropdown,
             .dropdown-menu,
             .pw-dropdown-menu,
@@ -2396,10 +2811,12 @@ html.AdminThemeReno {
             .pw-panel-container {
                 z-index: 100000 + 10100 !important;
             }
+
             #head_button {
                 margin-right: 24px;
                 margin-bottom: -8px;
             }
+
             #masthead,
             #branding,
             .main-nav-toggle {
@@ -2407,13 +2824,16 @@ html.AdminThemeReno {
                 position: fixed;
                 backface-visibility: hidden;
             }
+
             #masthead {
                 width: 100%;
                 z-index: 100000 + 60;
+
                 * {
                     z-index: 100000 + 70;
                 }
             }
+
             #breadcrumbs {
                 backface-visibility: hidden;
                 position: fixed;
@@ -2423,6 +2843,7 @@ html.AdminThemeReno {
                 //padding-bottom: 0.25em;
                 border-bottom: none;
             }
+
             #headline {
                 top: 86px;
                 position: fixed;
@@ -2433,12 +2854,14 @@ html.AdminThemeReno {
                 border-bottom: 1px solid rgba(#000, 0.1);
                 padding: 1.33em 0 1.33em 1.33em; //transition: padding-top 0.12s, padding-bottom 0.12s !important;
             }
+
             #main {
                 &:not(.closed) {
                     #headline {
                         padding-left: 232px;
                     }
                 }
+
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -2450,6 +2873,7 @@ html.AdminThemeReno {
                 max-height: 100%;
                 min-height: 100%; //overflow: auto;
                 overflow-y: auto; // disable page jump
+
                 //overflow-y: scroll;
                 #content {
                     // layout scrolbar fix
@@ -2457,6 +2881,7 @@ html.AdminThemeReno {
                     top: 0; //max-height: 100%;
                     //overflow: auto;
                     padding-bottom: 0; // placeholder to push down bottom (Firefox)
+
                     &:after {
                         content: "";
                         display: block;
@@ -2466,16 +2891,21 @@ html.AdminThemeReno {
                     }
                 }
             }
+
             ul.quicklinks {
                 top: 50px !important;
             }
+
             #headline {
                 box-shadow: $defaultBoxShadow;
-            } // limit long titles with ellipsis
+            }
+
+            // limit long titles with ellipsis
             #title {
                 max-width: calc(100% - 180px);
                 line-height: 1.25em !important;
                 margin-top: -0.25em !important;
+
                 >span {
                     white-space: nowrap;
                     overflow: hidden;
@@ -2485,12 +2915,15 @@ html.AdminThemeReno {
                     vertical-align: bottom;
                 }
             }
+
             #sidebar {
                 z-index: 100000 + 40;
             }
+
             #search {
                 z-index: 100000 + 80;
             }
+
             &.openSearch {
                 #search {
                     position: fixed;
@@ -2498,6 +2931,7 @@ html.AdminThemeReno {
                 }
             }
         }
+
         @media only screen and (min-width: 1200px) {
             #main {
                 &:not(.closed) #headline {
@@ -2505,33 +2939,42 @@ html.AdminThemeReno {
                 }
             }
         }
+
         body.pw-ready {
             #headline {
                 transition: padding-left $defaultTransition;
             }
         }
-    } // headStickyCompact
+    }
+
+    // headStickyCompact
     &.headSticky.headStickyCompact:not(.modal) {
         @media only screen and (min-width: 960px) {
             overflow: hidden; // System Notifications module
+
             #NotificationGhosts {
                 top: 48px !important;
             }
+
             .content #fieldgroupContext {
                 top: 105px;
                 position: fixed;
                 backface-visibility: hidden;
                 z-index: 100000 + 220;
+
                 select {
                     padding: 3px 1px 3px 3px;
+
                     &:hover {
                         cursor: pointer;
                     }
+
                     &:not(:focus) {
                         border-color: transparent;
                     }
                 }
             }
+
             #NotificationBug {
                 top: 70px !important;
                 float: right;
@@ -2541,11 +2984,14 @@ html.AdminThemeReno {
                 margin: 0 0 0 40px;
                 padding: 0;
                 display: block !important;
+
                 .qty {
                     //color: #fff;
                     font-weight: normal;
                     background: #E2E9EF;
-                } // do not show quantity if it's 0
+                }
+
+                // do not show quantity if it's 0
                 //&[data-qty="0"] {
                 //  display: none !important;
                 //  //.qty {
@@ -2555,18 +3001,22 @@ html.AdminThemeReno {
                 //  //}
                 //}
             }
+
             .NotificationMenu {
                 left: 210px;
                 top: 100px;
             }
+
             #branding,
             .main-nav-toggle {
                 display: none;
             }
+
             #masthead {
                 top: -52px;
                 z-index: 100000 + 250;
             }
+
             #breadcrumbs {
                 backface-visibility: hidden;
                 position: fixed;
@@ -2577,13 +3027,16 @@ html.AdminThemeReno {
                 border-bottom: none;
                 background: #fff;
             }
+
             #sidebar {
                 padding-top: 0;
                 z-index: 100000 + 300;
             }
+
             ul.quicklinks {
                 top: 0 !important;
             }
+
             #headline {
                 box-shadow: $defaultBoxShadow;
                 top: 33px;
@@ -2596,12 +3049,15 @@ html.AdminThemeReno {
                 //transition: padding-top 0.12s, padding-bottom 0.12s !important;
                 background: #fff;
             }
+
             #main {
                 border-top: 103px solid transparent;
+
                 &:not(.closed) #headline {
                     padding-left: 232px;
                 }
             }
+
             #wrap {
                 #search {
                     left: auto;
@@ -2614,10 +3070,12 @@ html.AdminThemeReno {
                     right: 8px;
                     text-align: right;
                     width: auto;
+
                     form {
                         display: inline-block;
                         width: auto;
                     }
+
                     input {
                         background: transparent;
                         border-bottom: 1px solid rgba(0, 0, 0, 0.16);
@@ -2629,14 +3087,17 @@ html.AdminThemeReno {
                         color: inherit;
                         position: relative;
                         z-index: 100000 + 220;
+
                         &:not(:focus) {
                             color: rgba(#2A3C51, 0.42);
                         }
+
                         &:focus {
                             background: rgba(#F0F3F7, 0.5);
                             max-width: 100%;
                         }
                     }
+
                     label {
                         right: 0;
                         left: auto !important;
@@ -2645,9 +3106,11 @@ html.AdminThemeReno {
                     }
                 }
             }
+
             h1#title {
                 max-width: calc(100% - 300px);
             }
+
             #ProcessPageSearchAutocomplete {
                 position: fixed;
                 backface-visibility: hidden;
@@ -2656,30 +3119,38 @@ html.AdminThemeReno {
                 top: 41px !important; //z-index: 100000 + 20000 !important;
                 box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.12) !important;
             }
+
             #ProcessPageSearchForm #ProcessPageSearchStatus {
                 right: 3.1em;
             }
+
             #masthead #topnav {
                 top: 50px;
                 z-index: 100000 + 260;
+
                 .avatar.pw-dropdown,
                 .avatar.dropdown {
                     margin-right: -0.5em !important;
+
                     a {
                         padding-right: 0.5em;
                     }
                 }
+
                 .avatar img {
                     margin-top: -1px;
                 }
+
                 a,
                 a:hover,
                 a:after {
                     color: inherit !important;
                 }
+
                 a {
                     margin-left: 1px;
                 }
+
                 li.pw-dropdown ul,
                 li.dropdown ul {
                     //box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.12);
@@ -2690,6 +3161,7 @@ html.AdminThemeReno {
                     z-index: 100000 + 3300;
                 }
             }
+
             &.openSearch {
                 #search {
                     position: fixed;
@@ -2698,42 +3170,52 @@ html.AdminThemeReno {
                 }
             }
         }
+
         @media only screen and (min-width: 1200px) {
             #main {
                 &:not(.closed) #headline {
                     padding-left: 252px;
                 }
             }
+
             .NotificationMenu {
                 left: 230px;
             }
         }
+
         body.id-23 {
             #headline {
                 padding-left: 24px !important;
             }
+
             .NotificationMenu {
                 left: 0 !important;
             }
         }
+
         body.pw-ready {
             #headline {
                 transition: padding-left $defaultTransition;
             }
+
             #wrap #search input {
                 transition: background $defaultTransition;
             }
-        } // stickyTabs
+        }
+
+        // stickyTabs
         body.hasWireTabs {
             @media only screen and (min-width: 960px) {
                 #main {
                     // layout fix to scroll div only the fixed header
                     border-top: 137px solid transparent;
+
                     &:not(.closed) {
                         .WireTabs {
                             left: 210px;
                         }
                     }
+
                     .WireTabs {
                         transition: left $defaultTransition;
                         position: fixed;
@@ -2746,50 +3228,63 @@ html.AdminThemeReno {
                         background: #fff;
                         border-top: 1px solid rgba(0, 0, 0, .1);
                         border-bottom: 1px solid rgba(0, 0, 0, .1);
+
                         a {
                             padding: 0.42em 1em 0.33em;
                             border: none;
                         }
+
                         li:first-child {
                             a {
                                 padding-left: 1.5em;
                             }
                         }
                     }
-                } //&.scrolled {
+                }
+
+                //&.scrolled {
                 #main {
                     .WireTabs {
                         box-shadow: $defaultBoxShadow;
                     }
-                } //}
+                }
+
+                //}
                 .NotificationMenu {
                     top: 137px;
                 }
             }
+
             @media only screen and (min-width: 1200px) {
                 #main {
                     &:not(.closed) {
                         .WireTabs {
                             left: 230px;
                         }
-                    } //.WireTabs {
+                    }
+
+                    //.WireTabs {
                     //  left: 0;
                     //}
                 }
             }
         }
+
         &:not(.headBtnToTitle) {
             #search {
                 right: 127px !important;
             }
         }
     }
+
     &.pListCompact {
         .content .PageList .PageListItem:not(.PageListPlaceholderItem) {
             padding-top: 0.4em;
             padding-bottom: 0.4em;
         }
-    } // AlwaysShowSearch
+    }
+
+    // AlwaysShowSearch
     &.openSearch:not(.modal),
     &.headStickyCompact {
         @media only screen and (min-width: 960px) {
@@ -2799,38 +3294,48 @@ html.AdminThemeReno {
                 left: 50%;
                 transform: translateX(-50%);
                 transition: none !important;
+
                 form {
                     max-width: 100%;
                 }
+
                 &:before {
                     display: none;
                 }
+
                 #ProcessPageSearchForm label {
                     width: 24px;
                 }
+
                 .search-close {
                     display: none;
                 }
             }
         }
+
         #topnav .search-toggle {
             display: none !important;
         }
-    } // custom miniScrollbar theme
+    }
+
+    // custom miniScrollbar theme
     #main-nav {
         position: relative;
     }
+
     ul.quicklinks {
         // hack because cannot have overflow-x and overflow-y work together as expected
         position: fixed !important;
         backface-visibility: hidden;
     }
+
     a.quicklinks-open {
         +ul.quicklinks {
             min-width: 250px;
             max-width: 500px;
             width: auto !important;
             display: inline-block !important; //&:after {
+
             //  content: "";
             //  position: absolute;
             //  left: 100%;
@@ -2843,9 +3348,12 @@ html.AdminThemeReno {
                 padding-right: 2em !important;
             }
         }
-    } // sbAutoHide
+    }
+
+    // sbAutoHide
     &.sbAutoHide:not(.modal) {
         &.noticeLeftX #notices {
+
             //left: -1em;
             //padding-left: 1em;
             .NoticeMessage {
@@ -2853,11 +3361,15 @@ html.AdminThemeReno {
                 padding-left: 3.25em;
             }
         }
+
         @media only screen and (min-width: 960px) {
+
             //padding-left: 1em;
             #headline {
                 padding-left: 1.5em !important;
-            } // extra space on left to avoid accidental hover on sidebar toggle
+            }
+
+            // extra space on left to avoid accidental hover on sidebar toggle
             #branding,
             #content,
             #headline,
@@ -2867,25 +3379,31 @@ html.AdminThemeReno {
             #masthead {
                 border-left: 16px solid transparent;
             }
+
             .WireTabs.nav {
                 left: 0 !important;
                 padding-left: 16px;
             }
+
             #main {
                 margin-left: 0;
             }
+
             #sidebar.closed,
             #sidebar.hide,
             #branding.closed {
                 left: 0 !important;
             }
+
             .main-nav-toggle {
                 display: none;
             }
+
             #sidebar {
                 padding-top: 0;
                 transform: translateX(-100%);
                 z-index: 100000 + 8000 !important;
+
                 &:before {
                     content: "";
                     position: absolute;
@@ -2895,17 +3413,21 @@ html.AdminThemeReno {
                     height: 100%;
                     background: transparent;
                 }
+
                 &:hover {
                     transform: translateX(0);
                 }
             }
+
             body.pw-ready {
                 #sidebar {
                     transition: transform $defaultTransition;
                 }
             }
         }
-    } // sbSticky
+    }
+
+    // sbSticky
     &.sbSticky {
         @media only screen and (min-width: 960px) {
             #sidebar {
@@ -2916,51 +3438,65 @@ html.AdminThemeReno {
                 //}
             }
         }
+
         &:not(.headSticky):not(.sbAutoHide) {
             #branding {
                 position: fixed;
                 backface-visibility: hidden;
             }
         }
-    } // sbItemsVisible
+    }
+
+    // sbItemsVisible
     &.sbItemsVisible {
         @media only screen and (min-width: 960px) {
             #sidebar {
                 #main-nav {
-                    > li {
-                        > a {
+                    >li {
+                        >a {
                             font-weight: 600;
+
                             >i {
                                 margin: 5px 8px 0 0;
                                 float: right;
                             }
                         }
+
                         a {
                             padding: 0.27em 0.5em 0.27em 1.3em;
+
                             &.parent {
                                 background: transparent;
+
                                 &:hover {
                                     background-color: inherit !important;
                                 }
                             }
+
                             &:after {
                                 display: none;
                             }
                         }
+
                         >ul {
                             display: block !important; //padding-bottom: 0.2em;
                             padding-bottom: 0;
+
                             &:empty {
                                 display: none !important;
                             }
+
                             overflow: visible !important;
                             height: auto !important; //padding: 8px 12px 2px 12px !important;
+
                             >li {
                                 a {
                                     padding-top: 0.275em;
                                     padding-bottom: 0.275em; //font-size: 0.94em;
                                     margin-bottom: 0;
+
                                     &.current {
+
                                         //background: transparent;
                                         //color: inherit !important;
                                         //opacity: 1;
@@ -2970,7 +3506,9 @@ html.AdminThemeReno {
                                                 display: none;
                                             }
                                         }
-                                    } //  &:hover {
+                                    }
+
+                                    //  &:hover {
                                     //    opacity: 1;
                                     //    background-color: inherit !important;
                                     //
@@ -2979,7 +3517,9 @@ html.AdminThemeReno {
                                     //    }
                                     //  }
                                 }
-                            } //ul.quicklinks {
+                            }
+
+                            //ul.quicklinks {
                             //  width: auto !important;
                             //  a {
                             //    min-width: 250px;
@@ -2991,54 +3531,66 @@ html.AdminThemeReno {
                 }
             }
         }
-    } // sbItemsInline
+    }
+
+    // sbItemsInline
     //&.sbItemsInline.lwysvsblsdbrims {
     &.sbItemsInline {
         @media only screen and (min-width: 960px) {
             #sidebar {
                 #main-nav {
-                    > li {
+                    >li {
                         a {
                             &.current {
                                 background: transparent;
                                 color: inherit !important;
                                 font-weight: 600;
                             }
+
                             &.has-quicklinks {
                                 span {
                                     display: inline-block;
                                     padding-right: 18px;
                                 }
                             }
+
                             i.quicklink-open {
                                 visibility: visible;
                                 opacity: 0.33;
                                 padding: 5px 10px;
                                 color: inherit !important;
+
                                 &:hover {
                                     opacity: 1;
                                     color: inherit !important;
                                 }
                             }
                         }
+
                         >ul {
                             padding: 8px 12px 2px 12px !important;
+
                             >li {
                                 display: inline-block;
                                 font-size: 0.94em;
+
                                 a {
                                     padding: 0.2em 0.5em;
+
                                     &:hover {
                                         opacity: 1;
                                         background-color: inherit !important;
+
                                         span {
                                             text-decoration: underline;
                                         }
                                     }
                                 }
                             }
+
                             ul.quicklinks {
                                 width: auto !important;
+
                                 a {
                                     min-width: 250px;
                                     padding: 0.25em 20px;
@@ -3049,21 +3601,30 @@ html.AdminThemeReno {
                 }
             }
         }
-    } // sbQuickLinksHide
+    }
+
+    // sbQuickLinksHide
     &.sbQuickLinksHide {
+
         //@media only screen and (min-width: 960px) {
         #sidebar #main-nav>li a {
             span {
                 padding-right: 0 !important;
             }
+
             i.quicklink-open {
                 display: none;
             }
-        } //}
-    } // noticeLeftX
+        }
+
+        //}
+    }
+
+    // noticeLeftX
     &.noticeLeftX {
         #notices li {
             padding-left: 50px;
+
             .notice-remove {
                 position: absolute;
                 left: 10px;
@@ -3074,7 +3635,9 @@ html.AdminThemeReno {
 
 html.headBtnToTitle {
     @media only screen and (min-width: 960px) {
-        #pw-content-head-buttons, #head_button {
+
+        #pw-content-head-buttons,
+        #head_button {
             float: none;
             margin-left: 1rem;
             margin-top: 0.2rem;
@@ -3082,40 +3645,55 @@ html.headBtnToTitle {
             //  float: none;
             //}
         }
+
         &.AdminThemeReno {
             #head_button {
                 margin-top: -2px;
                 margin-bottom: -12px !important;
             }
+
             #breadcrumbs ul.nav {
                 float: none;
             }
         }
+
         #pw-content-head h1,
         #headline h1,
         #breadcrumbs ul.nav {
             float: left;
         }
+
         #breadcrumbs {
             #head_button {
                 margin-bottom: -23px;
                 top: -9px;
-            } //ul.nav {
+            }
+
+            //ul.nav {
             //      margin-top: 2px;
             //    }
         }
+
         #pw-content-body {
             clear: both;
         }
     }
 }
 
+// ensure head buttons are above h1
+#pw-content-head-buttons {
+    position: relative;
+    z-index: 1;
+}
+
 // UikitTweaks (AdminThemeUikit theme tweaks)
 html.AdminThemeUikit {
     @media only screen and (min-width: 960px) {
+
         // headSticky
         &.headSticky {
             body:not(.modal):not(.id-23) {
+
                 //padding-top: 73px;
                 #pw-mastheads {
                     position: sticky !important;
@@ -3123,34 +3701,43 @@ html.AdminThemeUikit {
                     top: 0 !important; //width: 100%;
                     z-index: 6;
                 }
-            } //&.headSticky.headCompact {
+            }
+
+            //&.headSticky.headCompact {
             //  body:not(.modal):not(.id-23) {
             //    padding-top: 54px;
             //  }
             //}
         }
     }
+
     &.headCompact {
         body:not(.modal) {
+
             #pw-masthead,
             #pw-masthead-mobile {
                 height: 54px;
+
                 .uk-navbar a {
                     height: 54px;
                 }
             }
+
             .pw-logo {
                 margin-top: 6px;
             }
         }
+
         body.id-23 {
             .pw-logo {
                 margin-top: -23px;
             }
         }
     }
+
     &.centerLogin {
         body.id-23 {
+
             #wrap_login_name,
             #wrap_login_pass,
             #ProcessLoginForm {
@@ -3166,14 +3753,18 @@ html.AdminThemeUikit {
     padding: 0 0.3rem;
     position: relative;
     top: 1px;
+
     &:not(:hover) {
         color: #ccc;
     }
+
     i {
         font-size: 17px !important;
     }
+
     html:not(.AdminThemeDefault) & {
         padding: 0 0.5rem;
+
         i {
             font-size: 27px !important;
         }
@@ -3205,25 +3796,33 @@ html.AdminThemeDefault {
             float: left;
             margin-left: 32px;
         }
+
         body:not(.modal) {
+
             // topnav flicker fix until better solution
             #masthead #topnav {
                 margin-top: 8px;
-            } // fix for PrevNextTabs module
+            }
+
+            // fix for PrevNextTabs module
             #content {
                 ul.WireTabs {
                     overflow: hidden !important; // override default -2.6em (allows active tab having no border & works with PrevNextTabs fix)
                     margin-bottom: calc(-2.6em - 1px);
                 }
             }
-        } // headSticky
+        }
+
+        // headSticky
         &.headSticky {
             body:not(.modal) {
                 .NotificationMenu {
                     z-index: 9;
                     margin-top: 3px;
                 }
+
                 padding-top: 103px;
+
                 #masthead {
                     position: fixed;
                     backface-visibility: hidden;
@@ -3231,10 +3830,12 @@ html.AdminThemeDefault {
                     width: 100vw;
                     top: 0;
                     left: 0; // adminlangswitcher fix
+
                     &:hover {
                         z-index: 31;
                     }
                 }
+
                 #breadcrumbs {
                     backface-visibility: hidden;
                     position: fixed; //z-index: 100000 + 1000;
@@ -3244,32 +3845,39 @@ html.AdminThemeDefault {
                     width: 100vw;
                     border: none;
                 }
+
                 #notices {
                     position: relative;
                     z-index: 19;
+
                     &~#content {
                         padding-top: 20px;
                     }
                 }
+
                 &.hasWireTabs {
                     #notices {
                         &~#content {
                             padding-top: 52px;
                         }
                     }
+
                     #content {
                         padding-top: 52px;
                     }
                 }
+
                 #head_button {
                     margin-bottom: -20px;
                     top: -7px;
                 }
+
                 #content {
                     padding-top: 20px;
                 }
             }
         }
+
         &.wide {
             body:not(.modal) {
                 .container {
@@ -3289,34 +3897,42 @@ html.stickyCKE {
             z-index: 5;
             margin-bottom: -1px;
         }
+
         .cke_top,
         .cke_contents,
         .cke_bottom {
             float: none;
             @include clearfix();
         }
+
         .cke_contents {
             width: calc(100% - 1px);
         }
+
         .cke_bottom {
             position: sticky;
             bottom: 0;
             line-height: 1;
             z-index: 2;
         }
+
         [id*="cke_"].cke_chrome {
             margin-bottom: 1em !important;
-        } // default theme tweaks for sticky cke
+        }
+
+        // default theme tweaks for sticky cke
         &.AdminThemeDefault.headSticky {
             .cke_top {
                 top: 102px;
             }
         }
+
         &.AdminThemeUikit.headSticky {
             &.headSticky {
                 .cke_top {
                     top: 73px;
                 }
+
                 &.headCompact {
                     .cke_top {
                         top: 54px;
@@ -3347,10 +3963,12 @@ html.downloadAssetButton {
 html.moveAssetButtons {
     .ImageData {
         margin-right: -6%; // fix for inline css 78% width
+
         h2 {
             white-space: pre-wrap;
             margin-top: 4px !important;
             max-width: calc(100% - 70px) !important;
+
             +span {
                 display: block;
             }
@@ -3364,40 +3982,50 @@ html.moveAssetButtons {
     z-index: 99;
     right: 56px;
     color: white;
+
     i {
         padding: 9px 7px 8px;
         margin-right: 1px;
+
         &::before {
             transform: rotate(-90deg);
             display: inline-block;
         }
+
         &:hover {
             cursor: pointer;
             opacity: 0.7;
         }
     }
+
     .InputfieldImage & {
         right: 8px;
+
         i {
             float: right;
             padding: 8px 5px;
+
             &:before {
                 transform: rotate(180deg);
             }
         }
     }
+
     .InputfieldImageEditAll & {
         // Image field, full-width row
         opacity: 0.5;
         right: 34px;
         color: inherit;
+
         i {
             padding: 9px 7px 8px;
+
             &:before {
                 transform: rotate(-90deg);
             }
         }
     }
+
     ~.aos_downloadAsset~p.InputfieldFileInfo {
         padding-right: 104px !important;
     }
@@ -3406,6 +4034,7 @@ html.moveAssetButtons {
 .InputfieldFileList,
 .InputfieldImage {
     li {
+
         &:first-child [data-up],
         &:last-of-type [data-down] {
             opacity: 0.33;
@@ -3416,29 +4045,36 @@ html.moveAssetButtons {
 }
 
 .aos_downloadAsset {
+
     .gridImage--delete &,
     .InputfieldImageEdit__buttons & {
         display: none;
     }
+
     .InputfieldImage & {
         margin-top: -2px;
     }
+
     .InputfieldFileItem & {
         right: 27px;
         top: auto;
         position: absolute;
         z-index: 1;
+
         i {
             color: #fff;
         }
     }
+
     ~p.InputfieldFileInfo {
         padding-right: 54px !important;
     }
+
     i {
         padding: 9px 8px 10px;
         display: inline-block;
     }
+
     &:hover {
         opacity: 0.7;
         color: inherit !important;
@@ -3450,6 +4086,7 @@ html.moveAssetButtons {
 html.moveAssetButtons:not(.downloadAssetButton) {
     .aos_moveAssets {
         right: 28px;
+
         ~p.InputfieldFileInfo {
             padding-right: 74px !important;
         }
@@ -3475,6 +4112,7 @@ html.AdminThemeUikit .aos_no-inputfield-padding#FieldsetTools {
     >.InputfieldContent {
         background: transparent;
     }
+
     button[id^="Inputfield_submit_"] {
         margin-left: 20px;
         margin-bottom: 20px;
@@ -3488,9 +4126,11 @@ html.AdminThemeUikit .aos_no-inputfield-padding#FieldsetTools {
             .ProcessListerTable tr td:first-child:hover {
                 .PageListerActions {
                     display: inline-block !important;
+
                     .PageExtras~a {
                         display: none;
                     }
+
                     .PageExtras.extras-open,
                     .PageExtras.extras-open~a {
                         display: inline-block;
@@ -3506,6 +4146,7 @@ html.AdminThemeUikit .aos_no-inputfield-padding#FieldsetTools {
     font-size: 0.92em;
     color: rgba(0, 0, 0, 0.75);
     font-style: normal;
+
     &:not(:empty):before {
         content: "•";
         opacity: 0.5;
@@ -3513,6 +4154,7 @@ html.AdminThemeUikit .aos_no-inputfield-padding#FieldsetTools {
         padding: 0 5px 0 4px;
         font-weight: normal;
     }
+
     &:empty {
         display: none;
     }
@@ -3525,10 +4167,12 @@ html.pListFullRowHover:not(.pListShowActions) {
                 display: inline-block !important;
             }
         }
+
         .PageListItemOpen {
             .PageListActions {
                 display: none !important;
             }
+
             &:hover {
                 .PageListActions {
                     display: inline-block !important;
@@ -3539,6 +4183,7 @@ html.pListFullRowHover:not(.pListShowActions) {
 }
 
 html.pListCounters {
+
     // add pagelist counters
     .PageListRoot>.PageList>.PageListItem~.PageList:not(.PageListPlaceholder) {
         .PageListItem {
@@ -3550,23 +4195,31 @@ html.pListCounters {
                 top: -1px;
                 display: inline-block;
             }
+
             &:hover {
                 &:before {
                     opacity: 0.8;
                 }
             }
         }
+
         @include pListNum('pl1');
+
         >.PageList {
             @include pListNum('pl2');
+
             >.PageList {
                 @include pListNum('pl3');
+
                 >.PageList {
                     @include pListNum('pl4');
+
                     >.PageList {
                         @include pListNum('pl5');
+
                         >.PageList {
                             @include pListNum('pl6');
+
                             >.PageList {
                                 @include pListNum('pl7');
                             }
@@ -3575,7 +4228,9 @@ html.pListCounters {
                 }
             }
         }
-    } // only if unpublished-hidden pages aren't included in pListCounter
+    }
+
+    // only if unpublished-hidden pages aren't included in pListCounter
     //.PageListItem.PageListStatusHidden,
     //.PageListItem.PageListStatusUnpublished {
     //  padding-left: 19px;
@@ -3605,14 +4260,17 @@ html.pListIconOnly {
         font-size: 14px;
         font-weight: normal;
         line-height: 1;
+
         &:not(.PageExtras) {
             color: #7ea0ab !important;
             background: transparent !important;
+
             &:hover {
                 color: #E83561 !important;
                 z-index: 20;
             }
         }
+
         &:before {
             font-family: Fontawesome;
             padding: 0 4px;
@@ -3623,103 +4281,131 @@ html.pListIconOnly {
             font-size: 15px;
             margin-left: 0;
         }
+
         tr.open & {
             display: inline-block !important;
         }
-    } // for default theme
+    }
+
+    // for default theme
     .PageExtras.extras-open~a {
         display: inline-block !important;
     }
+
     .PageListerActions,
     .PageListActions {
         >li {
             margin-right: 1px;
         }
+
         .PageListActionEdit>a[href*="page/edit"],
         a.PageEdit {
             @include pageListIcon("\f040");
         }
-        .PageListActionEdit>a[href*="template/edit?"], // template edit action
+
+        .PageListActionEdit>a[href*="template/edit?"],
+        // template edit action
         a.PageEdit {
             max-width: unset;
         }
+
         .PageListActionView>a,
         a.PageView {
             @include pageListIcon("\f14c");
         }
+
         .PageListActionNew>a,
         a.PageNew {
             @include pageListIcon("\f055");
         }
+
         .PageListActionMove>a {
             @include pageListIcon("\f0dc");
         }
+
         .PageListActionHide>a,
         .PageHide {
             @include pageListIcon("\f070");
         }
+
         .PageListActionCopy>a,
         .PageCopy {
             //@include pageListIcon("\f067");
             @include pageListIcon("\f0c5");
         }
+
         .PageListActionUnhide>a,
         .PageUnhide {
             @include pageListIcon("\f06e");
         }
+
         .PageListActionPublish>a,
         .PagePublish {
             //@include pageListIcon("\f058");
             @include pageListIcon("\f05d");
         }
+
         .PageListActionUnpublish>a,
         .PageUnpublish {
             //@include pageListIcon("\f057");
             @include pageListIcon("\f05c");
         }
+
         .PageListActionLock>a,
         .PageLock {
             @include pageListIcon("\f023");
         }
+
         .PageListActionUnlock>a,
         .PageUnlock {
             @include pageListIcon("\f13e");
         }
+
         .PageListActionRefresh>a,
         .PageRefresh {
             @include pageListIcon("\f021");
         }
+
         .PageListActionEmpty>a,
         .PageEmpty {
             @include pageListIcon("\f057");
         }
+
         .PageListActionTrash>a,
         .PageTrash {
             position: static !important; // allow full-row red bg color
+
             &:not(.cancel):not([href*="force=1"]) {
                 @include pageListIcon("\f1f8");
+
                 i {
                     display: none;
                 }
             }
         }
+
         .PageListActionDelete>a,
         .PageDelete {
             position: static !important; // allow full-row red bg color
+
             &:not(.cancel):not([href*="force=1"]) {
                 @include pageListIcon("\f12d");
             }
         }
+
         .PageListActionSticky>a,
         a.PageSticky {
             @include pageListIcon("\f006");
+
             &:hover {
                 @include pageListIcon("\f005");
             }
         }
+
         .PageListActionUnsticky>a,
         a.PageUnsticky {
             @include pageListIcon("\f005");
+
             &:hover {
                 @include pageListIcon("\f006");
             }
@@ -3730,16 +4416,19 @@ html.pListIconOnly {
 @media only screen and (min-width: 960px) {
     li.navItem {
         position: relative;
+
         html.AdminThemeReno:not(.sbItemsInline) & {
             &.first {
                 border-top: 1px solid rgba(#51739D, 0.2);
             }
         }
+
         >ul.ui-menu {
             // uikit
             box-shadow: none;
             border: none !important;
         }
+
         .page-list {
             &:hover {
                 +.page-edit {
@@ -3747,17 +4436,20 @@ html.pListIconOnly {
                 }
             }
         }
+
         .page-edit {
             opacity: 0;
             position: absolute !important;
             right: 0;
             top: 0;
             z-index: 5;
+
             &:hover {
                 opacity: 1 !important;
                 background: transparent !important;
             }
         }
+
         &.hasSubmenu {
             ul {
                 position: relative !important;
@@ -3772,6 +4464,7 @@ html.pListIconOnly {
                 padding: 0 !important;
                 overflow: hidden !important;
             }
+
             &:hover,
             &.active {
                 ul {
@@ -3779,40 +4472,49 @@ html.pListIconOnly {
                 }
             }
         }
+
         html.AdminThemeReno & {
             &.hasSubmenu {
                 ul {
                     background: rgba(#1C2836, 0.05) !important;
+
                     li {
                         position: relative;
                     }
+
                     a:not(.current):hover {
                         background: rgba(#1C2836, 0.08) !important;
                     }
+
                     a {
                         padding-left: 2.4em !important;
                         position: relative;
+
                         &:first-child:before {
                             content: "•";
                             position: absolute;
                             left: 1.5em;
                         }
+
                         &.page-edit {
                             position: absolute;
                             top: 0;
                             bottom: 0;
+
                             &:hover {
                                 background: transparent !important;
                             }
                         }
                     }
                 }
+
                 i {
                     vertical-align: middle;
                     font-size: 12px !important;
                 }
             }
         }
+
         html.AdminThemeDefault & {
             &.hasSubmenu {
                 ul {
@@ -3820,10 +4522,12 @@ html.pListIconOnly {
                     position: absolute !important;
                     top: 2px !important;
                 }
+
                 i {
                     position: absolute;
                     right: 11px;
                     top: 12px;
+
                     &:before {
                         content: "\f105";
                     }
@@ -3831,17 +4535,20 @@ html.pListIconOnly {
             }
         }
     }
+
     html.AdminThemeReno {
         li ul {
             li.navItem {
                 a:not(.current) {
                     font-weight: normal !important;
                 }
+
                 .page-edit {
                     padding: 5px 17px !important;
                 }
             }
         }
+
         &:not(.sbItemsInline) {
             ul li ul {
                 li.navItem {
@@ -3851,16 +4558,19 @@ html.pListIconOnly {
                 }
             }
         }
+
         &.sbItemsInline {
             ul li ul {
                 li.navItem {
                     .page-list {
                         //margin-right: 21px;
                         display: inline-block !important;
+
                         &:hover {
                             text-decoration: underline;
                         }
                     }
+
                     .page-edit {
                         display: inline-block !important;
                         position: relative !important;
@@ -3868,6 +4578,7 @@ html.pListIconOnly {
                         top: 3px;
                         margin-left: -6px;
                         padding: 5px 5px !important;
+
                         i {
                             font-size: 92% !important;
                         }
@@ -3879,10 +4590,12 @@ html.pListIconOnly {
 }
 
 html.hoverDropdown {
+
     //@media only screen and (min-width: 960px) {
     .ui-button {
         &.pw-button-dropdown-main {
             position: relative; //border-radius: 4px !important;
+
             //padding-right: 16px !important;
             // extend the main button to overlap the menu opening button
             &::after {
@@ -3894,6 +4607,7 @@ html.hoverDropdown {
                 width: 1.7rem;
                 display: inline-block;
             }
+
             span {
                 pointer-events: none; //&:after {
                 //  content: "\f107";
@@ -3908,6 +4622,7 @@ html.hoverDropdown {
                 //}
             }
         }
+
         &.pw-button-dropdown-toggle {
             pointer-events: none;
             position: relative;
@@ -3917,7 +4632,9 @@ html.hoverDropdown {
             //  position: relative;
             //}
         }
-    } //&.AdminThemeUikit {
+    }
+
+    //&.AdminThemeUikit {
     //  .ui-button {
     //    &.pw-button-dropdown-main {
     //      // https://github.com/rolandtoth/AdminOnSteroids/issues/89#issuecomment-373186490
@@ -3981,18 +4698,22 @@ html.hoverDropdown {
     user-select: none;
     backface-visibility: hidden;
     z-index: 3;
+
     i {
         pointer-events: none;
         position: relative;
         top: -2px;
+
         &::before {
             font-size: 0.75rem;
             color: #3EB998;
             text-shadow: 0 0 2px rgba(white, 0.7);
         }
     }
+
     &:hover {
         background: #3EB998;
+
         i {
             &::before {
                 color: white;
@@ -4000,6 +4721,7 @@ html.hoverDropdown {
             }
         }
     }
+
     &[data-checked-all="1"] {
         i::before {
             content: '\f00d' !important;
@@ -4010,6 +4732,7 @@ html.hoverDropdown {
 ul[class*="InputfieldCheckboxes"] {
     //.AdminDataList {
     position: relative; // extra padding on top to avoid disappearing toggle button
+
     &::before {
         content: '';
         position: absolute;
@@ -4018,6 +4741,7 @@ ul[class*="InputfieldCheckboxes"] {
         right: 0;
         height: 1.4rem;
     }
+
     &:hover {
         #checkAllCheckboxes {
             opacity: 1;
@@ -4034,25 +4758,32 @@ ul[class*="InputfieldCheckboxes"] {
     padding: 0 12px;
     background: transparent;
     z-index: 2;
+
     &.button-left {
         right: auto;
         left: auto;
     }
+
     &.iuc-hide {
         pointer-events: none !important;
     }
+
     &.button-left~input {
         padding-left: 36px !important;
     }
+
     &.button-right~input {
         padding-right: 36px !important;
     }
+
     &:not(.iuc-hide):hover i {
         color: inherit !important;
     }
+
     &:active i {
         font-size: 0.88em !important;
     }
+
     i {
         color: rgba(0, 0, 0, 0.2);
         text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
@@ -4070,12 +4801,15 @@ html.aos .InputfieldAssistedUrlText {
 .InputfieldAssistedURL {
     .button-left {
         left: auto;
-    } //.InputfieldMaxWidth {
+    }
+
+    //.InputfieldMaxWidth {
     //  width: calc(100% - 50px) !important;
     //}
 }
 
 .InputfieldContent {
+
     .InputfieldURL,
     .InputfieldAssistedURL {
         position: relative;
@@ -4088,29 +4822,36 @@ html.aos .InputfieldAssistedUrlText {
 
 .InputfieldMultiplierInput {
     position: relative;
+
     .iuc-button.button-left {
         left: 8px;
     }
+
     .iuc-button.button-right {
         right: 8px;
     }
 }
 
 #wrap_link_page_url {
+
     .InputfieldPageAutocomplete,
     .InputfieldURL {
         .InputfieldContent {
             position: relative;
         }
     }
+
     .iuc-button.button-left {
         left: 40px;
+
         ~p #link_page_url_input {
             padding-left: 56px !important;
         }
     }
+
     .iuc-button.button-right {
         right: 34px;
+
         ~p #link_page_url_input {
             padding-right: 56px !important;
         }
@@ -4140,7 +4881,9 @@ html.aos .InputfieldAssistedUrlText {
 @keyframes spinIn {
     0% {
         transform: rotate(0.01deg) translate3d(0, 0, 1px);
-    } //50% {
+    }
+
+    //50% {
     //}
     100% {
         color: inherit;
@@ -4151,7 +4894,9 @@ html.aos .InputfieldAssistedUrlText {
 @keyframes spinOut {
     100% {
         transform: rotate(0.01deg) translate3d(0, 0, 1px);
-    } //50% {
+    }
+
+    //50% {
     //}
     0% {
         color: inherit;
@@ -4164,10 +4909,12 @@ html.aos .InputfieldAssistedUrlText {
         opacity: 0;
         transform: scale(0.95);
     }
+
     50% {
         opacity: 1;
         transform: scale(1);
     }
+
     100% {
         opacity: 0;
         transform: scale(0.95);
@@ -4178,6 +4925,7 @@ html.aos .InputfieldAssistedUrlText {
     0% {
         max-width: 24px; //overflow: hidden;
     }
+
     100% {
         max-width: 100px; //overflow: visible;
     }
@@ -4199,8 +4947,15 @@ html.aos .InputfieldAssistedUrlText {
     height: 0;
 }
 
-.CodeMirror-lines {
-    font-size: 13px;
+.CodeMirror-lines * {
+    font-size: 0.96rem !important;
+    font-family: -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        "Helvetica Neue",
+        Arial,
+        sans-serif !important;
 }
 
 // this would cause tab, space, etc not working in editors
@@ -4209,10 +4964,13 @@ html.aos .InputfieldAssistedUrlText {
 //    white-space: normal !important;
 //  }
 //}
+
 .cke_reset_all .CodeMirror-scroll * {
     word-wrap: break-word;
-    white-space: pre-wrap;
+    white-space: pre-wrap !important;
     word-break: normal;
+    // override black font color for the default dark theme
+    color: white;
 }
 
 .cke_top .cke_button_icon.cke_button__oembed_icon {
@@ -4240,6 +4998,7 @@ html.aos .InputfieldAssistedUrlText {
 }
 
 .cke_dialog_body {
+
     //.cke_dialog_contents * {
     //  box-sizing: border-box !important;
     //}
@@ -4250,6 +5009,7 @@ html.aos .InputfieldAssistedUrlText {
 
 .cke_button_label {
     white-space: nowrap;
+
     +.cke_button_label {
         display: none !important; // LightWire skin
     }
@@ -4260,16 +5020,19 @@ html.aos .InputfieldAssistedUrlText {
     position: absolute;
     z-index: 10000;
     display: none;
+
     * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
     }
+
     ul {
         display: inline-block;
         border: 1px solid #d1d1d1;
         list-style: none;
     }
+
     li {
         margin: 0;
         border-top: 1px solid #ebebeb;
@@ -4277,32 +5040,39 @@ html.aos .InputfieldAssistedUrlText {
         white-space: nowrap;
         padding: 3px 12px 3px 6px;
         cursor: pointer;
+
         strong {
             font-size: 0.9rem;
             display: block;
             font-weight: 700;
         }
+
         span {
             display: block;
             font-size: 0.75rem;
             line-height: 1.2;
             padding-bottom: 3px;
         }
+
         &:first-child {
             border-top: 0;
         }
+
         &.all-files {
             font-size: 0.75rem;
             font-style: italic;
         }
+
         &.no-files {
             font-size: 0.75rem;
             font-style: italic;
             cursor: default;
+
             &:hover {
                 background: #fff;
             }
         }
+
         &:hover {
             background: #ebebeb;
         }

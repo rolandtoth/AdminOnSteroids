@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 2.0.4 (2018-09-10)
+
+- top header button was overlapped by h1 title on smaller screen sizes (reported by Pete)
+- CodeMirror (CKEaddons): set white font color for the default dark theme (reported by Pete)
+- CodeMirror (CKEaddons): force line wrapping, use larger font size and the same font-family as the admin
+
+
+
 ### 2.0.3 (2018-08-25)
 
 - remove select2 sort (requested by Robin S)
