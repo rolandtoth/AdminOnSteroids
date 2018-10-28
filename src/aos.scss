@@ -3694,20 +3694,26 @@ html.AdminThemeUikit {
         &.headSticky {
             body:not(.modal):not(.id-23) {
 
-                //padding-top: 73px;
                 #pw-mastheads {
                     position: sticky !important;
                     backface-visibility: hidden;
                     top: 0 !important; //width: 100%;
                     z-index: 6;
                 }
-            }
 
-            //&.headSticky.headCompact {
-            //  body:not(.modal):not(.id-23) {
-            //    padding-top: 54px;
-            //  }
-            //}
+                .pw-dropdown-menu.prnav.pw-dropdown-ready {
+                    position: fixed !important;
+                    top: 75px !important;
+                }
+            }
+        }
+
+        &.headSticky.headCompact {
+            body:not(.modal):not(.id-23) {
+                .pw-dropdown-menu.prnav.pw-dropdown-ready {
+                    top: 56px !important;
+                }
+            }
         }
     }
 

@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2.0.5 (2018-10-28)
+
+- fix for field edit links not clickable when Repeater field set to "Items always open" (reported by Robin S)
+- fix for AdminThemeUikit fixed nav menu dropdown positioning (reported by MilenKo)
+
+
+
 ### 2.0.4 (2018-09-10)
 
 - top header button was overlapped by h1 title on smaller screen sizes (reported by Pete)

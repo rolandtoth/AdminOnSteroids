@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.4',
+            'version' => '2.0.5',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -2790,6 +2790,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             if ($field->flags && $field->hasFlag(Field::flagSystem) && $field->name !== 'title') {
                 return;
             }
+            
 
             // add class to wrapper to be able to use :hover even if label is unavailable (eg. checkbox field)
             $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' aos_hasTooltip');
@@ -2812,9 +2813,9 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             $link = '';
 
-            // for multi-select page reference fields $link was added twice #96
-            if (strpos($markup, 'aos_EditFieldLink') === false) {
-
+            // for multi-select page reference fields $link was added twice (#96)
+            // for repeaters $markup contains all included fields' $links (#101)
+            if (strpos($markup, 'aos_EditFieldLink') === false || $inputfield instanceof InputfieldRepeater) {
                 $target = isset(self::$configData['FieldAndTemplateEditLinks']) ? self::$configData['FieldAndTemplateEditLinks'] : '';
                 $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
 
