@@ -627,14 +627,3 @@ input#Inputfield_AsmTweaks_asmSearchBoxKeepTerm {
     outline-color: transparent;
   }
 }
-
-#Inputfield_tweaks>.InputfieldContent .Inputfields>li::before {
-  content: "";
-  display: block;
-  height: 100px;
-  top: -100px;
-  margin: -100px 0 0;
-  background: #fb505026;
-  pointer-events: none;
-  position: relative;
-}
