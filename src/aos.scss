@@ -197,9 +197,12 @@ html.aos {
         overflow: visible !important;
     }
 
-    .InputfieldStateCollapsed,
-    .InputfieldStateWasCollapsed {
+    .InputfieldStateCollapsed {
         overflow: visible !important;
+    }
+
+    .InputfieldStateCollapsed {
+        overflow: hidden !important;
     }
 
     h1:not(.pwapi-headline) {
@@ -3720,12 +3723,16 @@ html.AdminThemeUikit {
     &.headCompact {
         body:not(.modal) {
 
+            $height: 54px;
+
             #pw-masthead,
             #pw-masthead-mobile {
-                height: 54px;
+                height: $height;
+                min-height: $height;
 
                 .uk-navbar a {
-                    height: 54px;
+                    height: $height;
+                    min-height: $height;
                 }
             }
 

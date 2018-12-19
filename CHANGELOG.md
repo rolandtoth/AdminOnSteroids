@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 2.0.6 (2018-12-19)
+
+- AdminThemeUikit: fix invisible roles select list on the module config page (reported by jmartsch)
+- AdminThemeUikit: fix sticky top menu height issue on latest PW (reported by adrian)
+- fix case toggle encoding issue
+
+
+
 ### 2.0.5 (2018-10-28)
 
 - fix for field edit links not clickable when Repeater field set to "Items always open" (reported by Robin S)

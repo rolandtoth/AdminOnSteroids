@@ -2304,7 +2304,7 @@ $(document).ready(function () {
                 var pageTitleSelector,
                     titleCases = {
                         'original': function (string, $btn) {
-                            return $btn.attr('data-original');
+                            return decodeEntities($btn.attr('data-original'));
                         },
                         'Lorem ipsum': function (string) {
                             return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -2390,15 +2390,15 @@ $(document).ready(function () {
                         // change the original on type
                         $input.on('keyup', function () {
                             if ($input.prev('a.case-toggle').length) {
-                                $input.prev('a.case-toggle').attr('data-original', $input.val());
+                                $input.prev('a.case-toggle').attr('data-original', encodeEntities($input.val()));
                             }
                         });
 
                         if ($input.val() && $input.val().length) {
-                            dataOriginal = ' data-original="' + $input.val() + '"';
+                            dataOriginal = ' data-original="' + encodeEntities($input.val()) + '"';
                         }
 
-                        $(this).before('<a class="case-toggle" data-case="original"' + dataOriginal + '><i class="fa fa-font"></i><i class="fa fa-font"></i></a>');
+                        $(this).before("<a class='case-toggle' data-case='original'" + dataOriginal + "><i class='fa fa-font'></i><i class='fa fa-font'></i></a>");
                     });
                 }
 
@@ -2417,7 +2417,7 @@ $(document).ready(function () {
                     if ($input.length) {
                         if (!$input.val()) {
                             // add data-original if it's first click (was empty on start)
-                            $toggleBtn.attr('data-original', $input.val());
+                            $toggleBtn.attr('data-original', encodeEntities($input.val()));
                         }
                         $input.trigger('caseChange', [$toggleBtn]);
                     }
@@ -3660,83 +3660,10 @@ function setColWidths(tableSelector) {
 }
 
 
-// function loadAsset(path, callback, o) {
-//
-//     var selector = getUrlParameter('selector', path).replace(/['"]+/g, '').trim(),
-//         async = getUrlParameter('async', path) === 'true',
-//         version = getUrlParameter('v', path),
-//         assetType = 'js',
-//         assetTag = 'script',
-//         assetSrc = 'src',
-//         needAsset = true;
-//
-//     if (selector.length > 0 && !document.querySelector(selector))
-//         return false;
-//
-//     if (version.length) {
-//         version = '?v=' + version;
-//     }
-//
-//     function getUrlParameter(name, url) {
-//         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-//         url = url ? url : window.location.search;
-//
-//         // var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-//         var regex = new RegExp('[\\?&]' + name + '=([^&]*)'),
-//             results = regex.exec(url);
-//
-//         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-//     }
-//
-//     path = path.split(/\?(.+)/)[0]; // remove url parameters (settings)
-//
-//     if (path.slice(-3) === 'css') {
-//         assetType = 'css';
-//         assetTag = 'link';
-//         assetSrc = 'href';
-//     }
-//
-//     if (document.querySelector(assetTag + '[' + assetSrc + '="' + path + '"]'))
-//         needAsset = false;
-//
-//     function callCallback() {
-//         if (callback) {
-//             var obj = {};
-//             if (selector)
-//                 obj.selector = selector;
-//             if (o)
-//                 obj.o = o;
-//             callback.call(obj);
-//         }
-//     }
-//
-//     if (needAsset) {
-//
-//         var asset = document.createElement(assetTag);
-//         asset[assetSrc] = path + version;
-//
-//         if (assetType === 'js') {
-//             asset.type = "text/javascript";
-//             asset.async = async;
-//
-//             if (asset.readyState) { // IE
-//                 asset.onreadystatechange = function () {
-//                     if (asset.readyState === "loaded" || asset.readyState === "complete") {
-//                         asset.onreadystatechange = null;
-//                         callCallback();
-//                     }
-//                 };
-//             } else {    // others
-//                 asset.onload = callCallback;
-//             }
-//
-//         } else {    // CSS
-//             asset.rel = "stylesheet";
-//             callCallback();
-//         }
-//         document.getElementsByTagName("head")[0].appendChild(asset);
-//
-//     } else {    // always run callback
-//         callCallback();
-//     }
-// }
+function encodeEntities(s) {
+    return $("<div/>").text(s).html();
+}
+
+function decodeEntities(s) {
+    return $("<div/>").html(s).text();
+}
