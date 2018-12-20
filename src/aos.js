@@ -2323,7 +2323,6 @@ $(document).ready(function () {
                     };
 
 
-
                 function getMode(currentMode) {
                     var modesArray = Object.keys(titleCases),
                         mode = modesArray[0];
@@ -2375,7 +2374,7 @@ $(document).ready(function () {
 
                 function initCaseToggles() {
 
-                    var $titleFields = $('.InputfieldPageTitle, .InputfieldText, .InputfieldFileDescription, .batchChildTableContainer').find('input[type="text"]:not([data-casetoggle-init])');
+                    var $titleFields = $('.InputfieldPageTitle, .InputfieldText, .InputfieldFileDescription, .batchChildTableContainer').find('input[type="text"]:not([data-casetoggle-init]):not([data-no-titlecasetoggle])');
 
                     $titleFields.each(function () {
                         var $input = $(this),

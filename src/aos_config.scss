@@ -191,6 +191,7 @@ li.Inputfield {
         display: block;
         //padding: 10px 20px 10px 30px;
         padding: 14px 20px 10px 18px;
+        white-space: normal !important;
         z-index: 0;
 
         >span {
@@ -287,18 +288,11 @@ li.Inputfield {
     }
   }
 
-  //.asmListItem {
-  //  margin-bottom: 1px !important;
-  //  &:first-child {
-  //    margin-top: 4px !important;
-  //  }
-  //}
   .asmContainer {
     margin-bottom: 0;
   }
 
   .asmList {
-    margin-top: 0 !important;
     margin-right: 20px;
 
     &:empty {
@@ -306,19 +300,21 @@ li.Inputfield {
     }
   }
 
-  //> .InputfieldContent .InputfieldCheckboxesStacked li:hover .configLink i {
-  //  color: inherit !important;
-  //  opacity: 1;
-  //}
   .asmListItem {
     padding-left: 8px !important;
-    margin-right: 8px !important;
     display: inline-block !important;
     width: auto !important;
     font-size: 14px;
     background-color: transparent !important;
     border-color: transparent !important;
     color: inherit !important;
+    margin: 0 8px 0 0 !important;
+
+
+    // hide "N selected" for role asmSelects
+    &:last-child::before {
+      display: none !important;
+    }
 
     &:hover {
       .asmListItemLabel {
@@ -360,6 +356,7 @@ form>.Inputfields>li {
 //}
 
 #wrap_Inputfield_enabledSubmodules {
+
   >.InputfieldContent {
     label {
       font-size: 94%;
@@ -614,12 +611,28 @@ input#Inputfield_AsmTweaks_asmSearchBoxKeepTerm {
   }
 }
 
+.aos-highlight-section>.InputfieldContent {
+  outline: 1px solid #3EB998;
+  animation: highlightConfigTarget 2.4s linear forwards;
+  z-index: 20;
+}
+
 @keyframes focusOut {
   0% {
     outline-color: transparent;
   }
 
   2% {
+    outline-color: #3EB998;
+  }
+
+  100% {
+    outline-color: transparent;
+  }
+}
+
+@keyframes highlightConfigTarget {
+  0% {
     outline-color: #3EB998;
   }
 

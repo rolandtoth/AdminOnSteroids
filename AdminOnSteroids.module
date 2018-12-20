@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.6',
+            'version' => '2.0.7',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -3828,6 +3828,7 @@ HTML;
         $f->notes = __('', __FILE__);
         $f->showIf = 'enabledSubmodules=LongClickDuration';
         $f->attr('style', 'width: 100px; display: none !important;');
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedNever;
 
         $f->attr('value',
@@ -3916,6 +3917,7 @@ HTML;
         $f->attr('name', 'NavItems_pages_submenu');
         $f->label = __('Group selected pages into submenu:', __FILE__);
         $f->attr('placeholder', __('submenu name... (optional)', __FILE__));
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedNever;
 
         if ($data[$f->name]) {
@@ -4173,6 +4175,7 @@ HTML;
         $f->label = __('Admin CSS', __FILE__);
         $f->description = __('URL to a CSS file to be loaded in the admin, eg.',
             __FILE__) . ' "/site/templates/admin/admin.css"';
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {
@@ -4186,6 +4189,7 @@ HTML;
         $f->label = __('Admin JavaScript', __FILE__);
         $f->description = __('URL to a JavaScript file to be loaded in the admin, eg.',
             __FILE__) . ' "/site/templates/admin/admin.js"';
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {
@@ -4199,6 +4203,7 @@ HTML;
         $f->label = __('CKEditor custom CSS', __FILE__);
         $f->description = __('URL to a CSS file to be loaded for CKEditors, eg.',
             __FILE__) . ' "/site/templates/admin/cke.css"';
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {
@@ -4211,6 +4216,7 @@ HTML;
         $f->label = __('CKEditor custom configuration script', __FILE__);
         $f->description = __('URL to a JavaScript file to be loaded for CKEditors, eg.',
             __FILE__) . ' "/site/templates/admin/cke.js"';
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {
@@ -4224,6 +4230,7 @@ HTML;
         $f->description = __('URL to Content Templates CKEditor plugin templates directory, eg',
             __FILE__) . ' "/site/templates/admin/cke-templates.js".' .
         ' [' . __('Info', __FILE__) . '](https://ckeditor.com/cke4/addon/templates)';
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {
@@ -4236,6 +4243,7 @@ HTML;
         $f->label = __('FieldOverrides file', __FILE__);
         $f->description = __('File to prepend to the admin textarea config, eg',
             __FILE__) . ' "/site/templates/field-overrides.ini"';
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {
@@ -4248,6 +4256,7 @@ HTML;
         $f->label = __('Branding logo', __FILE__);
         $f->description = __('Path to image for replacing ProcessWire logo in the header, eg.',
             __FILE__) . ' "/site/templates/images/brand-logo.svg"';
+        $f->attr('data-no-titlecasetoggle', 'true');
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {

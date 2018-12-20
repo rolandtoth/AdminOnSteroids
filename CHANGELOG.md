@@ -1,6 +1,15 @@
 # Changelog
 
 
+### 2.0.7 (2018-12-20)
+
+- AdminThemeUikit: fix selected roles list in module config page not wrapping (reported by jmartsch)
+- scroll to target sections in module config page
+- do not add titleCaseToggle if the input has data-no-titlecasetoggle attribute
+- exclude various inputs on module config page from adding titleCaseToggle
+
+
+
 ### 2.0.6 (2018-12-19)
 
 - AdminThemeUikit: fix invisible roles select list on the module config page (reported by jmartsch)
