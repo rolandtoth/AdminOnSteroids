@@ -890,6 +890,12 @@ html.asmLeftX {
 .aos-language-translator-links {
     @include clearfix;
     margin-left: -8px;
+    list-style: none;
+    padding-left: 0;
+
+    .modal & {
+        display: none;
+    }
 
     li {
         float: left;

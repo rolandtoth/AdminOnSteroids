@@ -665,7 +665,7 @@ function setupAdminDataTableFilter() {
 // Translator filter box
 function setupTranslatorFilter() {
 
-    var transFilter = $('<div class="transFilter filterbox"><input type="text" autofocus placeholder="Filter..."><i class="fa fa-close"></i></div>');
+    var transFilter = $('<div class="transFilter filterbox"><input type="text" class="pw-search-input uk-input" autofocus placeholder="Filter..."><i class="fa fa-close"></i></div>');
 
     $('form > .Inputfields > .Inputfield:not(.Inputfield_abandoned_fieldset)').each(function () {
 
