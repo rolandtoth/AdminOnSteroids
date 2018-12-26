@@ -89,7 +89,6 @@ function initCKE() {
     }
 
     function addCKEtoolbars(instance) {
-
         var plugins = instance.extraPlugins.split(',');
 
         for (i = 0; i < plugins.length; i++) {
@@ -172,7 +171,7 @@ function initCKE() {
             }
 
             // process enabled fields
-            if (CKEenabledFields.length) {
+            if (CKEenabledFields && CKEenabledFields.length) {
                 if (CKEenabledFields.indexOf(CKEname.replace('InputfieldCKEditor_', '')) === -1) {
                     return true;
                 }
@@ -1103,6 +1102,34 @@ $(document).ready(function () {
     // Misc
     if (_isEnabled('Misc')) {
         var MiscSettings = AOSsettings.Misc;
+
+        if (MiscSettings.indexOf('translatorModal') !== -1) {
+            var saveTranslationsBtn = $('#save_translations');
+
+            $('.InputfieldFileLanguageInfo a.action')
+                .addClass('pw-modal pw-modal-large')
+                .attr('data-autoclose', '#save_translations_clone_close')
+                .attr('data-buttons', '#save_translations, #save_translations_clone_close');
+
+
+            if (window.frameElement && saveTranslationsBtn.length && $('body.modal').length) {
+                var saveTranslationsBtnCloneClose = saveTranslationsBtn.clone(false);
+
+                // unhide original save btn and hide to make ctrl+s work
+                saveTranslationsBtn.addClass('btn-hidden-alt force-inline-block');
+
+                saveTranslationsBtnCloneClose
+                    .attr('id', saveTranslationsBtn.attr('id') + '_clone_close')
+                    .addClass('ui-priority-secondary')
+                    .appendTo(saveTranslationsBtn.parent())
+                    .children('.ui-button-text').html(AOSsettings.loc.save_and_close);
+            }
+
+            $(document).on('pw-modal-closed', '.InputfieldFileLanguageInfo a.action', function (event) {
+                $(event.target).parents('li').first().trigger('reload');
+            });
+        }
+
 
         if (MiscSettings.indexOf('checkAllCheckboxes') !== -1) {
             var $checkAllCheckboxes = $('<li id="checkAllCheckboxes"><i class="fa fa-check"></i></li>');
@@ -2789,7 +2816,6 @@ $(document).ready(function () {
         }
     }
 
-
     // ModuleTweaks
     if (_isEnabled('ModuleTweaks')) {
 
@@ -2825,7 +2851,6 @@ $(document).ready(function () {
                     .children('.ui-button-text').html(loc.save_and_reload).before('<i class="fa fa-fw fa-refresh"></i>');
 
                 submitBtnClone.on('click', function () {
-
                     if ($('input#uninstall').is(':checked')) {
                         $(this).addClass('needsReload');
                         $('body', window.parent.document).addClass('needsReload');

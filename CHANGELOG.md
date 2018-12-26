@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2.0.8 (2018-12-26)
+
+- new tweak to open Language Translator in a modal window (Misc)
+- fix JS error caused by CKEaddons on certain pages
+
+
+
 ### 2.0.7 (2018-12-20)
 
 - AdminThemeUikit: fix selected roles list in module config page not wrapping (reported by jmartsch)

@@ -5,6 +5,16 @@
 // general style overrides
 html.aos {
 
+    .btn-hidden-alt {
+        position: relative !important;
+        z-index: -1 !important;
+        opacity: 0 !important;
+    }
+
+    .force-inline-block {
+        display: inline-block !important;
+    }
+
     .InputfieldPageListSelect,
     .InputfieldPageListSelect .InputfieldContent {
         @include clearfix();

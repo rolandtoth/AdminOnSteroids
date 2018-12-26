@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.7',
+            'version' => '2.0.8',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -1163,6 +1163,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configData['loc'] = array(
             'add_new' => __('Add new', __FILE__),
             'save' => __('Save', __FILE__),
+            'save_and_close' => __('Save + Close', __FILE__),
             'save_and_exit' => __('Save + Exit', __FILE__),
             'save_and_reload' => __('Save + Reload', __FILE__),
             'remove_all_fields' => __('Remove All', __FILE__),
@@ -3877,6 +3878,7 @@ HTML;
         $f->addOption('checkAllCheckboxes', __('Add button to check/uncheck all checkboxes (appears on hover)', __FILE__));
         $f->addOption('miniScrollbar', __('Use mini scrollbars (Chrome only)', __FILE__));
         $f->addOption('extendedFieldList', __('Show additional field details on Fields setup page', __FILE__));
+        $f->addOption('translatorModal', __('Open Language Translator in a modal window', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
@@ -4256,7 +4258,7 @@ HTML;
         $f->label = __('Branding logo', __FILE__);
         $f->description = __('Path to image for replacing ProcessWire logo in the header, eg.',
             __FILE__) . ' "/site/templates/images/brand-logo.svg"';
-        $f->attr('data-no-titlecasetoggle', 'true');
+        $f->attr('data-no-titlecasetoggle', 'true');        
         $f->collapsed = Inputfield::collapsedBlank;
 
         if (isset($data[$f->name])) {
