@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2.0.9 (2018-12-27)
+
+- translatorModal: add modal classes via PHP instead JavaScript
+- use "continue 2" within a switch in FieldOverrides (reported by adrian)
+
+
+
 ### 2.0.8 (2018-12-26)
 
 - new tweak to open Language Translator in a modal window (Misc)

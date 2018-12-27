@@ -1106,12 +1106,6 @@ $(document).ready(function () {
         if (MiscSettings.indexOf('translatorModal') !== -1) {
             var saveTranslationsBtn = $('#save_translations');
 
-            $('.InputfieldFileLanguageInfo a.action')
-                .addClass('pw-modal pw-modal-large')
-                .attr('data-autoclose', '#save_translations_clone_close')
-                .attr('data-buttons', '#save_translations, #save_translations_clone_close');
-
-
             if (window.frameElement && saveTranslationsBtn.length && $('body.modal').length) {
                 var saveTranslationsBtnCloneClose = saveTranslationsBtn.clone(false);
 

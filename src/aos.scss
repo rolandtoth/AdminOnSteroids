@@ -9,6 +9,13 @@ html.aos {
         position: relative !important;
         z-index: -1 !important;
         opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .ui-dialog-buttonset {
+        max-width: 1600px;
+        margin: 0 auto !important;
     }
 
     .force-inline-block {

@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.8',
+            'version' => '2.0.9',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -976,6 +976,14 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 $jsFiles[] = $root . '/scripts/vendor/autosize/autosize.min.js';
             }
 
+            if (in_array('translatorModal', $configData[$subModule], true)) {
+                $this->addHookAfter('InputfieldFile::render', function ($event) {
+                    if (wire('page')->name === 'languages' && strpos(wire('page')->path, '/setup/languages') !== false) {
+                        $event->return = str_replace("<a class='action'", "<a class='action pw-modal pw-modal-full' data-buttons='#save_translations, #save_translations_clone_close' data-autoclose='#save_translations_clone_close'", $event->return);
+                    }
+                });
+            }
+
             // extendedFieldList
             if (in_array('extendedFieldList', $configData[$subModule], true)) {
                 $this->addHookAfter('ProcessField::getListTableRow', function (HookEvent $event) {
@@ -1086,7 +1094,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     }
                 }
             }
-
         }
 
         // langTabHotkeySwitcher
@@ -2619,7 +2626,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     case 'name':
                     case 'type':
                     case 'inputfieldClass':
-                        continue;
+                        continue 2;
                         break;
                     default:
                         $field->{$key} = $v;
