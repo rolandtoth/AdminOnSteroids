@@ -617,6 +617,10 @@ input#Inputfield_AsmTweaks_asmSearchBoxKeepTerm {
   z-index: 20;
 }
 
+.pw-no-select {
+  user-select: text;
+}
+
 @keyframes focusOut {
   0% {
     outline-color: transparent;

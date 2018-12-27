@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 2.0.10 (2018-12-28)
+
+- improvements to tweak "Add links to Language Translator to edit current textdomain file in other languages": do not add links for non-existing textdomains, add intro text, do not hide them in modal view
+
+
+
 ### 2.0.9 (2018-12-27)
 
 - translatorModal: add modal classes via PHP instead JavaScript

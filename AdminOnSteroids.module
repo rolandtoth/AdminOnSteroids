@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.9',
+            'version' => '2.0.10',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -2841,17 +2841,27 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $currentLangID = $this->wire('input')->get('language_id');
         $links = '';
         $adminUrl = $this->wire('urls')->admin;
+        $modalParam = wire('input')->get('modal') === '1' ? '&modal=1' : '';
+        $translatorLinksIntro = '<p class="aos-language-translator-intro">' . __('Translate to other languages', __FILE__) . ':</p>';
 
         foreach ($this->wire('languages') as $lang) {
             $lang_id = $lang->id;
-            if ($lang_id == $currentLangID) {
-                continue;
+            if ($lang_id == $currentLangID)     continue;
+
+            $translator = new LanguageTranslator($lang);
+            $file = $translator->textdomainToFilename($textdomain);
+
+            if ($file) {
+                $links .= '<li><a href="' . $adminUrl . 'setup/language-translator/edit/?textdomain=' . $textdomain . '&language_id=' . $lang_id . $modalParam . '" title="' . $lang->name . '">' . $lang->title . '</a></li>';
             }
-            $links .= '<li><a href="' . $adminUrl . 'setup/language-translator/edit/?textdomain=' . $textdomain . '&language_id=' . $lang_id . '">' . $lang->title . ' <span>' . $lang->name . '<span></a></li>';
         }
 
-        $links = '<ul class="aos-language-translator-links">' . $links . '</ul>';
-        $event->return = str_replace('</h2>', '</h2>' . $links, $form);
+        if(strlen($links)) {
+            $links = '<ul class="aos-language-translator-links">' . $links . '</ul>';
+        } else {
+            $links = '<p class="aos-language-translator-links-none"><em>' . __('Unable to load textdomain for other languages.', __FILE__) . '</em></p>';
+        }
+        $event->return = str_replace('</h2>', '</h2>' . $translatorLinksIntro . $links, $form);
     }
 
     public function addPageListUnselectButtons(HookEvent $event)

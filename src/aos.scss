@@ -893,6 +893,13 @@ html.asmLeftX {
     text-overflow: ellipsis;
 }
 
+.aos-language-translator-intro {
+    float: left;
+    margin: 0;
+    margin-right: 10px;
+    font-size: .92em;
+}
+
 // translator links
 .aos-language-translator-links {
     @include clearfix;
@@ -900,35 +907,30 @@ html.asmLeftX {
     list-style: none;
     padding-left: 0;
 
-    .modal & {
-        display: none;
-    }
-
     li {
         float: left;
         line-height: 1;
 
         &:not(:last-child) {
             margin-right: 0.5em;
-            padding-right: 0.5em;
-            border-right: 1px solid #7EA0AB;
         }
     }
 
     a {
-        font-size: 0.9em;
+        font-size: .92em;
         display: inline-block;
-        padding: 0.16em 10px;
-        vertical-align: middle;
+        padding: 0.4rem 0.64rem;
+        background: #f0f3f7;
+        border-radius: 2px;
+        text-decoration: none;
+        margin-top: -2px;
+
+        &:hover {
+            background: darken(#f0f3f7, 3%);
+        }
 
         &:not(:hover) {
             color: inherit;
-        }
-
-        span {
-            opacity: 0.66;
-            font-size: 0.9em;
-            text-transform: uppercase;
         }
     }
 }
