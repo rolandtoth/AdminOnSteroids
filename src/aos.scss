@@ -27,9 +27,6 @@ html.aos {
         @include clearfix();
     }
 
-    // make mini scrollbar overlap contents
-    overflow: overlay; //min-width: 100vw;
-
     //overflow-x: hidden; // note: this makes asmselect weird on moving items
     // on pagelist item hover underline only the first span (added by the module)
     .pw-content .PageList .PageListItem>a.PageListPage {

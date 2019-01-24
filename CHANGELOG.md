@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2.0.11 (2019-01-24)
+
+- remove overlay: overflow on html tag to avoid unwanted styling issues (reportd by adrian)
+- disable filterbox if table has "nofilterbox" class (PR #103 by bernhard)
+
+
+
 ### 2.0.10 (2018-12-28)
 
 - improvements to tweak "Add links to Language Translator to edit current textdomain file in other languages": do not add links for non-existing textdomains, add intro text, do not hide them in modal view
