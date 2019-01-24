@@ -388,7 +388,7 @@ function setupAdminDataTableFilter() {
             if (table.attr('data-dtfilter-added')) return true;
             
             // do not show if the table has the nofilterbox class
-            if(table.hasClass('nofilterbox')) return false;
+            if(table.hasClass('nofilterbox')) return true;
 
             // continue if table is under Module Info section
             // if (table.parents('#ModuleEditForm, #ModuleInfo').length) return true;
