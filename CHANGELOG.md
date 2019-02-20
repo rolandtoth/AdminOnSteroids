@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 2.0.12 (2019-02-20)
+
+- RestrictTreeDropdown: hide primary nav submenu if empty (reported by Robin S)
+
+
+
 ### 2.0.11 (2019-01-24)
 
 - remove overlay: overflow on html tag to avoid unwanted styling issues (reportd by adrian)

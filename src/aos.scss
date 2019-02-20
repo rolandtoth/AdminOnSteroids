@@ -40,6 +40,11 @@ html.aos {
         }
     }
 
+    // RestrictTreeDropdown: hide empty submenu (#105)
+    ul.pw-dropdown-menu.prnav:empty {
+        display: none !important;
+    }
+
     // add some space between the top bar and page content (default theme, sticky header disabled)
     &.AdminThemeDefault:not(.headSticky) {
         body:not(.hasWireTabs) {
