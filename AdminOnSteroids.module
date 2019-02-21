@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.12',
+            'version' => '2.0.13',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -227,7 +227,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             'centerLogin',
             'downloadAssetButton',
             'editFieldWidth',
-            'emptyTrashTop',
             'filterbox',
             'flatModules',
             'headBtnToTitle',
@@ -3878,7 +3877,6 @@ HTML;
         $f->addOption('hoverDropdown', __('Show save dropdown on hover instead on click', __FILE__));
         $f->addOption('titleCaseToggle', __('Add button to toggle case of Pagetitle and text field contents', __FILE__));
         $f->addOption('tabIndex', __('Add sequential tabindex to fields', __FILE__));
-        $f->addOption('emptyTrashTop', __('Move empty trash confirmation checkbox above trash items', __FILE__));
         $f->addOption('showSystemTemplates', __('Force showing system templates', __FILE__));
         $f->addOption('iconsFilter', __('Add filter box to template icon picker', __FILE__));
         $f->addOption('uncheckAddnewActive',

@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 2.0.13 (2019-02-20)
+
+- Misc: remove "Move empty trash confirmation checkbox above trash items" because latest ProcessWire versions doesn't need this tweak anymore (suggested by Robin S)
+
+
+
 ### 2.0.12 (2019-02-20)
 
 - RestrictTreeDropdown: hide primary nav submenu if empty (reported by Robin S)
