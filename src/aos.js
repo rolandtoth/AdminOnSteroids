@@ -1527,10 +1527,10 @@ $(document).ready(function () {
 
             $(document).on('change', '.asmSelect ~ select', function () {
 
-                var src = event.target || event.srcElement;
+                var src = event && (event.target || event.srcElement);
 
                 // asmSelect remove icon click
-                if (src.tagName === 'I') {
+                if (src && src.tagName === 'I') {
                     var $asmSelect = $(this).parents('.asmContainer').first().find('.asmSelect');
                     $asmSelect.select2('destroy');
                     restoreAsmSelectBoxPlaceholder($asmSelect, select2Config);

@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.13',
+            'version' => '2.0.14',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -504,7 +504,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         //NavItems
         $subModule = 'NavItems';
 
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
             if ($this->wire('page')->id !== 23) {
                 $this->addHookAfter('Page::render', $this, 'addNavItems');
             }
@@ -529,19 +529,23 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         // AsmTweaks
         $subModule = 'AsmTweaks';
 
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
-            if (in_array('asmPlaceholder', $configData[$subModule])) {
+            if (in_array('asmShowFieldTypes', $configData[$subModule], true)) {
+                $this->addHookBefore('InputfieldAsmSelect::render', $this, 'asmShowFieldTypes');
+            }
+
+            if (in_array('asmPlaceholder', $configData[$subModule], true)) {
                 $this->addHookAfter('Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields', $this, 'addAsmPlaceholderConfigField');
                 $this->addHookAfter('InputfieldAsmSelect::render', $this, 'addAsmPlaceholder');
             }
 
-            if (in_array('asmLimit', $configData[$subModule])) {
+            if (in_array('asmLimit', $configData[$subModule], true)) {
                 $this->addHookAfter('Field(type=FieldtypePage|FieldtypeOptions)::getConfigInputfields', $this, 'addLimitItemsConfigField');
                 $this->addHookAfter('InputfieldAsmSelect::render', $this, 'addAsmLimit');
             }
 
-            if (in_array('asmSearchBox', $configData[$subModule])) {
+            if (in_array('asmSearchBox', $configData[$subModule], true)) {
                 $this->addHookAfter('InputfieldAsmSelect::render', $this, 'addAsmSelectBox');
                 $styles->add($root . '/scripts/vendor/select2/css/select2.min.css');
                 $scripts->add($root . '/scripts/vendor/select2/js/select2.min.js'); // note: patched
@@ -1522,6 +1526,40 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         //$event->return = utf8_decode($markup);
         $event->return = $markup;
+    }
+
+    public function asmShowFieldTypes(HookEvent $event)
+    {
+        $field = $event->object;
+
+        if($field->label !== 'Fields') {
+            return false;
+        }
+
+        $options = $field->options;
+        $optionAttributes = $field->optionAttributes;
+
+        foreach($field->options as $key => $name) {
+            $f = $this->wire('fields')->get(trim($name, '*'));
+
+            if(!$f) {
+                continue;
+            }
+
+            $className = str_replace('Fieldtype', '', $f->type);
+            $inputfieldClass = str_replace('Inputfield', '', $f->inputfieldClass);
+
+            $optionAttributes[$key]['data-status'] = str_replace($className, '', trim($optionAttributes[$key]['data-status']));
+
+            if($inputfieldClass !== '' && $inputfieldClass !== $className && $className !== $inputfieldClass . 'Language') {
+                $className .= ' (' . $inputfieldClass . ')';
+            }
+
+            $options[$key] = $name . ' &ndash; ' . $className;
+        }
+
+        $field->options = $options;
+        $field->optionAttributes = $optionAttributes;
     }
 
     public function addAsmPlaceholder(HookEvent $event)
@@ -3385,6 +3423,7 @@ HTML;
         $f->addOption('asmSearchBoxKeepListOpen', __('Keep list open after select', __FILE__));
         $f->addOption('asmSearchBoxKeepTerm', __('Keep search term after select', __FILE__));
         $f->addOption('asmCounter', __('Add counter to asmSelect', __FILE__));
+        $f->addOption('asmShowFieldTypes', __('Show field types after name (for Fields asmSelect)', __FILE__));
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);

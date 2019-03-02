@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2.0.14 (2019-03-02)
+
+- new AsmTweaks tweak: show field types after name (for Fields asmSelect)
+- fix for select2 JavaScript error on manual trigger
+
+
+
 ### 2.0.13 (2019-02-20)
 
 - Misc: remove "Move empty trash confirmation checkbox above trash items" because latest ProcessWire versions doesn't need this tweak anymore (suggested by Robin S)
