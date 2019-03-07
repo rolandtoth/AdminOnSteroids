@@ -1,6 +1,14 @@
 # Changelog
 
 
+### 2.0.15 (2019-03-07)
+
+- Misc: new "addFieldWrapAttributes" tweak that adds data-attributes to field wrappers containing field name, id, type, etc
+- fix for a small jump when hovering on a paginated pagelist under the Children tab (reported by matjazp)
+- added JumpLinks module's save button to the supported ctrl+s save buttons (suggested by Tomka)
+
+
+
 ### 2.0.14 (2019-03-02)
 
 - new AsmTweaks tweak: show field types after name (for Fields asmSelect)

@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.14',
+            'version' => '2.0.15',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -300,7 +300,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             $this->htmlClasses[] = 'BrandingLogo';
         }
 
-        if (!$this->wire('user')->isSuperUser()) {
+        if (!$this->wire('user')->isSuperuser()) {
             if (($key = array_search('themeConfigLinks', $this->htmlClasses)) !== false) {
                 unset($this->htmlClasses[$key]);
             }
@@ -350,7 +350,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $configData = $this->wire('modules')->getModuleConfigData($this);
         self::$configData = $configData;
 
-        if ($this->wire('user')->isSuperUser()) {
+        if ($this->wire('user')->isSuperuser()) {
 
             if ($this->wire('input')->toggle == 1) {
                 $configData['enabled'] = ($this->enabled == 1) ? 0 : 1;
@@ -382,7 +382,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         // remove submodules where user's role is not allowed
 
-        if (!$this->wire('user')->isSuperUser()) {
+        if (!$this->wire('user')->isSuperuser()) {
 //        $userRoles = $this->wire('user')->roles->explode('name');
             $userRoles = $this->wire('user')->roles->name(',');
 
@@ -556,7 +556,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $subModule = 'FieldAndTemplateEditLinks';
         if (in_array($subModule, $enabledSubmodules, true)) {
 
-            if ($this->wire('user')->isSuperUser()) {
+            if ($this->wire('user')->isSuperuser()) {
 
                 // add template edit link (page action) to pagelist
                 $this->addHookAfter('ProcessPageListActions::getActions', $this, 'addTemplateEditLinkPageList');
@@ -591,7 +591,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         //InputfieldURLChecker
         $subModule = 'InputfieldURLChecker';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
 //            $jsFiles[] = $root . '/' . $subModule . '/' . $subModule . '.js';
             //            $cssFiles[] = $root . '/' . $subModule . '/' . $subModule . '.css';
@@ -603,7 +603,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         //PageListTweaks
         $subModule = 'PageListTweaks';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
             // always add hook to remove markup if tweak is disabled
             $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addPageListMarkup');
@@ -613,17 +613,17 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
 
             // pListUnselect
-            if (in_array('pListUnselect', $configData[$subModule])) {
+            if (in_array('pListUnselect', $configData[$subModule], true)) {
                 $this->addHookAfter('InputfieldPageListSelect::render', $this, 'addPageListUnselectButtons');
             }
 
-            if ($this->wire('user')->isSuperUser()) {
+            if ($this->wire('user')->isSuperuser()) {
 
-                if (in_array('pListIDs', $configData[$subModule])) {
+                if (in_array('pListIDs', $configData[$subModule], true)) {
                     $this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addPageListIDs');
                 }
 
-                if (in_array('deleteBtn', $configData[$subModule])) {
+                if (in_array('deleteBtn', $configData[$subModule], true)) {
                     // add delete action to pagelist items (bypass trash)
                     $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addDeleteButton');
                     $this->addHookAfter('ProcessPageListActions::processAction', $this, 'addDeleteButtonAction');
@@ -633,7 +633,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $this->addHookBefore('Pages::trash', $this, 'addDeletePermanentlyHook');
                 }
 
-                if (in_array('stickyBtn', $configData[$subModule])) {
+                if (in_array('stickyBtn', $configData[$subModule], true)) {
                     $this->_installStickyField();
                     $this->addHookAfter('ProcessPageList::find', $this, 'stickyFindMod');
                     $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addStickyButton');
@@ -643,7 +643,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
             }
 
-            if (in_array('refreshBtn', $configData[$subModule])) {
+            if (in_array('refreshBtn', $configData[$subModule], true)) {
                 $this->addHookAfter('ProcessPageListActions::getExtraActions', function (HookEvent $event) {
 
                     $page = $event->arguments('page');
@@ -666,7 +666,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                     $page = $event->arguments(0);
                     $action = $event->arguments(1);
 
-                    if ($action == 'refresh') {
+                    if ($action === 'refresh') {
 
                         $remove = false;
                         $refreshChildren = $page->id;
@@ -690,8 +690,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 });
             }
 
-            if (in_array('pListTrash', $configData[$subModule])) {
-                if (!$this->wire('user')->isSuperUser()) {
+            if (in_array('pListTrash', $configData[$subModule], true)) {
+                if (!$this->wire('user')->isSuperuser()) {
                     $this->addHookAfter('ProcessPageListActions::getExtraActions', $this, 'addTrashButton');
                 }
             }
@@ -707,7 +707,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $subModule = 'ListerTweaks';
         // default columns: only add hook if there's no bookmark requested
-        if (in_array($subModule, $enabledSubmodules) && (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false) && (!empty(self::$configData['ListerTweaks_find']) || !empty(self::$configData['ListerTweaks_users']))) {
+        if (in_array($subModule, $enabledSubmodules, true) && (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '?bookmark=') === false) && (!empty(self::$configData['ListerTweaks_find']) || !empty(self::$configData['ListerTweaks_users']))) {
             $this->addHookBefore('ProcessPageLister::execute', function ($event) {
 
                 // do not mess with ListerPro
@@ -736,7 +736,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                 if (!empty(self::$configData[$listerType])) {
                     foreach (self::$configData[$listerType] as $ff) {
-                        if ($ff == '[DEFAULTS]') {
+                        if ($ff === '[DEFAULTS]') {
                             $columns += $defaultFields;
                             continue;
                         }
@@ -756,16 +756,16 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         //RestrictTreeDropdown
         $subModule = 'RestrictTreeDropdown';
 
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
             $user = $this->wire('user');
             $selected_roles = $this->RestrictTreeDropdown;
 
             if (!empty($selected_roles)) {
 
                 $prevent_dropdown = false;
-                if (in_array('all-roles', $selected_roles)) {
+                if (in_array('all-roles', $selected_roles, true)) {
                     $prevent_dropdown = true;
-                } elseif (!$this->wire('user')->isSuperUser() && in_array('nonsuperuser', $selected_roles)) {
+                } elseif (!$this->wire('user')->isSuperuser() && in_array('nonsuperuser', $selected_roles, true)) {
                     $prevent_dropdown = true;
                 } elseif (count(array_intersect($selected_roles, $user->roles->explode('name')))) {
                     $prevent_dropdown = true;
@@ -781,7 +781,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $subModule = 'AddNewChildFirst';
 
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
             $this->addHookAfter('Pages::added', function (HookEvent $event) {
                 $page = $event->arguments[0];
@@ -797,7 +797,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         // FieldOverrides
         $subModule = 'FieldOverrides';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
             if ($this->isOnPageEditScreen()) {
 
@@ -848,10 +848,10 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         //Hotkeys
         $subModule = 'Hotkeys';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
             // add breadcrumb tweaks
-            if (in_array('breadcrumbTweaks', $configData[$subModule])) {
+            if (in_array('breadcrumbTweaks', $configData[$subModule], true)) {
 
                 $editedPage = $this->editedPage;
 
@@ -876,7 +876,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         //LongClickDuration
         $subModule = 'LongClickDuration';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
             $LongClickDuration = (int) $configData['LongClickDuration'];
 
@@ -892,8 +892,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         // CKEaddons
         $subModule = 'CKEaddons';
 
-        if (in_array($subModule, $enabledSubmodules)) {
-            if (in_array('linkfilesmenu', $configData['CKEaddons_plugins'])) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
+            if (in_array('linkfilesmenu', $configData['CKEaddons_plugins'], true)) {
                 $this->addHookBefore('ProcessLogin::executeLogout', $this, 'CkeLinkFilesAjaxResponse');
                 $this->addHookAfter('ProcessPageEdit::execute', $this, 'CkeLinkFilesPageEditMods');
             }
@@ -901,10 +901,15 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         // Misc
         $subModule = 'Misc';
-        if (in_array($subModule, $enabledSubmodules)) {
+        if (in_array($subModule, $enabledSubmodules, true)) {
 
+            // addFieldWrapAttributes
+            if (in_array('addFieldWrapAttributes', $configData[$subModule], true)) {
+                $this->addHookAfter('Inputfield::render', $this, 'addFieldWrapAttributes');
+            }
+            
             // adminColumns
-            if (in_array('adminColumns', $configData[$subModule])) {
+            if (in_array('adminColumns', $configData[$subModule], true)) {
                 // make sure field is available
                 $this->installColumnBreakField();
                 $this->addHookAfter('ProcessPageEdit::buildFormContent', $this, 'setupAdminColumns');
@@ -912,49 +917,49 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
 
             // adminLangSwitcher
-            if (in_array('adminLangSwitcher', $configData[$subModule])) {
+            if (in_array('adminLangSwitcher', $configData[$subModule], true)) {
                 $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAdminLangSwitcher');
             }
 
             // uncheckAddnewActive
-            if (in_array('uncheckAddnewActive', $configData[$subModule])) {
+            if (in_array('uncheckAddnewActive', $configData[$subModule], true)) {
                 $this->addHookAfter('InputfieldPageName::render', $this, 'uncheckAddnewActive');
             }
 
             // addTranslatorLinks
-            if (in_array('addTranslatorLinks', $configData[$subModule])) {
+            if (in_array('addTranslatorLinks', $configData[$subModule], true)) {
                 if ($this->wire('page')->process == 'ProcessLanguageTranslator' && $this->languageCount > 1) {
                     $this->addHookAfter('ProcessLanguageTranslator::executeEdit', $this, 'addTranslatorLinks');
                 }
             }
 
             // logsHelperTweaks
-            if (in_array('logsHelperTweaks', $configData[$subModule])) {
+            if (in_array('logsHelperTweaks', $configData[$subModule], true)) {
                 $this->addHookAfter('InputfieldFieldset(id=FieldsetTools)::render', $this, 'expandFieldsetToolsField');
                 $this->addHookAfter('InputfieldSelect(id=Inputfield_action,is_replacement!=1)::render', $this, 'replaceLogActionsWithRadios');
             }
 
             // inputMask
-            if (in_array('inputMask', $configData[$subModule])) {
+            if (in_array('inputMask', $configData[$subModule], true)) {
                 $this->addHookAfter('Field(type=FieldtypeText|FieldtypeTextLanguage)::getConfigInputfields', $this, 'addInputMaskConfigField');
                 $this->addHookAfter('InputfieldText::render', $this, 'addInputMask');
 
                 $scripts->add($root . '/scripts/vendor/cleave.js/cleave.min.js');
 
-                if (in_array('inputMaskPhoneLib', $configData[$subModule])) {
+                if (in_array('inputMaskPhoneLib', $configData[$subModule], true)) {
                     $scripts->add($root . '/scripts/vendor/cleave.js/cleave-phone.i18n.js');
                 }
             }
 
             // load CSS for miniScrollbar
-            if (in_array('miniScrollbar', $configData[$subModule])) {
+            if (in_array('miniScrollbar', $configData[$subModule], true)) {
                 $styles->add($root . '/styles/scrollbar.css');
             }
 
             // showSystemTemplates
-            if (in_array('showSystemTemplates', $configData[$subModule])) {
+            if (in_array('showSystemTemplates', $configData[$subModule], true)) {
 
-                if ($this->wire('user')->isSuperUser()) {
+                if ($this->wire('user')->isSuperuser()) {
                     $this->addHookBefore('ProcessField::buildEditFormInfo', function () {
                         // Show system templates in templates list of Edit Field
                         $this->wire('config')->advanced = true;
@@ -1226,6 +1231,23 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $field->collapsed = Inputfield::collapsedNo;
         $field->label = '';
         $field->wrapAttr('class', 'aos_no-inputfield-padding');
+    }
+
+    public function addFieldWrapAttributes(HookEvent $event)
+    {
+        $field = $event->object;
+        $f = $field->hasField;
+
+        if(!$f) {
+            return false;
+        }
+
+        $field->wrapAttr('data-field-id', $f->id);
+        $field->wrapAttr('data-field-name', $f->name);
+        $field->wrapAttr('data-field-type', $f->type);
+        $field->wrapAttr('data-field-tags', $f->tags);
+        $field->wrapAttr('data-field-flags', $f->flags);
+        $field->wrapAttr('data-field-inputfieldclass', $f->inputfieldClass);
     }
 
     // replace select box for Actions field on Logs page
@@ -1690,7 +1712,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             if (strlen($inputMask)) {
 
-                $maskConfig = $this->linesToArray($inputMask, false);
+                $maskConfig = $this->linestoArray($inputMask, false);
 
                 $field->attr('has-inputmask', 1);
                 $id = $field_base_id . $langSuffix;
@@ -1812,7 +1834,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 } else {
                     if ($p->id == 21) {
 
-                        if ($this->wire('user')->isSuperUser()) {
+                        if ($this->wire('user')->isSuperuser()) {
                             $url = $this->config->urls->admin . 'module';
                         }
 
@@ -1876,7 +1898,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                     // if title starts with "!" then only SuperUsers should see
                     if ($NavItems_pages_submenu[0] == '!') {
-                        if (!$this->wire('user')->isSuperUser()) {
+                        if (!$this->wire('user')->isSuperuser()) {
                             $superuserFlag = true;
                         }
                         // trim
@@ -1945,7 +1967,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                         // if title starts with "!" then only SuperUsers should see
                         if ($title[0] == '!') {
-                            if (!$this->wire('user')->isSuperUser()) {
+                            if (!$this->wire('user')->isSuperuser()) {
                                 $superuserFlag = true;
                                 continue;
                             }
@@ -1992,7 +2014,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
                 // if title starts with "!" then only SuperUsers should see
                 if ($title[0] == '!') {
-                    if (!$this->wire('user')->isSuperUser()) {
+                    if (!$this->wire('user')->isSuperuser()) {
                         continue;
                     }
                     // trim and add * to indicate it's admin only
@@ -2024,7 +2046,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
     {
         $page = $event->arguments('page');
 
-        if (!$this->wire('user')->isSuperUser()) {
+        if (!$this->wire('user')->isSuperuser()) {
             return false;
         }
 
@@ -2908,7 +2930,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $originalID = '';
         $originalTitle = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->title : '';
 
-        if (isset($this->PageListTweaks) && in_array('pListIDs', $this->PageListTweaks) && $this->wire('user')->isSuperUser()) {
+        if (isset($this->PageListTweaks) && in_array('pListIDs', $this->PageListTweaks) && $this->wire('user')->isSuperuser()) {
             $originalID = ($field->value && $this->pages->get($field->value)) ? $this->pages->get($field->value)->id : '';
         }
 
@@ -3193,7 +3215,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         }
 
         // build settings array
-        $settings = $this->linesToArray($data);
+        $settings = $this->linestoArray($data);
         $this->{$propertyName} = $settings;
 
         return $settings;
@@ -3899,6 +3921,7 @@ HTML;
         $f->showIf = 'enabledSubmodules=Misc';
         $f->collapsed = Inputfield::collapsedNever;
 
+        $f->addOption('addFieldWrapAttributes', __('Add data-attributes to field wrappers containing field name, id, type, etc', __FILE__));
         $f->addOption('adminColumns', __('Add `aos_column_break` field to create admin columns', __FILE__));
         $f->addOption('adminLangSwitcher', __('Add language switcher to the admin', __FILE__));
         $f->addOption('addTranslatorLinks',

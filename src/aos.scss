@@ -197,7 +197,7 @@ html.aos {
     }
 
     .ui-menu {
-
+        
         // AdminThemeDefault menu item overrides
         [data-pid]:after {
             margin-left: 1px;
@@ -211,10 +211,10 @@ html.aos {
 
     // allow template edit links to appear
     //.PageList:not(.PageListSortingList) {
-    .PageListItem>.PageList,
-    .PageList:hover {
-        overflow: visible !important;
-    }
+    //.PageListItem>.PageList,
+    //.PageList:hover {
+    //    overflow: visible !important;
+    //}
 
     .InputfieldStateCollapsed {
         overflow: visible !important;

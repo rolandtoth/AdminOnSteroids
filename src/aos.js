@@ -1321,7 +1321,7 @@ $(document).ready(function () {
 
             } else {
 
-                var selectors = '.aos_hotkeySave, #submit_save_unpublished, form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations'.split(',');
+                var selectors = '.aos_hotkeySave, #submit_save_unpublished, form#ProcessTemplateAdd #Inputfield_submit, #submit_publish, #Inputfield_submit_save, #submit_save, #ProcessTemplateEdit #Inputfield_submit, #Inputfield_submit_save_field, #Inputfield_submit_save_module, #submit_save_profile, #save_translations, #saveJumplink'.split(',');
 
                 $.each(selectors, function (i, selector) {
                     var res = $(selector);
