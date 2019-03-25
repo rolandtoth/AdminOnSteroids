@@ -1,5 +1,11 @@
 # Changelog
 
+### 2.0.16 (2019-03-25)
+
+- fix hidden text for hidden pagelist items (possibly a webkit bug) (reported by @adrianbj and MilenKo)
+- fix PHP notice when $editedPage is not available (InputfieldURLChecker)
+
+
 
 ### 2.0.15 (2019-03-07)
 
@@ -30,7 +36,7 @@
 
 ### 2.0.11 (2019-01-24)
 
-- remove overlay: overflow on html tag to avoid unwanted styling issues (reportd by adrian)
+- remove overlay: overflow on html tag to avoid unwanted styling issues (reportd by @adrianbj)
 - disable filterbox if table has "nofilterbox" class (PR #103 by bernhard)
 
 
@@ -44,7 +50,7 @@
 ### 2.0.9 (2018-12-27)
 
 - translatorModal: add modal classes via PHP instead JavaScript
-- use "continue 2" within a switch in FieldOverrides (reported by adrian)
+- use "continue 2" within a switch in FieldOverrides (reported by @adrianbj)
 
 
 
@@ -67,7 +73,7 @@
 ### 2.0.6 (2018-12-19)
 
 - AdminThemeUikit: fix invisible roles select list on the module config page (reported by jmartsch)
-- AdminThemeUikit: fix sticky top menu height issue on latest PW (reported by adrian)
+- AdminThemeUikit: fix sticky top menu height issue on latest PW (reported by @adrianbj)
 - fix case toggle encoding issue
 
 
@@ -197,7 +203,7 @@
 
 - fix for additional adminDataTable filterbox after PageTable reload (reported by szabesz)
 - remove CSS rule that made impossible to resize ListerPro columns (reported by szabesz)
-- make TracyDebugger panels appear above sticky headers and AOS submodule blocks (reported by adrian)
+- make TracyDebugger panels appear above sticky headers and AOS submodule blocks (reported by @adrianbj)
 
 
 
@@ -209,7 +215,7 @@
 
 ### 1.8.8 (2018-04-03)
 
-- prevNextLinks: do not load all siblings (by adrian)
+- prevNextLinks: do not load all siblings (by @adrianbj)
 
 
 
@@ -257,7 +263,7 @@
 
 ### 1.8.2 (2018-03-12)
 
-- Misc: new checkAllCheckboxes: button to check all checkboxes (appears on hover) (requested by adrian)
+- Misc: new checkAllCheckboxes: button to check all checkboxes (appears on hover) (requested by @adrianbj)
 
 
 
@@ -270,14 +276,14 @@
 
 ### 1.8.0 (2018-03-04)
 
-- asmSearchBox: keeping option list open is now optional (requested by adrian)
+- asmSearchBox: keeping option list open is now optional (requested by @adrianbj)
 - asmPlaceholder: keep existing placeholders when used with asmSearchBox
 
 
 
 ### 1.7.9 (2018-03-03)
 
-- title case changer fixes (reported by adrian)
+- title case changer fixes (reported by @adrianbj)
 
 
 
@@ -351,7 +357,7 @@
 - fix modules list cog icon placement in Uikit theme (+ make them sharper)
 - fix enable/disable AOS link alignment when module is in disabled state
 - fix noFilenameTruncate: too broad CSS selector that may conflict with others (reported by Robin S)
-- remove forced zero border radius from pagelist action buttons (reported by adrian)
+- remove forced zero border radius from pagelist action buttons (reported by @adrianbj)
 
 
 
@@ -395,7 +401,7 @@
 
 ### 1.6.6 (2017-11-07)
 
-- UikitTweaks: login page sticky header and centerLogin adjustments (reported by adrian)
+- UikitTweaks: login page sticky header and centerLogin adjustments (reported by @adrianbj)
 
 
 
@@ -467,7 +473,7 @@
 - enhance FieldOverrides config textarea by InputfieldAceExtended/CodeMirror JS (idea by Robin S)
 - FieldOverrides: prepend field-overrides.ini file if exists (configurable in AssetPaths, idea by Robin S)
 - use sticky CKEditor toolbar only above desktop screen width
-- enable full row hover actions in the Tree panel too (reported by adrian)
+- enable full row hover actions in the Tree panel too (reported by @adrianbj)
 - added pagelist action icon "Empty Trash" for icon-only pagelist items (PageListTweaks)
 
 
@@ -516,14 +522,14 @@
 
 ### 1.5.3 (2017-08-29)
 
-- fix for a few file compiler issues and typos (thanks to adrian)
+- fix for a few file compiler issues and typos (thanks to @adrianbj)
 - filterbox broken layout regression fix
 
 
 
 ### 1.5.2 (2017-08-28)
 
-- new submodule: AddNewChildFirst based on Add New Child Reverse module by horst (re-thought by abdus/adrian)
+- new submodule: AddNewChildFirst based on Add New Child Reverse module by horst (re-thought by abdus/@adrianbj)
 - merged PR #49 "Consistent UI and AdminThemeUikit compatibility" by jmartsch
 - added: asmSelect NavItems can also be grouped into a submenu
 - fix for missing submodule role selectors
@@ -629,7 +635,7 @@
 
 ### 1.3.8 (2017-03-23)
 
-- fix JS error caused by adminColumns (reported by adrian)
+- fix JS error caused by adminColumns (reported by @adrianbj)
 
 
 
@@ -682,7 +688,7 @@
 ### 1.3.0 (2017-03-11)
 
 - AdminTweaks: added an option to align the top menu to left (idea & request by Robin S)
-- PagelistIDs: fixed issues with latest PW versions (reported by adrian)
+- PagelistIDs: fixed issues with latest PW versions (reported by @adrianbj)
 
 
 
@@ -781,7 +787,7 @@
 
 ### 1.1.5 (2016-12-24)
 
-- PageListUnselect: add trigger on unselect to allow dependent fields to update (reported by adrian)
+- PageListUnselect: add trigger on unselect to allow dependent fields to update (reported by @adrianbj)
 
 
 
@@ -844,7 +850,7 @@
 
 ### 1.0.6 (2016-11-28)
 
-- fix for "Always show pagelist actions" on pagelist items with children (reported by adrian)
+- fix for "Always show pagelist actions" on pagelist items with children (reported by @adrianbj)
 - add documentation to auto-loaded assets (Asset Paths)
 - second attempt to fix for missing pagelist IDs
 - second attempt to fix topnav third-level menu subpixel issue
@@ -866,9 +872,9 @@
 - CKEaddon keystrokes: changed cltr+u to ctrl+hift+u
 - Hotkeys: on focusing the search box (alt+d) trigger the autocomplete with previously set keyword
 - add extra clases to admin body (by Robin S)
-- fix for missing pagelist IDs (reported by adrian)
+- fix for missing pagelist IDs (reported by @adrianbj)
 - added workaround for the subpixel issue in topnav third menu items (Default theme) 
-- pagelist template edit action: fix missing action buttons (reported by adrian)
+- pagelist template edit action: fix missing action buttons (reported by @adrianbj)
 - removed the "#" prefix from pagelist template edit links (and made the action link texts smaller)
 - PageListThumbs display fixes
 - do not align modal buttons to center
@@ -909,12 +915,12 @@
 
 - moved AdminLangSwitcher, noAnim, HoverDropdown, LangTabHotkeySwitcher, AdminColumns, AutosizeTextareas, TabIndex submodules into Misc submodule
 - moved PageListUnselect submodule into PageListTweaks submodule
-- added e.metaKey besides e.ctrlKey (suggested by adrian)
+- added e.metaKey besides e.ctrlKey (suggested by @adrianbj)
 - separate CSS/JS for AOS configuration page (suggested by matjazp)
 - do not load module CSS/JS when module is disabled
-- flatModules: make "Add new module" section visible when clicking on "Add new" from sidebar/top menu (reported by adrian)
+- flatModules: make "Add new module" section visible when clicking on "Add new" from sidebar/top menu (reported by @adrianbj)
 - force loading of longclick.js for moduleModal (reported by gmclelland)
-- fix for invisible AsmList items on drag (reported by adrian)
+- fix for invisible AsmList items on drag (reported by @adrianbj)
 - added hash navigation for module config page
 
 
@@ -941,16 +947,16 @@
 - ListerTweaks colummns: exclude ListerPro
 - added auto-close, auto-width tweaks to quicklinks (RenoTweaks)
 - fixed disappearing uninstalled modules from the module list
-- do not add template edit action if module is disabled (reported by adrian)
+- do not add template edit action if module is disabled (reported by @adrianbj)
 - improvements to autohide sidebar + quicklinks
 
 
 
 ### 0.9.96 (2016-11-06)
 
-- show pagelist action buttons on hovering lister rows (requested by adrian)
+- show pagelist action buttons on hovering lister rows (requested by @adrianbj)
 - ListerTweaks: option to disable template edit action (requested by szabesz)
-- fix: add TemplateEditLink to the end of pagelist actions if no extra actions exist (reported by adrian)
+- fix: add TemplateEditLink to the end of pagelist actions if no extra actions exist (reported by @adrianbj)
 
 
 
@@ -964,7 +970,7 @@
 ### 0.9.94 (2016-11-06)
 
 - browser compability fixes for AOS submodule jumplinks (reported by Robin S)
-- Delete pagelist action didn't worked in Lister (reported by adrian)
+- Delete pagelist action didn't worked in Lister (reported by @adrianbj)
 - fix for template edit link not positioned as last action before Extras in Lister pagelists
 - removed the two-column layout for submodule options
 - Perfect Scrollbar updated to 0.6.14
@@ -1134,7 +1140,7 @@
 
 ### 0.8.0 (2016-10-15)
 
-- AdminTweaks: new tweak "Show pagelist actions on full row hover" (suggested by adrian)
+- AdminTweaks: new tweak "Show pagelist actions on full row hover" (suggested by @adrianbj)
 
 
 
@@ -1308,7 +1314,7 @@ timestamp for main module CSS and JavaScript file to prevent caching issues
 - add 'restrict by roles' feature to all submodules
 - removed 'SuperUser only' from DeselectRadios and Tooltips
 - truncate long titles in fixed header to avoid cut (Reno theme only)
-- fix overlapping icons in compact module list (reported by adrian)
+- fix overlapping icons in compact module list (reported by @adrianbj)
 - fix z-index issue with CKEditor after switching language tabs
 
 

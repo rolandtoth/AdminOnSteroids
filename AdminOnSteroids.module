@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.15',
+            'version' => '2.0.16',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -2967,20 +2967,20 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $editLinkAttrsArray = array();
         $editLinkAttrs = '';
 
-        if (!empty($configData['IUC_enabledTemplates']) && !in_array($editedPage->template->name,
-            $configData['IUC_enabledTemplates'])
-        ) {
+        if(!$this->editedPage) {
             return false;
         }
 
-        if (!empty($configData['IUC_enabledFields']) && !in_array($inputfield->name,
-            $configData['IUC_enabledFields'])
-        ) {
+        if (!empty($configData['IUC_enabledTemplates']) && !in_array($editedPage->template->name, $configData['IUC_enabledTemplates'], true)) {
+            return false;
+        }
+
+        if (!empty($configData['IUC_enabledFields']) && !in_array($inputfield->name, $configData['IUC_enabledFields'], true)) {
             return false;
         }
 
         // process locked fields
-        if (in_array($inputfield->collapsed, array(7, 8))) {
+        if (in_array($inputfield->collapsed, array(7, 8), true)) {
             $target = isset($configData['IUC_target']) ? $configData['IUC_target'] : '';
             $target = ($target === 'pw-panel') ? $target . ' pw-panel-reload' : $target;
             $event->return = '<a href="' . $event->return . '" target="_blank" class="iuc iuc-locked-link ' . $target . '">' . $event->return . '</a>';
@@ -2994,7 +2994,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
             $editLinkAttrsArray['data-iuc-mode'][] = $mode;
 
-            if (in_array('button', $configData['IUC_mode'])) {
+            if (in_array('button', $configData['IUC_mode'], true)) {
                 $buttonPosition = isset($configData['IUC_buttonPosition']) ? $configData['IUC_buttonPosition'] : '';
                 $editLinkAttrsArray['class'][] = 'iuc iuc-button ' . $buttonPosition;
             } else {
@@ -3005,7 +3005,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         if (isset($configData['IUC_target'])) {
 
             // add wrap class for repeaters (only if mode is pw-panel)
-
             if ($configData['IUC_target'] === 'pw-panel' && strpos($inputfield->attr('id'), '_repeater') !== false) {
                 $inputfield->wrapAttr('class', $inputfield->wrapAttr('class') . ' pw-panel-items');
             }
@@ -3018,7 +3017,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             }
         }
 
-        if (isset($configData['IUC_forceHttp']) && $configData['IUC_forceHttp'] == 1) {
+        if (isset($configData['IUC_forceHttp']) && $configData['IUC_forceHttp'] === 1) {
             $editLinkAttrsArray['data-iuc-force-http'][] = 1;
         }
 
@@ -3039,7 +3038,6 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 // add template name to title
     public function addTemplateLinkPageList(HookEvent $event)
     {
-
         $page = $event->arguments('page');
 
         $template = $page->template;
