@@ -1,5 +1,12 @@
 # Changelog
 
+### 2.0.17 (2019-06-15)
+
+- fix sticky header z-index issue on Uikit theme (reported by szabesz)
+- added Color Button, Color Dialog, Table Resize, Table Tools, Table Tools Toolbar CKE and Color Dialog plugins
+
+
+
 ### 2.0.16 (2019-03-25)
 
 - fix hidden text for hidden pagelist items (possibly a webkit bug) (reported by @adrianbj and MilenKo)

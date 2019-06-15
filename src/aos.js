@@ -25,7 +25,6 @@ function addCSSRule(selector, rules, index) {
 }
 
 function initCKE() {
-
     var CKEplugins = ProcessWire.config.InputfieldCKEditor.plugins,
         enabledCKEplugins = AOSsettings.CKEaddons_plugins,
         CKEskin = AOSsettings.CKEaddons_skin,
@@ -33,6 +32,7 @@ function initCKE() {
         CKEpluginCount = enabledCKEplugins.length,
         CKEtoolbars = {
             codesnippet: ["CodeSnippet"],
+            colorbutton: ["TextColor", "BGColor"],
             div: ["CreateDiv"],
             find: ["Find", "Replace"],
             justify: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
@@ -43,12 +43,15 @@ function initCKE() {
             mathjax: ["Mathjax"],
             oembed: ["oembed"],
             showblocks: ["ShowBlocks"],
+            tabletoolstoolbar: ["table", "tablealignleft", "tablealigncenter", "tablealignright", "tablecellaligleft", "tablecellinsertbefore", "tablecellinsertafter", "tablecelldelete", "tablecellproperties", "tablecellsmerge", "tablecellmergeright", "tablecellmergedown", "tablecellsplithorizontal", "tablecellsplitvertical", "tabledelete", "tableinsert", "tableproperties", "tablerowinsertbefore", "tablerowinsertafter", "tablerowdelete", "tablecolumninsertbefore", "tablecolumninsertafter", "tablecolumndelete"],
             templates: ["Templates"],
             token: ["CreateToken"]
         };
 
     window.CKEpluginDependencies = {
         autosave: 'notification',
+        colorbutton: 'floatpanel,panelbutton',
+        colordialog: 'dialog',
         codesnippet: 'widget,dialog,lineutils',
         mathjax: 'widget,dialog,lineutils,clipboard',
         layoutmanager: 'basewidget,widget',
@@ -57,22 +60,27 @@ function initCKE() {
         openlink: 'contextmenu,link',
         templates: 'dialog',
         token: 'widget,dialog,lineutils',
+        tableresize: 'tabletools',
+        tabletools: 'dialog,table',
+        tabletoolstoolbar: 'table,tabletools',
         wordcount: 'htmlwriter,undo'
     };
 
     // keep the plugin order from admin
-    if (enabledCKEplugins) enabledCKEplugins.reverse();
+    if (enabledCKEplugins) {
+        enabledCKEplugins.reverse();
+    }
 
     // set each plugin path to AOS dir
     if (CKEpluginCount > 0) {
-
         var dependencies,
             dependentPlugins = [];
 
-        for (var k in window.CKEpluginDependencies) dependentPlugins.push(k);
+        for (var m in window.CKEpluginDependencies) {
+            dependentPlugins.push(m);
+        }
 
         for (var i = 0; i < CKEpluginCount; i++) {
-
             var pluginName = enabledCKEplugins[i];
 
             if (dependentPlugins.indexOf(pluginName) !== -1 && CKEpluginDependencies[pluginName]) {

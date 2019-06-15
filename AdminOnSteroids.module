@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.16',
+            'version' => '2.0.17',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -3473,6 +3473,8 @@ HTML;
         $f->addOption('autogrow', 'Auto Grow');
         $f->addOption('autolink', 'Auto Link');
         $f->addOption('autosave', 'Auto Save');
+        $f->addOption('colorbutton', 'Color Button' . $hasToolbarBtn);
+        $f->addOption('colordialog', 'Color Dialog');
         $f->addOption('linkfilesmenu', 'Link Files Menu' . $hasToolbarBtn);
         $f->addOption('linkhover', 'Link Hover');
         $f->addOption('codemirror', 'CodeMirror');
@@ -3491,6 +3493,9 @@ HTML;
         $f->addOption('openlink', 'Open Link');
         $f->addOption('showblocks', 'Show Blocks' . $hasToolbarBtn);
         $f->addOption('smallerselection', 'Smaller Selection');
+        $f->addOption('tableresize', 'Table Resize');
+        $f->addOption('tabletools', 'Table Tools');
+        $f->addOption('tabletoolstoolbar', 'Table Tools Toolbar' . $hasToolbarBtn);
         $f->addOption('token', 'Token' . $hasToolbarBtn);
         $f->addOption('wordcount', 'WordCount');
 

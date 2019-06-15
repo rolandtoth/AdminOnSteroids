@@ -3710,8 +3710,8 @@ html.AdminThemeUikit {
         #pw-mastheads {
           position: sticky !important;
           backface-visibility: hidden;
-          top: 0 !important; //width: 100%;
-          z-index: 6;
+          top: 0 !important;
+          z-index: 11;
         }
 
         .pw-dropdown-menu.prnav.pw-dropdown-ready {
