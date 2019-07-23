@@ -4,6 +4,7 @@
   "description": "Various ProcessWire admin tweaks to boost productivity",
   "main": "index.js",
   "devDependencies": {
+    "lodash": ">=4.17.13",
     "uglify-js": "*",
     "node-sass": "^4.5.3",
     "nodemon": "^1.11.0"
