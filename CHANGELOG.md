@@ -1,5 +1,17 @@
 # Changelog
 
+### 2.0.19 (2019-08-12)
+
+- add parenthesis to ternary operator for PHP 7.4 (#111, reported by tiefenb)
+
+
+
+### 2.0.18 (2019-06-23)
+
+- lodash dependency update
+
+
+
 ### 2.0.17 (2019-06-15)
 
 - fix sticky header z-index issue on Uikit theme (reported by szabesz)
