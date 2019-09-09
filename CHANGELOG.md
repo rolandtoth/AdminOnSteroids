@@ -1,5 +1,12 @@
 # Changelog
 
+### 2.0.20 (2019-09-09)
+
+- rename module enable/disable toggle GET param to avoid possible conflict with the new toggle fieldtype (reported by dragan)
+- fix hotkey label typo for toggle filterbox (reported by gmclelland, #112)
+
+
+
 ### 2.0.19 (2019-08-12)
 
 - add parenthesis to ternary operator for PHP 7.4 (#111, reported by tiefenb)

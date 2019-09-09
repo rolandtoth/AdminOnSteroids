@@ -36,7 +36,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         return array(
             'title' => 'AdminOnSteroids',
             'class' => 'AdminOnSteroids',
-            'version' => '2.0.19',
+            'version' => '2.0.20',
             'summary' => __('ProcessWire admin tweaks to boost productivity.'),
             'author' => 'Roland Toth',
             'autoload' => 'template=admin',
@@ -352,7 +352,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         if ($this->wire('user')->isSuperuser()) {
 
-            if ($this->wire('input')->toggle == 1) {
+            if ($this->wire('input')->toggleAos == 1) {
                 $configData['enabled'] = ($this->enabled == 1) ? 0 : 1;
                 $this->wire('modules')->saveModuleConfigData($this, $configData);
 
@@ -362,7 +362,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
                 }
             }
 
-            $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addAOSToggleLink');
+            $this->addHookAfter('AdminTheme::getExtraMarkup', $this, 'addToggleAosButton');
         }
 
         $this->allRoles = array();
@@ -2780,9 +2780,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
         $event->return = $markup . $event->return;
     }
 
-    public function addAOSToggleLink(HookEvent $event)
+    public function addToggleAosButton(HookEvent $event)
     {
-
         $parts = $event->return;
 
         $div_class = ($this->wire('config')->defaultAdminTheme === 'AdminThemeUikit') ? 'pw-container uk-container uk-container-expand' : '';
@@ -2799,7 +2798,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $configLinkMarkup = '<div class="' . $div_class . '">
 <div class="uk-grid"><div class="uk-width-2-3@m uk-flex-first@m uk-text-center uk-text-left@m uk-first-column"><p style="margin-top: 10px; font-size: 0.9rem;" class="">
-<a href="' . $modulePage . '&toggle=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>
+<a href="' . $modulePage . '&toggleAos=1" class="aos_toggle" ' . $linkStyle . '><i class="fa fa-medkit"></i> <span ' . $mouseover . '>
 ' . ($this->enabled ? $enabledText : $disabledText) . '</span></a> ' . $configLink . '</p></div></div></div>';
 
         $parts['footer'] .= $configLinkMarkup;
@@ -2809,7 +2808,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
     public function addTemplateEditLink(HookEvent $event)
     {
-        if (!$this->editedPage || $this->editedPage->template == 'admin') {
+        if (!$this->editedPage || $this->editedPage->template->name === 'admin') {
             return;
         }
 
@@ -3764,7 +3763,7 @@ HTML;
         $f->addOption('save', __('Save on', __FILE__) . ' `ctrl+s`');
         $f->addOption('focusSearch', __('Focus search on', __FILE__) . ' `alt+d`');
         $f->addOption('addPageTreeTrigger', __('Open page tree panel on', __FILE__) . ' `alt+o`');
-        $f->addOption('filterboxHotkey', __('Focus filterbox on', __FILE__) . ' `als+s`');
+        $f->addOption('filterboxHotkey', __('Focus filterbox on', __FILE__) . ' `alt+s`');
 
         if ($data[$f->name]) {
             $f->attr('value', $data[$f->name]);
