@@ -34,11 +34,11 @@ html.aos {
 
   //overflow-x: hidden; // note: this makes asmselect weird on moving items
   // on pagelist item hover underline only the first span (added by the module)
-  .pw-content .PageList .PageListItem > a.PageListPage {
+  .pw-content .PageList .PageListItem>a.PageListPage {
     &:hover {
       text-decoration: none;
 
-      > span {
+      >span {
         position: relative; // make sure data-pid (pagelist IDs) are correctly positioned
         text-decoration: underline;
       }
@@ -53,7 +53,7 @@ html.aos {
   // add some space between the top bar and page content (default theme, sticky header disabled)
   &.AdminThemeDefault:not(.headSticky) {
     body:not(.hasWireTabs) {
-      #content > .pw-container {
+      #content>.pw-container {
         margin-top: 13px;
       }
     }
@@ -235,13 +235,13 @@ html.aos {
 
   h1:not(.pwapi-headline) span,
   .PageListItem:not(.PageListSortItem) .PageListPage span[class^="label_"],
-    //h1#title,
+  //h1#title,
   #breadcrumbs li.title span {
     position: relative;
 
     &:hover {
 
-      ~ .aos_EditTemplate,
+      ~.aos_EditTemplate,
       .aos_EditTemplate {
         display: inline-block;
         visibility: visible;
@@ -377,7 +377,7 @@ html.aos {
     clear: none !important;
     margin-top: 0 !important;
 
-    > .InputfieldContent {
+    >.InputfieldContent {
       background: transparent;
     }
   }
@@ -520,7 +520,7 @@ html.aos {
       background: transparent;
       margin: 0 0 24px;
 
-      > input {
+      >input {
         width: 100% !important;
         max-width: 360px !important;
         border: none !important;
@@ -528,7 +528,7 @@ html.aos {
         padding-left: 35px !important;
       }
 
-      > input:focus,
+      >input:focus,
       &.hasValue input {
         border-color: #8d939e !important;
       }
@@ -560,7 +560,7 @@ html.aos {
         border-color: $colorDelete !important;
       }
 
-      + .fa-close {
+      +.fa-close {
         color: inherit;
         margin-left: -30px;
         opacity: 0.33;
@@ -578,7 +578,7 @@ html.aos {
     }
 
     &.hasValue {
-      input + .fa-close {
+      input+.fa-close {
         display: inline-block;
       }
 
@@ -689,15 +689,6 @@ html.aos {
   z-index: 100000 + 900 !important;
 }
 
-// CKEditor html source dialog
-.cke_dialog_background_cover {
-  z-index: 100000 + 3000 !important;
-
-  + .cke_reset_all > table {
-    z-index: 100000 + 3050 !important;
-  }
-}
-
 // fix cke dialog covered by other lang's cke overlay after langtab switch
 .cke_dialog {
   z-index: 100000 + 3100 !important;
@@ -728,7 +719,7 @@ html.aos {
 .aos-pagelist-confirm {
   white-space: nowrap;
 
-  + [href*="force=1"] {
+  +[href*="force=1"] {
     margin-left: 6px;
     color: #fff !important;
     background-color: #BC283D !important;
@@ -861,7 +852,7 @@ html.asmLeftX {
     body {
 
       .Inputfields .asmFieldsetStart,
-      .Inputfields .asmFieldsetStart ~ .asmListItem {
+      .Inputfields .asmFieldsetStart~.asmListItem {
         padding-left: 48px;
 
         .asmListItemRemove {
@@ -1172,18 +1163,18 @@ html {
         transform-origin: center;
       }
 
-      ~ .PageListRoot .PageListSelectName {
+      ~.PageListRoot .PageListSelectName {
         text-decoration: line-through;
       }
     }
 
-    ~ .PageListRoot {
+    ~.PageListRoot {
       float: left;
       width: calc(100% - 54px);
       margin-bottom: 1rem;
     }
 
-    ~ .notes {
+    ~.notes {
       width: 100%;
       clear: both;
     }
@@ -1202,7 +1193,7 @@ html.asmCounter {
   .Inputfield.InputfieldAsmSelect {
     position: relative;
 
-    > .InputfieldStateCollapsed .asmList {
+    >.InputfieldStateCollapsed .asmList {
       counter-reset: pageRefCounter;
     }
 
@@ -1224,15 +1215,15 @@ html.asmCounter {
     }
 
     &.InputfieldStateCollapsed {
-      > .InputfieldContent {
+      >.InputfieldContent {
         // override default display: none to be able to move counter out of the div
         display: block;
         height: 0;
         padding: 0;
         border: none; // hide description and notes too when collapsed
 
-        > p,
-        > ul {
+        >p,
+        >ul {
           display: none;
         }
       }
@@ -1304,7 +1295,7 @@ html.asmCounter {
 //}
 html.asmCollapse {
 
-  .Inputfields .asmFieldsetStart ~ .asmListItem,
+  .Inputfields .asmFieldsetStart~.asmListItem,
   .Inputfields .asmFieldsetEnd,
   .Inputfields .asmFieldsetStart {
     padding-left: 24px;
@@ -1382,7 +1373,7 @@ html.asmCollapse {
       }
 
       form#ProcessLoginForm {
-        > ul {
+        >ul {
           width: 300px;
           display: inline-block;
 
@@ -1397,7 +1388,7 @@ html.asmCollapse {
           }
         }
 
-        + * {
+        +* {
           margin-top: 32px;
         }
       }
@@ -1463,7 +1454,7 @@ html.asmCollapse {
 
 html.hideAddNewDropdown body.id-3 {
   #head_button {
-    > .ui-button.pw-dropdown-toggle {
+    >.ui-button.pw-dropdown-toggle {
       display: none !important;
     }
   }
@@ -1474,7 +1465,7 @@ html.hideAddNewDropdown body.id-3 {
   z-index: 100000 + 100;
   margin-right: 2px; //text-align: right;
 
-  > a {
+  >a {
     position: relative;
 
     &:after {
@@ -1614,7 +1605,7 @@ html.hideAddNewDropdown body.id-3 {
 // also make sure to show the TemplateEditLink when a checkbox field
 // doesn't have a label
 .aos_hasTooltip .title,
-.InputfieldCheckbox .InputfieldContent > label {
+.InputfieldCheckbox .InputfieldContent>label {
   position: relative;
 }
 
@@ -1732,7 +1723,7 @@ html.noFilenameTruncate {
 // FileFieldTweaks filterbox
 html.filterbox {
   .Inputfield.filterbox_loaded {
-    > label {
+    >label {
       padding-top: 14px;
       padding-bottom: 13px;
     }
@@ -1896,7 +1887,7 @@ html.flatModules body.id-21 {
     display: block !important;
   }
 
-  #modules_form > .Inputfields > .Inputfield {
+  #modules_form>.Inputfields>.Inputfield {
 
     &#tab_configurable_modules,
     &#tab_install_modules {
@@ -1908,16 +1899,16 @@ html.flatModules body.id-21 {
     }
 
     .AdminDataTable,
-    .Inputfields .InputfieldMarkup .InputfieldHeader + .InputfieldContent {
+    .Inputfields .InputfieldMarkup .InputfieldHeader+.InputfieldContent {
       margin-bottom: 0;
       padding-bottom: 0;
     }
 
-    .InputfieldContent > p:first-child {
+    .InputfieldContent>p:first-child {
       display: none;
     }
 
-    > .Inputfields > .Inputfield:not(.InputfieldFieldset) .InputfieldHeader:not(.uk-form-label) {
+    >.Inputfields>.Inputfield:not(.InputfieldFieldset) .InputfieldHeader:not(.uk-form-label) {
       height: 0;
       overflow: hidden;
       position: relative;
@@ -1934,12 +1925,12 @@ html.flatModules body.id-21 {
       display: none;
     }
 
-    + #tab_site_modules {
+    +#tab_site_modules {
       display: none !important;
     }
   }
 
-  li + #tab_new_modules {
+  li+#tab_new_modules {
     margin-top: 1em;
   }
 }
@@ -1985,7 +1976,7 @@ html.moduleCompact {
       display: none;
     }
 
-    .modules_section + p {
+    .modules_section+p {
       margin-top: 2em;
     }
 
@@ -2002,7 +1993,7 @@ html.moduleCompact {
         margin: 0;
 
         button {
-          + button {
+          +button {
             margin-left: 4px;
           }
         }
@@ -2021,16 +2012,16 @@ html.moduleCompact {
       p.module-summary {
 
         &,
-        + span {
+        +span {
           float: left;
           display: block;
           max-width: calc(100% - 120px);
         }
 
-        + span {
+        +span {
           clear: left;
 
-          + .buttons {
+          +.buttons {
             // pull up
             margin-top: -20px;
           }
@@ -2092,7 +2083,7 @@ html.moduleCompact {
           }
         }
 
-        span.not_installed > span.ConfigurableModule:after {
+        span.not_installed>span.ConfigurableModule:after {
           display: none;
         }
 
@@ -2244,8 +2235,8 @@ html.PageListThumbs {
 
       //  border-radius: 0 !important;
       //}
-      > a {
-        > figure {
+      >a {
+        >figure {
           vertical-align: middle;
         }
       }
@@ -2276,7 +2267,7 @@ html.PageListThumbs {
 
         // create a pseudo to make items align vertically (:before on next item)
         // exclude the page icon (.fa)
-        + *:not(.fa):before {
+        +*:not(.fa):before {
           content: "";
           height: $thumbSize - 10px; //height: $thumbSize;
           display: inline-block;
@@ -2372,7 +2363,7 @@ html.PageListThumbs {
             height: $thumbSize;
           }
 
-          + *:before {
+          +*:before {
             height: $thumbSize - 4px;
           }
 
@@ -2400,7 +2391,7 @@ html.PageListThumbs {
     }
 
     // but allow the image in the pagelist without edit link
-    .PageListSelectHeader ~ .PageList {
+    .PageListSelectHeader~.PageList {
       figure a {
         pointer-events: none !important;
       }
@@ -2463,7 +2454,7 @@ html.pListShowActions {
         display: inline-block !important;
         opacity: 1 !important;
 
-        > [class^="PageListAction"]:not(:hover) {
+        >[class^="PageListAction"]:not(:hover) {
           filter: saturate(0.5);
           opacity: 0.5;
         }
@@ -2573,7 +2564,7 @@ span.select2-dropdown {
 //.select2-selection__rendered {
 //  line-height: inherit !important;
 //}
-.select2-container--default .select2-results > .select2-results__options {
+.select2-container--default .select2-results>.select2-results__options {
   max-height: 360px !important;
 }
 
@@ -2582,7 +2573,7 @@ span.select2-dropdown {
 }
 
 // hide the tags
-ol.asmList + select + .select2-container {
+ol.asmList+select+.select2-container {
   display: none !important;
 }
 
@@ -2667,7 +2658,7 @@ a.case-toggle {
     right: 19px;
   }
 
-  + input {
+  +input {
     padding-right: 36px !important;
   }
 
@@ -2678,7 +2669,7 @@ a.case-toggle {
       font-size: 12px;
     }
 
-    + i {
+    +i {
       margin-left: -25px;
 
       &::before {
@@ -2727,7 +2718,8 @@ html.AdminThemeReno {
 
   body.id-23:not(.centerLogin) {
     #headline {
-      padding-left: 20px !important;;
+      padding-left: 20px !important;
+      ;
     }
   }
 
@@ -2919,7 +2911,7 @@ html.AdminThemeReno {
         line-height: 1.25em !important;
         margin-top: -0.25em !important;
 
-        > span {
+        >span {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -3343,7 +3335,7 @@ html.AdminThemeReno {
   }
 
   a.quicklinks-open {
-    + ul.quicklinks {
+    +ul.quicklinks {
       min-width: 250px;
       max-width: 500px;
       width: auto !important;
@@ -3465,11 +3457,11 @@ html.AdminThemeReno {
     @media only screen and (min-width: 960px) {
       #sidebar {
         #main-nav {
-          > li {
-            > a {
+          >li {
+            >a {
               font-weight: 600;
 
-              > i {
+              >i {
                 margin: 5px 8px 0 0;
                 float: right;
               }
@@ -3491,7 +3483,7 @@ html.AdminThemeReno {
               }
             }
 
-            > ul {
+            >ul {
               display: block !important; //padding-bottom: 0.2em;
               padding-bottom: 0;
 
@@ -3502,7 +3494,7 @@ html.AdminThemeReno {
               overflow: visible !important;
               height: auto !important; //padding: 8px 12px 2px 12px !important;
 
-              > li {
+              >li {
                 a {
                   padding-top: 0.275em;
                   padding-bottom: 0.275em; //font-size: 0.94em;
@@ -3552,7 +3544,7 @@ html.AdminThemeReno {
     @media only screen and (min-width: 960px) {
       #sidebar {
         #main-nav {
-          > li {
+          >li {
             a {
               &.current {
                 background: transparent;
@@ -3580,10 +3572,10 @@ html.AdminThemeReno {
               }
             }
 
-            > ul {
+            >ul {
               padding: 8px 12px 2px 12px !important;
 
-              > li {
+              >li {
                 display: inline-block;
                 font-size: 0.94em;
 
@@ -3620,7 +3612,7 @@ html.AdminThemeReno {
   &.sbQuickLinksHide {
 
     //@media only screen and (min-width: 960px) {
-    #sidebar #main-nav > li a {
+    #sidebar #main-nav>li a {
       span {
         padding-right: 0 !important;
       }
@@ -3873,14 +3865,14 @@ html.AdminThemeDefault {
           position: relative;
           z-index: 19;
 
-          & ~ #content {
+          &~#content {
             padding-top: 20px;
           }
         }
 
         &.hasWireTabs {
           #notices {
-            & ~ #content {
+            &~#content {
               padding-top: 52px;
             }
           }
@@ -3992,7 +3984,7 @@ html.moveAssetButtons {
       margin-top: 4px !important;
       max-width: calc(100% - 70px) !important;
 
-      + span {
+      +span {
         display: block;
       }
     }
@@ -4049,7 +4041,7 @@ html.moveAssetButtons {
     }
   }
 
-  ~ .aos_downloadAsset ~ p.InputfieldFileInfo {
+  ~.aos_downloadAsset~p.InputfieldFileInfo {
     padding-right: 104px !important;
   }
 }
@@ -4089,7 +4081,7 @@ html.moveAssetButtons {
     }
   }
 
-  ~ p.InputfieldFileInfo {
+  ~p.InputfieldFileInfo {
     padding-right: 54px !important;
   }
 
@@ -4110,14 +4102,14 @@ html.moveAssetButtons:not(.downloadAssetButton) {
   .aos_moveAssets {
     right: 28px;
 
-    ~ p.InputfieldFileInfo {
+    ~p.InputfieldFileInfo {
       padding-right: 74px !important;
     }
   }
 }
 
 .aos_no-inputfield-padding {
-  > .InputfieldContent {
+  >.InputfieldContent {
     padding: 0;
   }
 }
@@ -4132,7 +4124,7 @@ html.moveAssetButtons:not(.downloadAssetButton) {
 
 // Logs page Actions field
 html.AdminThemeUikit .aos_no-inputfield-padding#FieldsetTools {
-  > .InputfieldContent {
+  >.InputfieldContent {
     background: transparent;
   }
 
@@ -4150,12 +4142,12 @@ html.AdminThemeUikit .aos_no-inputfield-padding#FieldsetTools {
         .PageListerActions {
           display: inline-block !important;
 
-          .PageExtras ~ a {
+          .PageExtras~a {
             display: none;
           }
 
           .PageExtras.extras-open,
-          .PageExtras.extras-open ~ a {
+          .PageExtras.extras-open~a {
             display: inline-block;
           }
         }
@@ -4208,7 +4200,7 @@ html.pListFullRowHover:not(.pListShowActions) {
 html.pListCounters {
 
   // add pagelist counters
-  .PageListRoot > .PageList > .PageListItem ~ .PageList:not(.PageListPlaceholder) {
+  .PageListRoot>.PageList>.PageListItem~.PageList:not(.PageListPlaceholder) {
     .PageListItem {
       &:before {
         opacity: 0.5;
@@ -4228,22 +4220,22 @@ html.pListCounters {
 
     @include pListNum('pl1');
 
-    > .PageList {
+    >.PageList {
       @include pListNum('pl2');
 
-      > .PageList {
+      >.PageList {
         @include pListNum('pl3');
 
-        > .PageList {
+        >.PageList {
           @include pListNum('pl4');
 
-          > .PageList {
+          >.PageList {
             @include pListNum('pl5');
 
-            > .PageList {
+            >.PageList {
               @include pListNum('pl6');
 
-              > .PageList {
+              >.PageList {
                 @include pListNum('pl7');
               }
             }
@@ -4311,90 +4303,90 @@ html.pListIconOnly {
   }
 
   // for default theme
-  .PageExtras.extras-open ~ a {
+  .PageExtras.extras-open~a {
     display: inline-block !important;
   }
 
   .PageListerActions,
   .PageListActions {
-    > li {
+    >li {
       margin-right: 1px;
     }
 
-    .PageListActionEdit > a[href*="page/edit"],
+    .PageListActionEdit>a[href*="page/edit"],
     a.PageEdit {
       @include pageListIcon("\f040");
     }
 
-    .PageListActionEdit > a[href*="template/edit?"],
-      // template edit action
+    .PageListActionEdit>a[href*="template/edit?"],
+    // template edit action
     a.PageEdit {
       max-width: unset;
     }
 
-    .PageListActionView > a,
+    .PageListActionView>a,
     a.PageView {
       @include pageListIcon("\f14c");
     }
 
-    .PageListActionNew > a,
+    .PageListActionNew>a,
     a.PageNew {
       @include pageListIcon("\f055");
     }
 
-    .PageListActionMove > a {
+    .PageListActionMove>a {
       @include pageListIcon("\f0dc");
     }
 
-    .PageListActionHide > a,
+    .PageListActionHide>a,
     .PageHide {
       @include pageListIcon("\f070");
     }
 
-    .PageListActionCopy > a,
+    .PageListActionCopy>a,
     .PageCopy {
       //@include pageListIcon("\f067");
       @include pageListIcon("\f0c5");
     }
 
-    .PageListActionUnhide > a,
+    .PageListActionUnhide>a,
     .PageUnhide {
       @include pageListIcon("\f06e");
     }
 
-    .PageListActionPublish > a,
+    .PageListActionPublish>a,
     .PagePublish {
       //@include pageListIcon("\f058");
       @include pageListIcon("\f05d");
     }
 
-    .PageListActionUnpublish > a,
+    .PageListActionUnpublish>a,
     .PageUnpublish {
       //@include pageListIcon("\f057");
       @include pageListIcon("\f05c");
     }
 
-    .PageListActionLock > a,
+    .PageListActionLock>a,
     .PageLock {
       @include pageListIcon("\f023");
     }
 
-    .PageListActionUnlock > a,
+    .PageListActionUnlock>a,
     .PageUnlock {
       @include pageListIcon("\f13e");
     }
 
-    .PageListActionRefresh > a,
+    .PageListActionRefresh>a,
     .PageRefresh {
       @include pageListIcon("\f021");
     }
 
-    .PageListActionEmpty > a,
+    .PageListActionEmpty>a,
     .PageEmpty {
       @include pageListIcon("\f057");
     }
 
-    .PageListActionTrash > a,
+    .PageListActionTrash>a,
     .PageTrash {
       position: static !important; // allow full-row red bg color
 
@@ -4407,7 +4399,7 @@ html.pListIconOnly {
       }
     }
 
-    .PageListActionDelete > a,
+    .PageListActionDelete>a,
     .PageDelete {
       position: static !important; // allow full-row red bg color
 
@@ -4416,7 +4408,7 @@ html.pListIconOnly {
       }
     }
 
-    .PageListActionSticky > a,
+    .PageListActionSticky>a,
     a.PageSticky {
       @include pageListIcon("\f006");
 
@@ -4425,7 +4417,7 @@ html.pListIconOnly {
       }
     }
 
-    .PageListActionUnsticky > a,
+    .PageListActionUnsticky>a,
     a.PageUnsticky {
       @include pageListIcon("\f005");
 
@@ -4446,7 +4438,7 @@ html.pListIconOnly {
       }
     }
 
-    > ul.ui-menu {
+    >ul.ui-menu {
       // uikit
       box-shadow: none;
       border: none !important;
@@ -4454,7 +4446,7 @@ html.pListIconOnly {
 
     .page-list {
       &:hover {
-        + .page-edit {
+        +.page-edit {
           opacity: 0.3;
         }
       }
@@ -4575,7 +4567,7 @@ html.pListIconOnly {
     &:not(.sbItemsInline) {
       ul li ul {
         li.navItem {
-          a.current + .page-edit i {
+          a.current+.page-edit i {
             color: #fff !important;
           }
         }
@@ -4791,11 +4783,11 @@ ul[class*="InputfieldCheckboxes"] {
     pointer-events: none !important;
   }
 
-  &.button-left ~ input {
+  &.button-left~input {
     padding-left: 36px !important;
   }
 
-  &.button-right ~ input {
+  &.button-right~input {
     padding-right: 36px !important;
   }
 
@@ -4867,7 +4859,7 @@ html.aos .InputfieldAssistedUrlText {
   .iuc-button.button-left {
     left: 40px;
 
-    ~ p #link_page_url_input {
+    ~p #link_page_url_input {
       padding-left: 56px !important;
     }
   }
@@ -4875,7 +4867,7 @@ html.aos .InputfieldAssistedUrlText {
   .iuc-button.button-right {
     right: 34px;
 
-    ~ p #link_page_url_input {
+    ~p #link_page_url_input {
       padding-right: 56px !important;
     }
   }
@@ -4883,7 +4875,7 @@ html.aos .InputfieldAssistedUrlText {
 
 #wrap_link_page_url .InputfieldPageAutocomplete,
 .InputfieldURL {
-  input:focus + .iuc-button i {
+  input:focus+.iuc-button i {
     color: rgba(0, 0, 0, 0.32);
   }
 }
@@ -4973,12 +4965,12 @@ html.aos .InputfieldAssistedUrlText {
 .CodeMirror-lines * {
   font-size: 0.96rem !important;
   font-family: -apple-system,
-  BlinkMacSystemFont,
-  "Segoe UI",
-  Roboto,
-  "Helvetica Neue",
-  Arial,
-  sans-serif !important;
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
 }
 
 // this would cause tab, space, etc not working in editors
@@ -5033,7 +5025,7 @@ html.aos .InputfieldAssistedUrlText {
 .cke_button_label {
   white-space: nowrap;
 
-  + .cke_button_label {
+  +.cke_button_label {
     display: none !important; // LightWire skin
   }
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+### 2.0.21 (2020-06-06)
+
+- remove blocking cke overlay z-index, npm audit fixes
+ 
+
+
 ### 2.0.20 (2019-09-09)
 
 - rename module enable/disable toggle GET param to avoid possible conflict with the new toggle fieldtype (reported by dragan)
