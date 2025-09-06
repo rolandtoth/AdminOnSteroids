@@ -1776,7 +1776,7 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
 
         $multilangFieldRegex = "/%([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)%/";
 
-        $pageLabelField = utf8_encode($pageLabelField);
+        $pageLabelField = mb_convert_encoding($pageLabelField, 'UTF-8', 'ISO-8859-1');
 
         $pageLabelField = preg_replace_callback($multilangFieldRegex, function ($match) use ($page) {
 
@@ -1794,7 +1794,8 @@ class AdminOnSteroids extends WireData implements Module, ConfigurableModule
             //}, utf8_encode($pageLabelField));
         }, $pageLabelField);
 
-        $page->template->pageLabelField = utf8_decode($pageLabelField);
+        $page->template->pageLabelField = mb_convert_encoding($pageLabelField, 'ISO-8859-1', 'UTF-8');
+
     }
 
     public function addNavItems(HookEvent $event)
